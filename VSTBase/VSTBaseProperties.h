@@ -13,6 +13,7 @@ namespace eLibV2
                 VSTBaseProperties() { mSynth = false; mId = "NoId"; mVersion = 0x0815; }
 
                 bool isSynth() { return mSynth; }
+                bool canProcessReplacing() { return mCanProcessReplacing; }
                 VstInt16 getNumPresets() { return mNumPresets; }
                 VstInt16 getNumParameters() { return mNumParameters; }
                 VstInt16 getNumInputs() { return mNumInputs; }
@@ -30,6 +31,7 @@ namespace eLibV2
                 VstInt16 getVersion() { return mVersion; }
 
                 void setSynth() { mSynth = true; }
+                void setProcessReplacing() { mCanProcessReplacing = true; }
                 void setNumPresets(VstInt16 numPresets) { mNumPresets = numPresets; }
                 void setNumParameters(VstInt16 numParameters) { mNumParameters = numParameters; }
                 void setNumInputs(VstInt16 numInputs) { mNumInputs = numInputs; }
@@ -39,6 +41,7 @@ namespace eLibV2
 
             private:
                 bool mSynth;
+                bool mCanProcessReplacing;
                 std::string mId;
                 VstInt16 mVersion;
                 VstInt16 mNumInputs;

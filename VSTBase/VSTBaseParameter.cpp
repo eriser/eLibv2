@@ -18,7 +18,7 @@ VSTBaseParameter::VSTBaseParameter()
     mCanBeAutomated = false;
 }
 
-VSTBaseParameter::VSTBaseParameter(const std::string name, const std::string label, double minValue, double maxValue, double initValue = 0.0)
+VSTBaseParameter::VSTBaseParameter(const std::string name, const std::string label, double minValue, double maxValue, double initValue)
     : mParameterName(name)
     , mUnitLabel(label)
     , mType(ParameterTypeDouble)
@@ -29,7 +29,7 @@ VSTBaseParameter::VSTBaseParameter(const std::string name, const std::string lab
 {
 }
 
-VSTBaseParameter::VSTBaseParameter(const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue = 0.0)
+VSTBaseParameter::VSTBaseParameter(const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue)
     : mParameterName(name)
     , mUnitLabel(label)
     , mType(type)

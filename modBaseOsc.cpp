@@ -79,10 +79,10 @@ void BaseOscillator::setScaler()
 
 void BaseOscillator::setCoarse(double Coarse)
 {
-    if ((Coarse >= -BASEOSC_COARSE_RANGE) && (Coarse <= BASEOSC_COARSE_RANGE))
+//    if ((Coarse >= -BASEOSC_COARSE_RANGE) && (Coarse <= BASEOSC_COARSE_RANGE))
         dCoarse = Coarse;
-    else
-        dbgOutputF("coarse out of range: %lf (%lf - %lf) -> using %lf", Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE, dCoarse);
+//    else
+//        dbgOutputF("coarse out of range: %lf (%lf - %lf) -> using %lf", Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE, dCoarse);
 }
 
 void BaseOscillator::setFinetune(double Finetune)

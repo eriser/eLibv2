@@ -21,7 +21,7 @@ namespace eLibV2
         {
             public:
                 VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPreset, VstInt16 numParameters, VSTBaseProperties properties);
-                ~VSTBaseClass();
+                ~VSTBaseClass() {}
 
                 // attach externally provided programs to plugin
                 void attachPrograms(VSTBasePrograms programs);
@@ -44,6 +44,7 @@ namespace eLibV2
                 // handling of parameters
                 virtual void setParameter(VstInt32 index, float value);
                 virtual float getParameter(VstInt32 index);
+                virtual float getParameterScaled(VstInt32 index);
                 virtual void getParameterName(VstInt32 index, char* text);
                 virtual void getParameterDisplay(VstInt32 index, char* text);
                 virtual void getParameterLabel(VstInt32 index, char* label);

@@ -16,20 +16,15 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets,
     // init
     if (audioMaster)
     {
-        ModuleLogger::print("audiomaster");
         setNumInputs(mProperties.getNumInputs());
         setNumOutputs(mProperties.getNumOutputs());
-        canProcessReplacing();
         if (mProperties.isSynth())
             isSynth();
+        if (mProperties.canProcessReplacing())
+            canProcessReplacing();
         setUniqueID(properties.getPluginIdAsVstInt32());
     }
     suspend();
-}
-
-//------------------------------------------------------------------------
-VSTBaseClass::~VSTBaseClass()
-{
 }
 
 //------------------------------------------------------------------------
@@ -52,6 +47,9 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
         mMidiEventHandler = handler;
 }
 
+//------------------------------------------------------------------------
+// attach parameters
+//------------------------------------------------------------------------
 void VSTBaseClass::attachParameter(VSTBaseParameter param)
 {
     ModuleLogger::print("attachParameter");
@@ -120,13 +118,27 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
 }
 
 //------------------------------------------------------------------------
-// get value of parameter for internal use in host application
+// get value of parameter for internal use in host application (0.0 - 1.0)
 //------------------------------------------------------------------------
 float VSTBaseClass::getParameter(VstInt32 index)
 {
     //ModuleLogger::print("getParameter: %d %f", index, mPrograms[mCurrentProgram].getParameter(index));
 
     return mPrograms[mCurrentProgram].getParameter(index);
+}
+
+//------------------------------------------------------------------------
+// get value of parameter for internal use in host application (minValue - maxValue)
+//------------------------------------------------------------------------
+float VSTBaseClass::getParameterScaled(VstInt32 index)
+{
+    double minValue = mParameters[index].getMinValue();
+    double maxValue = mParameters[index].getMaxValue();
+    double res = getParameter(index) * (maxValue - minValue) + minValue;
+    if (mParameters[index].isIntegerType())
+        return ((float)((VstInt32)res));
+    else
+        return (float)res;
 }
 
 //------------------------------------------------------------------------
@@ -295,12 +307,14 @@ VstInt32 VSTBaseClass::canDo(char* text)
         return 1;
     if (!strcmp(text, "sendVstEvents"))
         return 1;
+    if (!strcmp(text, "sendVstMidiEvent"))
+        return 1;
     return -1;	// explicitly can't do; 0 => don't know
 }
 
 
 //---------------------------------------------------------------------------
-// event and audio processing
+// audio processing
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -347,13 +361,12 @@ void VSTBaseClass::processDoubleReplacing(double** inputs, double** outputs, Vst
     }
 }
 
-void VSTBaseClass::process(double in1, double in2, double *out1, double *out2)
-{
-    *out1 = 0.0;
 
-    *out2 = *out1;
-}
+//---------------------------------------------------------------------------
+// event processing
+//---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
 VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
 {
     for (VstInt32 i = 0; i < ev->numEvents; i++)
@@ -387,6 +400,7 @@ VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
     return 1;
 }
 
+//---------------------------------------------------------------------------
 VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstInt16 note, VstInt16 velocity)
 {
     std::stringstream s;
@@ -416,6 +430,7 @@ VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstIn
     return 1;
 }
 
+//---------------------------------------------------------------------------
 VstInt32 VSTBaseClass::processSysexEvent(VstInt32 size, char *data)
 {
     std::stringstream s;
