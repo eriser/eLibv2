@@ -52,6 +52,11 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
         mMidiEventHandler = handler;
 }
 
+void VSTBaseClass::attachParameter(VSTBaseParameter param)
+{
+    ModuleLogger::print("attachParameter");
+    mParameters.push_back(param);
+}
 
 //------------------------------------------------------------------------
 // handling of programms
@@ -61,9 +66,9 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
 void VSTBaseClass::setProgram(VstInt32 program)
 {
     ModuleLogger::print("setProgram: %d", program);
-    if (mPrograms.size())
+    if ((VstInt32)mPrograms.size() > program)
     {
-        for (VstInt16 ParamIndex = 0; ParamIndex < numParameters; ParamIndex++)
+        for (VstInt16 ParamIndex = 0; ParamIndex < mProperties.getNumParameters(); ParamIndex++)
             setParameter(ParamIndex, mPrograms[program].getParameter(ParamIndex));
         mCurrentProgram = program;
         AudioEffectX::updateDisplay();
@@ -74,6 +79,7 @@ void VSTBaseClass::setProgram(VstInt32 program)
 void VSTBaseClass::setProgramName(char* name)
 {
     ModuleLogger::print("setProgramName: %s", name);
+
     if (mPrograms.size())
         mPrograms[mCurrentProgram].setName(name);
 }
@@ -89,7 +95,8 @@ void VSTBaseClass::getProgramName(char* name)
 bool VSTBaseClass::getProgramNameIndexed(VstInt32 category, VstInt32 index, char* text)
 {
     ModuleLogger::print("getProgramNameIndexed: %d %d", category, index);
-    if ((int)mPrograms.size() >= index + 1)
+
+    if ((VstInt32)mPrograms.size() > index)
         vst_strncpy (text, mPrograms[index].getName().c_str(), kVstMaxProgNameLen);
     return true;
 }
@@ -104,7 +111,11 @@ bool VSTBaseClass::getProgramNameIndexed(VstInt32 category, VstInt32 index, char
 //------------------------------------------------------------------------
 void VSTBaseClass::setParameter(VstInt32 index, float value)
 {
+    //ModuleLogger::print("setParameter: %d %f", index, value);
+
+    // set value of internal parameter
     mPrograms[mCurrentProgram].setParameter(index, value);
+    // notify subclass of parameter change
     setParameterInvoked(index, value);
 }
 
@@ -113,6 +124,8 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
 //------------------------------------------------------------------------
 float VSTBaseClass::getParameter(VstInt32 index)
 {
+    //ModuleLogger::print("getParameter: %d %f", index, mPrograms[mCurrentProgram].getParameter(index));
+
     return mPrograms[mCurrentProgram].getParameter(index);
 }
 
@@ -121,10 +134,15 @@ float VSTBaseClass::getParameter(VstInt32 index)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterName(VstInt32 index, char *label)
 {
+    //ModuleLogger::print("getParameterName: %d", index);
+
     if (!label)
         return;
 
-    sprintf(label, "P%li", index);
+    if ((VstInt32)mParameters.size() > index)
+        sprintf(label, "%s", mParameters[index].getName().c_str());
+    else
+        sprintf(label, "P%li", index);
 }
 
 //------------------------------------------------------------------------
@@ -132,10 +150,15 @@ void VSTBaseClass::getParameterName(VstInt32 index, char *label)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterDisplay(VstInt32 index, char *text)
 {
+    //ModuleLogger::print("getParameterDisplay: %d", index);
+
     if (!text)
         return;
 
-    sprintf(text, "%f", mPrograms[mCurrentProgram].getParameter(index));
+    if ((VstInt32)mParameters.size() > index)
+        sprintf(text, "%s", mParameters[index].getValue(mPrograms[mCurrentProgram].getParameter(index)).c_str());
+    else
+        sprintf(text, "%f", mPrograms[mCurrentProgram].getParameter(index));
 }
 
 //------------------------------------------------------------------------
@@ -143,10 +166,15 @@ void VSTBaseClass::getParameterDisplay(VstInt32 index, char *text)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterLabel(VstInt32 index, char *label)
 {
+    //ModuleLogger::print("getParameterLabel: %d", index);
+
     if (!label)
         return;
 
-    sprintf(label, "L%li", index);
+    if ((VstInt32)mParameters.size() >= index)
+        sprintf(label, "%s", mParameters[index].getLabel().c_str());
+    else
+        sprintf(label, "L%li", index);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -239,8 +267,20 @@ bool VSTBaseClass::getOutputProperties(VstInt32 index, VstPinProperties* propert
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::setProcessPrecision(VstInt32 precision)
 {
-    ModuleLogger::print("setProcessPrecision");
+    ModuleLogger::print("setProcessPrecision: %d", precision);
     return false;
+}
+
+//-----------------------------------------------------------------------------------------
+VstInt32 VSTBaseClass::getNumMidiInputChannels()
+{
+    return NUM_MIDI_OUTPUT_CHANNELS;
+}
+
+//-----------------------------------------------------------------------------------------
+VstInt32 VSTBaseClass::getNumMidiOutputChannels()
+{
+    return NUM_MIDI_OUTPUT_CHANNELS;
 }
 
 //-----------------------------------------------------------------------------------------

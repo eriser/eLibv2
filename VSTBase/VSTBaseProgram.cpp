@@ -7,19 +7,22 @@
 using namespace eLibV2;
 using namespace eLibV2::VSTBase;
 
-VSTBaseProgram::VSTBaseProgram()
+void VSTBaseProgram::addParameter(const float value)
 {
+    if ((VstInt32)mParameterValues.size() < mNumParameters)
+        mParameterValues.push_back(value);
 }
 
 void VSTBaseProgram::setParameter(const VstInt32 parameterIndex, const float value)
 {
-    mParameters[parameterIndex] = value;
+    if ((VstInt32)mParameterValues.size() > parameterIndex)
+        mParameterValues[parameterIndex] = value;
 }
 
 float VSTBaseProgram::getParameter(const VstInt32 parameterIndex) const
 {
-    if (mParameters.count(parameterIndex))
-        return mParameters.at(parameterIndex);
+    if ((VstInt32)mParameterValues.size() > parameterIndex)
+        return mParameterValues[parameterIndex];
     else
         return 0.0f;
 }

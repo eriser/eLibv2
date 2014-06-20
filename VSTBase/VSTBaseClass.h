@@ -8,6 +8,10 @@
 #include "modMidiEventHandler.h"
 #include <VSTBase/VSTBaseProperties.h>
 #include <VSTBase/VSTBaseProgram.h>
+#include <VSTBase/VSTBaseParameter.h>
+
+#define NUM_MIDI_INPUT_CHANNELS     16
+#define NUM_MIDI_OUTPUT_CHANNELS    16
 
 namespace eLibV2
 {
@@ -24,6 +28,9 @@ namespace eLibV2
 
                 // attach midi event handler to process midi-events
                 void attachMidiEventHandler(MidiEventHandler *handler);
+
+                // attach parameters
+                void attachParameter(VSTBaseParameter param);
 
             // virtual functions from AudioEffectX
             protected:
@@ -53,7 +60,9 @@ namespace eLibV2
                 virtual void setSampleRate(float sampleRate);
                 virtual bool getInputProperties(VstInt32 index, VstPinProperties* properties);
                 virtual bool getOutputProperties(VstInt32 index, VstPinProperties* properties);
-                virtual bool setProcessPrecision (VstInt32 precision);
+                virtual bool setProcessPrecision(VstInt32 precision);
+                virtual VstInt32 getNumMidiInputChannels();
+                virtual VstInt32 getNumMidiOutputChannels();
                 virtual VstInt32 canDo(char* text);
 
                 // audio processing
@@ -70,16 +79,20 @@ namespace eLibV2
                 // invoked abstract methods
                 virtual void setParameterInvoked(VstInt32 index, float value) = 0;
 
-            protected:
+            private:
+                // properties for plugin
+                VSTBaseProperties mProperties;
+
+                // active midi event handler
+                MidiEventHandler *mMidiEventHandler;
+
+                // parameter properties
+                std::vector<VSTBaseParameter> mParameters;
+
+                // parameter values contained in programs
                 std::vector<VSTBaseProgram> mPrograms;
                 VstInt32 mCurrentProgram;
 
-            private:
-                VstInt16 numPresets;
-                VstInt16 numParameters;
-
-                VSTBaseProperties mProperties;
-                MidiEventHandler *mMidiEventHandler;
         };
     }
 }

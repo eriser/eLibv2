@@ -9,8 +9,6 @@
 // vst headers
 #include <audioeffectx.h>
 
-typedef std::map<VstInt32, float> ParameterMap;
-
 namespace eLibV2
 {
     namespace VSTBase
@@ -18,17 +16,19 @@ namespace eLibV2
         class VSTBaseProgram
         {
         public:
-            VSTBaseProgram();
+            VSTBaseProgram(const VstInt32 numParameters) { mNumParameters = numParameters; }
             ~VSTBaseProgram() {}
 
+            void addParameter(const float value);
             void setParameter(const VstInt32 parameterIndex, const float value);
             float getParameter(const VstInt32 parameterIndex) const;
 
             void setName(const std::string name) { mProgramName = name; }
-            std::string getName() { return mProgramName; }
+            std::string getName() const { return mProgramName; }
 
         private:
-            ParameterMap mParameters;
+            VstInt32 mNumParameters;
+            std::vector<float> mParameterValues;
             std::string mProgramName;
         };
 
