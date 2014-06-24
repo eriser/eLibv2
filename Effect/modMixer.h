@@ -8,7 +8,7 @@
 #ifndef MODMIXER_H_
 #define MODMIXER_H_
 
-#include "modBaseEffect.h"
+#include "Base/modBaseEffect.h"
 
 namespace eLibV2
 {

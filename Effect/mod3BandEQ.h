@@ -8,7 +8,7 @@
 #ifndef MOD3BANDEQ_H_
 #define MOD3BANDEQ_H_
 
-#include "modBaseEffect.h"
+#include "Base/modBaseEffect.h"
 
 namespace eLibV2
 {

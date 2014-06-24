@@ -10,8 +10,8 @@
 
 #include <vector>
 
-#include "modBaseModule.h"
-#include "modMidiEvent.h"
+#include "BASE/modBaseModule.h"
+#include "MIDI/modMidiEvent.h"
 
 #define MAX_MIDI_CHANNELS 16
 

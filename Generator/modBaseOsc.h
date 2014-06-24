@@ -8,8 +8,8 @@
 #ifndef MODBASEOSC_H_
 #define MODBASEOSC_H_
 
-#include "modBaseModule.h"
-#include "modWavetable.h"
+#include "Base/modBaseModule.h"
+#include "Generator/modWavetable.h"
 
 namespace eLibV2
 {

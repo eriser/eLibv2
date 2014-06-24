@@ -9,7 +9,7 @@
 #define MODSEQUENCER_H_
 
 #include <vector>
-#include "modBaseModule.h"
+#include "Base/modBaseModule.h"
 
 namespace eLibV2
 {

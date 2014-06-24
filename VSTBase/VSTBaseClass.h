@@ -4,8 +4,8 @@
 #include <sstream>
 
 #include <audioeffectx.h>
-#include "modLogger.h"
-#include "modMidiEventHandler.h"
+#include "Util/modLogger.h"
+#include "MIDI/modMidiEventHandler.h"
 #include <VSTBase/VSTBaseProperties.h>
 #include <VSTBase/VSTBaseProgram.h>
 #include <VSTBase/VSTBaseParameter.h>

@@ -5,8 +5,8 @@
  *      Author: dedokter
  */
 
-#include "modBaseOsc.h"
-#include "modLPSLoader.h"
+#include "Generator/modBaseOsc.h"
+#include "Loader/modLPSLoader.h"
 
 using namespace eLibV2;
 

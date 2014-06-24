@@ -8,7 +8,7 @@
 #ifndef MODSIGNALADD_H_
 #define MODSIGNALADD_H_
 
-#include "modBaseEffect.h"
+#include "Base/modBaseEffect.h"
 
 namespace eLibV2
 {

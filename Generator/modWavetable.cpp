@@ -5,8 +5,8 @@
  *      Author: dedokter
  */
 
-#include "modWavetable.h"
-#include "modWaveLoader.h"
+#include "Generator/modWavetable.h"
+#include "Loader/modWaveLoader.h"
 
 using namespace eLibV2;
 

@@ -8,7 +8,7 @@
 #ifndef MODENVELOPEDADSR_H_
 #define MODENVELOPEDADSR_H_
 
-#include "modBaseEnvelope.h"
+#include "Base/modBaseEnvelope.h"
 
 namespace eLibV2
 {

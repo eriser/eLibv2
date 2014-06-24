@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <zlib.h>
-#include "modBaseModule.h"
-#include "modTypes.h"
+#include "Base/modBaseModule.h"
+#include "Util/modTypes.h"
 
 #define LPS_DEBUG_MODE  1
 

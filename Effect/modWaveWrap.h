@@ -8,7 +8,7 @@
 #ifndef MODWAVEWRAP_H_
 #define MODWAVEWRAP_H_
 
-#include "modBaseEffect.h"
+#include "Base/modBaseEffect.h"
 
 #define sgn(x) x < 0.0 ? -1.0 : 1.0
 
