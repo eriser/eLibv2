@@ -8,8 +8,8 @@
 #ifndef MODBASEOSC_H_
 #define MODBASEOSC_H_
 
-#include "Base/modBaseModule.h"
-#include "Generator/modWavetable.h"
+#include <Base/modBaseModule.h>
+#include <Generator/modWavetable.h>
 
 namespace eLibV2
 {
@@ -45,6 +45,8 @@ namespace eLibV2
         double getFinetuneScale(void) {return 2 * BASEOSC_FINE_RANGE - BASEOSC_FINE_RANGE;}
 
         VstInt32 getNumWaveforms(void);
+
+		void runTests();
 
     protected:
         VstInt32 lWaveform;

@@ -8,12 +8,11 @@
 #ifndef MODPARAMRANDOM_H_
 #define MODPARAMRANDOM_H_
 
+#include <Base/modBaseModule.h>
+
 #include <map>
 #include <time.h>
 #include <stdlib.h>
-#include "Base/modBaseModule.h"
-
-using namespace std;
 
 namespace eLibV2
 {
@@ -37,8 +36,8 @@ namespace eLibV2
         int ProcessParam(long *Id, double *Value);
 
     private:
-        map<long, sRandom> RandomizerMap;
-        map<long, sRandom>::iterator RandomizerMapIterator;
+        std::map<long, sRandom> RandomizerMap;
+		std::map<long, sRandom>::iterator RandomizerMapIterator;
 	};
 
 }

@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modNoiseGenerator.h"
+#include <Generator/modNoiseGenerator.h>
 
 using namespace eLibV2;
 
@@ -20,7 +20,7 @@ NoiseGenerator::~NoiseGenerator()
 
 void NoiseGenerator::Init()
 {
-    ModuleName.assign("ToneGenerator");
+    setModuleName("ToneGenerator");
 }
 
 double NoiseGenerator::Process(void)

@@ -5,8 +5,9 @@
  *      Author: dedokter
  */
 
+#include <Effect/modSimpleComp.h>
+
 #include <math.h>
-#include "modSimpleComp.h"
 
 using namespace eLibV2;
 
@@ -17,7 +18,7 @@ FxSimpleComp::FxSimpleComp()
 
 void FxSimpleComp::Init()
 {
-    ModuleName.assign("FxSimpleComp");
+    setModuleName("FxSimpleComp");
 
     dThreshold = 1.0;
     dAttack = 0.0;

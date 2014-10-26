@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modSequencer.h"
+#include <Generator/modSequencer.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ BaseSequencer::BaseSequencer()
 
 void BaseSequencer::Init()
 {
-    ModuleName.assign("Sequencer");
+    setModuleName("Sequencer");
 
     setSamplerate(44100.0);
     setBpm(120.0);

@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modWaveWrap.h"
+#include <Effect/modWaveWrap.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ FxWaveWrap::FxWaveWrap()
 
 void FxWaveWrap::Init()
 {
-    ModuleName.assign("FxWaveWrap");
+    setModuleName("FxWaveWrap");
     // Positive Triangle
     for (long i = 0; i < WRAP_WAVESIZE; i++)
     {

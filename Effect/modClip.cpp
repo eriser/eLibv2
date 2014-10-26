@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modClip.h"
+#include <Effect/modClip.h>
 
 using namespace eLibV2;
 
@@ -36,7 +36,7 @@ void FxClip::setClipMode(long ClipMode)
 
 void FxClip::Init()
 {
-    ModuleName.assign("FxClip");
+    setModuleName("FxClip");
     setClipLevel(1.0);
     setClipMode(CLIP_MODE_POSITIVE);
 }
@@ -71,7 +71,7 @@ double FxClip::Process(double Input)
     return res;
 }
 
-void FxClip::Test(void)
+void FxClip::runTests(void)
 {
     double In, Out;
 

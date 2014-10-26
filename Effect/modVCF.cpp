@@ -5,8 +5,9 @@
  *      Author: dedokter
  */
 
+#include <Effect/modVCF.h>
+
 #include <math.h>
-#include "modVCF.h"
 
 using namespace eLibV2;
 
@@ -17,7 +18,7 @@ FxVCF::FxVCF()
 
 void FxVCF::Init()
 {
-    ModuleName.assign("FxVCF");
+    setModuleName("FxVCF");
 
     setFiltertype(0);
     setFrequency(0.5);

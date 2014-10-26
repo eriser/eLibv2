@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modEnvFollower.h"
+#include <Effect/modEnvFollower.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ FxEnvFollower::FxEnvFollower()
 
 void FxEnvFollower::Init(void)
 {
-    ModuleName.assign("FxEnvFollower");
+    setModuleName("FxEnvFollower");
 
     setAttack(5.0);
     setRelease(50.0);

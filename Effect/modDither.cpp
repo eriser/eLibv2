@@ -5,8 +5,9 @@
  *      Author: dedokter
  */
 
+#include <Effect/modDither.h>
+
 #include <math.h>
-#include "modDither.h"
 
 using namespace eLibV2;
 
@@ -15,7 +16,7 @@ FxDither::FxDither(void)
     Init();
 }
 
-void FxDither::setBitsize(long Bitsize)
+void FxDither::setBitsize(unsigned int Bitsize)
 {
     if ((Bitsize >= DITHER_BITSIZE_MIN) && (Bitsize <= DITHER_BITSIZE_MAX))
         lBitsize = Bitsize;
@@ -25,7 +26,7 @@ void FxDither::setBitsize(long Bitsize)
 
 void FxDither::Init(void)
 {
-    ModuleName.assign("FxDither");
+    setModuleName("FxDither");
     setBitsize(12);
 }
 
@@ -46,11 +47,11 @@ double FxDither::Process(double Input)
     // resulting in -(2 ^ Bitsize) to (2 ^ Bitsize)
     // after this the value is cast back to a double and
     // divided by the same dithering factor
-    Scaler = pow(2.0, lBitsize);
+    Scaler = pow(2.0, (int)lBitsize);
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
-void FxDither::Test(void)
+void FxDither::runTests(void)
 {
     double In, Out;
 

@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modEnvelopeDADSR.h"
+#include <Envelope/modEnvelopeDADSR.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ EnvelopeDADSR::EnvelopeDADSR(void)
 
 void EnvelopeDADSR::Init(void)
 {
-    ModuleName.assign("EnvelopeDADSR");
+    setModuleName("EnvelopeDADSR");
 
     setDelay(0.25);
     setDelayScale(1.0);
@@ -188,7 +188,7 @@ double EnvelopeDADSR::Process(void)
     return res;
 }
 
-void EnvelopeDADSR::Test(void)
+void EnvelopeDADSR::runTests(void)
 {
     double Value;
     long oldstate = 0;

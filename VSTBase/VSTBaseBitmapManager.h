@@ -20,11 +20,11 @@ namespace eLibV2
         {
         public:
             VSTBaseBitmapManager() {}
-            ~VSTBaseBitmapManager() {}
+            ~VSTBaseBitmapManager();
 
-            void addBitmap(VstInt32 id, CBitmap *bitmap);
-            CBitmap *getBitmap(VstInt32 id) { return mBitmaps[id]; }
-            void forgetBitmap(VstInt32 id);
+            void addBitmap(const VstInt32 id, CBitmap *bitmap);
+            CBitmap *getBitmap(const VstInt32 bitmapId) { return mBitmaps[bitmapId]; }
+            void forgetBitmap(const VstInt32 id);
 
         private:
             std::map<VstInt32, CBitmap*> mBitmaps;

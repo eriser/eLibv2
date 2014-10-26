@@ -8,14 +8,15 @@
 #ifndef MODLPSLOADER_H_
 #define MODLPSLOADER_H_
 
+#include <Base/modBaseModule.h>
+#include <Util/modTypes.h>
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <memory.h>
 #include <zlib.h>
-#include "Base/modBaseModule.h"
-#include "Util/modTypes.h"
 
 #define LPS_DEBUG_MODE  1
 

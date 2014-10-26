@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modWaveLoader.h"
+#include <Loader/modWaveLoader.h>
 
 using namespace eLibV2;
 using namespace std;
@@ -23,7 +23,7 @@ WaveLoader::~WaveLoader()
 
 void WaveLoader::Init()
 {
-    ModuleName.assign("WaveLoader");
+    setModuleName("WaveLoader");
     WaveData = 0;
 }
 
@@ -178,4 +178,8 @@ void WaveLoader::getWaveFormat(WaveFormat *Format)
 {
     if (WaveData)
         memcpy((void*)Format, &Wave.fmt, sizeof(Wave.fmt));
+}
+
+void WaveLoader::runTests(void)
+{
 }

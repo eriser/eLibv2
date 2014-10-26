@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modOverdrive.h"
+#include <Effect/modOverdrive.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ FxOverdrive::FxOverdrive()
 
 void FxOverdrive::Init()
 {
-    ModuleName.assign("Overdrive");
+    setModuleName("Overdrive");
 
     setLevel(150.0);
 }

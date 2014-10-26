@@ -5,10 +5,11 @@
  *      Author: dedokter
  */
 
+#include <Loader/modPresetLoader.h>
+
 #include <iostream>
 #include <fstream>
-#include <string.h>
-#include "modPresetLoader.h"
+#include <string>
 
 using namespace eLibV2;
 using namespace std;
@@ -20,7 +21,7 @@ PresetLoader::PresetLoader()
 
 void PresetLoader::Init()
 {
-    ModuleName.assign("PresetLoader");
+    setModuleName("PresetLoader");
 }
 
 int PresetLoader::Load(string filename)
@@ -210,7 +211,7 @@ int PresetLoader::ReadProgram(void)
     InFile.read((char*)&fxpProgram.fxID, sizeof(fxpProgram.fxID));
     InFile.read((char*)&tempval, sizeof(tempval));
     fxpProgram.fxVersion = SwapBytes(tempval);
-    cout << ModuleName << ": converting for Plugin: [ID: " << fxpProgram.fxID[0] << fxpProgram.fxID[1] << fxpProgram.fxID[2] << fxpProgram.fxID[3] << " Version: " << fxpProgram.fxVersion << "]" << endl;
+    cout << getModuleName() << ": converting for Plugin: [ID: " << fxpProgram.fxID[0] << fxpProgram.fxID[1] << fxpProgram.fxID[2] << fxpProgram.fxID[3] << " Version: " << fxpProgram.fxVersion << "]" << endl;
 
     InFile.read((char*)&tempval, sizeof(tempval));
     fxpProgram.numParams = SwapBytes(tempval);
@@ -224,7 +225,7 @@ int PresetLoader::ReadProgram(void)
 
     // begin output format
     Program.ProgramName.assign(fxpProgram.prgName);
-    cout << ModuleName << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << endl;
+    cout << getModuleName() << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << endl;
 
     for (int ii = 0; ii < fxpProgram.numParams; ii++)
     {
@@ -278,14 +279,14 @@ int PresetLoader::LoadFxbFile(string Filename)
     InFile.read((char*)&fxbBank.fxID, sizeof(fxbBank.fxID));
     InFile.read((char*)&tempval, sizeof(tempval));
     fxbBank.fxVersion = SwapBytes(tempval);
-    cout << ModuleName << ": converting for Plugin: [ID: " << fxbBank.fxID[0] << fxbBank.fxID[1] << fxbBank.fxID[2] << fxbBank.fxID[3] << " Version: " << fxbBank.fxVersion << "]" << endl;
+    cout << getModuleName() << ": converting for Plugin: [ID: " << fxbBank.fxID[0] << fxbBank.fxID[1] << fxbBank.fxID[2] << fxbBank.fxID[3] << " Version: " << fxbBank.fxVersion << "]" << endl;
 
     InFile.read((char*)&tempval, sizeof(tempval));
     fxbBank.numPrograms = SwapBytes(tempval);
     InFile.read((char*)&fxbBank.future, sizeof(char) * 64);
     InFile.read((char*)&fxbBank.future, sizeof(char) * 64);
 
-    cout << ModuleName << ": Reading " << fxbBank.numPrograms <<  " programs" << endl;
+    cout << getModuleName() << ": Reading " << fxbBank.numPrograms <<  " programs" << endl;
     for (VstInt32 ProgramIndex = 0; ProgramIndex < fxbBank.numPrograms; ProgramIndex++)
     {
         ret = ReadProgram();

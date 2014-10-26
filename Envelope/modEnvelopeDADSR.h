@@ -8,7 +8,7 @@
 #ifndef MODENVELOPEDADSR_H_
 #define MODENVELOPEDADSR_H_
 
-#include "Base/modBaseEnvelope.h"
+#include <Base/modBaseEnvelope.h>
 
 namespace eLibV2
 {
@@ -29,7 +29,7 @@ namespace eLibV2
 
         virtual void Init(void);
         virtual void Reset(void);
-        virtual void Test(void);
+        virtual void runTests(void);
         virtual double Process(void);
 
         virtual bool isReady(void);

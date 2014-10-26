@@ -5,13 +5,13 @@
  *      Author: dedokter
  */
 
-#include "modBaseLFO.h"
+#include <Generator/modBaseLFO.h>
 
 using namespace eLibV2;
 
 void BaseLFO::Init(void)
 {
-    ModuleName.assign("BaseLFO");
+    setModuleName("BaseLFO");
 }
 
 double BaseLFO::Process(void)

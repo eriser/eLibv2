@@ -22,7 +22,7 @@ LPSLoader::~LPSLoader()
 
 void LPSLoader::Init()
 {
-    ModuleName.assign("LPSLoader");
+    setModuleName("LPSLoader");
 
     FileLoaded = false;
     for (int i = 0; i < LPS_MAXTRACKS; i++)

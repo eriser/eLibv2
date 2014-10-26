@@ -8,13 +8,14 @@
 #ifndef MODWAVELOADER_H_
 #define MODWAVELOADER_H_
 
+#include <Base/modBaseModule.h>
+#include <Util/modTypes.h>
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <memory.h>
-#include "Base/modBaseModule.h"
-#include "Util/modTypes.h"
 
 #define WAVE_DEBUG_MODE  1
 
@@ -104,6 +105,7 @@ namespace eLibV2
         double *getWaveData(void) {return WaveData;}
         long getWaveSize(void) {return SizeOfData;}
         void getWaveFormat(WaveFormat *Format);
+		void runTests(void);
 
     private:
         struct waveFile Wave;

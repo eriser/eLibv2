@@ -5,9 +5,10 @@
  *      Author: dedokter
  */
 
+#include <Effect/mod3BandEQ.h>
+
 #include <math.h>
 #include <memory.h>
-#include "mod3BandEQ.h"
 
 using namespace eLibV2;
 
@@ -18,7 +19,7 @@ Fx3BandEQ::Fx3BandEQ()
 
 void Fx3BandEQ::Init()
 {
-    ModuleName.assign("3BandEQ");
+    setModuleName("3BandEQ");
 
     setGain(0, 0.0);
     setGain(1, 0.0);

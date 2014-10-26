@@ -8,34 +8,9 @@
 #ifndef MODBASEMODULE_H_
 #define MODBASEMODULE_H_
 
-#ifndef COMPANY_NAME
-#define COMPANY_NAME "SyS AudioResearch"
-#endif
-
-#ifndef PI
-#define PI 3.1415926535
-#endif
-
-#ifndef MIDISCALER
-#define MIDISCALER 1.0 / 127.0
-#endif
-
-#ifndef EULER
-#define EULER 2.71828
-#endif
-
-#ifndef EULER_DIV_2
-#define EULER_DIV_2 1.95716
-#endif
-
-#ifndef LOWEST
-#define LOWEST 0.0001
-#endif
-
-#define PLUGIN_TYPE_SYNTH   1
-#define PLUGIN_TYPE_EFFECT  2
-
-#define DEBUG_MSG_MAX       1024
+#include <Base/modTestCase.h>
+#include <Base/modBaseName.h>
+#include <Base/modDebug.h>
 
 // std headers
 #include <iostream>
@@ -50,16 +25,12 @@
 #include <windows.h>
 #endif
 
-using namespace std;
-
 namespace eLibV2
 {
-    class BaseModule
+    class BaseModule : public TestCase, public Debug
     {
     public:
         virtual void Init(void) = 0;
-        virtual void Test(void) = 0;
-        virtual std::string getModuleName(void) {return ModuleName;}
 
         virtual double getSamplerate(void) {return dSamplerate;}
         virtual void setSamplerate(double Samplerate) {dSamplerate = Samplerate;}
@@ -78,39 +49,8 @@ namespace eLibV2
 
         virtual double GenerateTestSignal(void) {return ((((double)rand()) / RAND_MAX) * 2) - 1.0;}
 
-        void TestBeginMsg(void) {TestMode = true; dbgOutput("Begin Test");}
-        void TestEndMsg(void) {TestMode = false; dbgOutput("End Test");}
-
-        void dbgOutputF(char *format, ...)
-        {
-            char MsgBuffer[DEBUG_MSG_MAX];
-            va_list vl;
-
-            va_start(vl, format);
-            vsprintf(MsgBuffer, format, vl);
-            dbgOutput(MsgBuffer);
-            va_end(vl);
-        }
-
-        void dbgOutput(char *msg)
-        {
-            std::string dbgString;
-
-            dbgString.assign(ModuleName);
-            dbgString.append(": ");
-            dbgString.append(msg);
-
-        #if defined(WIN32) && !defined(_CONSOLE)
-            OutputDebugString(dbgString.c_str());
-        #else
-            cout << dbgString << endl;
-        #endif
-        }
-
     protected:
-        string ModuleName;
         double dSamplerate;
-        bool TestMode;
     };
 }
 

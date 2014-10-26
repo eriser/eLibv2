@@ -8,7 +8,7 @@
 #ifndef MODBASELFO_H_
 #define MODBASELFO_H_
 
-#include "modBaseOsc.h"
+#include <Generator/modBaseOsc.h>
 
 namespace eLibV2
 {

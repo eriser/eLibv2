@@ -5,8 +5,8 @@
  *      Author: dedokter
  */
 
-#include "Generator/modBaseOsc.h"
-#include "Loader/modLPSLoader.h"
+#include <Generator/modBaseOsc.h>
+#include <Loader/modLPSLoader.h>
 
 using namespace eLibV2;
 
@@ -23,7 +23,7 @@ BaseOscillator::~BaseOscillator()
 
 void BaseOscillator::Init(void)
 {
-    ModuleName.assign("BaseOscillator");
+    setModuleName("BaseOscillator");
     pBaseWavetable = new BaseWavetable();
 
     setWaveform(1);
@@ -123,4 +123,8 @@ double BaseOscillator::Process(VstInt16 Note)
     dPhase = pBaseWavetable->adjustPhase(lWaveform, dPhase);
 
     return data;
+}
+
+void BaseOscillator::runTests(void)
+{
 }

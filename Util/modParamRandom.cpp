@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modParamRandom.h"
+#include <Util/modParamRandom.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ ParamRandomizer::ParamRandomizer()
 
 void ParamRandomizer::Init(void)
 {
-    ModuleName.assign("ParamRandomizer");
+    setModuleName("ParamRandomizer");
     RandomizerMap.clear();
     srand((unsigned)time(NULL));
 }

@@ -8,7 +8,7 @@
 #ifndef MODCLIP_H_
 #define MODCLIP_H_
 
-#include "Base/modBaseEffect.h"
+#include <Base/modBaseEffect.h>
 
 namespace eLibV2
 {
@@ -32,7 +32,6 @@ namespace eLibV2
 
         void Init(void);
         void Reset(void) {}
-        void Test(void);
 
         double getClipLevel(void) {return dClipLevel;}
         long getClipMode(void) {return lClipMode;}
@@ -42,6 +41,8 @@ namespace eLibV2
 
         double Process(double Input);
         double Process2(double Input1, double Input2);
+
+		void runTests(void);
 
     private:
         double dClipLevel;

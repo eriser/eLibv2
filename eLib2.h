@@ -43,6 +43,7 @@
 #include "Util/modLogger.h"
 #include "Util/modParamRandom.h"
 #include "Util/modTypes.h"
+#include "Util/modTestable.h"
 
 // VSTBase
 #include "VSTBase/VSTBaseBitmapManager.h"

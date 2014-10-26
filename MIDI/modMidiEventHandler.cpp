@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modMidiEventHandler.h"
+#include <MIDI/modMidiEventHandler.h>
 
 using namespace eLibV2;
 
@@ -74,13 +74,13 @@ bool MidiEventHandler::hasEvents(int channel)
 
 void MidiEventHandler::Init()
 {
-    ModuleName.assign("MidiEventHandler");
+    setModuleName("MidiEventHandler");
 
     for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
         mMidiEvents[i] = new std::vector<MidiEvent>();
 }
 
-void MidiEventHandler::Test()
+void MidiEventHandler::runTests()
 {
     MidiEvent res;
     bool del;

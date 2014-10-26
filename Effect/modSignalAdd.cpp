@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modSignalAdd.h"
+#include <Effect/modSignalAdd.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ FxSignalAdd::FxSignalAdd()
 
 void FxSignalAdd::Init(void)
 {
-    ModuleName.assign("FxSignalAdd");
+    setModuleName("FxSignalAdd");
 }
 
 void FxSignalAdd::Reset(void)

@@ -8,7 +8,7 @@
 #ifndef MODSIMPLECOMP_H_
 #define MODSIMPLECOMP_H_
 
-#include "Base/modBaseEffect.h"
+#include <Base/modBaseEffect.h>
 
 namespace eLibV2
 {

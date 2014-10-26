@@ -8,14 +8,14 @@
 #ifndef MODDITHER_H_
 #define MODDITHER_H_
 
-#include "Base/modBaseEffect.h"
+#include <Base/modBaseEffect.h>
 
 namespace eLibV2
 {
     enum
     {
         DITHER_BITSIZE_MIN = 0,
-        DITHER_BITSIZE_MAX = 24
+        DITHER_BITSIZE_MAX = 32
     };
 
     class FxDither : public BaseEffect
@@ -26,14 +26,14 @@ namespace eLibV2
 
         void Init(void);
         void Reset(void);
-        void Test(void);
-        double Process(double Input);
+		void runTests(void);
+		double Process(double Input);
 
         long getBitsize(void) {return lBitsize;}
-        void setBitsize(long Bitsize);
+        void setBitsize(unsigned int Bitsize);
 
     private:
-        long lBitsize;
+        unsigned int lBitsize;
     };
 }
 

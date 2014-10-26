@@ -5,8 +5,8 @@
  *      Author: dedokter
  */
 
-#include "Generator/modWavetable.h"
-#include "Loader/modWaveLoader.h"
+#include <Generator/modWavetable.h>
+#include <Loader/modWaveLoader.h>
 
 using namespace eLibV2;
 
@@ -39,7 +39,7 @@ void BaseWavetable::Init()
     double *noise;
     double *smplhold;
 
-    ModuleName.assign("BaseWavetable");
+    setModuleName("BaseWavetable");
 
     LoadedWaveforms = 0;
     srand((unsigned)time(NULL));
@@ -145,7 +145,7 @@ void BaseWavetable::DeleteWaveform(VstInt32 Index)
     }
 }
 
-bool BaseWavetable::AddWaveform(string Filename, string WaveName)
+bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
 {
     WaveLoader WL;
     WaveFormat WF;
@@ -185,7 +185,7 @@ bool BaseWavetable::AddWaveform(string Filename, string WaveName)
     return true;
 }
 
-bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, string WaveName, VstInt16 ChannelNum)
+bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string WaveName, VstInt16 ChannelNum)
 {
     try
     {
@@ -216,7 +216,7 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, string Wave
 }
 
 #if defined(WIN32) && !defined(_CONSOLE)
-bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, string WaveName, VstInt16 ByteSize, VstInt16 ChannelNum)
+bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::string WaveName, VstInt16 ByteSize, VstInt16 ChannelNum)
 {
     HGLOBAL hRData = NULL;
     HRSRC hResource = NULL;
@@ -318,4 +318,8 @@ double BaseWavetable::adjustPhase(VstInt16 WaveIndex, double phase)
         return phase - dCorrect;
     else
         return phase;
+}
+
+void BaseWavetable::runTests(void)
+{
 }

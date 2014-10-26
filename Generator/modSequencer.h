@@ -8,8 +8,9 @@
 #ifndef MODSEQUENCER_H_
 #define MODSEQUENCER_H_
 
+#include <Base/modBaseModule.h>
+
 #include <vector>
-#include "Base/modBaseModule.h"
 
 namespace eLibV2
 {
@@ -41,7 +42,7 @@ namespace eLibV2
         bool bSync;
         double dSpeed, dBpm;
         long lType, lCurrentSamplePosition, lCurrentStepIndex;
-        vector<double> SequencerData;
+		std::vector<double> SequencerData;
     };
 }
 

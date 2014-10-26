@@ -8,10 +8,11 @@
 #ifndef MODWAVETABLE_H_
 #define MODWAVETABLE_H_
 
+#include <Base/modBaseModule.h>
+
 #include <time.h>
 #include <math.h>
 #include <stdlib.h>
-#include "Base/modBaseModule.h"
 
 namespace eLibV2
 {
@@ -44,10 +45,10 @@ namespace eLibV2
         void Reset(void);
         void Test(void) {}
 
-        bool AddWaveform(string Filename, string WaveName);
-        bool AddWaveform(double *Wavedata, VstInt32 WaveSize, string WaveName, VstInt16 ChannelNum = 1);
+		bool AddWaveform(std::string Filename, std::string WaveName);
+		bool AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string WaveName, VstInt16 ChannelNum = 1);
 #if defined(WIN32) && !defined(_CONSOLE)
-        bool AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, string WaveName, VstInt16 ByteSize = 2, VstInt16 ChannelNum = 1);
+		bool AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::string WaveName, VstInt16 ByteSize = 2, VstInt16 ChannelNum = 1);
 #endif
 
         long getWaveSize(VstInt16 WaveIndex);
@@ -56,6 +57,7 @@ namespace eLibV2
         double getWaveData(VstInt32 WaveIndex, double dPhase);
         bool getWaveName(VstInt32 WaveIndex, char* name);
         long getNumLoadedWaveforms(void) {return LoadedWaveforms;}
+		void runTests(void);
 
     private:
         Waveform Waveforms[WAVEFORM_INDEX_MAX];

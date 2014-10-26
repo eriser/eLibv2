@@ -8,9 +8,10 @@
 #ifndef MODPRESETLOADER_H_
 #define MODPRESETLOADER_H_
 
+#include <Base/modBaseModule.h>
+
 #include <vector>
 #include <fstream>
-#include "Base/modBaseModule.h"
 
 #define PRESET_DEBUG_MODE   1
 
@@ -93,14 +94,14 @@ namespace eLibV2
 
     typedef struct
     {
-        string ProgramName;
-        vector<float> Params;
+		std::string ProgramName;
+		std::vector<float> Params;
     } OutputProgram;
 
     typedef struct
     {
         int NumPrograms;
-        vector<OutputProgram> Programs;
+		std::vector<OutputProgram> Programs;
     } OutputBank;
 
     class PresetLoader : public BaseModule
@@ -112,7 +113,7 @@ namespace eLibV2
         void Init(void);
 
         int Load(std::string filename);
-        int Save(string filename);
+		int Save(std::string filename);
 
     private:
         VstInt32 SwapBytes(VstInt32 input)
@@ -123,14 +124,14 @@ namespace eLibV2
             return temp;
         }
 
-        int LoadTxtFile(string Filename);
-        int LoadFxpFile(string Filename);
-        int LoadFxbFile(string Filename);
+		int LoadTxtFile(std::string Filename);
+		int LoadFxpFile(std::string Filename);
+		int LoadFxbFile(std::string Filename);
         int ReadProgram(void);
 
     private:
-        ifstream InFile;
-        ofstream OutFile;
+		std::ifstream InFile;
+		std::ofstream OutFile;
         OutputBank Bank;
 
     #if PRESET_DEBUG_MODE

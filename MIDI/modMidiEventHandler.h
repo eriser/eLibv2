@@ -8,10 +8,10 @@
 #ifndef MODMIDIEVENTHANDLER_H_
 #define MODMIDIEVENTHANDLER_H_
 
-#include <vector>
+#include <BASE/modBaseModule.h>
+#include <MIDI/modMidiEvent.h>
 
-#include "BASE/modBaseModule.h"
-#include "MIDI/modMidiEvent.h"
+#include <vector>
 
 #define MAX_MIDI_CHANNELS 16
 
@@ -29,7 +29,7 @@ namespace eLibV2
         bool hasEvents(int channel);
 
         void Init();
-        void Test();
+        void runTests();
 
     private:
         std::vector<MidiEvent> *mMidiEvents[MAX_MIDI_CHANNELS];

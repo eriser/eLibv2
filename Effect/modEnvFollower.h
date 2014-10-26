@@ -8,7 +8,7 @@
 #ifndef MODENVFOLLOWER_H_
 #define MODENVFOLLOWER_H_
 
-#include "Base/modBaseEffect.h"
+#include <Base/modBaseEffect.h>
 
 namespace eLibV2
 {

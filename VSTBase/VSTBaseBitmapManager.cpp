@@ -7,18 +7,32 @@
 using namespace eLibV2;
 using namespace eLibV2::VSTBase;
 
-void VSTBaseBitmapManager::addBitmap(VstInt32 id, CBitmap *bitmap)
+VSTBaseBitmapManager::~VSTBaseBitmapManager()
 {
-    ModuleLogger::print("%d", id);
-
-    mBitmaps[id] = bitmap;
+    if (mBitmaps.size())
+    {
+        for (std::map<VstInt32, CBitmap *>::iterator it = mBitmaps.begin(); it != mBitmaps.end(); it++)
+        {
+            it->second->forget();
+        }
+    }
+    mBitmaps.clear();
 }
 
-void VSTBaseBitmapManager::forgetBitmap(VstInt32 id)
+void VSTBaseBitmapManager::addBitmap(const VstInt32 bitmapId, CBitmap *bitmap)
 {
-    if (mBitmaps[id])
+    ModuleLogger::print("add id: %d", bitmapId);
+    mBitmaps[bitmapId] = bitmap;
+    ModuleLogger::print("size: %d", mBitmaps.size());
+}
+
+void VSTBaseBitmapManager::forgetBitmap(const VstInt32 bitmapId)
+{
+    ModuleLogger::print("erase id: %d", bitmapId);
+    if (mBitmaps[bitmapId])
     {
-        mBitmaps[id]->forget();
-        mBitmaps[id] = 0;
+        mBitmaps[bitmapId]->forget();
+        mBitmaps.erase(bitmapId);
     }
+    ModuleLogger::print("size: %d", mBitmaps.size());
 }

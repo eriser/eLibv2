@@ -8,7 +8,7 @@
 #ifndef MODBASEENVELOPE_H_
 #define MODBASEENVELOPE_H_
 
-#include "modBaseModule.h"
+#include <Base/modBaseModule.h>
 
 namespace eLibV2
 {

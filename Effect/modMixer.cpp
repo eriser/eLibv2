@@ -5,7 +5,7 @@
  *      Author: dedokter
  */
 
-#include "modMixer.h"
+#include <Effect/modMixer.h>
 
 using namespace eLibV2;
 
@@ -16,7 +16,7 @@ FxMixer::FxMixer()
 
 void FxMixer::Init(void)
 {
-    ModuleName.assign("FxMixer");
+    setModuleName("FxMixer");
     setVolume(0.0);
     setMode(MODE_MIXER_ADD);
 }

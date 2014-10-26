@@ -13,16 +13,16 @@ using namespace std;
 
 void BaseEffect::Init(void)
 {
-    ModuleName.assign("BaseEffect");
+    setModuleName("BaseEffect");
 }
 
 void BaseEffect::Reset(void)
 {
-    ModuleName.assign("BaseEffect resetted");
+    setModuleName("BaseEffect resetted");
 }
 
 double BaseEffect::Process(double input)
 {
-    cout << "name: " << ModuleName << endl;
+    cout << "name: " << getModuleName() << endl;
     return input * 2.1 * EULER;
 }

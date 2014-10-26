@@ -8,7 +8,7 @@
 #ifndef MODBASEEFFECT_H_
 #define MODBASEEFFECT_H_
 
-#include "modBaseModule.h"
+#include <Base/modBaseModule.h>
 
 namespace eLibV2
 {
@@ -17,7 +17,6 @@ namespace eLibV2
     public:
         virtual void Init(void) = 0;
         virtual void Reset(void) = 0;
-        virtual void Test(void) = 0;
         virtual double Process(double Input) = 0;
 
     protected:
