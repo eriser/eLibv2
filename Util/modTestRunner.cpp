@@ -2,7 +2,7 @@
 
 using namespace eLibV2;
 
-void TestRunner::addTestCase(TestCase* mod)
+void TestRunner::addTestCase(ModuleTestCase* mod)
 {
 	if (mod)
 		TestCases.push_back(mod);
@@ -10,6 +10,6 @@ void TestRunner::addTestCase(TestCase* mod)
 
 void TestRunner::runTests()
 {
-	for (std::vector<TestCase*>::iterator it = TestCases.begin(); it != TestCases.end(); it++)
-		(*it)->runTests();
+	for (std::vector<ModuleTestCase*>::iterator it = TestCases.begin(); it != TestCases.end(); it++)
+		(*it)->Test();
 }

@@ -6,6 +6,7 @@
  */
 
 #include <MIDI/modMidiEventHandler.h>
+#include <Util/modLogger.h>
 
 using namespace eLibV2;
 
@@ -62,7 +63,7 @@ int MidiEventHandler::getEvents(int channel, std::vector<MidiEvent>& events)
     return size;
 }
 
-bool MidiEventHandler::hasEvents(int channel)
+bool MidiEventHandler::hasEventsOnChannel(int channel)
 {
     bool has = false;
 
@@ -70,6 +71,34 @@ bool MidiEventHandler::hasEvents(int channel)
         has = (mMidiEvents[channel]->size() != 0);
 
     return has;
+}
+
+bool MidiEventHandler::hasEventsOnAnyChannel()
+{
+	bool has = false;
+
+	for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
+	{
+		if (hasEventsOnChannel(i))
+		{
+			has = true;
+			break;
+		}
+	}
+	return has;
+}
+
+double MidiEventHandler::processControlInputs()
+{
+	double res = 0.0;
+	std::vector<MidiEvent> events;
+
+	if (hasEventsOnChannel(0))
+	{
+		getEvents(0, events);
+		res = events[0].getNote();
+	}
+	return res;
 }
 
 void MidiEventHandler::Init()
@@ -80,7 +109,7 @@ void MidiEventHandler::Init()
         mMidiEvents[i] = new std::vector<MidiEvent>();
 }
 
-void MidiEventHandler::runTests()
+void MidiEventHandler::Test()
 {
     MidiEvent res;
     bool del;

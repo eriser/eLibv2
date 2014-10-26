@@ -43,7 +43,6 @@ namespace eLibV2
 
         void Init(void);
         void Reset(void);
-        void Test(void) {}
 
 		bool AddWaveform(std::string Filename, std::string WaveName);
 		bool AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string WaveName, VstInt16 ChannelNum = 1);

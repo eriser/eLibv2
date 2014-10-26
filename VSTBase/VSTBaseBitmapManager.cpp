@@ -21,18 +21,18 @@ VSTBaseBitmapManager::~VSTBaseBitmapManager()
 
 void VSTBaseBitmapManager::addBitmap(const VstInt32 bitmapId, CBitmap *bitmap)
 {
-    ModuleLogger::print("add id: %d", bitmapId);
+    ModuleLogger::print("VSTBaseBitmapManager::addBitmap: add id: %d", bitmapId);
     mBitmaps[bitmapId] = bitmap;
-    ModuleLogger::print("size: %d", mBitmaps.size());
+    ModuleLogger::print("VSTBaseBitmapManager::addBitmap: size: %d", mBitmaps.size());
 }
 
 void VSTBaseBitmapManager::forgetBitmap(const VstInt32 bitmapId)
 {
-    ModuleLogger::print("erase id: %d", bitmapId);
+    ModuleLogger::print("VSTBaseBitmapManager::forgetBitmap: erase id: %d", bitmapId);
     if (mBitmaps[bitmapId])
     {
         mBitmaps[bitmapId]->forget();
         mBitmaps.erase(bitmapId);
     }
-    ModuleLogger::print("size: %d", mBitmaps.size());
+    ModuleLogger::print("VSTBaseBitmapManager::forgetBitmap: size: %d", mBitmaps.size());
 }

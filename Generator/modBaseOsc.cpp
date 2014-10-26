@@ -125,6 +125,17 @@ double BaseOscillator::Process(VstInt16 Note)
     return data;
 }
 
-void BaseOscillator::runTests(void)
+double BaseOscillator::processAudioInputs(void)
+{
+	double input;
+
+	if (controlInputs.size())
+	{
+		input = controlInputs[0]->processControlInputs();
+	}
+	return Process(input);
+}
+
+void BaseOscillator::Test(void)
 {
 }

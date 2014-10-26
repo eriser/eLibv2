@@ -9,7 +9,7 @@
 class ModuleLogger
 {
 public:
-    static void setActive(bool value) { debugActive = value; }
+    static void setActive(bool value) { if (debugActive != value) debugActive = value; }
     static void print(const char* format, ...);
 
 private:

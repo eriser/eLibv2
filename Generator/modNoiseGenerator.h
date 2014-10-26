@@ -20,7 +20,6 @@ namespace eLibV2
 
         void Init(void);
         void Reset(void);
-        void Test(void) {}
         double Process(void);
 
     protected:

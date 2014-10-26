@@ -23,4 +23,4 @@ namespace eLibV2
 	};
 }
 
-#endif /* MODBASEEFFECT_H_ */
+#endif

@@ -55,7 +55,6 @@ double EnvelopeDADSR::Process(void)
         {
             case ENVELOPE_DADSR_STATE_INIT:
                 tDelay = tAttack = tDecay = tRelease = 0;
-                res = 0.0;
 
                 // trigger changed
                 if (bOldTrigger != bTrigger)
@@ -71,7 +70,6 @@ double EnvelopeDADSR::Process(void)
 
             case ENVELOPE_DADSR_STATE_DELAY:
                 tDelayEnd = (VstInt32)(dDelay * dDelayScale * dSamplerate);
-                res = 0.0;
 
                 // trigger changed
                 if (bOldTrigger != bTrigger)
@@ -180,9 +178,7 @@ double EnvelopeDADSR::Process(void)
     }
     else
     {
-        if (lEnvelopeState != ENVELOPE_DADSR_STATE_INIT)
-            lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
-        bOldTrigger = bTrigger = false;
+		Reset();
     }
     dLastLevel = res;
     return res;

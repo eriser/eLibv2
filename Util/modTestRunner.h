@@ -8,7 +8,7 @@
 #ifndef MODTESTRUNNER_H_
 #define MODTESTRUNNER_H_
 
-#include <Base/modTestCase.h>
+#include <Util/modTestCase.h>
 
 // std headers
 #include <vector>
@@ -18,11 +18,11 @@ namespace eLibV2
 	class TestRunner
 	{
 	public:
-		void addTestCase(TestCase* mod);
+		void addTestCase(ModuleTestCase* mod);
 		void runTests();
 
 	private:
-		std::vector<TestCase*> TestCases;
+		std::vector<ModuleTestCase*> TestCases;
 	};
 }
 

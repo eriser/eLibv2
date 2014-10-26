@@ -21,7 +21,7 @@ void FxDither::setBitsize(unsigned int Bitsize)
     if ((Bitsize >= DITHER_BITSIZE_MIN) && (Bitsize <= DITHER_BITSIZE_MAX))
         lBitsize = Bitsize;
     else
-        dbgOutputF("bitsize out of range: %li -> using %li", Bitsize, lBitsize);
+        dbgOutputF("bitsize out of range: %li -> using default (%li)", Bitsize, lBitsize);
 }
 
 void FxDither::Init(void)
@@ -43,15 +43,26 @@ double FxDither::Process(double Input)
     // which means an integer between -32768 and 32767
 
     // to reach a dithering effect this value is multiplied
-    // by the dithering factor (2 ^ Bitsize) and cast a long
+    // by the dithering factor (2 ^ Bitsize) and cast to a long
     // resulting in -(2 ^ Bitsize) to (2 ^ Bitsize)
-    // after this the value is cast back to a double and
+    // after that, the value is cast back to a double and
     // divided by the same dithering factor
     Scaler = pow(2.0, (int)lBitsize);
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
-void FxDither::runTests(void)
+double FxDither::processAudioInputs()
+{
+	double input;
+
+	if (audioInputs[0])
+	{
+		input = audioInputs[0]->processAudioInputs();
+	}
+	return Process(input);
+}
+
+void FxDither::Test(void)
 {
     double In, Out;
 

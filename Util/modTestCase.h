@@ -10,10 +10,10 @@
 
 namespace eLibV2
 {
-	class TestCase
+	class ModuleTestCase
 	{
 	public:
-		virtual void runTests(void) = 0;
+		virtual void Test(void) = 0;
 	};
 }
 

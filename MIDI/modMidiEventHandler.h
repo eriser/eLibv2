@@ -26,10 +26,13 @@ namespace eLibV2
         void insertEvent(int channel, MidiEvent event);
         bool deleteEvent(int channel, MidiEvent event);
         int getEvents(int channel, std::vector<MidiEvent>& events);
-        bool hasEvents(int channel);
+        bool hasEventsOnChannel(int channel);
+		bool hasEventsOnAnyChannel();
+
+		double processControlInputs();
 
         void Init();
-        void runTests();
+        void Test();
 
     private:
         std::vector<MidiEvent> *mMidiEvents[MAX_MIDI_CHANNELS];

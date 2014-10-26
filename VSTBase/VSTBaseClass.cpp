@@ -9,7 +9,7 @@ using namespace eLibV2::VSTBase;
 
 VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets, VstInt16 numParameters, VSTBaseProperties properties) : AudioEffectX(audioMaster, numPresets, numParameters)
 {
-    ModuleLogger::print("constructor");
+    ModuleLogger::print("VSTBaseClass::constructor");
     mProperties = properties;
     mCurrentProgram = 0;
 
@@ -32,7 +32,7 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets,
 //------------------------------------------------------------------------
 void VSTBaseClass::attachPrograms(VSTBasePrograms programs)
 {
-    ModuleLogger::print("attachPrograms");
+    ModuleLogger::print("VSTBaseClass::attachPrograms");
     mPrograms.clear();
     for (VSTBasePrograms::iterator it = programs.begin(); it != programs.end(); it++)
         mPrograms.push_back(*it);
@@ -52,7 +52,7 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
 //------------------------------------------------------------------------
 void VSTBaseClass::attachParameter(VSTBaseParameter param)
 {
-    ModuleLogger::print("attachParameter");
+    ModuleLogger::print("VSTBaseClass::attachParameter");
     mParameters.push_back(param);
 }
 
@@ -63,7 +63,7 @@ void VSTBaseClass::attachParameter(VSTBaseParameter param)
 //------------------------------------------------------------------------
 void VSTBaseClass::setProgram(VstInt32 program)
 {
-    ModuleLogger::print("setProgram: %d", program);
+    ModuleLogger::print("VSTBaseClass::setProgram: %d", program);
     if ((VstInt32)mPrograms.size() > program)
     {
         for (VstInt16 ParamIndex = 0; ParamIndex < mProperties.getNumParameters(); ParamIndex++)
@@ -76,7 +76,7 @@ void VSTBaseClass::setProgram(VstInt32 program)
 //-----------------------------------------------------------------------------------------
 void VSTBaseClass::setProgramName(char* name)
 {
-    ModuleLogger::print("setProgramName: %s", name);
+    ModuleLogger::print("VSTBaseClass::setProgramName: %s", name);
 
     if (mPrograms.size())
         mPrograms[mCurrentProgram].setName(name);
@@ -85,14 +85,14 @@ void VSTBaseClass::setProgramName(char* name)
 //-----------------------------------------------------------------------------------------
 void VSTBaseClass::getProgramName(char* name)
 {
-    ModuleLogger::print("getProgramName: %s", mPrograms[mCurrentProgram].getName());
+    ModuleLogger::print("VSTBaseClass::getProgramName: %s", mPrograms[mCurrentProgram].getName());
     vst_strncpy(name, mPrograms[mCurrentProgram].getName().c_str(), kVstMaxProgNameLen);
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getProgramNameIndexed(VstInt32 category, VstInt32 index, char* text)
 {
-    ModuleLogger::print("getProgramNameIndexed: %d %d", category, index);
+    ModuleLogger::print("VSTBaseClass::getProgramNameIndexed: %d %d", category, index);
 
     if ((VstInt32)mPrograms.size() > index)
         vst_strncpy (text, mPrograms[index].getName().c_str(), kVstMaxProgNameLen);
@@ -192,14 +192,14 @@ void VSTBaseClass::getParameterLabel(VstInt32 index, char *label)
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::canParameterBeAutomated(VstInt32 index)
 {
-    ModuleLogger::print("canParameterBeAutomated");
+    ModuleLogger::print("VSTBaseClass::canParameterBeAutomated");
     return true;
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getParameterProperties(VstInt32 index, VstParameterProperties* p)
 {
-    ModuleLogger::print("getParameterProperties");
+    ModuleLogger::print("VSTBaseClass::getParameterProperties");
     return false;
 }
 
@@ -213,7 +213,7 @@ bool VSTBaseClass::getEffectName(char* name)
 {
     std::stringstream temp;
 
-    ModuleLogger::print("getEffectName");
+    ModuleLogger::print("VSTBaseClass::getEffectName");
     temp << mProperties.getPluginId() << " " << (int)mProperties.getVersion();
 
     vst_strncpy (name, temp.str().c_str(), kVstMaxEffectNameLen);
@@ -225,7 +225,7 @@ bool VSTBaseClass::getProductString(char* text)
 {
     std::stringstream temp;
 
-    ModuleLogger::print("getProductString");
+    ModuleLogger::print("VSTBaseClass::getProductString");
     temp << mProperties.getPluginId() << " " << (int)mProperties.getVersion();
 
     vst_strncpy (text, temp.str().c_str(), kVstMaxEffectNameLen);
@@ -235,7 +235,7 @@ bool VSTBaseClass::getProductString(char* text)
 //-----------------------------------------------------------------------------------------
 VstInt32 VSTBaseClass::getVendorVersion()
 {
-    ModuleLogger::print("getVendorVersion: %d", mProperties.getVersion());
+    ModuleLogger::print("VSTBaseClass::getVendorVersion: %d", mProperties.getVersion());
     return mProperties.getVersion();
 }
 
@@ -247,20 +247,20 @@ VstInt32 VSTBaseClass::getVendorVersion()
 //-----------------------------------------------------------------------------------------
 void VSTBaseClass::setSampleRate(float sampleRate)
 {
-    ModuleLogger::print("setSampleRate: %f", sampleRate);
+    ModuleLogger::print("VSTBaseClass::setSampleRate: %f", sampleRate);
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getInputProperties(VstInt32 index, VstPinProperties* properties)
 {
-    ModuleLogger::print("getInputProperties");
+    ModuleLogger::print("VSTBaseClass::getInputProperties");
     return false;
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getOutputProperties(VstInt32 index, VstPinProperties* properties)
 {
-    ModuleLogger::print("getOutputProperties");
+    ModuleLogger::print("VSTBaseClass::getOutputProperties");
     if (index < mProperties.getNumOutputs())
     {
         vst_strncpy (properties->label, "O ", 63);
@@ -279,7 +279,7 @@ bool VSTBaseClass::getOutputProperties(VstInt32 index, VstPinProperties* propert
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::setProcessPrecision(VstInt32 precision)
 {
-    ModuleLogger::print("setProcessPrecision: %d", precision);
+    ModuleLogger::print("VSTBaseClass::setProcessPrecision: %d", precision);
     return false;
 }
 
@@ -298,7 +298,7 @@ VstInt32 VSTBaseClass::getNumMidiOutputChannels()
 //-----------------------------------------------------------------------------------------
 VstInt32 VSTBaseClass::canDo(char* text)
 {
-    ModuleLogger::print("canDo");
+    ModuleLogger::print("VSTBaseClass::canDo");
     if (!strcmp(text, "receiveVstEvents"))
         return 1;
     if (!strcmp(text, "receiveVstMidiEvent"))
@@ -394,7 +394,7 @@ VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
         }
         else
         {
-            ModuleLogger::print("unknown event type %d", (ev->events[i])->type);
+            ModuleLogger::print("VSTBaseClass::processEvents: unknown event type %d", (ev->events[i])->type);
         }
     }
     return 1;
@@ -414,16 +414,16 @@ VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstIn
         if (noteIsOn)
         {
             mMidiEventHandler->insertEvent(channel, MidiEvent(note, velocity));
-            ModuleLogger::print("inserting note %d/%d", note, velocity);
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: inserting note %d/%d", note, velocity);
         }
         else
         {
             mMidiEventHandler->deleteEvent(channel, MidiEvent(note, 0));
-            ModuleLogger::print("deleting note %d", note);
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: deleting note %d", note);
         }
     }
 
-    s << "Midi Data: ";
+	s << "VSTBaseClass::processMidiEvents: Midi Data: ";
     s << "channel: " << (int)channel << " Status: " << (int)status << " Note: " << (int)note << " Velocity: " << (int)velocity;
 
     ModuleLogger::print(s.str().c_str());
@@ -447,5 +447,5 @@ VstInt32 VSTBaseClass::processSysexEvent(VstInt32 size, char *data)
 
 void VSTBaseClass::resume()
 {
-    ModuleLogger::print("resume");
+    ModuleLogger::print("VSTBaseClass::resume");
 }

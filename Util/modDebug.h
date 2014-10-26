@@ -16,7 +16,7 @@
 
 namespace eLibV2
 {
-	class Debug: public BaseName
+	class ModuleDebug: public BaseName
 	{
 	public:
 		void TestBeginMsg(void) { TestMode = true; dbgOutput("Begin Test"); }

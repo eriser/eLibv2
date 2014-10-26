@@ -10,6 +10,7 @@
 
 #include <Base/modBaseModule.h>
 #include <Generator/modWavetable.h>
+#include <Util/modLogger.h>
 
 namespace eLibV2
 {
@@ -29,8 +30,9 @@ namespace eLibV2
 
         virtual void Init(void);
         virtual void Reset(void);
-        virtual void Test(void) {}
-        virtual double Process(VstInt16 Note);
+		virtual void Test(void);
+		virtual double Process(VstInt16 Note);
+		virtual double processAudioInputs();
 
         void setWaveform(VstInt32 Waveform);
         void setCoarse(double Coarse);
@@ -45,8 +47,6 @@ namespace eLibV2
         double getFinetuneScale(void) {return 2 * BASEOSC_FINE_RANGE - BASEOSC_FINE_RANGE;}
 
         VstInt32 getNumWaveforms(void);
-
-		void runTests();
 
     protected:
         VstInt32 lWaveform;

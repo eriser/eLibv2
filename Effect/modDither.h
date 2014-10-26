@@ -9,6 +9,7 @@
 #define MODDITHER_H_
 
 #include <Base/modBaseEffect.h>
+#include <Util/modTestCase.h>
 
 namespace eLibV2
 {
@@ -18,7 +19,7 @@ namespace eLibV2
         DITHER_BITSIZE_MAX = 32
     };
 
-    class FxDither : public BaseEffect
+    class FxDither : public BaseEffect, public ModuleTestCase
     {
     public:
         FxDither();
@@ -26,8 +27,10 @@ namespace eLibV2
 
         void Init(void);
         void Reset(void);
-		void runTests(void);
+		void Test(void);
 		double Process(double Input);
+
+		virtual double processAudioInputs();
 
         long getBitsize(void) {return lBitsize;}
         void setBitsize(unsigned int Bitsize);
