@@ -19,7 +19,7 @@ namespace eLibV2
 	class InputConnector: public BaseConnector
 	{
 	public:
-		virtual void putValue(double value) { mValue = value; }
+		virtual void putValue(double value) { ModuleLogger::print("%lf", value); mValue = value; }
 		virtual double processIOs() { return processInputs(); }
 
 		double processInputs() { ModuleLogger::print("%p inputconnector: value: %lf", this, mValue); return mValue; }

@@ -17,7 +17,7 @@ namespace eLibV2
 	class BaseName
 	{
 	public:
-		BaseName() { ModuleLogger::print("wdwdadadaw"); setModuleName("Baseame"); }
+		BaseName() { ModuleLogger::print("Basename"); setModuleName("Basename"); }
 		virtual std::string getModuleName(void) { return mModuleName; }
 		virtual void setModuleName(std::string ModuleName) { mModuleName.assign(ModuleName); }
 

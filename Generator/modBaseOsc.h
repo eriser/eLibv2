@@ -8,8 +8,7 @@
 #ifndef MODBASEOSC_H_
 #define MODBASEOSC_H_
 
-#include <Base/modBaseModule.h>
-#include <Generator/modWavetable.h>
+#include <Base/modBaseGenerator.h>
 #include <Util/modLogger.h>
 
 namespace eLibV2
@@ -17,7 +16,7 @@ namespace eLibV2
     static const double BASEOSC_COARSE_RANGE = 24.0;
     static const double BASEOSC_FINE_RANGE = 100.0;
 
-    class BaseOscillator : public BaseModule
+    class BaseOscillator : public BaseGenerator
     {
 	public:
 		enum
@@ -29,10 +28,6 @@ namespace eLibV2
 		};
 
 	private:
-		enum
-		{
-			kNumFrequencies = 128,  // 128 midi notes
-		};
 
     public:
         BaseOscillator();
@@ -52,9 +47,7 @@ namespace eLibV2
 
         VstInt32 getWaveform(void) {return lWaveform;}
         double getCoarse(void) {return dCoarse;}
-        double getCoarseScale(void) {return 2 * BASEOSC_COARSE_RANGE - BASEOSC_COARSE_RANGE;}
         double getFinetune(void) {return dFinetune;}
-        double getFinetuneScale(void) {return 2 * BASEOSC_FINE_RANGE - BASEOSC_FINE_RANGE;}
 
         VstInt32 getNumWaveforms(void);
 
@@ -64,14 +57,9 @@ namespace eLibV2
         double dFinetune;
         double dPhase;
         double dSamplerate;
-        double dScaler;
-        double freqtab[kNumFrequencies];
-
-    private:
-        void SetupFreqs(void);
-
-        BaseWavetable *pBaseWavetable;
+		double dScaler;
     };
 }
 
-#endif /* MODBASEOSC_H_ */
+#endif
+
