@@ -1,10 +1,10 @@
 #include <Util/modLogger.h>
 
-bool ModuleLogger::debugActive = false;
+bool ModuleLogger::debugActive[DBG_CLASS_END] = { false, false, false };
 
 void ModuleLogger::print(const char* format, ...)
 {
-    if (!debugActive)
+    if (!debugActive[0])
         return;
 
     char debugBuffer[BUFFER_LEN];

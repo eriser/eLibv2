@@ -7,8 +7,6 @@
 
 #include <Effect/modDither.h>
 
-#include <math.h>
-
 using namespace eLibV2;
 
 FxDither::FxDither(void)
@@ -51,14 +49,16 @@ double FxDither::Process(double Input)
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
-double FxDither::processAudioInputs()
+double FxDither::processIOs()
 {
-	double input;
+	double input = 0.0;
 
-	if (audioInputs[0])
-	{
-		input = audioInputs[0]->processAudioInputs();
-	}
+	if (controlIOs.count(DITHER_INPUT_BITSIZE) > 0)
+		setBitsize(controlIOs[DITHER_INPUT_BITSIZE]->processIOs());
+	if (controlIOs.count(DITHER_OUTPUT) > 0)
+		input = controlIOs[DITHER_OUTPUT]->processIOs();
+	ModuleLogger::print("%p Dither::process %lf", this, input);
+
 	return Process(input);
 }
 

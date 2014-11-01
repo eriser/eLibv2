@@ -4,8 +4,11 @@
 #include <sstream>
 
 #include <audioeffectx.h>
-#include "Util/modLogger.h"
-#include "MIDI/modMidiEventHandler.h"
+
+#include <Blocks/modInputConnector.h>
+#include <Util/modLogger.h>
+#include <MIDI/modMidiEventHandler.h>
+
 #include <VSTBase/VSTBaseProperties.h>
 #include <VSTBase/VSTBaseProgram.h>
 #include <VSTBase/VSTBaseParameter.h>
@@ -30,7 +33,7 @@ namespace eLibV2
                 void attachMidiEventHandler(MidiEventHandler *handler);
 
                 // attach parameters
-                void attachParameter(VSTBaseParameter param);
+                void attachParameter(VSTBaseParameter param, InputConnector *inputConnector = 0);
 
             // virtual functions from AudioEffectX
             protected:
@@ -53,7 +56,7 @@ namespace eLibV2
 
                 // vendor and product identifications
                 virtual bool getEffectName(char* name);
-                virtual bool getVendorString(char* text) { vst_strncpy (text, "Sys AudioResearch", kVstMaxVendorStrLen); return true; }
+                virtual bool getVendorString(char* text) { vst_strncpy (text, "SYS AudioResearch", kVstMaxVendorStrLen); return true; }
                 virtual bool getProductString(char* text);
                 virtual VstInt32 getVendorVersion();
 
@@ -89,6 +92,7 @@ namespace eLibV2
 
                 // parameter properties
                 std::vector<VSTBaseParameter> mParameters;
+				std::vector<InputConnector*> mParameterConnectors;
 
                 // parameter values contained in programs
                 std::vector<VSTBaseProgram> mPrograms;

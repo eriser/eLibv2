@@ -8,20 +8,21 @@
 #ifndef MODINPUTCONNECTOR_H_
 #define MODINPUTCONNECTOR_H_
 
-#include <Base/modConnector.h>
+#include <Blocks/modBaseConnector.h>
+
+#include <Util/modLogger.h>
 
 #include <vector>
 
 namespace eLibV2
 {
-	class InputConnector: public Connector
+	class InputConnector: public BaseConnector
 	{
 	public:
 		virtual void putValue(double value) { mValue = value; }
-		virtual double processAudioInputs();
-		virtual double processControlInputs();
+		virtual double processIOs() { return processInputs(); }
 
-		double processInputs() { return mValue; }
+		double processInputs() { ModuleLogger::print("%p inputconnector: value: %lf", this, mValue); return mValue; }
 
 	protected:
 		double mValue;

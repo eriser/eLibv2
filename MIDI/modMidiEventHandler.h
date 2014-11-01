@@ -29,8 +29,6 @@ namespace eLibV2
         bool hasEventsOnChannel(int channel);
 		bool hasEventsOnAnyChannel();
 
-		double processControlInputs();
-
         void Init();
         void Test();
 

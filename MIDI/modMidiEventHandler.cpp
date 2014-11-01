@@ -75,30 +75,17 @@ bool MidiEventHandler::hasEventsOnChannel(int channel)
 
 bool MidiEventHandler::hasEventsOnAnyChannel()
 {
-	bool has = false;
+	bool hasEvents = false;
 
-	for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
+	for (int channelIndex = MidiEvent::MIDI_CHANNEL_1; channelIndex < MidiEvent::MIDI_CHANNEL_MAX; channelIndex++)
 	{
-		if (hasEventsOnChannel(i))
+		if (hasEventsOnChannel(channelIndex))
 		{
-			has = true;
+			hasEvents = true;
 			break;
 		}
 	}
-	return has;
-}
-
-double MidiEventHandler::processControlInputs()
-{
-	double res = 0.0;
-	std::vector<MidiEvent> events;
-
-	if (hasEventsOnChannel(0))
-	{
-		getEvents(0, events);
-		res = events[0].getNote();
-	}
-	return res;
+	return hasEvents;
 }
 
 void MidiEventHandler::Init()

@@ -6,7 +6,6 @@
  */
 
 #include <Generator/modBaseOsc.h>
-#include <Loader/modLPSLoader.h>
 
 using namespace eLibV2;
 
@@ -79,10 +78,10 @@ void BaseOscillator::setScaler()
 
 void BaseOscillator::setCoarse(double Coarse)
 {
-//    if ((Coarse >= -BASEOSC_COARSE_RANGE) && (Coarse <= BASEOSC_COARSE_RANGE))
+    if ((Coarse >= -BASEOSC_COARSE_RANGE) && (Coarse <= BASEOSC_COARSE_RANGE))
         dCoarse = Coarse;
-//    else
-//        dbgOutputF("coarse out of range: %lf (%lf - %lf) -> using %lf", Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE, dCoarse);
+    else
+        dbgOutputF("coarse out of range: %lf (%lf - %lf) -> using %lf", Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE, dCoarse);
 }
 
 void BaseOscillator::setFinetune(double Finetune)
@@ -111,12 +110,12 @@ double BaseOscillator::Process(VstInt16 Note)
     dBase = freqtab[(Note + (VstInt16)(dCoarse)) & 0x7f];
     if (dFinetune >= 0.0)
     {
-        dTune = (freqtab[(Note + (VstInt16)(dCoarse) + 1) & 0x7f] - dBase) * (((dFinetune + 100.0) / 200.0) - 0.5) * 2;
+		dTune = (freqtab[(Note + (VstInt16)(dCoarse)+1) & 0x7f] - dBase) * (((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
         dFreq = (dBase + dTune) * dScaler;
     }
     else
     {
-        dTune = (dBase - freqtab[(Note + (VstInt16)(dCoarse) - 1) & 0x7f]) * (0.5 - ((dFinetune + 100.0) / 200.0)) * 2;
+		dTune = (dBase - freqtab[(Note + (VstInt16)(dCoarse)-1) & 0x7f]) * (0.5 - ((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
         dFreq = (dBase - dTune) * dScaler;
     }
     dPhase += dFreq;
@@ -125,14 +124,21 @@ double BaseOscillator::Process(VstInt16 Note)
     return data;
 }
 
-double BaseOscillator::processAudioInputs(void)
+double BaseOscillator::processIOs(void)
 {
-	double input;
+	double input = 0.0;
 
-	if (controlInputs.size())
-	{
-		input = controlInputs[0]->processControlInputs();
-	}
+	if (controlIOs.count(OSC_INPUT_COARSE) > 0)
+		setCoarse(controlIOs[OSC_INPUT_COARSE]->processIOs());
+	if (controlIOs.count(OSC_INPUT_FINETUNE) > 0)
+		setFinetune(controlIOs[OSC_INPUT_FINETUNE]->processIOs());
+	if (controlIOs.count(OSC_INPUT_WAVEFORM) > 0)
+		setWaveform(controlIOs[OSC_INPUT_WAVEFORM]->processIOs());
+	if (controlIOs.count(OSC_INPUT_NOTE) > 0)
+		input = controlIOs[OSC_INPUT_NOTE]->processIOs();
+
+	ModuleLogger::print("%p BaseOsc::process %lf", this, input);
+
 	return Process(input);
 }
 

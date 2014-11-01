@@ -10,17 +10,28 @@
 
 #include <Base/modBaseEffect.h>
 #include <Util/modTestCase.h>
+#include <Util/modLogger.h>
+
+#include <math.h>
 
 namespace eLibV2
 {
-    enum
-    {
-        DITHER_BITSIZE_MIN = 0,
-        DITHER_BITSIZE_MAX = 32
-    };
-
     class FxDither : public BaseEffect, public ModuleTestCase
     {
+	public:
+		enum
+		{
+			DITHER_OUTPUT,
+			DITHER_INPUT_BITSIZE
+		};
+
+	private:
+		enum
+		{
+			DITHER_BITSIZE_MIN = 0,
+			DITHER_BITSIZE_MAX = 32
+		};
+
     public:
         FxDither();
         ~FxDither() {}
@@ -30,7 +41,7 @@ namespace eLibV2
 		void Test(void);
 		double Process(double Input);
 
-		virtual double processAudioInputs();
+		virtual double processIOs();
 
         long getBitsize(void) {return lBitsize;}
         void setBitsize(unsigned int Bitsize);

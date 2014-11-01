@@ -50,10 +50,11 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
 //------------------------------------------------------------------------
 // attach parameters
 //------------------------------------------------------------------------
-void VSTBaseClass::attachParameter(VSTBaseParameter param)
+void VSTBaseClass::attachParameter(VSTBaseParameter param, InputConnector *inputConnector)
 {
     ModuleLogger::print("VSTBaseClass::attachParameter");
     mParameters.push_back(param);
+	mParameterConnectors.push_back(inputConnector);
 }
 
 //------------------------------------------------------------------------
@@ -113,7 +114,9 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
 
     // set value of internal parameter
     mPrograms[mCurrentProgram].setParameter(index, value);
-    // notify subclass of parameter change
+	if (index < mParameterConnectors.size() && mParameterConnectors[index])
+		mParameterConnectors[index]->putValue(value);
+	// notify subclass of parameter change
     setParameterInvoked(index, value);
 }
 
@@ -122,9 +125,10 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
 //------------------------------------------------------------------------
 float VSTBaseClass::getParameter(VstInt32 index)
 {
-    //ModuleLogger::print("getParameter: %d %f", index, mPrograms[mCurrentProgram].getParameter(index));
+	double res = mPrograms[mCurrentProgram].getParameter(index);
 
-    return mPrograms[mCurrentProgram].getParameter(index);
+    //ModuleLogger::print("VSTBaseClass::getParameter: %d %f", index, res);
+	return res;
 }
 
 //------------------------------------------------------------------------

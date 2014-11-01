@@ -8,8 +8,7 @@
 #ifndef MODBASEMODULE_H_
 #define MODBASEMODULE_H_
 
-#include <Base/modAudioIO.h>
-#include <Base/modControlIO.h>
+#include <Blocks/modControlIO.h>
 
 #include <Util/modDebug.h>
 #include <Util/modHelper.h>
@@ -29,7 +28,7 @@
 
 namespace eLibV2
 {
-	class BaseModule : public ModuleDebug, public ModuleHelper, public ControlIO, public AudioIO
+	class BaseModule : public ModuleDebug, public ModuleHelper, public ControlIO
     {
     public:
         virtual void Init(void) = 0;

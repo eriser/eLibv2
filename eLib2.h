@@ -8,6 +8,11 @@
 #ifndef __ELIB2_H__
 #define __ELBI2_H__
 
+// block modules
+#include <Blocks/modBaseConnector.h>
+#include <Blocks/modInputConnector.h>
+#include <Blocks/modScalerConnector.h>
+
 // loader modules
 #include <Loader/modLPSLoader.h>
 #include <Loader/modPresetLoader.h>
@@ -38,6 +43,7 @@
 // midi event handling
 #include <MIDI/modMidiEvent.h>
 #include <MIDI/modMidiEventHandler.h>
+#include <MIDI/modMidiEventAdapter.h>
 
 // helper modules
 #include <Util/modLogger.h>

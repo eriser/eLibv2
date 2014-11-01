@@ -14,16 +14,26 @@
 
 namespace eLibV2
 {
-    enum
-    {
-        kNumFrequencies = 128,  // 128 midi notes
-    };
-
     static const double BASEOSC_COARSE_RANGE = 24.0;
     static const double BASEOSC_FINE_RANGE = 100.0;
 
     class BaseOscillator : public BaseModule
     {
+	public:
+		enum
+		{
+			OSC_INPUT_NOTE,
+			OSC_INPUT_WAVEFORM,
+			OSC_INPUT_COARSE,
+			OSC_INPUT_FINETUNE
+		};
+
+	private:
+		enum
+		{
+			kNumFrequencies = 128,  // 128 midi notes
+		};
+
     public:
         BaseOscillator();
         ~BaseOscillator();
@@ -32,7 +42,7 @@ namespace eLibV2
         virtual void Reset(void);
 		virtual void Test(void);
 		virtual double Process(VstInt16 Note);
-		virtual double processAudioInputs();
+		virtual double processIOs();
 
         void setWaveform(VstInt32 Waveform);
         void setCoarse(double Coarse);

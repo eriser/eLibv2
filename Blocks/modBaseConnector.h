@@ -1,12 +1,12 @@
 /*
-* modConnector.h
+* modBaseConnector.h
 *
 *  Created on: 25.11.2011
 *      Author: dedokter
 */
 
-#ifndef MODCONNECTOR_H_
-#define MODCONNECTOR_H_
+#ifndef MODBASECONNECTOR_H_
+#define MODBASECONNECTOR_H_
 
 #include <Base/modBaseModule.h>
 
@@ -14,8 +14,9 @@
 
 namespace eLibV2
 {
-	class Connector : public BaseModule
+	class BaseConnector : public BaseModule
 	{
+	public:
 		void Init() {}
 	};
 }
