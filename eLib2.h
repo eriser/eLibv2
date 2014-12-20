@@ -12,6 +12,7 @@
 #include <Blocks/modBaseConnector.h>
 #include <Blocks/modInputConnector.h>
 #include <Blocks/modScalerConnector.h>
+#include <Blocks/modConstantConnector.h>
 
 // loader modules
 #include <Loader/modLPSLoader.h>

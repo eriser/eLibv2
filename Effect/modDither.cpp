@@ -9,22 +9,21 @@
 
 using namespace eLibV2;
 
-FxDither::FxDither(void)
+FxDither::FxDither(void) : BaseName("FxDither")
 {
     Init();
 }
 
-void FxDither::setBitsize(unsigned int Bitsize)
+void FxDither::setBitsize(VstInt16 Bitsize)
 {
     if ((Bitsize >= DITHER_BITSIZE_MIN) && (Bitsize <= DITHER_BITSIZE_MAX))
-        lBitsize = Bitsize;
+        mBitsize = Bitsize;
     else
-        dbgOutputF("bitsize out of range: %li -> using default (%li)", Bitsize, lBitsize);
+        dbgOutputF("bitsize out of range: %li -> using default (%li)", Bitsize, mBitsize);
 }
 
 void FxDither::Init(void)
 {
-    setModuleName("FxDither");
     setBitsize(12);
 }
 
@@ -45,7 +44,7 @@ double FxDither::Process(double Input)
     // resulting in -(2 ^ Bitsize) to (2 ^ Bitsize)
     // after that, the value is cast back to a double and
     // divided by the same dithering factor
-    Scaler = pow(2.0, (int)lBitsize);
+    Scaler = pow(2.0, (int)mBitsize);
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
@@ -54,10 +53,10 @@ double FxDither::processIOs()
 	double input = 0.0;
 
 	if (controlIOs.count(DITHER_INPUT_BITSIZE) > 0)
-		setBitsize(controlIOs[DITHER_INPUT_BITSIZE]->processIOs());
-	if (controlIOs.count(DITHER_OUTPUT) > 0)
-		input = controlIOs[DITHER_OUTPUT]->processIOs();
-	ModuleLogger::print("%p Dither::process %lf", this, input);
+		setBitsize((unsigned int)controlIOs[DITHER_INPUT_BITSIZE]->processIOs());
+	if (controlIOs.count(DITHER_INPUT) > 0)
+		input = controlIOs[DITHER_INPUT]->processIOs();
+	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
 	return Process(input);
 }
@@ -67,7 +66,7 @@ void FxDither::Test(void)
     double In, Out;
 
     TestBeginMsg();
-    for (long bitsize = 16; bitsize >= 2; bitsize--)
+    for (VstInt16 bitsize = 16; bitsize >= 2; bitsize--)
     {
         dbgOutputF("setting bitsize to: %li", bitsize);
         setBitsize(bitsize);

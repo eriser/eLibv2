@@ -19,8 +19,9 @@ namespace eLibV2
 	class MidiEventAdapter : public ControlIO
 	{
 	public:
-		MidiEventAdapter(MidiEventHandler *handler, int channel);
+		MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
 
+		/* process first existing note on selected channel */
 		virtual double processIOs();
 
 	private:

@@ -15,7 +15,8 @@ namespace eLibV2
 	class ScalerConnector : public BaseConnector
 	{
 	public:
-		ScalerConnector(double factor, double offset) { mFactor = factor; mOffset = offset; }
+		ScalerConnector(double factor, double offset) : BaseName("ScalerConnector"), mFactor(factor), mOffset(offset) {}
+		ScalerConnector(std::string name, double factor, double offset) : BaseName(name), mFactor(factor), mOffset(offset) {}
 
 		virtual void Init() {}
 		virtual double processIOs();

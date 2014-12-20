@@ -153,7 +153,7 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
 
     try
     {
-        if (LoadedWaveforms == WAVEFORM_INDEX_MAX)
+        if (LoadedWaveforms >= WAVEFORM_INDEX_MAX)
             return false;
 
         if (WL.Load(Filename))
@@ -189,7 +189,7 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string
 {
     try
     {
-        if (LoadedWaveforms == WAVEFORM_INDEX_MAX)
+        if (LoadedWaveforms >= WAVEFORM_INDEX_MAX)
             return false;
 
         Waveforms[LoadedWaveforms].ChannelNum = ChannelNum;

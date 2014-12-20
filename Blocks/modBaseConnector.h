@@ -17,6 +17,9 @@ namespace eLibV2
 	class BaseConnector : public BaseModule
 	{
 	public:
+		BaseConnector() : BaseName("BaseConnector") {}
+		BaseConnector(std::string name) : BaseName(name) {}
+
 		void Init() {}
 	};
 }

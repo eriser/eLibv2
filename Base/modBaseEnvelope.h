@@ -23,6 +23,8 @@ namespace eLibV2
     class BaseEnvelope : public BaseModule
     {
     public:
+		BaseEnvelope() : BaseName("BaseEnvelope") {}
+
         virtual void Init(void) = 0;
         virtual void Reset(void) = 0;
         virtual double Process(void) = 0;

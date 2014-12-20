@@ -22,6 +22,8 @@ namespace eLibV2
 		};
 
 	public:
+		BaseGenerator() : BaseName("BaseGenerator") {}
+
 		virtual void Init(void) = 0;
 		virtual void Reset(void) = 0;
 		virtual double Process(VstInt16 Note) = 0;

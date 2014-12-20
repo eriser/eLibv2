@@ -19,10 +19,13 @@ namespace eLibV2
 	class InputConnector: public BaseConnector
 	{
 	public:
-		virtual void putValue(double value) { ModuleLogger::print("%lf", value); mValue = value; }
+		InputConnector() : BaseName("InputConnector") {}
+		InputConnector(std::string name) : BaseName(name) {}
+
+		virtual void putValue(double value) { ModuleLogger::print("%s::putValue: %lf", getModuleName().c_str(), value); mValue = value; }
 		virtual double processIOs() { return processInputs(); }
 
-		double processInputs() { ModuleLogger::print("%p inputconnector: value: %lf", this, mValue); return mValue; }
+		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
 
 	protected:
 		double mValue;

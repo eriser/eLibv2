@@ -73,14 +73,14 @@ double Fx3BandEQ::Process(double Input)
 
     mid2 = CalcBand(2, Input);
 
-    high = buffer[EQ_BUFFER_SIZE] - CalcBand(3, Input);
+    high = buffer[EQ_BUFFER_SIZE - 1] - CalcBand(3, Input);
 
     low *= dGain[0];
     mid1 *= dGain[1];
     mid2 *= dGain[2];
     high *= dGain[3];
 
-    for (VstInt16 BufferIndex = EQ_BUFFER_SIZE; BufferIndex >= 0; BufferIndex--)
+    for (VstInt16 BufferIndex = EQ_BUFFER_SIZE - 1; BufferIndex >= 0; BufferIndex--)
         buffer[BufferIndex] = (BufferIndex) ? buffer[BufferIndex - 1] : Input;
 
     return(mid1 + mid2 + high);

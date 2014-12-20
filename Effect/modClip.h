@@ -27,7 +27,7 @@ namespace eLibV2
     class FxClip : public BaseEffect
     {
     public:
-        FxClip();
+		FxClip();
         ~FxClip();
 
         void Init(void);

@@ -12,6 +12,6 @@ double ScalerConnector::processIOs()
 			input += controlIOs[inputIndex]->processIOs();
 	}
 
-	ModuleLogger::print("%p value: %lf %lf %lf -> %lf", this, input, mFactor, mOffset, input * mFactor + mOffset);
+	ModuleLogger::print("%s::processIOs value: %lf %lf %lf -> %lf", getModuleName().c_str(), input, mFactor, mOffset, input * mFactor + mOffset);
 	return input * mFactor + mOffset;
 }

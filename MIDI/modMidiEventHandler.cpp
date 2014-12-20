@@ -6,7 +6,6 @@
  */
 
 #include <MIDI/modMidiEventHandler.h>
-#include <Util/modLogger.h>
 
 using namespace eLibV2;
 
@@ -53,10 +52,10 @@ bool MidiEventHandler::deleteEvent(int channel, MidiEvent event)
 
 int MidiEventHandler::getEvents(int channel, std::vector<MidiEvent>& events)
 {
-    int size;
+    int size = 0;
     if (mMidiEvents[channel])
     {
-        for (std::vector<MidiEvent>::iterator it = mMidiEvents[channel]->begin(); it != mMidiEvents[channel]->end(); it++)
+        for (MidiEventsIterator it = mMidiEvents[channel]->begin(); it != mMidiEvents[channel]->end(); it++)
             events.push_back(*it);
         size = mMidiEvents[channel]->size();
     }

@@ -21,7 +21,7 @@ namespace eLibV2
 	public:
 		enum
 		{
-			DITHER_OUTPUT,
+			DITHER_INPUT,
 			DITHER_INPUT_BITSIZE
 		};
 
@@ -43,11 +43,11 @@ namespace eLibV2
 
 		virtual double processIOs();
 
-        long getBitsize(void) {return lBitsize;}
-        void setBitsize(unsigned int Bitsize);
+		VstInt16 getBitsize(void) { return mBitsize; }
+		void setBitsize(VstInt16 Bitsize);
 
     private:
-        unsigned int lBitsize;
+		VstInt16 mBitsize;
     };
 }
 

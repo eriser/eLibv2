@@ -9,7 +9,7 @@
 
 using namespace eLibV2;
 
-BaseOscillator::BaseOscillator()
+BaseOscillator::BaseOscillator() : BaseName("BaseOscillator")
 {
     Init();
 }
@@ -22,7 +22,6 @@ BaseOscillator::~BaseOscillator()
 
 void BaseOscillator::Init(void)
 {
-    setModuleName("BaseOscillator");
     pBaseWavetable = new BaseWavetable();
 
     setWaveform(1);
@@ -109,20 +108,22 @@ double BaseOscillator::Process(VstInt16 Note)
 
 double BaseOscillator::processIOs(void)
 {
-	double input = 0.0;
+	double input = 0.0, res;
 
 	if (controlIOs.count(OSC_INPUT_COARSE) > 0)
 		setCoarse(controlIOs[OSC_INPUT_COARSE]->processIOs());
 	if (controlIOs.count(OSC_INPUT_FINETUNE) > 0)
 		setFinetune(controlIOs[OSC_INPUT_FINETUNE]->processIOs());
 	if (controlIOs.count(OSC_INPUT_WAVEFORM) > 0)
-		setWaveform(controlIOs[OSC_INPUT_WAVEFORM]->processIOs());
+		setWaveform((VstInt16)controlIOs[OSC_INPUT_WAVEFORM]->processIOs());
 	if (controlIOs.count(OSC_INPUT_NOTE) > 0)
 		input = controlIOs[OSC_INPUT_NOTE]->processIOs();
 
-	ModuleLogger::print("%p BaseOsc::process %lf", this, input);
+	ModuleLogger::print("%s::processIOs %lf/%lf/%ld/%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
+	res = Process((VstInt16)input);
+	ModuleLogger::print("osc output: %lf", res);
 
-	return Process(input);
+	return res;
 }
 
 void BaseOscillator::Test(void)

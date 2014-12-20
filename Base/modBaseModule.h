@@ -31,6 +31,8 @@ namespace eLibV2
 	class BaseModule : public ModuleDebug, public ModuleHelper, public ControlIO
     {
     public:
+		BaseModule() : BaseName("BaseModule") {}
+
         virtual void Init(void) = 0;
 
         virtual double getSamplerate(void) {return dSamplerate;}

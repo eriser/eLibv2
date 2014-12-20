@@ -11,12 +11,14 @@
 #include <Util/modDefines.h>
 #include <Base/modBaseName.h>
 
+#include <iostream>
+
 #include <Windows.h>
 #include <string>
 
 namespace eLibV2
 {
-	class ModuleDebug: public BaseName
+	class ModuleDebug
 	{
 	public:
 		void TestBeginMsg(void) { TestMode = true; dbgOutput("Begin Test"); }
@@ -37,14 +39,14 @@ namespace eLibV2
 		{
 			std::string dbgString;
 
-			dbgString.assign(getModuleName());
+			dbgString.assign("");
 			dbgString.append(": ");
 			dbgString.append(msg);
 
 #if defined(WIN32) && !defined(_CONSOLE)
 			OutputDebugString(dbgString.c_str());
 #else
-			cout << dbgString << endl;
+			std::cout << dbgString << std::endl;
 #endif
 		}
 

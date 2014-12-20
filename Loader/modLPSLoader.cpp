@@ -139,7 +139,7 @@ int LPSLoader::Load(string filename)
             LPSTracks[tracknum]->LengthUnCompressed = LPSFile.MaxLengthTracks;
 
 #if LPS_DEBUG_MODE
-        sprintf(debug_temp, "Name: %s Ptr: %08X %08X %08X Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
+        sprintf(debug_temp, "Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
         dbgOutput(debug_temp);
 #endif
         /* allocate temp buffers */

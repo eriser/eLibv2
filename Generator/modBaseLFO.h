@@ -15,6 +15,7 @@ namespace eLibV2
     class BaseLFO : public BaseOscillator
     {
     public:
+		BaseLFO() { Init(); }
         void Init(void);
         double Process(void);
     };

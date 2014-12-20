@@ -9,7 +9,7 @@
 
 using namespace eLibV2;
 
-FxClip::FxClip(void)
+FxClip::FxClip(void) : BaseName("FxClip")
 {
     Init();
 }

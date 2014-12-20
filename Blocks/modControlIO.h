@@ -8,11 +8,14 @@
 #ifndef MODCONTROLIO_H_
 #define MODCONTROLIO_H_
 
+#include <Base/modBaseName.h>
+#include <Util/modLogger.h>
+
 #include <map>
 
 namespace eLibV2
 {
-	class ControlIO
+	class ControlIO : virtual public BaseName
 	{
 	public:
 		enum
@@ -36,12 +39,16 @@ namespace eLibV2
 		};
 
 	public:
+		ControlIO() : BaseName("ControlIO") {}
+
 		// polymophism doesn't work without virtual!!!
 		virtual void attachIO(const int connectionId, ControlIO* input) { controlIOs[connectionId] = input; }
 		virtual void detachIO(const int connectionId) { controlIOs.erase(connectionId); }
 		virtual double processIOs();
+		virtual void testChaining();
 
 	protected:
+		typedef std::map<const int, ControlIO*>::iterator controlIOiterator;
 		std::map<const int, ControlIO*> controlIOs;
 	};
 }

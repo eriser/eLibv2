@@ -2,12 +2,6 @@
 
 using namespace eLibV2;
 
-MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel)
-{
-	mHandler = handler;
-	mChannel = channel;
-}
-
 double MidiEventAdapter::processIOs()
 {
 	double res = 0.0;
@@ -18,7 +12,7 @@ double MidiEventAdapter::processIOs()
 		if (mHandler->hasEventsOnChannel(mChannel))
 		{
 			mHandler->getEvents(mChannel, events);
-			res = events[mChannel].getNote();
+			res = events[0].getNote();
 		}
 	}
 	return res;

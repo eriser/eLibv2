@@ -10,6 +10,7 @@
 
 #include <BASE/modBaseModule.h>
 #include <MIDI/modMidiEvent.h>
+#include <Util/modLogger.h>
 
 #include <vector>
 
@@ -33,6 +34,7 @@ namespace eLibV2
         void Test();
 
     private:
+		typedef std::vector<MidiEvent>::iterator MidiEventsIterator;
         std::vector<MidiEvent> *mMidiEvents[MAX_MIDI_CHANNELS];
     };
 }
