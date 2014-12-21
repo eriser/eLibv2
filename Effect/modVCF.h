@@ -1,14 +1,11 @@
-/*
- * modVCF.h
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODVCF_H_
 #define MODVCF_H_
 
 #include <Base/modBaseEffect.h>
+
+#include <math.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -22,8 +19,7 @@ namespace eLibV2
     class FxVCF : public BaseEffect
     {
     public:
-        FxVCF();
-        ~FxVCF() {}
+		FxVCF() : BaseName("FxVCF") { Init(); }
 
         void Init(void);
         void Reset(void) {}
@@ -53,4 +49,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODVCF_H_ */
+#endif

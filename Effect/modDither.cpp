@@ -1,18 +1,4 @@
-/*
- * modDither.cpp
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modDither.h>
-
-using namespace eLibV2;
-
-FxDither::FxDither(void) : BaseName("FxDither")
-{
-    Init();
-}
 
 void FxDither::setBitsize(VstInt16 Bitsize)
 {
@@ -52,16 +38,16 @@ double FxDither::processIOs()
 {
 	double input = 0.0;
 
-	if (controlIOs.count(DITHER_INPUT_BITSIZE) > 0)
-		setBitsize((unsigned int)controlIOs[DITHER_INPUT_BITSIZE]->processIOs());
-	if (controlIOs.count(DITHER_INPUT) > 0)
+	if (isAttached(DITHER_BITSIZE))
+		setBitsize((unsigned int)controlIOs[DITHER_BITSIZE]->processIOs());
+	if (isAttached(DITHER_INPUT))
 		input = controlIOs[DITHER_INPUT]->processIOs();
 	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
 	return Process(input);
 }
 
-void FxDither::Test(void)
+bool FxDither::Test(void)
 {
     double In, Out;
 
@@ -78,4 +64,6 @@ void FxDither::Test(void)
         }
     }
     TestEndMsg();
+
+	return true;
 }

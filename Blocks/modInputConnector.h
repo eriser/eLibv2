@@ -1,10 +1,3 @@
-/*
-* modInputConnector.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODINPUTCONNECTOR_H_
 #define MODINPUTCONNECTOR_H_
 
@@ -22,7 +15,7 @@ namespace eLibV2
 		InputConnector() : BaseName("InputConnector") {}
 		InputConnector(std::string name) : BaseName(name) {}
 
-		virtual void putValue(double value) { ModuleLogger::print("%s::putValue: %lf", getModuleName().c_str(), value); mValue = value; }
+		virtual void setValue(double value) { ModuleLogger::print("%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
 		virtual double processIOs() { return processInputs(); }
 
 		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }

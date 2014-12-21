@@ -1,26 +1,19 @@
-/*
- * modEnvFollower.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODENVFOLLOWER_H_
 #define MODENVFOLLOWER_H_
 
 #include <Base/modBaseEffect.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
 	class FxEnvFollower : public BaseEffect
 	{
 	public:
-        FxEnvFollower();
-        ~FxEnvFollower() {}
+		FxEnvFollower() : BaseName("FxEnvFollower") { Init(); }
 
 		void Init(void);
 		void Reset(void);
-        void Test(void) {}
 		double Process(double Input);
 
         double getAttack(void) {return dAttack;}
@@ -39,4 +32,4 @@ namespace eLibV2
 	};
 }
 
-#endif /* MODENVFOLLOWER_H_ */
+#endif

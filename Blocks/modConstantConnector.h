@@ -1,10 +1,3 @@
-/*
-* modConstantConnector.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODCONSTANTCONNECTOR_H_
 #define MODCONSTANTCONNECTOR_H_
 
@@ -21,7 +14,7 @@ namespace eLibV2
 	public:
 		ConstantConnector(double value) : BaseName("ConstantConnector"), mValue(value) {}
 
-		virtual void putValue(double value) { ModuleLogger::print("putValue: %lf", value); mValue = value; }
+		virtual void setValue(double value) { ModuleLogger::print("setValue: %lf", value); mValue = value; }
 		virtual double processIOs() { return processInputs(); }
 
 		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }

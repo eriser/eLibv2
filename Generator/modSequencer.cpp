@@ -1,33 +1,13 @@
-/*
- * modSequencer.cpp
- *
- *  Created on: 06.01.2012
- *      Author: dedokter
- */
-
 #include <Generator/modSequencer.h>
-
-using namespace eLibV2;
-
-BaseSequencer::BaseSequencer()
-{
-    Init();
-}
 
 void BaseSequencer::Init()
 {
-    setModuleName("Sequencer");
-
     setSamplerate(44100.0);
     setBpm(120.0);
     setSpeed(2);
     setSync(false);
     lCurrentSamplePosition = 0;
     lCurrentStepIndex = 0;
-}
-
-void BaseSequencer::Reset(void)
-{
 }
 
 long BaseSequencer::getStepCount(void)
@@ -46,12 +26,14 @@ void BaseSequencer::setStepValue(unsigned long Index, double Value)
     SequencerData.at(Index) = StepValue;
 }
 
-void BaseSequencer::getStepValue(unsigned long Index, double *Value)
+double BaseSequencer::getStepValue(unsigned long Index)
 {
-    if ((Index >= SequencerData.size()) || (!Value))
-        return;
+	double res = 0.0;
 
-    *Value = SequencerData.at(Index);
+    if (Index < SequencerData.size())
+		res = SequencerData.at(Index);
+
+	return res;
 }
 
 void BaseSequencer::addSteps(long Count)
@@ -70,7 +52,7 @@ double BaseSequencer::Process(void)
     bool advance = false;
     long lNeededSamplePosition = 0;
 
-    getStepValue(lCurrentStepIndex, &ret);
+    ret = getStepValue(lCurrentStepIndex);
 
     lCurrentSamplePosition++;
     if (bSync)
@@ -85,5 +67,5 @@ double BaseSequencer::Process(void)
         lCurrentStepIndex %= SequencerData.size();
     }
 
-    return(ret);
+    return ret ;
 }

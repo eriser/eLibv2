@@ -1,22 +1,7 @@
-/*
- * modMixer.cpp
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modMixer.h>
-
-using namespace eLibV2;
-
-FxMixer::FxMixer()
-{
-    Init();
-}
 
 void FxMixer::Init(void)
 {
-    setModuleName("FxMixer");
     setVolume(0.0);
     setMode(MODE_MIXER_ADD);
 }
@@ -46,9 +31,4 @@ double FxMixer::Process2(double Input1, double Input2)
     }
 
     return res;
-}
-
-void FxMixer::Test(void)
-{
-    
 }

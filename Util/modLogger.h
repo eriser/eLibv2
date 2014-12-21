@@ -25,4 +25,4 @@ private:
     static bool debugActive[DBG_CLASS_END];
 };
 
-#endif /* MODLOGGER_H_ */
+#endif

@@ -1,14 +1,9 @@
-/*
- * mod3BandEQ.h
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #ifndef MOD3BANDEQ_H_
 #define MOD3BANDEQ_H_
 
 #include <Base/modBaseEffect.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -31,12 +26,10 @@ namespace eLibV2
     {
     public:
 
-        Fx3BandEQ();
-        ~Fx3BandEQ() {}
+		Fx3BandEQ() : BaseName("Fx3BandEQ") { Init(); }
 
         void Init(void);
         void Reset(void);
-        void Test(void) {}
 
         double CalcBand(VstInt16 BandIndex, double Input);
         double Process(double Input);
@@ -44,6 +37,8 @@ namespace eLibV2
         void setGain(VstInt16 Index, double Gain) {dGain[Index] = Gain;}
         void setFrequency(VstInt16 Index, double Frequency);
         void setSamplerate(double Samplerate);
+
+		double processIOs();
 
     private:
         EQBand Bands[EQ_NUM_BANDS - 1];
@@ -55,4 +50,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MOD3BANDEQ_H_ */
+#endif

@@ -1,25 +1,7 @@
-/*
- * modVCF.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modVCF.h>
-
-#include <math.h>
-
-using namespace eLibV2;
-
-FxVCF::FxVCF()
-{
-    Init();
-}
 
 void FxVCF::Init()
 {
-    setModuleName("FxVCF");
-
     setFiltertype(0);
     setFrequency(0.5);
     setResonance(0.5);

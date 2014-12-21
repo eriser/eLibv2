@@ -1,10 +1,3 @@
-/*
- * modMidiEventHandler.h
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODMIDIEVENTHANDLER_H_
 #define MODMIDIEVENTHANDLER_H_
 
@@ -14,14 +7,17 @@
 
 #include <vector>
 
-#define MAX_MIDI_CHANNELS 16
+using namespace eLibV2;
 
 namespace eLibV2
 {
     class MidiEventHandler : public BaseModule
     {
+	public:
+		enum { MAX_MIDI_CHANNELS = 16 };
+
     public:
-        MidiEventHandler();
+		MidiEventHandler() : BaseName("MidiEventHandler") { Init(); }
         ~MidiEventHandler();
 
         void insertEvent(int channel, MidiEvent event);
@@ -31,7 +27,7 @@ namespace eLibV2
 		bool hasEventsOnAnyChannel();
 
         void Init();
-        void Test();
+        bool Test();
 
     private:
 		typedef std::vector<MidiEvent>::iterator MidiEventsIterator;
@@ -39,4 +35,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODMIDIEVENTHANDLER_H_ */
+#endif

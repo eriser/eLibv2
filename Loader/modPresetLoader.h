@@ -1,10 +1,3 @@
-/*
- * modPresetLoader.h
- *
- *  Created on: 28.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODPRESETLOADER_H_
 #define MODPRESETLOADER_H_
 
@@ -26,6 +19,8 @@ union flint
     float f;
     VstInt32 i;
 };
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -107,10 +102,9 @@ namespace eLibV2
     class PresetLoader : public BaseModule
     {
     public:
-        PresetLoader();
-        ~PresetLoader() {}
+		PresetLoader() : BaseName("PresetLoader") {}
 
-        void Init(void);
+		void Init(void) {}
 
         int Load(std::string filename);
 		int Save(std::string filename);
@@ -140,4 +134,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODPRESETLOADER_H_ */
+#endif

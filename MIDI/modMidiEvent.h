@@ -1,10 +1,3 @@
-/*
- * modMidiEvent.h
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODMIDIEVENT_H_
 #define MODMIDIEVENT_H_
 
@@ -46,4 +39,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODMIDIEVENT_H_ */
+#endif

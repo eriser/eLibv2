@@ -1,7 +1,5 @@
 #include <Blocks/modControlIO.h>
 
-using namespace eLibV2;
-
 double ControlIO::processIOs()
 {
 	double res = 0.0;

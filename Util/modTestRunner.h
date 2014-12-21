@@ -1,17 +1,11 @@
-/*
-* modTestRunner.h
-*
-*  Created on: 24.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODTESTRUNNER_H_
 #define MODTESTRUNNER_H_
 
 #include <Util/modTestCase.h>
 
-// std headers
 #include <vector>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {

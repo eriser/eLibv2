@@ -1,10 +1,3 @@
-/*
- * modDither.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODDITHER_H_
 #define MODDITHER_H_
 
@@ -14,15 +7,17 @@
 
 #include <math.h>
 
+using namespace eLibV2;
+
 namespace eLibV2
 {
-    class FxDither : public BaseEffect, public ModuleTestCase
+    class FxDither : public BaseEffect
     {
 	public:
 		enum
 		{
 			DITHER_INPUT,
-			DITHER_INPUT_BITSIZE
+			DITHER_BITSIZE
 		};
 
 	private:
@@ -33,12 +28,11 @@ namespace eLibV2
 		};
 
     public:
-        FxDither();
-        ~FxDither() {}
+		FxDither() : BaseName("FxDither") { Init(); }
 
         void Init(void);
         void Reset(void);
-		void Test(void);
+		bool Test(void);
 		double Process(double Input);
 
 		virtual double processIOs();
@@ -46,9 +40,12 @@ namespace eLibV2
 		VstInt16 getBitsize(void) { return mBitsize; }
 		void setBitsize(VstInt16 Bitsize);
 
+		void attachInput(ControlIO *controller) { attachIO(DITHER_INPUT, controller); }
+		void attachBitsize(ControlIO *controller) { attachIO(DITHER_BITSIZE, controller); }
+
     private:
 		VstInt16 mBitsize;
     };
 }
 
-#endif /* MODDITHER_H_ */
+#endif

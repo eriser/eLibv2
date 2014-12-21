@@ -1,10 +1,3 @@
-/*
-* modBaseName.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODBASENAME_H_
 #define MODBASENAME_H_
 

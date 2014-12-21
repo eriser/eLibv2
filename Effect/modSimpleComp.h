@@ -1,22 +1,18 @@
-/*
- * modSimpleComp.h
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODSIMPLECOMP_H_
 #define MODSIMPLECOMP_H_
 
 #include <Base/modBaseEffect.h>
+
+#include <math.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
     class FxSimpleComp : public BaseEffect
     {
     public:
-        FxSimpleComp();
-        ~FxSimpleComp() {}
+		FxSimpleComp() : BaseName("FxSimpleComp") { Init(); }
 
         void Init(void);
         void Reset(void);
@@ -44,4 +40,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODSIMPLECOMP_H_ */
+#endif

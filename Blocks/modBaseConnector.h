@@ -1,10 +1,3 @@
-/*
-* modBaseConnector.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODBASECONNECTOR_H_
 #define MODBASECONNECTOR_H_
 

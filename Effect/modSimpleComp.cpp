@@ -1,25 +1,7 @@
-/*
- * modSimpleComp.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modSimpleComp.h>
-
-#include <math.h>
-
-using namespace eLibV2;
-
-FxSimpleComp::FxSimpleComp()
-{
-    Init();
-}
 
 void FxSimpleComp::Init()
 {
-    setModuleName("FxSimpleComp");
-
     dThreshold = 1.0;
     dAttack = 0.0;
     dRelease = 0.0;
@@ -76,13 +58,9 @@ double FxSimpleComp::Process(double Input)
 
     det = fabs(Input);
     det += 10e-30f; /* add tiny DC offset (-600dB) to prevent denormals */
-
-    dEnv = det >= dEnv ? det : det + dEnvDecay * (dEnv - det);
-
-    transfer_gain = dEnv > dThreshold ? pow(dEnv, dTransferA) * dTransferB : dOutput;
-
-    dGain = transfer_gain < dGain ? transfer_gain + dAttack * (dGain - transfer_gain) : transfer_gain + dRelease * (dGain - transfer_gain);
-
+    dEnv = (det >= dEnv) ? det : det + dEnvDecay * (dEnv - det);
+    transfer_gain = (dEnv > dThreshold) ? pow(dEnv, dTransferA) * dTransferB : dOutput;
+    dGain = (transfer_gain < dGain) ? transfer_gain + dAttack * (dGain - transfer_gain) : transfer_gain + dRelease * (dGain - transfer_gain);
     res = Input * dGain;
 
     return res;

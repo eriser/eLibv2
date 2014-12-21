@@ -1,10 +1,3 @@
-/*
- * modParamRandom.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODPARAMRANDOM_H_
 #define MODPARAMRANDOM_H_
 
@@ -13,6 +6,8 @@
 #include <map>
 #include <time.h>
 #include <stdlib.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -25,8 +20,7 @@ namespace eLibV2
 	class ParamRandomizer : public BaseModule
 	{
     public:
-        ParamRandomizer();
-        ~ParamRandomizer() {}
+		ParamRandomizer() : BaseName("ParamRandomizer") { Init(); }
 
         void Init(void);
 
@@ -42,4 +36,4 @@ namespace eLibV2
 
 }
 
-#endif /* MODPARAMRANDOM_H_ */
+#endif

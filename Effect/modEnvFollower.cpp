@@ -1,23 +1,7 @@
-/*
- * modEnvFollower.cpp
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modEnvFollower.h>
-
-using namespace eLibV2;
-
-FxEnvFollower::FxEnvFollower()
-{
-    Init();
-}
 
 void FxEnvFollower::Init(void)
 {
-    setModuleName("FxEnvFollower");
-
     setAttack(5.0);
     setRelease(50.0);
     setSamplerate(44100.0);

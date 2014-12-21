@@ -1,10 +1,3 @@
-/*
- * modWaveLoader.h
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODWAVELOADER_H_
 #define MODWAVELOADER_H_
 
@@ -34,12 +27,11 @@
 #define WAVE_MAGIC_SMPL "smpl"
 #define WAVE_MAGIC_INST "inst"
 
+using namespace eLibV2;
+
 namespace eLibV2
 {
-    enum
-    {
-        MAX_WAVE_BUFFER = 0x10000
-    };
+    enum { MAX_WAVE_BUFFER = 0x10000 };
 
     enum
     {
@@ -94,11 +86,10 @@ namespace eLibV2
     class WaveLoader : public BaseModule
     {
     public:
-        WaveLoader();
+		WaveLoader() : BaseName("WaveLoader") { Init(); }
         ~WaveLoader();
 
         void Init(void);
-        void Test(void) {}
 
         int Load(std::string filename);
         void Unload(void);
@@ -119,4 +110,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODWAVELOADER_H_ */
+#endif

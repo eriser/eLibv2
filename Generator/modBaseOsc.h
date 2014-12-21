@@ -1,15 +1,10 @@
-/*
- * modBaseOsc.h
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODBASEOSC_H_
 #define MODBASEOSC_H_
 
 #include <Base/modBaseGenerator.h>
 #include <Util/modLogger.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -30,12 +25,11 @@ namespace eLibV2
 	private:
 
     public:
-        BaseOscillator();
-        ~BaseOscillator();
+		BaseOscillator() : BaseName("BaseOscillator") { Init(); }
+		~BaseOscillator();
 
         virtual void Init(void);
         virtual void Reset(void);
-		virtual void Test(void);
 		virtual double Process(VstInt16 Note);
 		virtual double processIOs();
 
@@ -43,13 +37,18 @@ namespace eLibV2
         void setCoarse(double Coarse);
         void setFinetune(double Finetune);
         void setSamplerate(double Samplerate);
-        void setScaler();
+		void adjustScaler();
 
         VstInt32 getWaveform(void) {return lWaveform;}
         double getCoarse(void) {return dCoarse;}
         double getFinetune(void) {return dFinetune;}
 
         VstInt32 getNumWaveforms(void);
+
+		void attachNote(ControlIO *controller) { attachIO(OSC_INPUT_NOTE, controller); }
+		void attachWaveform(ControlIO *controller) { attachIO(OSC_INPUT_WAVEFORM, controller); }
+		void attachCoarse(ControlIO *controller) { attachIO(OSC_INPUT_COARSE, controller); }
+		void attachFinetune(ControlIO *controller) { attachIO(OSC_INPUT_FINETUNE, controller); }
 
     protected:
         VstInt32 lWaveform;

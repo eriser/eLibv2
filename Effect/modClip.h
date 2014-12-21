@@ -1,14 +1,9 @@
-/*
- * modClip.h
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODCLIP_H_
 #define MODCLIP_H_
 
 #include <Base/modBaseEffect.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -27,11 +22,11 @@ namespace eLibV2
     class FxClip : public BaseEffect
     {
     public:
-		FxClip();
-        ~FxClip();
+		FxClip() : BaseName("FxClip") { Init(); }
 
         void Init(void);
         void Reset(void) {}
+		bool Test();
 
         double getClipLevel(void) {return dClipLevel;}
         long getClipMode(void) {return lClipMode;}
@@ -42,12 +37,10 @@ namespace eLibV2
         double Process(double Input);
         double Process2(double Input1, double Input2);
 
-		void runTests(void);
-
     private:
         double dClipLevel;
         long lClipMode;
     };
 }
 
-#endif /* MODCLIP_H_ */
+#endif

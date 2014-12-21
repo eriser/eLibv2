@@ -1,14 +1,4 @@
-/*
- * modWaveWrap.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Generator/modWavetable.h>
-#include <Loader/modWaveLoader.h>
-
-using namespace eLibV2;
 
 BaseWavetable::BaseWavetable()
 {

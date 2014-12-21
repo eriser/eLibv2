@@ -1,10 +1,3 @@
-/*
- * modBaseModule.h
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODBASEMODULE_H_
 #define MODBASEMODULE_H_
 
@@ -12,6 +5,7 @@
 
 #include <Util/modDebug.h>
 #include <Util/modHelper.h>
+#include <Util/modTestCase.h>
 
 // std headers
 #include <iostream>
@@ -21,14 +15,9 @@
 // vst headers
 #include <audioeffectx.h>
 
-// platform headers
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 namespace eLibV2
 {
-	class BaseModule : public ModuleDebug, public ModuleHelper, public ControlIO
+	class BaseModule : public ControlIO, public ModuleDebug, public ModuleHelper, public ModuleTestCase
     {
     public:
 		BaseModule() : BaseName("BaseModule") {}
@@ -38,9 +27,11 @@ namespace eLibV2
         virtual double getSamplerate(void) {return dSamplerate;}
         virtual void setSamplerate(double Samplerate) {dSamplerate = Samplerate;}
 
+		virtual bool Test() { return true; }
+
     protected:
         double dSamplerate;
     };
 }
 
-#endif /* MODBASEMODULE_H_ */
+#endif

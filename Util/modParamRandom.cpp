@@ -1,22 +1,7 @@
-/*
- * modParamRandom.cpp
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #include <Util/modParamRandom.h>
-
-using namespace eLibV2;
-
-ParamRandomizer::ParamRandomizer()
-{
-    Init();
-}
 
 void ParamRandomizer::Init(void)
 {
-    setModuleName("ParamRandomizer");
     RandomizerMap.clear();
     srand((unsigned)time(NULL));
 }

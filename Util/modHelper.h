@@ -1,10 +1,3 @@
-/*
-* modHelper.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODHELPER_H_
 #define MODHELPER_H_
 
@@ -18,6 +11,7 @@ namespace eLibV2
 		// helper functions for truncating given value at minimum / maximum
 		double minval(double value, double minvalue) { return ((value < minvalue) ? minvalue : value); }
 		double maxval(double value, double maxvalue) { return ((value > maxvalue) ? maxvalue : value); }
+		double clamp(double value, double minvalue, double maxvalue) { double res = minval(value, minvalue); res = maxval(value, maxvalue); return res; }
 
 		// helper functions for conversion between time / frequency / quarter and samples
 		virtual double ms2samples(double ms, double samplerate) { return (ms / 1000.0) * samplerate; }

@@ -1,14 +1,9 @@
-/*
- * modMixer.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODMIXER_H_
 #define MODMIXER_H_
 
 #include <Base/modBaseEffect.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -22,12 +17,11 @@ namespace eLibV2
     class FxMixer : public BaseEffect
     {
     public:
-        FxMixer();
-        ~FxMixer() {}
+		FxMixer() : BaseName("FxMixer") { Init(); }
 
         void Init(void);
         void Reset(void);
-        void Test(void);
+		bool Test(void) {}
 
         void setVolume(double Volume) {dVolume = Volume;}
         void setMode(long Mode) {lMode = Mode;}
@@ -44,4 +38,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODMIXER_H_ */
+#endif

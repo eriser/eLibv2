@@ -1,10 +1,3 @@
-/*
- * modBaseEffect.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODBASEEFFECT_H_
 #define MODBASEEFFECT_H_
 
@@ -16,6 +9,7 @@ namespace eLibV2
     {
     public:
 		BaseEffect() : BaseName("BaseEffect") {}
+		BaseEffect(std::string name) : BaseName(name) {}
 
         virtual void Init(void) = 0;
         virtual void Reset(void) = 0;
@@ -26,4 +20,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODBASEEFFECT_H_ */
+#endif

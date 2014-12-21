@@ -1,10 +1,3 @@
-/*
-* modControlIO.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODCONTROLIO_H_
 #define MODCONTROLIO_H_
 
@@ -12,6 +5,8 @@
 #include <Util/modLogger.h>
 
 #include <map>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -44,12 +39,15 @@ namespace eLibV2
 		// polymophism doesn't work without virtual!!!
 		virtual void attachIO(const int connectionId, ControlIO* input) { controlIOs[connectionId] = input; }
 		virtual void detachIO(const int connectionId) { controlIOs.erase(connectionId); }
+		virtual bool isAttached(const int connectionId) { return(controlIOs.count(connectionId) > 0); }
 		virtual double processIOs();
 		virtual void testChaining();
 
 	protected:
-		typedef std::map<const int, ControlIO*>::iterator controlIOiterator;
-		std::map<const int, ControlIO*> controlIOs;
+		typedef std::map<const int, ControlIO*> controlIOmap;
+		typedef controlIOmap::iterator controlIOiterator;
+
+		controlIOmap controlIOs;
 	};
 }
 

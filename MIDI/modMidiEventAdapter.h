@@ -1,10 +1,3 @@
-/*
-* modMidiEventAdapter.h
-*
-*  Created on: 24.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODMIDIEVENTADAPTER_H_
 #define MODMIDIEVENTADAPTER_H_
 
@@ -13,6 +6,8 @@
 
 #include <MIDI/modMidiEvent.h>
 #include <MIDI/modMidiEventHandler.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {

@@ -1,7 +1,5 @@
 #include <Util/modTestRunner.h>
 
-using namespace eLibV2;
-
 void TestRunner::addTestCase(ModuleTestCase* mod)
 {
 	if (mod)

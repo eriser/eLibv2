@@ -1,22 +1,4 @@
-/*
- * modClip.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modClip.h>
-
-using namespace eLibV2;
-
-FxClip::FxClip(void) : BaseName("FxClip")
-{
-    Init();
-}
-
-FxClip::~FxClip()
-{
-}
 
 void FxClip::setClipLevel(double ClipLevel)
 {
@@ -36,7 +18,6 @@ void FxClip::setClipMode(long ClipMode)
 
 void FxClip::Init()
 {
-    setModuleName("FxClip");
     setClipLevel(1.0);
     setClipMode(CLIP_MODE_POSITIVE);
 }
@@ -71,7 +52,7 @@ double FxClip::Process(double Input)
     return res;
 }
 
-void FxClip::runTests(void)
+bool FxClip::Test(void)
 {
     double In, Out;
 
@@ -90,4 +71,6 @@ void FxClip::runTests(void)
         }
     }
     TestEndMsg();
+
+	return true;
 }

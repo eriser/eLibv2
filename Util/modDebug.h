@@ -1,10 +1,3 @@
-/*
-* modDebug.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODDEBUG_H_
 #define MODDEBUG_H_
 
@@ -55,4 +48,4 @@ namespace eLibV2
 	};
 }
 
-#endif /* MODBASEEFFECT_H_ */
+#endif

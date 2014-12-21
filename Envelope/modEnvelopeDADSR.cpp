@@ -1,23 +1,7 @@
-/*
- * modEnvelopeDADSR.cpp
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #include <Envelope/modEnvelopeDADSR.h>
-
-using namespace eLibV2;
-
-EnvelopeDADSR::EnvelopeDADSR(void)
-{
-    Init();
-}
 
 void EnvelopeDADSR::Init(void)
 {
-    setModuleName("EnvelopeDADSR");
-
     setDelay(0.25);
     setDelayScale(1.0);
     setAttack(0.5);

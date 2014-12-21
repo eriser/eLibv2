@@ -1,18 +1,4 @@
-/*
- * modBaseOsc.cpp
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #include <Generator/modBaseOsc.h>
-
-using namespace eLibV2;
-
-BaseOscillator::BaseOscillator() : BaseName("BaseOscillator")
-{
-    Init();
-}
 
 BaseOscillator::~BaseOscillator()
 {
@@ -43,16 +29,16 @@ void BaseOscillator::setWaveform(VstInt32 Waveform)
 {
     lWaveform = Waveform;
     setSamplerate(dSamplerate);
-    setScaler();
+	adjustScaler();
 }
 
 void BaseOscillator::setSamplerate(double Samplerate)
 {
     dSamplerate = Samplerate;
-    setScaler();
+    adjustScaler();
 }
 
-void BaseOscillator::setScaler()
+void BaseOscillator::adjustScaler()
 {
     if (pBaseWavetable)
         dScaler = pBaseWavetable->getWaveSize(lWaveform) / dSamplerate;
@@ -60,18 +46,12 @@ void BaseOscillator::setScaler()
 
 void BaseOscillator::setCoarse(double Coarse)
 {
-    if ((Coarse >= -BASEOSC_COARSE_RANGE) && (Coarse <= BASEOSC_COARSE_RANGE))
-        dCoarse = Coarse;
-    else
-        dbgOutputF("coarse out of range: %lf (%lf - %lf) -> using %lf", Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE, dCoarse);
+	dCoarse = clamp(Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE);
 }
 
 void BaseOscillator::setFinetune(double Finetune)
 {
-    if ((Finetune >= -BASEOSC_FINE_RANGE) && (Finetune <= BASEOSC_FINE_RANGE))
-        dFinetune = Finetune;
-    else
-        dbgOutputF("finetune out of range: %lf (%lf - %lf) -> using %lf", Finetune, -BASEOSC_FINE_RANGE, BASEOSC_FINE_RANGE, dFinetune);
+	dFinetune = clamp(Finetune, -BASEOSC_FINE_RANGE, BASEOSC_FINE_RANGE);
 }
 
 VstInt32 BaseOscillator::getNumWaveforms(void)
@@ -110,13 +90,13 @@ double BaseOscillator::processIOs(void)
 {
 	double input = 0.0, res;
 
-	if (controlIOs.count(OSC_INPUT_COARSE) > 0)
+	if (isAttached(OSC_INPUT_COARSE))
 		setCoarse(controlIOs[OSC_INPUT_COARSE]->processIOs());
-	if (controlIOs.count(OSC_INPUT_FINETUNE) > 0)
+	if (isAttached(OSC_INPUT_FINETUNE))
 		setFinetune(controlIOs[OSC_INPUT_FINETUNE]->processIOs());
-	if (controlIOs.count(OSC_INPUT_WAVEFORM) > 0)
+	if (isAttached(OSC_INPUT_WAVEFORM))
 		setWaveform((VstInt16)controlIOs[OSC_INPUT_WAVEFORM]->processIOs());
-	if (controlIOs.count(OSC_INPUT_NOTE) > 0)
+	if (isAttached(OSC_INPUT_NOTE))
 		input = controlIOs[OSC_INPUT_NOTE]->processIOs();
 
 	ModuleLogger::print("%s::processIOs %lf/%lf/%ld/%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
@@ -124,8 +104,4 @@ double BaseOscillator::processIOs(void)
 	ModuleLogger::print("osc output: %lf", res);
 
 	return res;
-}
-
-void BaseOscillator::Test(void)
-{
 }

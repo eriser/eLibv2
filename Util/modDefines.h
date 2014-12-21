@@ -34,4 +34,4 @@
 #define sgn(x) x < 0.0 ? -1.0 : 1.0
 #endif
 
-#endif /* MODDEFINES_H_ */
+#endif

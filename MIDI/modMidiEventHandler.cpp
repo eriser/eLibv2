@@ -1,18 +1,4 @@
-/*
- * modMidiEventHandler.cpp
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #include <MIDI/modMidiEventHandler.h>
-
-using namespace eLibV2;
-
-MidiEventHandler::MidiEventHandler(void)
-{
-    Init();
-}
 
 MidiEventHandler::~MidiEventHandler(void)
 {
@@ -89,13 +75,11 @@ bool MidiEventHandler::hasEventsOnAnyChannel()
 
 void MidiEventHandler::Init()
 {
-    setModuleName("MidiEventHandler");
-
     for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
         mMidiEvents[i] = new std::vector<MidiEvent>();
 }
 
-void MidiEventHandler::Test()
+bool MidiEventHandler::Test()
 {
     MidiEvent res;
     bool del;
@@ -116,4 +100,6 @@ void MidiEventHandler::Test()
     dbgOutputF("delete -> %d", del);
     dbgOutputF("size: %d", mMidiEvents[0]->size());
     TestEndMsg();
+
+	return true;
 }

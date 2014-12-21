@@ -1,22 +1,7 @@
-/*
- * modWaveWrap.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/modWaveWrap.h>
-
-using namespace eLibV2;
-
-FxWaveWrap::FxWaveWrap()
-{
-    Init();
-}
 
 void FxWaveWrap::Init()
 {
-    setModuleName("FxWaveWrap");
     // Positive Triangle
     for (long i = 0; i < WRAP_WAVESIZE; i++)
     {
@@ -40,4 +25,17 @@ double FxWaveWrap::Process(double Input)
         res = -2.0 - temp;
 
     return res;
+}
+
+double FxWaveWrap::processIOs()
+{
+	double input = 0.0;
+
+	if (isAttached(WAVEWRAP_LEVEL))
+		setWrapLevel(controlIOs[WAVEWRAP_LEVEL]->processIOs());
+	else if (isAttached(WAVEWRAP_INPUT))
+		input = controlIOs[WAVEWRAP_INPUT]->processIOs();
+	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
+
+	return Process(input);
 }

@@ -1,40 +1,20 @@
-/*
- * modePresetLoader.cpp
- *
- *  Created on: 28.11.2011
- *      Author: dedokter
- */
-
 #include <Loader/modPresetLoader.h>
 
 #include <iostream>
 #include <fstream>
 #include <string>
 
-using namespace eLibV2;
-using namespace std;
-
-PresetLoader::PresetLoader()
-{
-    Init();
-}
-
-void PresetLoader::Init()
-{
-    setModuleName("PresetLoader");
-}
-
-int PresetLoader::Load(string filename)
+int PresetLoader::Load(std::string filename)
 {
     size_t found;
-    string Filetype;
+    std::string Filetype;
     int ret;
 
     if (!filename.size())
         return ERR_PRESET_NO_FILENAME;
 
     found = filename.rfind('.');
-    if (found == string::npos)
+    if (found == std::string::npos)
         return ERR_PRESET_INVALID_FILENAME;
 
     Filetype = filename.substr(found);
@@ -52,18 +32,18 @@ int PresetLoader::Load(string filename)
     return ret;
 }
 
-int PresetLoader::Save(string filename)
+int PresetLoader::Save(std::string filename)
 {
     char tempstr[12];
 
-    OutFile.open(filename.c_str(), ifstream::out | ifstream::binary);
+    OutFile.open(filename.c_str(), std::ifstream::out | std::ifstream::binary);
     if (!OutFile.good())
         return ERR_PRESET_FILE_OPEN;
 
     if (Bank.NumPrograms)
     {
-        OutFile << "#define PRESET_NUM " << Bank.NumPrograms << endl;
-        OutFile << "#define PARAM_NUM " << Bank.Programs.at(0).Params.size() << endl << endl;
+        OutFile << "#define PRESET_NUM " << Bank.NumPrograms << std::endl;
+        OutFile << "#define PARAM_NUM " << Bank.Programs.at(0).Params.size() << std::endl << std::endl;
 
         // output programnames
         OutFile << "static char preset_names[PRESET_NUM][kVstMaxProgNameLen] = {";
@@ -71,16 +51,16 @@ int PresetLoader::Save(string filename)
         {
             // new line and indent
             if ((ProgramIndex % MAX_NAMES_PER_LINE) == 0)
-                OutFile << endl << "    ";
+                OutFile << std::endl << "    ";
 
             OutFile << "{\"" << Bank.Programs.at(ProgramIndex).ProgramName << "\"}";
             if (ProgramIndex < (Bank.NumPrograms - 1))
                 OutFile << ",";
         }
-        OutFile << endl << "};" << endl << endl;
+        OutFile << std::endl << "};" << std::endl << std::endl;
 
         // output program values
-        OutFile << "double preset_data[PRESET_NUM][PARAM_NUM] = {" << endl;
+        OutFile << "double preset_data[PRESET_NUM][PARAM_NUM] = {" << std::endl;
         for (int ProgramIndex = 0; ProgramIndex < Bank.NumPrograms; ProgramIndex++)
         {
             OutFile << "{";
@@ -89,7 +69,7 @@ int PresetLoader::Save(string filename)
                 if ((ParamIndex % MAX_PARAMS_PER_LINE) == 0)
                 {
                     sprintf(tempstr, "%02i", ParamIndex);
-                    OutFile << endl << "/* " << tempstr << " */";
+                    OutFile << std::endl << "/* " << tempstr << " */";
                 }
 
                 sprintf(tempstr, "%f", Bank.Programs.at(ProgramIndex).Params.at(ParamIndex));
@@ -97,12 +77,12 @@ int PresetLoader::Save(string filename)
                 if (ParamIndex < (Bank.Programs.at(ProgramIndex).Params.size() - 1))
                     OutFile << ", ";
             }
-            OutFile << endl << "}";
+            OutFile << std::endl << "}";
             if (ProgramIndex < (Bank.NumPrograms - 1))
                 OutFile << ",";
-            OutFile << endl;
+            OutFile << std::endl;
         }
-        OutFile << endl << "};" << endl;
+        OutFile << std::endl << "};" << std::endl;
 
     }
 
@@ -110,9 +90,9 @@ int PresetLoader::Save(string filename)
     return ERR_PRESET_NO_ERROR;
 }
 
-int PresetLoader::LoadTxtFile(string Filename)
+int PresetLoader::LoadTxtFile(std::string Filename)
 {
-    InFile.open(Filename.c_str(), ifstream::in);
+    InFile.open(Filename.c_str(), std::ifstream::in);
     if (!InFile.good())
         return ERR_PRESET_FILE_OPEN;
 
@@ -211,7 +191,7 @@ int PresetLoader::ReadProgram(void)
     InFile.read((char*)&fxpProgram.fxID, sizeof(fxpProgram.fxID));
     InFile.read((char*)&tempval, sizeof(tempval));
     fxpProgram.fxVersion = SwapBytes(tempval);
-    cout << getModuleName() << ": converting for Plugin: [ID: " << fxpProgram.fxID[0] << fxpProgram.fxID[1] << fxpProgram.fxID[2] << fxpProgram.fxID[3] << " Version: " << fxpProgram.fxVersion << "]" << endl;
+    std::cout << getModuleName() << ": converting for Plugin: [ID: " << fxpProgram.fxID[0] << fxpProgram.fxID[1] << fxpProgram.fxID[2] << fxpProgram.fxID[3] << " Version: " << fxpProgram.fxVersion << "]" << std::endl;
 
     InFile.read((char*)&tempval, sizeof(tempval));
     fxpProgram.numParams = SwapBytes(tempval);
@@ -219,13 +199,13 @@ int PresetLoader::ReadProgram(void)
 
     if ((fxpProgram.byteSize) && (fxpProgram.byteSize != (fxpProgram.numParams * 4 + 48)))
     {
-        cout << "expected " << fxpProgram.numParams * 4 + 48 << " bytes, got " << fxpProgram.byteSize << endl;
+        std::cout << "expected " << fxpProgram.numParams * 4 + 48 << " bytes, got " << fxpProgram.byteSize << std::endl;
         return ERR_PRESET_FXP_CORRUPTED;
     }
 
     // begin output format
     Program.ProgramName.assign(fxpProgram.prgName);
-    cout << getModuleName() << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << endl;
+    std::cout << getModuleName() << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << std::endl;
 
     for (int ii = 0; ii < fxpProgram.numParams; ii++)
     {
@@ -237,11 +217,11 @@ int PresetLoader::ReadProgram(void)
     return ERR_PRESET_NO_ERROR;
 }
 
-int PresetLoader::LoadFxpFile(string Filename)
+int PresetLoader::LoadFxpFile(std::string Filename)
 {
     int ret = 0;
 
-    InFile.open(Filename.c_str(), ifstream::in | ifstream::binary);
+    InFile.open(Filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!InFile.good())
         return ERR_PRESET_FILE_OPEN;
 
@@ -252,13 +232,13 @@ int PresetLoader::LoadFxpFile(string Filename)
     return ret;
 }
 
-int PresetLoader::LoadFxbFile(string Filename)
+int PresetLoader::LoadFxbFile(std::string Filename)
 {
     int ret = 0;
     VstInt32 tempval;
     fxBank fxbBank;
 
-    InFile.open(Filename.c_str(), ifstream::in | ifstream::binary);
+    InFile.open(Filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!InFile.good())
         return ERR_PRESET_FILE_OPEN;
 
@@ -279,14 +259,14 @@ int PresetLoader::LoadFxbFile(string Filename)
     InFile.read((char*)&fxbBank.fxID, sizeof(fxbBank.fxID));
     InFile.read((char*)&tempval, sizeof(tempval));
     fxbBank.fxVersion = SwapBytes(tempval);
-    cout << getModuleName() << ": converting for Plugin: [ID: " << fxbBank.fxID[0] << fxbBank.fxID[1] << fxbBank.fxID[2] << fxbBank.fxID[3] << " Version: " << fxbBank.fxVersion << "]" << endl;
+    std::cout << getModuleName() << ": converting for Plugin: [ID: " << fxbBank.fxID[0] << fxbBank.fxID[1] << fxbBank.fxID[2] << fxbBank.fxID[3] << " Version: " << fxbBank.fxVersion << "]" << std::endl;
 
     InFile.read((char*)&tempval, sizeof(tempval));
     fxbBank.numPrograms = SwapBytes(tempval);
     InFile.read((char*)&fxbBank.future, sizeof(char) * 64);
     InFile.read((char*)&fxbBank.future, sizeof(char) * 64);
 
-    cout << getModuleName() << ": Reading " << fxbBank.numPrograms <<  " programs" << endl;
+    std::cout << getModuleName() << ": Reading " << fxbBank.numPrograms <<  " programs" << std::endl;
     for (VstInt32 ProgramIndex = 0; ProgramIndex < fxbBank.numPrograms; ProgramIndex++)
     {
         ret = ReadProgram();

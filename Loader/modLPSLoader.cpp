@@ -1,19 +1,4 @@
-/*
- * modLPSLoader.cpp
- *
- *  Created on: 03.12.2011
- *      Author: dedokter
- */
-
-#include "modLPSLoader.h"
-
-using namespace eLibV2;
-using namespace std;
-
-LPSLoader::LPSLoader()
-{
-    Init();
-}
+#include <Loader/modLPSLoader.h>
 
 LPSLoader::~LPSLoader()
 {
@@ -22,8 +7,6 @@ LPSLoader::~LPSLoader()
 
 void LPSLoader::Init()
 {
-    setModuleName("LPSLoader");
-
     FileLoaded = false;
     for (int i = 0; i < LPS_MAXTRACKS; i++)
     {
@@ -51,9 +34,9 @@ void LPSLoader::Unload(void)
     FileLoaded = false;
 }
 
-int LPSLoader::Load(string filename)
+int LPSLoader::Load(std::string filename)
 {
-    ifstream lpsfile;
+    std::ifstream lpsfile;
     unsigned long numread, tracknum, NumRemain, NumPages;
     char msg[1024];
     BYTE helper[LPS_MAXREADBUF];
@@ -61,7 +44,7 @@ int LPSLoader::Load(string filename)
     // cleanup previously used memory
     Unload();
 
-    lpsfile.open(filename.c_str(), ifstream::in | ifstream::binary);
+	lpsfile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!lpsfile.good())
     {
         sprintf(msg, "file '%s' not found\nplease reload manually", filename.c_str());

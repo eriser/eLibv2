@@ -1,14 +1,9 @@
-/*
- * modEnvelopeDADSR.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODENVELOPEDADSR_H_
 #define MODENVELOPEDADSR_H_
 
 #include <Base/modBaseEnvelope.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -25,7 +20,7 @@ namespace eLibV2
     class EnvelopeDADSR : public BaseEnvelope
     {
     public:
-        EnvelopeDADSR(void);
+		EnvelopeDADSR(void) : BaseName("EnvelopeDADSR") { Init(); }
 
         virtual void Init(void);
         virtual void Reset(void);

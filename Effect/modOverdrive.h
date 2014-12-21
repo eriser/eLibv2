@@ -1,33 +1,38 @@
-/*
- * modOverdrive.h
- *
- *  Created on: 06.01.2012
- *      Author: dedokter
- */
-
 #ifndef MODOVERDRIVE_H_
 #define MODOVERDRIVE_H_
 
-#include <Base/modBaseModule.h>
+#include <Base/modBaseEffect.h>
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
-    class FxOverdrive : public BaseModule
+    class FxOverdrive : public BaseEffect
     {
     public:
-        FxOverdrive();
-        ~FxOverdrive() {}
+		enum
+		{
+			OVERDRIVE_INPUT,
+			OVERDRIVE_LEVEL
+		};
 
-        void Init();
-        void Reset();
-        double Process();
+		FxOverdrive() : BaseName("FxOverdrive") { Init(); }
+
+		void Init() { setLevel(150.0); }
+		void Reset() {}
+        double Process(double input);
 
         void setLevel(double Level) {dLevel = Level;}
         double getLevel(void) {return dLevel;}
 
-    private:
+		void attachInput(ControlIO *controller) { attachIO(OVERDRIVE_INPUT, controller); }
+		void attachLevel(ControlIO *controller) { attachIO(OVERDRIVE_LEVEL, controller); }
+
+		double processIOs();
+
+	protected:
         double dLevel;
     };
 }
 
-#endif /* MODOVERDRIVE_H_ */
+#endif

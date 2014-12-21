@@ -1,10 +1,3 @@
-/*
- * modBaseEnvelope.h
- *
- *  Created on: 25.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODBASEENVELOPE_H_
 #define MODBASEENVELOPE_H_
 
@@ -43,4 +36,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODBASEENVELOPE_H_ */
+#endif

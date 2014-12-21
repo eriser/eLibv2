@@ -1,17 +1,10 @@
-/*
- * eLib2.h
- *
- *  Created on: 25.01.2012
- *      Author: dedokter
- */
-
 #ifndef __ELIB2_H__
 #define __ELBI2_H__
 
 // block modules
 #include <Blocks/modBaseConnector.h>
 #include <Blocks/modInputConnector.h>
-#include <Blocks/modScalerConnector.h>
+#include <Blocks/modScalingConnector.h>
 #include <Blocks/modConstantConnector.h>
 
 // loader modules
@@ -60,4 +53,4 @@
 #include <VSTBase/VSTBaseProgram.h>
 #include <VSTBase/VSTBaseProperties.h>
 
-#endif /* __ELIB2_H__ */
+#endif

@@ -1,42 +1,36 @@
-/*
- * modWavetable.h
- *
- *  Created on: 24.11.2011
- *      Author: dedokter
- */
-
 #ifndef MODWAVETABLE_H_
 #define MODWAVETABLE_H_
 
 #include <Base/modBaseModule.h>
+#include <Loader/modWaveLoader.h>
 
 #include <time.h>
 #include <math.h>
 #include <stdlib.h>
 
+using namespace eLibV2;
+
 namespace eLibV2
 {
-    enum
-    {
-        WAVEFORM_INDEX_NONE = 0,
-        WAVEFORM_INDEX_MAX = 200
-    };
-
-    enum
-    {
-        kWavesize = 65536      // samples (must be power of 2 here)
-    };
-
-    typedef struct
-    {
-        VstInt16 ChannelNum;
-        VstInt32 WaveSize;
-        std::string WaveName;
-        double *WaveData;
-    } Waveform;
-
     class BaseWavetable : public BaseModule
     {
+	protected:
+		enum { kWavesize = 65536 };
+
+		enum
+		{
+			WAVEFORM_INDEX_NONE = 0,
+			WAVEFORM_INDEX_MAX = 200
+		};
+
+		typedef struct
+		{
+			VstInt16 ChannelNum;
+			VstInt32 WaveSize;
+			std::string WaveName;
+			double *WaveData;
+		} Waveform;
+
     public:
         BaseWavetable();
         ~BaseWavetable();
@@ -70,4 +64,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODWAVETABLE_H_ */
+#endif

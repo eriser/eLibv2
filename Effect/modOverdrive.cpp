@@ -1,33 +1,24 @@
-/*
- * modOverdrive.cpp
- *
- *  Created on: 06.01.2012
- *      Author: dedokter
- */
-
 #include <Effect/modOverdrive.h>
 
 using namespace eLibV2;
 
-FxOverdrive::FxOverdrive()
+double FxOverdrive::Process(double input)
 {
-    Init();
+    double ret = input * dLevel;
+	ret = clamp(ret, -1.0, 1.0);
+
+	return ret;
 }
 
-void FxOverdrive::Init()
+double FxOverdrive::processIOs()
 {
-    setModuleName("Overdrive");
+	double input = 0.0;
 
-    setLevel(150.0);
-}
+	if (isAttached(OVERDRIVE_LEVEL))
+		setLevel(controlIOs[OVERDRIVE_LEVEL]->processIOs());
+	if (isAttached(OVERDRIVE_INPUT))
+		input = controlIOs[OVERDRIVE_INPUT]->processIOs();
+	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
-void FxOverdrive::Reset(void)
-{
-}
-
-double FxOverdrive::Process(void)
-{
-    double ret = 1.0;
-
-    return(ret);
+	return Process(input);
 }

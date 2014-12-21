@@ -1,26 +1,10 @@
-/*
- * mod3BandEQ.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Effect/mod3BandEQ.h>
 
 #include <math.h>
 #include <memory.h>
 
-using namespace eLibV2;
-
-Fx3BandEQ::Fx3BandEQ()
-{
-    Init();
-}
-
 void Fx3BandEQ::Init()
 {
-    setModuleName("3BandEQ");
-
     setGain(0, 0.0);
     setGain(1, 0.0);
     setGain(2, 0.0);
@@ -30,7 +14,7 @@ void Fx3BandEQ::Init()
     setFrequency(2, 2000.0);
     setSamplerate(44100.0);
 
-    buffer[0] = buffer[1] = buffer[2] = 0.0;
+	memset(buffer, 0, sizeof(buffer));
 }
 
 void Fx3BandEQ::Reset(void)
@@ -68,11 +52,8 @@ double Fx3BandEQ::Process(double Input)
     double low, mid1, mid2, high;
 
     low = CalcBand(0, Input);
-
     mid1 = CalcBand(1, Input);
-
     mid2 = CalcBand(2, Input);
-
     high = buffer[EQ_BUFFER_SIZE - 1] - CalcBand(3, Input);
 
     low *= dGain[0];
@@ -84,4 +65,15 @@ double Fx3BandEQ::Process(double Input)
         buffer[BufferIndex] = (BufferIndex) ? buffer[BufferIndex - 1] : Input;
 
     return(mid1 + mid2 + high);
+}
+
+double Fx3BandEQ::processIOs()
+{
+	double input = 0.0;
+
+	if (isAttached(ControlIO::CONNECTOR_INPUT1))
+		input = controlIOs[ControlIO::CONNECTOR_INPUT1]->processIOs();
+	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
+
+	return Process(input);
 }

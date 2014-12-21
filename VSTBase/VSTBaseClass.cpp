@@ -114,10 +114,11 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
 
     // set value of internal parameter
     mPrograms[mCurrentProgram].setParameter(index, value);
-	if (index < mParameterConnectors.size() && mParameterConnectors[index])
-		mParameterConnectors[index]->putValue(value);
 	// notify subclass of parameter change
     setParameterInvoked(index, value);
+    // process connected inputs
+	if (index < mParameterConnectors.size() && mParameterConnectors[index])
+		mParameterConnectors[index]->setValue(getParameterScaled(index));
 }
 
 //------------------------------------------------------------------------

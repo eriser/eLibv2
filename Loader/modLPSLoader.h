@@ -1,10 +1,3 @@
-/*
- * modLPSLoader.h
- *
- *  Created on: 03.12.2011
- *      Author: dedokter
- */
-
 #ifndef MODLPSLOADER_H_
 #define MODLPSLOADER_H_
 
@@ -24,6 +17,8 @@
 #define LPS_MAXTRACKS   16
 #define LPS_MAXLENTRACK 10000000
 #define LPS_MAXREADBUF  0x80000
+
+using namespace eLibV2;
 
 namespace eLibV2
 {
@@ -58,7 +53,7 @@ namespace eLibV2
     class LPSLoader : public BaseModule
     {
     public:
-        LPSLoader();
+		LPSLoader() : BaseName("LPSLoader") { Init(); }
         ~LPSLoader();
 
         void Init(void);
@@ -96,4 +91,4 @@ namespace eLibV2
     };
 }
 
-#endif /* MODLPSLOADER_H_ */
+#endif

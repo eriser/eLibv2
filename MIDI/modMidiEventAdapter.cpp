@@ -1,7 +1,5 @@
 #include <MIDI/modMidiEventAdapter.h>
 
-using namespace eLibV2;
-
 double MidiEventAdapter::processIOs()
 {
 	double res = 0.0;

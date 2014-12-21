@@ -1,10 +1,3 @@
-/*
-* modBaseGenerator.h
-*
-*  Created on: 25.11.2011
-*      Author: dedokter
-*/
-
 #ifndef MODBASEGENERATOR_H_
 #define MODBASEGENERATOR_H_
 
@@ -16,13 +9,11 @@ namespace eLibV2
 	class BaseGenerator : public BaseModule
 	{
 	public:
-		enum
-		{
-			kNumFrequencies = 128,  // 128 midi notes
-		};
+		enum { kNumNotes = 128 };
 
 	public:
 		BaseGenerator() : BaseName("BaseGenerator") {}
+		BaseGenerator(std::string name) : BaseName(name) {}
 
 		virtual void Init(void) = 0;
 		virtual void Reset(void) = 0;
@@ -39,14 +30,14 @@ namespace eLibV2
 			a *= k;     // c, frequency of midi note 0
 
 			// 128 midi notes
-			for (VstInt16 FreqIndex = 0; FreqIndex < kNumFrequencies; FreqIndex++)
+			for (VstInt16 FreqIndex = 0; FreqIndex < kNumNotes; FreqIndex++)
 			{
 				freqtab[FreqIndex] = a;
 				a *= k;
 			}
 		}
 
-		double freqtab[kNumFrequencies];
+		double freqtab[kNumNotes];
 		BaseWavetable *pBaseWavetable;
 	};
 }

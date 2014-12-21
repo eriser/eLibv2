@@ -1,19 +1,4 @@
-/*
- * modWaveLoader.cpp
- *
- *  Created on: 26.11.2011
- *      Author: dedokter
- */
-
 #include <Loader/modWaveLoader.h>
-
-using namespace eLibV2;
-using namespace std;
-
-WaveLoader::WaveLoader()
-{
-    Init();
-}
 
 WaveLoader::~WaveLoader()
 {
@@ -23,19 +8,18 @@ WaveLoader::~WaveLoader()
 
 void WaveLoader::Init()
 {
-    setModuleName("WaveLoader");
     WaveData = 0;
 }
 
 int WaveLoader::Load(std::string filename)
 {
-    ifstream wavefile;
+	std::ifstream wavefile;
     ULONG i, NumRemain, NumPages;
     BYTE buf[MAX_WAVE_BUFFER];
     BYTE *TempByteBuffer;
     SSHORT help = 0;
 
-    wavefile.open(filename.c_str(), ifstream::in | ifstream::binary);
+	wavefile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!wavefile.good())
     {
 #if WAVE_DEBUG_MODE
