@@ -32,7 +32,7 @@ namespace eLibV2
 		} Waveform;
 
     public:
-        BaseWavetable();
+		BaseWavetable() : BaseName("BaseWavetable") { Init(); }
         ~BaseWavetable();
 
         void Init(void);

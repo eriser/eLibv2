@@ -23,8 +23,7 @@ int WaveLoader::Load(std::string filename)
     if (!wavefile.good())
     {
 #if WAVE_DEBUG_MODE
-        sprintf(debug_temp, "error opening '%s'", filename.c_str());
-        dbgOutput(debug_temp);
+		ModuleLogger::print("error opening '%s'", filename.c_str());
 #endif
         return -1;
     }
@@ -33,8 +32,7 @@ int WaveLoader::Load(std::string filename)
     if (strncmp((char*)Wave.Header.Magic, WAVE_MAGIC_RIFF, 4))
     {
 #if WAVE_DEBUG_MODE
-        sprintf(debug_temp, "Error not a valid RIFF-File");
-        dbgOutput(debug_temp);
+		ModuleLogger::print("Error not a valid RIFF-File");
 #endif
         wavefile.close();
         return -2;
@@ -42,15 +40,13 @@ int WaveLoader::Load(std::string filename)
 
     wavefile.read((char*)&Wave.Header.Size, sizeof(BYTE) * sizeof(Wave.Header.Size));
 #if WAVE_DEBUG_MODE
-    sprintf(debug_temp, "filesize: %li", Wave.Header.Size);
-    dbgOutput(debug_temp);
+	ModuleLogger::print("filesize: %li", Wave.Header.Size);
 #endif
     wavefile.read((char*)&Wave.Header.RiffType, sizeof(BYTE) * sizeof(Wave.Header.RiffType));
     if (strncmp((char*)Wave.Header.RiffType, WAVE_MAGIC_WAVE, 4))
     {
 #if WAVE_DEBUG_MODE
-        sprintf(debug_temp, "Error not a valid WAVE-File");
-        dbgOutput(debug_temp);
+		ModuleLogger::print("Error not a valid WAVE-File");
 #endif
         wavefile.close();
         return -3;
@@ -65,8 +61,7 @@ int WaveLoader::Load(std::string filename)
         if (!strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_FMT, 4))
         {
 #if WAVE_DEBUG_MODE
-            sprintf(debug_temp, "fmt-Chunk size: %li", Chunk.ChunkSize);
-            dbgOutput(debug_temp);
+			ModuleLogger::print("fmt-Chunk size: %li", Chunk.ChunkSize);
 #endif
             wavefile.read((char*)&Wave.fmt.Compression, sizeof(BYTE) * sizeof(Wave.fmt.Compression));
             wavefile.read((char*)&Wave.fmt.NumChannels, sizeof(BYTE) * sizeof(Wave.fmt.NumChannels));
@@ -75,25 +70,18 @@ int WaveLoader::Load(std::string filename)
             wavefile.read((char*)&Wave.fmt.BlockAlign, sizeof(BYTE) * sizeof(Wave.fmt.BlockAlign));
             wavefile.read((char*)&Wave.fmt.BitsPerSample, sizeof(BYTE) * sizeof(Wave.fmt.BitsPerSample));
 #if WAVE_DEBUG_MODE
-            sprintf(debug_temp, "Compression: %i", Wave.fmt.Compression);
-            dbgOutput(debug_temp);
-            sprintf(debug_temp, "Number of Channels: %i", Wave.fmt.NumChannels);
-            dbgOutput(debug_temp);
-            sprintf(debug_temp, "Samplerate: %li Hz", Wave.fmt.SampleRate);
-            dbgOutput(debug_temp);
-            sprintf(debug_temp, "bytes/sec: %li", Wave.fmt.BytesPerSec);
-            dbgOutput(debug_temp);
-            sprintf(debug_temp, "BlockAlign: %i", Wave.fmt.BlockAlign);
-            dbgOutput(debug_temp);
-            sprintf(debug_temp, "bits/sample: %i", Wave.fmt.BitsPerSample);
-            dbgOutput(debug_temp);
+			ModuleLogger::print("Compression: %i", Wave.fmt.Compression);
+			ModuleLogger::print("Number of Channels: %i", Wave.fmt.NumChannels);
+			ModuleLogger::print("Samplerate: %li Hz", Wave.fmt.SampleRate);
+			ModuleLogger::print("bytes/sec: %li", Wave.fmt.BytesPerSec);
+			ModuleLogger::print("BlockAlign: %i", Wave.fmt.BlockAlign);
+			ModuleLogger::print("bits/sample: %i", Wave.fmt.BitsPerSample);
 #endif
             if (Chunk.ChunkSize > 16)
             {
                 wavefile.read((char*)&Wave.fmt.ExtraFormatLng, sizeof(BYTE) * sizeof(Wave.fmt.ExtraFormatLng));
 #if WAVE_DEBUG_MODE
-                sprintf(debug_temp, "Extra Format Length: %i", Wave.fmt.ExtraFormatLng);
-                dbgOutput(debug_temp);
+				ModuleLogger::print("Extra Format Length: %i", Wave.fmt.ExtraFormatLng);
 #endif
                 if (Wave.fmt.ExtraFormatLng)
                 {
@@ -106,8 +94,7 @@ int WaveLoader::Load(std::string filename)
         else if (!strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_DATA, 4))
         {
 #if WAVE_DEBUG_MODE
-            sprintf(debug_temp, "data-Chunk size: %li", Chunk.ChunkSize);
-            dbgOutput(debug_temp);
+			ModuleLogger::print("data-Chunk size: %li", Chunk.ChunkSize);
 #endif
             TempByteBuffer = (BYTE*)malloc(Chunk.ChunkSize);
 
@@ -138,8 +125,7 @@ int WaveLoader::Load(std::string filename)
         else
         {
 #if WAVE_DEBUG_MODE
-            sprintf(debug_temp, "unknown chunk: '%c%c%c%c' size: %li", Chunk.ChunkID[0], Chunk.ChunkID[1], Chunk.ChunkID[2], Chunk.ChunkID[3], Chunk.ChunkSize);
-            dbgOutput(debug_temp);
+			ModuleLogger::print("unknown chunk: '%c%c%c%c' size: %li", Chunk.ChunkID[0], Chunk.ChunkID[1], Chunk.ChunkID[2], Chunk.ChunkID[3], Chunk.ChunkSize);
 #endif
             for (i = 0; i < Chunk.ChunkSize; i++)
             {

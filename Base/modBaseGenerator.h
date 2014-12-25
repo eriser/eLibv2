@@ -1,7 +1,6 @@
 #ifndef MODBASEGENERATOR_H_
 #define MODBASEGENERATOR_H_
 
-#include <Base/modBaseGenerator.h>
 #include <Generator/modWavetable.h>
 
 namespace eLibV2

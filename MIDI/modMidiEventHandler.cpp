@@ -86,19 +86,19 @@ bool MidiEventHandler::Test()
 
     TestBeginMsg();
     insertEvent(0, MidiEvent(123, 10));
-    dbgOutputF("size: %d", mMidiEvents[0]->size());
+	ModuleLogger::print("size: %d", mMidiEvents[0]->size());
     insertEvent(0, MidiEvent(124, 20));
-    dbgOutputF("size: %d", mMidiEvents[0]->size());
+	ModuleLogger::print("size: %d", mMidiEvents[0]->size());
 
     del = deleteEvent(0, MidiEvent(123, 0));
-    dbgOutputF("delete -> %d", del);
-    dbgOutputF("size: %d", mMidiEvents[0]->size());
+	ModuleLogger::print("delete -> %d", del);
+	ModuleLogger::print("size: %d", mMidiEvents[0]->size());
 
     res = mMidiEvents[0]->front();
-    dbgOutputF("event -> note: %d velocity: %d", res.getNote(), res.getVelocity());
+	ModuleLogger::print("event -> note: %d velocity: %d", res.getNote(), res.getVelocity());
     del = deleteEvent(0, MidiEvent(124, 0));
-    dbgOutputF("delete -> %d", del);
-    dbgOutputF("size: %d", mMidiEvents[0]->size());
+	ModuleLogger::print("delete -> %d", del);
+	ModuleLogger::print("size: %d", mMidiEvents[0]->size());
     TestEndMsg();
 
 	return true;

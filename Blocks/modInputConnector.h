@@ -17,7 +17,6 @@ namespace eLibV2
 
 		virtual void setValue(double value) { ModuleLogger::print("%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
 		virtual double processIOs() { return processInputs(); }
-
 		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
 
 	protected:

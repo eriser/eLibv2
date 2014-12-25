@@ -21,6 +21,7 @@ namespace eLibV2
 
         void Init(void);
         void Reset(void) {}
+		bool Test();
 
         double getWrapLevel(void) {return dWrapLevel;}
         void setWrapLevel(double WrapLevel) {dWrapLevel = WrapLevel;}

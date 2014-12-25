@@ -14,13 +14,11 @@ namespace eLibV2
 	public:
 		ConstantConnector(double value) : BaseName("ConstantConnector"), mValue(value) {}
 
-		virtual void setValue(double value) { ModuleLogger::print("setValue: %lf", value); mValue = value; }
 		virtual double processIOs() { return processInputs(); }
-
 		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
 
 	protected:
-		double mValue;
+		const double mValue;
 	};
 }
 

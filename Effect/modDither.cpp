@@ -2,10 +2,7 @@
 
 void FxDither::setBitsize(VstInt16 Bitsize)
 {
-    if ((Bitsize >= DITHER_BITSIZE_MIN) && (Bitsize <= DITHER_BITSIZE_MAX))
-        mBitsize = Bitsize;
-    else
-        dbgOutputF("bitsize out of range: %li -> using default (%li)", Bitsize, mBitsize);
+	mBitsize = clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX);
 }
 
 void FxDither::Init(void)
@@ -54,13 +51,13 @@ bool FxDither::Test(void)
     TestBeginMsg();
     for (VstInt16 bitsize = 16; bitsize >= 2; bitsize--)
     {
-        dbgOutputF("setting bitsize to: %li", bitsize);
+        ModuleLogger::print("setting bitsize to: %li", bitsize);
         setBitsize(bitsize);
         for (long ii = 0; ii < 10; ii++)
         {
             In = GenerateTestSignal();
             Out = Process(In);
-            dbgOutputF("bitsize: %li in: %lf out: %lf", bitsize, In, Out);
+			ModuleLogger::print("bitsize: %li in: %lf out: %lf", bitsize, In, Out);
         }
     }
     TestEndMsg();

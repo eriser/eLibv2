@@ -7,7 +7,6 @@ double FxSignalAdd::Process(double Input1, double Input2)
 
 bool FxSignalAdd::Test(void)
 {
-    char temp[1024];
     double In1, In2, Out;
 
     TestBeginMsg();
@@ -16,8 +15,7 @@ bool FxSignalAdd::Test(void)
         In1 = GenerateTestSignal();
         In2 = GenerateTestSignal();
         Out = Process(In1, In2);
-        sprintf(temp, "in1: %lf in2: %lf out: %lf", In1, In2, Out);
-        dbgOutput(temp);
+		ModuleLogger::print("in1: %lf in2: %lf out: %lf", In1, In2, Out);
     }
     TestEndMsg();
 

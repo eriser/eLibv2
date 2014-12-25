@@ -3,7 +3,7 @@
 
 #include <Blocks/modControlIO.h>
 
-#include <Util/modDebug.h>
+#include <Util/modDefines.h>
 #include <Util/modHelper.h>
 #include <Util/modTestCase.h>
 
@@ -17,7 +17,7 @@
 
 namespace eLibV2
 {
-	class BaseModule : public ControlIO, public ModuleDebug, public ModuleHelper, public ModuleTestCase
+	class BaseModule : public ControlIO, public ModuleHelper, public ModuleTestCase
     {
     public:
 		BaseModule() : BaseName("BaseModule") {}
@@ -29,7 +29,11 @@ namespace eLibV2
 
 		virtual bool Test() { return true; }
 
-    protected:
+		// for testing purposes
+		virtual void TestBeginMsg() { ModuleLogger::print("Begin Test (%s))", getModuleName().c_str()); }
+		virtual void TestEndMsg() { ModuleLogger::print("End Test (%s))", getModuleName().c_str()); }
+
+	protected:
         double dSamplerate;
     };
 }

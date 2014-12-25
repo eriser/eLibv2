@@ -2,18 +2,12 @@
 
 void FxClip::setClipLevel(double ClipLevel)
 {
-    if ((ClipLevel >= CLIP_LEVEL_MIN) && (ClipLevel <= CLIP_LEVEL_MAX))
-        dClipLevel = ClipLevel;
-    else
-        dbgOutputF("level out of range: %lf -> using %lf", ClipLevel, dClipLevel);
+	dClipLevel = clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX);
 }
 
 void FxClip::setClipMode(long ClipMode)
 {
-    if ((ClipMode >= CLIP_MODE_MIN) && (ClipMode < CLIP_MODE_MAX))
-        lClipMode = ClipMode;
-    else
-        dbgOutputF("mode out of range: %li -> using %li", ClipMode, lClipMode);
+	lClipMode = clamp(ClipMode, CLIP_MODE_MIN, CLIP_MODE_MAX);
 }
 
 void FxClip::Init()
@@ -56,21 +50,21 @@ bool FxClip::Test(void)
 {
     double In, Out;
 
-    TestBeginMsg();
+	ModuleLogger::print("Begin Test");
     for (long TestMode = CLIP_MODE_POSITIVE; TestMode <= CLIP_MODE_BOTH; TestMode++)
     {
-        dbgOutputF("setting mode to: %li", TestMode);
+        ModuleLogger::print("setting mode to: %li", TestMode);
         setClipMode(TestMode);
-        dbgOutputF("setting level to: 0.5");
+		ModuleLogger::print("setting level to: 0.5");
         setClipLevel(0.8);
         for (long ii = 0; ii < 10; ii++)
         {
             In = GenerateTestSignal();
             Out = Process(In);
-            dbgOutputF("mode: %li in: %lf out: %lf", TestMode, In, Out);
+			ModuleLogger::print("mode: %li in: %lf out: %lf", TestMode, In, Out);
         }
     }
-    TestEndMsg();
+	ModuleLogger::print("End Test");
 
 	return true;
 }

@@ -1,12 +1,25 @@
 #include <Effect/modWaveWrap.h>
 
+/*
+      ^
+     / \
+0  --------
+   /     \
+  /       \
+
+  input: -1.0 ... 1.0
+  wraplevel: 0.0 ... 1.0 (0.5)
+  offset: 0 * 32 * 32768 * 0.5 ... 2 * 32 * 32768 * 0.5
+  (input + 1.0) * 32 * WRAP_WAVESIZE * wraplevel
+
+  temp = Input * triangle[((long)((Input + 1.0) * 32 * WRAP_WAVESIZE * dWrapLevel)) & (WRAP_WAVESIZE - 1)];
+
+*/
 void FxWaveWrap::Init()
 {
     // Positive Triangle
     for (long i = 0; i < WRAP_WAVESIZE; i++)
-    {
         triangle[i] = (double)(i < (WRAP_WAVESIZE / 2)) ? ((double)(2.0 / (((double)WRAP_WAVESIZE / 2))) * i - 1.0) : (double)((double)(-2.0 / (((double)WRAP_WAVESIZE / 2))) * (i - (double)(WRAP_WAVESIZE / 2)) + 1.0);
-    }
     setWrapLevel(0.0);
 }
 
@@ -38,4 +51,14 @@ double FxWaveWrap::processIOs()
 	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
 	return Process(input);
+}
+
+bool FxWaveWrap::Test()
+{
+	for (long i = 0; i < WRAP_WAVESIZE; i++)
+	{
+		if (i % 256 == 0)
+			ModuleLogger::print("Triangle: %li %lf", i, triangle[i]);
+	}
+	return true;
 }

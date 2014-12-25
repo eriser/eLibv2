@@ -38,7 +38,6 @@ int LPSLoader::Load(std::string filename)
 {
     std::ifstream lpsfile;
     unsigned long numread, tracknum, NumRemain, NumPages;
-    char msg[1024];
     BYTE helper[LPS_MAXREADBUF];
     
     // cleanup previously used memory
@@ -47,49 +46,43 @@ int LPSLoader::Load(std::string filename)
 	lpsfile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!lpsfile.good())
     {
-        sprintf(msg, "file '%s' not found\nplease reload manually", filename.c_str());
-        dbgOutput(msg);
+		ModuleLogger::print("file '%s' not found\nplease reload manually", filename.c_str());
         return LPS_ERROR_FILENOTFOUND;
     }
     tracknum = 0;
     lpsfile.read((char*)&LPSFile.Magic, sizeof(LPSFile.Magic));
     if (strncmp((char*)&LPSFile.Magic, LPS_MAGIC, 4))
     {
-        dbgOutput((char*)"not a LPS-File");
+		ModuleLogger::print("not a LPS-File");
         lpsfile.close();
         return LPS_ERROR_FILETYPE;
     }
 
     lpsfile.read((char*)&LPSFile.Version, sizeof(LPSFile.Version));
 #if LPS_DEBUG_MODE
-    sprintf(debug_temp, "Version: %li.%02li", (LPSFile.Version & 0xFF00) >> 8, LPSFile.Version & 0x00FF);
-    dbgOutput(debug_temp);
+	ModuleLogger::print("Version: %li.%02li", (LPSFile.Version & 0xFF00) >> 8, LPSFile.Version & 0x00FF);
 #endif
 
     lpsfile.read((char*)&LPSFile.Name, sizeof(LPSFile.Name));
 #if LPS_DEBUG_MODE
-    sprintf(debug_temp, "Name: '%s'", (char*)&LPSFile.Name);
-    dbgOutput(debug_temp);
+	ModuleLogger::print("Name: '%s'", (char*)&LPSFile.Name);
 #endif
 
     lpsfile.read((char*)&LPSFile.BPM, sizeof(LPSFile.BPM));
 #if LPS_DEBUG_MODE
-    sprintf(debug_temp, "BPM: %i", LPSFile.BPM);
-    dbgOutput(debug_temp);
+	ModuleLogger::print("BPM: %i", LPSFile.BPM);
 #endif
 
     lpsfile.read((char*)&LPSFile.MaxLengthTracks, sizeof(LPSFile.MaxLengthTracks));
     // divide by 2 for mono tracks
     LPSFile.MaxLengthTracks /= 2;
 #if LPS_DEBUG_MODE
-    sprintf(debug_temp, "Length: %li", LPSFile.MaxLengthTracks);
-    dbgOutput(debug_temp);
+	ModuleLogger::print("Length: %li", LPSFile.MaxLengthTracks);
 #endif
 
     lpsfile.read((char*)&LPSFile.NumTracks, sizeof(LPSFile.NumTracks));
 #if LPS_DEBUG_MODE
-    sprintf(debug_temp, "Num: %li", LPSFile.NumTracks);
-    dbgOutput(debug_temp);
+	ModuleLogger::print("Num: %li", LPSFile.NumTracks);
 #endif
 
     for (tracknum = 0; tracknum < LPSFile.NumTracks; tracknum++)
@@ -97,14 +90,14 @@ int LPSLoader::Load(std::string filename)
         LPSTracks[tracknum] = new lpsData;
         if (!LPSTracks[tracknum])
         {
-            dbgOutput((char*)"Error allocating memory for Track");
+			ModuleLogger::print("Error allocating memory for Track");
             return LPS_ERROR_MEMORY_TRACK;
         }
         LPSFile.TrackData[tracknum] = LPSTracks[tracknum];
         TrackData[tracknum] = new double[LPSFile.MaxLengthTracks];
         if (!TrackData[tracknum])
         {
-            dbgOutput((char*)"Error allocation memory for Trackdata");
+			ModuleLogger::print("Error allocation memory for Trackdata");
             return LPS_ERROR_MEMORY_TRACKDATA;
         }
         LPSFile.TrackData[tracknum]->Data = TrackData[tracknum];
@@ -122,8 +115,7 @@ int LPSLoader::Load(std::string filename)
             LPSTracks[tracknum]->LengthUnCompressed = LPSFile.MaxLengthTracks;
 
 #if LPS_DEBUG_MODE
-        sprintf(debug_temp, "Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
-        dbgOutput(debug_temp);
+		ModuleLogger::print("Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
 #endif
         /* allocate temp buffers */
         TrackCompressed = new BYTE[LPSTracks[tracknum]->LengthCompressed];
@@ -165,8 +157,7 @@ int LPSLoader::Load(std::string filename)
     lpsfile.close();
 
 #if LPS_DEBUG_MODE
-    sprintf(debug_temp, "File '%s' successfully loaded", filename.c_str());
-    dbgOutput(debug_temp);
+	ModuleLogger::print("File '%s' successfully loaded", filename.c_str());
 #endif
 
     FileLoaded = true;

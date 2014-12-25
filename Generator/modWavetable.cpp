@@ -1,10 +1,5 @@
 #include <Generator/modWavetable.h>
 
-BaseWavetable::BaseWavetable()
-{
-    Init();
-}
-
 BaseWavetable::~BaseWavetable()
 {
     for (VstInt16 WaveformIndex = 0; WaveformIndex < WAVEFORM_INDEX_MAX; WaveformIndex++)
@@ -28,8 +23,6 @@ void BaseWavetable::Init()
     double *pulse;
     double *noise;
     double *smplhold;
-
-    setModuleName("BaseWavetable");
 
     LoadedWaveforms = 0;
     srand((unsigned)time(NULL));
@@ -122,7 +115,7 @@ void BaseWavetable::Init()
     catch (...)
     {
         // reaching here lacks WAVEFORM_BUILTIN_NUM * kWavesize bytes of memory
-        dbgOutput((char*)"out of memory");
+		ModuleLogger::print("out of memory");
     }
 }
 
@@ -169,7 +162,7 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
 
     catch (...)
     {
-        dbgOutput((char*)"out of memory");
+		ModuleLogger::print("out of memory");
         return false;
     }
     return true;
@@ -199,7 +192,7 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string
 
     catch (...)
     {
-        dbgOutput((char*)"out of memory");
+		ModuleLogger::print("out of memory");
         return false;
     }
     return true;
@@ -249,7 +242,7 @@ bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::s
 
     catch (...)
     {
-        dbgOutput((char*)"out of memory");
+		ModuleLogger::print("out of memory");
         return false;
     }
     return true;

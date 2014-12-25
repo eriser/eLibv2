@@ -99,7 +99,7 @@ double BaseOscillator::processIOs(void)
 	if (isAttached(OSC_INPUT_NOTE))
 		input = controlIOs[OSC_INPUT_NOTE]->processIOs();
 
-	ModuleLogger::print("%s::processIOs %lf/%lf/%ld/%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
+	ModuleLogger::print("%s::processIOs C:%lf/F:%lf/W:%ld/I:%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
 	res = Process((VstInt16)input);
 	ModuleLogger::print("osc output: %lf", res);
 

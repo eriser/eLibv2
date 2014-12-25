@@ -41,7 +41,7 @@ namespace eLibV2
 		virtual void detachIO(const int connectionId) { controlIOs.erase(connectionId); }
 		virtual bool isAttached(const int connectionId) { return(controlIOs.count(connectionId) > 0); }
 		virtual double processIOs();
-		virtual void testChaining();
+		virtual void testChaining(int depth = 0);
 
 	protected:
 		typedef std::map<const int, ControlIO*> controlIOmap;

@@ -174,18 +174,18 @@ void EnvelopeDADSR::runTests(void)
     long oldstate = 0;
 
     TestBeginMsg();
-    dbgOutputF("using delay: %lf", dDelay);
-    dbgOutputF("using attack: %lf", dAttack);
-    dbgOutputF("using decay: %lf", dDecay);
-    dbgOutputF("using sustain: %lf", dSustain);
-    dbgOutputF("using release: %lf", dRelease);
+    ModuleLogger::print("using delay: %lf", dDelay);
+	ModuleLogger::print("using attack: %lf", dAttack);
+	ModuleLogger::print("using decay: %lf", dDecay);
+	ModuleLogger::print("using sustain: %lf", dSustain);
+	ModuleLogger::print("using release: %lf", dRelease);
     setTrigger(true);
     for (long EnvTime = 0; EnvTime < 200000; EnvTime++)
     {
         Value = Process();
         if (oldstate != lEnvelopeState)
         {
-            dbgOutputF("time: %li state: %li value: %lf", EnvTime, lEnvelopeState, Value);
+			ModuleLogger::print("time: %li state: %li value: %lf", EnvTime, lEnvelopeState, Value);
             oldstate = lEnvelopeState;
         }
         if (EnvTime > 60000)
