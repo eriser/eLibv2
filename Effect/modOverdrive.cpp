@@ -10,14 +10,14 @@ double FxOverdrive::Process(double input)
 	return ret;
 }
 
-double FxOverdrive::processIOs()
+double FxOverdrive::processConnection()
 {
 	double input = 0.0;
 
-	if (isAttached(OVERDRIVE_LEVEL))
-		setLevel(controlIOs[OVERDRIVE_LEVEL]->processIOs());
-	if (isAttached(OVERDRIVE_INPUT))
-		input = controlIOs[OVERDRIVE_INPUT]->processIOs();
+	if (isConnected(CONNECTION_OVERDRIVE_LEVEL))
+		setLevel(connections[CONNECTION_OVERDRIVE_LEVEL]->processConnection());
+	if (isConnected(CONNECTION_OVERDRIVE_INPUT))
+		input = connections[CONNECTION_OVERDRIVE_INPUT]->processConnection();
 	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
 	return Process(input);

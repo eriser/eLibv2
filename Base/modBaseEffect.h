@@ -8,8 +8,7 @@ namespace eLibV2
     class BaseEffect : public BaseModule
     {
     public:
-		BaseEffect() : BaseName("BaseEffect") {}
-		BaseEffect(std::string name) : BaseName(name) {}
+		BaseEffect(std::string name = "BaseEffect") : BaseConnector(name, 1, 1) {}
 
         virtual void Init(void) = 0;
         virtual void Reset(void) = 0;

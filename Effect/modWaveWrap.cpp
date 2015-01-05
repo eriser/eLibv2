@@ -1,5 +1,7 @@
 #include <Effect/modWaveWrap.h>
 
+using namespace eLibV2;
+
 /*
       ^
      / \
@@ -40,14 +42,14 @@ double FxWaveWrap::Process(double Input)
     return res;
 }
 
-double FxWaveWrap::processIOs()
+double FxWaveWrap::processConnection()
 {
 	double input = 0.0;
 
-	if (isAttached(WAVEWRAP_LEVEL))
-		setWrapLevel(controlIOs[WAVEWRAP_LEVEL]->processIOs());
-	else if (isAttached(WAVEWRAP_INPUT))
-		input = controlIOs[WAVEWRAP_INPUT]->processIOs();
+	if (isConnected(WAVEWRAP_LEVEL))
+		setWrapLevel(connections[WAVEWRAP_LEVEL]->processConnection());
+	else if (isConnected(WAVEWRAP_INPUT))
+		input = connections[WAVEWRAP_INPUT]->processConnection();
 	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
 	return Process(input);

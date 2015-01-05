@@ -3,8 +3,6 @@
 
 #include <Base/modBaseEffect.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
     enum
@@ -22,7 +20,8 @@ namespace eLibV2
     class FxClip : public BaseEffect
     {
     public:
-		FxClip() : BaseName("FxClip") { Init(); }
+		FxClip(std::string name = "FxClip")
+			: BaseName(name) { Init(); }
 
         void Init(void);
         void Reset(void) {}

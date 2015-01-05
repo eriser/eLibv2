@@ -10,7 +10,8 @@ namespace eLibV2
 	class FxEnvFollower : public BaseEffect
 	{
 	public:
-		FxEnvFollower() : BaseName("FxEnvFollower") { Init(); }
+		FxEnvFollower(std::string name = "FxEnvFollower")
+			: BaseName(name) { Init(); }
 
 		void Init(void);
 		void Reset(void);

@@ -10,7 +10,8 @@ namespace eLibV2
     class NoiseGenerator : public BaseModule
     {
     public:
-		NoiseGenerator() : BaseName("NoiseGenerator") {}
+		NoiseGenerator(std::string name = "NoiseGenerator")
+			: BaseName(name) {}
 
         double Process(void);
 

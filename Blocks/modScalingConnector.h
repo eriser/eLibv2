@@ -3,8 +3,6 @@
 
 #include <Blocks/modBaseConnector.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
 	class ScalingConnector : public BaseConnector
@@ -18,15 +16,15 @@ namespace eLibV2
 		};
 
 	public:
-		ScalingConnector(double factor = 1.0, double offset = 0.0) : BaseName("ScalingConnector"), numInputs(0), mFactor(factor), mOffset(offset) {}
-		ScalingConnector(std::string name, double factor = 1.0, double offset = 0.0) : BaseName(name), mFactor(factor), mOffset(offset) {}
+		ScalingConnector(std::string name = "ScalingConnector", double factor = 1.0, double offset = 0.0)
+			: BaseName(name), numInputs(0), mFactor(factor), mOffset(offset) {}
 
 		virtual void Init() {}
-		virtual double processIOs();
+		virtual double processConnection();
 
-		virtual void attachInput(ControlIO *controller) { attachIO(SCALING_INPUT + numInputs, controller); numInputs++; }
-		virtual void attachFactor(ControlIO *controller) { attachIO(SCALING_FACTOR, controller); }
-		virtual void attachOffset(ControlIO *controller) { attachIO(SCALING_OFFSET, controller); }
+		virtual void attachInput(BaseConnector *controller) { connect(SCALING_INPUT + numInputs, controller); numInputs++; }
+		virtual void attachFactor(BaseConnector *controller) { connect(SCALING_FACTOR, controller); }
+		virtual void attachOffset(BaseConnector *controller) { connect(SCALING_OFFSET, controller); }
 
 	protected:
 		int numInputs;

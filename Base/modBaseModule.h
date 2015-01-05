@@ -1,7 +1,7 @@
 #ifndef MODBASEMODULE_H_
 #define MODBASEMODULE_H_
 
-#include <Blocks/modControlIO.h>
+#include <Blocks/modBaseConnector.h>
 
 #include <Util/modDefines.h>
 #include <Util/modHelper.h>
@@ -17,7 +17,7 @@
 
 namespace eLibV2
 {
-	class BaseModule : public ControlIO, public ModuleHelper, public ModuleTestCase
+	class BaseModule : virtual public BaseConnector, public ModuleHelper, public ModuleTestCase
     {
     public:
 		BaseModule() : BaseName("BaseModule") {}
@@ -27,7 +27,7 @@ namespace eLibV2
         virtual double getSamplerate(void) {return dSamplerate;}
         virtual void setSamplerate(double Samplerate) {dSamplerate = Samplerate;}
 
-		virtual bool Test() { return true; }
+		virtual bool Test(void) = 0;
 
 		// for testing purposes
 		virtual void TestBeginMsg() { ModuleLogger::print("Begin Test (%s))", getModuleName().c_str()); }

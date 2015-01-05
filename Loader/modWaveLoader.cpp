@@ -150,6 +150,7 @@ void WaveLoader::getWaveFormat(WaveFormat *Format)
         memcpy((void*)Format, &Wave.fmt, sizeof(Wave.fmt));
 }
 
-void WaveLoader::runTests(void)
+bool WaveLoader::Test(void)
 {
+	return true;
 }

@@ -2,7 +2,7 @@
 #define MODMIDIEVENTADAPTER_H_
 
 #include <Base/modBaseModule.h>
-#include <Blocks/modControlIO.h>
+#include <Blocks/modBaseConnector.h>
 
 #include <MIDI/modMidiEvent.h>
 #include <MIDI/modMidiEventHandler.h>
@@ -11,7 +11,7 @@ using namespace eLibV2;
 
 namespace eLibV2
 {
-	class MidiEventAdapter : public ControlIO
+	class MidiEventAdapter : public BaseConnector
 	{
 	public:
 		MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
@@ -20,7 +20,7 @@ namespace eLibV2
 		virtual double processIOs();
 
 	private:
-		int mChannel;
+		const int mChannel;
 		MidiEventHandler *mHandler;
 	};
 }

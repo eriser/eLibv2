@@ -12,23 +12,25 @@ namespace eLibV2
     public:
 		enum
 		{
-			OVERDRIVE_INPUT,
-			OVERDRIVE_LEVEL
+			CONNECTION_OVERDRIVE_INPUT,
+			CONNECTION_OVERDRIVE_LEVEL
 		};
 
-		FxOverdrive() : BaseName("FxOverdrive") { Init(); }
+		FxOverdrive(std::string name = "FxOverdrive")
+			: BaseName(name) { Init(); }
 
 		void Init() { setLevel(150.0); }
 		void Reset() {}
         double Process(double input);
+		virtual double processConnection();
 
+	public:
         void setLevel(double Level) {dLevel = Level;}
         double getLevel(void) {return dLevel;}
 
-		void attachInput(ControlIO *controller) { attachIO(OVERDRIVE_INPUT, controller); }
-		void attachLevel(ControlIO *controller) { attachIO(OVERDRIVE_LEVEL, controller); }
-
-		double processIOs();
+	public:
+		void attachInput(BaseConnector *controller) { connect(CONNECTION_OVERDRIVE_INPUT, controller); }
+		void attachLevel(BaseConnector *controller) { connect(CONNECTION_OVERDRIVE_LEVEL, controller); }
 
 	protected:
         double dLevel;

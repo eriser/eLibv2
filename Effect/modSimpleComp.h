@@ -12,7 +12,8 @@ namespace eLibV2
     class FxSimpleComp : public BaseEffect
     {
     public:
-		FxSimpleComp() : BaseName("FxSimpleComp") { Init(); }
+		FxSimpleComp(std::string name = "FxSimpleComp")
+			: BaseName(name) { Init(); }
 
         void Init(void);
         void Reset(void);

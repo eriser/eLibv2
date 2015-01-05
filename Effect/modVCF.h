@@ -19,7 +19,8 @@ namespace eLibV2
     class FxVCF : public BaseEffect
     {
     public:
-		FxVCF() : BaseName("FxVCF") { Init(); }
+		FxVCF(std::string name = "FxVCF")
+			: BaseName(name) { Init(); }
 
         void Init(void);
         void Reset(void) {}

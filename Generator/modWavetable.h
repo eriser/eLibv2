@@ -32,35 +32,35 @@ namespace eLibV2
 		} Waveform;
 
     public:
-		BaseWavetable() : BaseName("BaseWavetable") { Init(); }
+		BaseWavetable(std::string name = "BaseWavetable")
+			: BaseName(name) { Init(); }
         ~BaseWavetable();
 
-        void Init(void);
-        void Reset(void);
+        virtual void Init(void);
+		virtual bool Test(void);
 
+	private:
 		bool AddWaveform(std::string Filename, std::string WaveName);
 		bool AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string WaveName, VstInt16 ChannelNum = 1);
-#if defined(WIN32) && !defined(_CONSOLE)
-		bool AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::string WaveName, VstInt16 ByteSize = 2, VstInt16 ChannelNum = 1);
-#endif
 
+#ifdef WIN32
+		bool AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::string WaveName, VstInt16 ByteSize = 2, VstInt16 ChannelNum = 1);
+		double* loadWaveform(HINSTANCE hInstance, int resID, double *data);
+		long sizeWaveform(HINSTANCE hInstance, int resID);
+#endif
+		void DeleteWaveform(VstInt32 Index);
+
+	public:
         long getWaveSize(VstInt16 WaveIndex);
         double adjustPhase(double phase);
         double adjustPhase(VstInt16 WaveIndex, double phase);
         double getWaveData(VstInt32 WaveIndex, double dPhase);
         bool getWaveName(VstInt32 WaveIndex, char* name);
         long getNumLoadedWaveforms(void) {return LoadedWaveforms;}
-		void runTests(void);
 
     private:
         Waveform Waveforms[WAVEFORM_INDEX_MAX];
         long LoadedWaveforms;
-
-#ifdef WIN32
-        double* loadWaveform(HINSTANCE hInstance, int resID, double *data);
-        long sizeWaveform(HINSTANCE hInstance, int resID);
-#endif
-        void DeleteWaveform(VstInt32 Index);
     };
 }
 

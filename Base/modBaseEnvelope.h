@@ -5,18 +5,20 @@
 
 namespace eLibV2
 {
-    enum
-    {
-        ENVELOPE_MODE_UNDEF = 0,
-        ENVELOPE_MODE_LINEAR,
-        ENVELOPE_MODE_LOGARITHMIC,
-        ENVELOPE_MODE_EXPONENTIAL
-    };
-
     class BaseEnvelope : public BaseModule
     {
+	protected:
+		enum
+		{
+			ENVELOPE_MODE_UNDEF = 0,
+			ENVELOPE_MODE_LINEAR,
+			ENVELOPE_MODE_LOGARITHMIC,
+			ENVELOPE_MODE_EXPONENTIAL
+		};
+
     public:
-		BaseEnvelope() : BaseName("BaseEnvelope") {}
+		BaseEnvelope(std::string name = "BaseEnvelope")
+			: BaseConnector(name, 1, 1) {}
 
         virtual void Init(void) = 0;
         virtual void Reset(void) = 0;

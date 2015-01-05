@@ -198,7 +198,7 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string
     return true;
 }
 
-#if defined(WIN32) && !defined(_CONSOLE)
+#if defined(WIN32)
 bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::string WaveName, VstInt16 ByteSize, VstInt16 ChannelNum)
 {
     HGLOBAL hRData = NULL;
@@ -208,7 +208,7 @@ bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::s
     VstInt16 *buf;
     VstInt32 bufferSize, Divisor;
 
-    if (LoadedWaveforms == WAVEFORM_INDEX_MAX)
+    if (LoadedWaveforms >= WAVEFORM_INDEX_MAX)
         return false;
 
     try
@@ -303,6 +303,7 @@ double BaseWavetable::adjustPhase(VstInt16 WaveIndex, double phase)
         return phase;
 }
 
-void BaseWavetable::runTests(void)
+bool BaseWavetable::Test(void)
 {
+	return true;
 }

@@ -7,24 +7,26 @@ using namespace eLibV2;
 
 namespace eLibV2
 {
-    enum
-    {
-        ENVELOPE_DADSR_STATE_INIT = 0,
-        ENVELOPE_DADSR_STATE_DELAY,
-        ENVELOPE_DADSR_STATE_ATTACK,
-        ENVELOPE_DADSR_STATE_DECAY,
-        ENVELOPE_DADSR_STATE_SUSTAIN,
-        ENVELOPE_DADSR_STATE_RELEASE
-    };
-
     class EnvelopeDADSR : public BaseEnvelope
     {
+	public:
+		enum
+		{
+			ENVELOPE_DADSR_STATE_INIT = 0,
+			ENVELOPE_DADSR_STATE_DELAY,
+			ENVELOPE_DADSR_STATE_ATTACK,
+			ENVELOPE_DADSR_STATE_DECAY,
+			ENVELOPE_DADSR_STATE_SUSTAIN,
+			ENVELOPE_DADSR_STATE_RELEASE
+		};
+
     public:
-		EnvelopeDADSR(void) : BaseName("EnvelopeDADSR") { Init(); }
+		EnvelopeDADSR(std::string name = "EnvelopeDADSR")
+			: BaseName(name) { Init(); }
 
         virtual void Init(void);
         virtual void Reset(void);
-        virtual void runTests(void);
+		virtual bool Test(void);
         virtual double Process(void);
 
         virtual bool isReady(void);

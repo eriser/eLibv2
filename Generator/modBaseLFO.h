@@ -10,8 +10,11 @@ namespace eLibV2
     class BaseLFO : public BaseOscillator
     {
     public:
-		BaseLFO() : BaseName("BaseLFO") {}
-        double Process(void);
+		BaseLFO(std::string name = "BaseLFO")
+			: BaseName(name) {}
+
+        virtual double Process(void);
+		virtual bool Test(void) { return true; }
     };
 }
 

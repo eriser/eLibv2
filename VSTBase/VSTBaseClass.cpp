@@ -118,7 +118,7 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
     setParameterInvoked(index, value);
     // process connected inputs
 	if (index < mParameterConnectors.size() && mParameterConnectors[index])
-		mParameterConnectors[index]->setValue(getParameterScaled(index));
+		mParameterConnectors[index]->setInput(getParameterScaled(index));
 }
 
 //------------------------------------------------------------------------

@@ -12,7 +12,8 @@ namespace eLibV2
     class BaseSequencer : public BaseModule
     {
     public:
-		BaseSequencer() : BaseName("BaseSequencer") { Init(); }
+		BaseSequencer(std::string name = "BaseSequencer")
+			: BaseName(name) { Init(); }
 
         void Init();
 		void Reset() {}

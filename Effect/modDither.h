@@ -16,8 +16,8 @@ namespace eLibV2
 	public:
 		enum
 		{
-			DITHER_INPUT,
-			DITHER_BITSIZE
+			CONNECTION_DITHER_INPUT,
+			CONNECTION_DITHER_BITSIZE
 		};
 
 	private:
@@ -28,20 +28,24 @@ namespace eLibV2
 		};
 
     public:
-		FxDither() : BaseName("FxDither") { Init(); }
+		FxDither(std::string name = "FxDither")
+			: BaseConnector(name, 1, 1) {
+			Init();
+		}
 
-        void Init(void);
-        void Reset(void);
-		bool Test(void);
-		double Process(double Input);
+        virtual void Init(void);
+        virtual void Reset(void);
+		virtual bool Test(void);
+		virtual double Process(double Input);
+		virtual double processConnection();
 
-		virtual double processIOs();
-
+	public:
 		VstInt16 getBitsize(void) { return mBitsize; }
 		void setBitsize(VstInt16 Bitsize);
 
-		void attachInput(ControlIO *controller) { attachIO(DITHER_INPUT, controller); }
-		void attachBitsize(ControlIO *controller) { attachIO(DITHER_BITSIZE, controller); }
+	public:
+		void attachInput(BaseConnector *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
+		void attachBitsize(BaseConnector *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
 
     private:
 		VstInt16 mBitsize;

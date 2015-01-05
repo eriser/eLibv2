@@ -3,34 +3,36 @@
 
 #include <Base/modBaseEffect.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-    enum { WRAP_WAVESIZE = 32768 };
-	enum
-	{
-		WAVEWRAP_INPUT,
-		WAVEWRAP_LEVEL
-	};
-
     class FxWaveWrap : public BaseEffect
     {
     public:
-		FxWaveWrap() : BaseName("FxWaveWrap") { Init(); }
+		enum { WRAP_WAVESIZE = 32768 };
+		enum
+		{
+			WAVEWRAP_INPUT,
+			WAVEWRAP_LEVEL
+		};
 
-        void Init(void);
-        void Reset(void) {}
-		bool Test();
+	public:
+		FxWaveWrap(std::string name = "FxWaveWrap")
+			: BaseName(name) { Init(); }
 
+		virtual void Init(void);
+		virtual void Reset(void) {}
+		virtual bool Test();
+		virtual double Process(double Input);
+		virtual double processConnection();
+
+	public:
         double getWrapLevel(void) {return dWrapLevel;}
         void setWrapLevel(double WrapLevel) {dWrapLevel = WrapLevel;}
 
-        double Process(double Input);
-		void attachInput(ControlIO *controller) { attachIO(WAVEWRAP_INPUT, controller); }
-		void attachLevel(ControlIO *controller) { attachIO(WAVEWRAP_LEVEL, controller); }
+	public:
+		void attachInput(BaseConnector *controller) { connect(WAVEWRAP_INPUT, controller); }
+		void attachLevel(BaseConnector *controller) { connect(WAVEWRAP_LEVEL, controller); }
 
-		double processIOs();
 
     private:
         double dWrapLevel;

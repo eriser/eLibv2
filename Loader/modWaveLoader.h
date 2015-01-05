@@ -89,14 +89,18 @@ namespace eLibV2
 		WaveLoader() : BaseName("WaveLoader") { Init(); }
         ~WaveLoader();
 
+	public:
         void Init(void);
+		virtual bool Test(void);
 
+	public:
         int Load(std::string filename);
         void Unload(void);
-        double *getWaveData(void) {return WaveData;}
+
+	public:
+		double *getWaveData(void) {return WaveData;}
         long getWaveSize(void) {return SizeOfData;}
         void getWaveFormat(WaveFormat *Format);
-		void runTests(void);
 
     private:
         struct waveFile Wave;

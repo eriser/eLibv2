@@ -17,7 +17,8 @@ namespace eLibV2
     class FxMixer : public BaseEffect
     {
     public:
-		FxMixer() : BaseName("FxMixer") { Init(); }
+		FxMixer(std::string name = "FxMixer")
+			: BaseName(name) { Init(); }
 
         void Init(void);
         void Reset(void);

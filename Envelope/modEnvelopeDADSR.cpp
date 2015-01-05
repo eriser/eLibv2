@@ -168,7 +168,7 @@ double EnvelopeDADSR::Process(void)
     return res;
 }
 
-void EnvelopeDADSR::runTests(void)
+bool EnvelopeDADSR::Test(void)
 {
     double Value;
     long oldstate = 0;
@@ -192,4 +192,6 @@ void EnvelopeDADSR::runTests(void)
             setTrigger(false);
     }
     TestEndMsg();
+
+	return true;
 }

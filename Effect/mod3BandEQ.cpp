@@ -1,7 +1,6 @@
 #include <Effect/mod3BandEQ.h>
 
-#include <math.h>
-#include <memory.h>
+using namespace eLibV2;
 
 void Fx3BandEQ::Init()
 {
@@ -67,12 +66,12 @@ double Fx3BandEQ::Process(double Input)
     return(mid1 + mid2 + high);
 }
 
-double Fx3BandEQ::processIOs()
+double Fx3BandEQ::processConnection()
 {
 	double input = 0.0;
 
-	if (isAttached(ControlIO::CONNECTOR_INPUT1))
-		input = controlIOs[ControlIO::CONNECTOR_INPUT1]->processIOs();
+	if (isConnected(BaseConnector::CONNECTOR_INPUT))
+		input = connections[BaseConnector::CONNECTOR_INPUT]->processConnection();
 	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
 	return Process(input);

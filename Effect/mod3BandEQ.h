@@ -2,31 +2,34 @@
 #define MOD3BANDEQ_H_
 
 #include <Base/modBaseEffect.h>
-
-using namespace eLibV2;
+#include <math.h>
+#include <memory.h>
 
 namespace eLibV2
 {
     static const double vsa = (1.0 / 4294967295.0);   // Very small amount (Denormal Fix)
 
-    enum
-    {
-        EQ_NUM_BANDS = 4,
-        EQ_NUM_POLES = 4,
-        EQ_BUFFER_SIZE = 3
-    };
-
-    typedef struct
-    {
-        double Frequency;
-        double Poles[EQ_NUM_POLES];
-    } EQBand;
-
     class Fx3BandEQ : public BaseEffect
     {
-    public:
+	private:
+		enum
+		{
+			EQ_NUM_BANDS = 4,
+			EQ_NUM_POLES = 4,
+			EQ_BUFFER_SIZE = 3
+		};
 
-		Fx3BandEQ() : BaseName("Fx3BandEQ") { Init(); }
+		typedef struct
+		{
+			double Frequency;
+			double Poles[EQ_NUM_POLES];
+		} EQBand;
+
+	public:
+		Fx3BandEQ(std::string name = "Fx3BandEQ")
+			: BaseConnector(name, 1, 1) {
+			Init();
+		}
 
         void Init(void);
         void Reset(void);
@@ -38,7 +41,7 @@ namespace eLibV2
         void setFrequency(VstInt16 Index, double Frequency);
         void setSamplerate(double Samplerate);
 
-		double processIOs();
+		virtual double processConnection();
 
     private:
         EQBand Bands[EQ_NUM_BANDS - 1];

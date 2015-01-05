@@ -13,27 +13,32 @@ namespace eLibV2
 
     class BaseOscillator : public BaseGenerator
     {
-	public:
+	protected:
 		enum
 		{
-			OSC_INPUT_NOTE,
-			OSC_INPUT_WAVEFORM,
-			OSC_INPUT_COARSE,
-			OSC_INPUT_FINETUNE
+			CONNECTION_OSC_INPUT_NOTE,
+			CONNECTION_OSC_INPUT_WAVEFORM,
+			CONNECTION_OSC_INPUT_COARSE,
+			CONNECTION_OSC_INPUT_FINETUNE
 		};
 
-	private:
-
     public:
-		BaseOscillator() : BaseName("BaseOscillator") { Init(); }
+		BaseOscillator(std::string name = "BaseOscillator")
+			: BaseConnector(name, 4, 1) {
+			Init();
+		}
 		~BaseOscillator();
 
+	public:
         virtual void Init(void);
         virtual void Reset(void);
+		virtual bool Test(void) { return true; }
 		virtual double Process(VstInt16 Note);
-		virtual double processIOs();
+		virtual double processConnection();
 
-        void setWaveform(VstInt32 Waveform);
+	public:
+		/* set and get methods */
+		void setWaveform(VstInt32 Waveform);
         void setCoarse(double Coarse);
         void setFinetune(double Finetune);
         void setSamplerate(double Samplerate);
@@ -42,13 +47,14 @@ namespace eLibV2
         VstInt32 getWaveform(void) {return lWaveform;}
         double getCoarse(void) {return dCoarse;}
         double getFinetune(void) {return dFinetune;}
-
         VstInt32 getNumWaveforms(void);
 
-		void attachNote(ControlIO *controller) { attachIO(OSC_INPUT_NOTE, controller); }
-		void attachWaveform(ControlIO *controller) { attachIO(OSC_INPUT_WAVEFORM, controller); }
-		void attachCoarse(ControlIO *controller) { attachIO(OSC_INPUT_COARSE, controller); }
-		void attachFinetune(ControlIO *controller) { attachIO(OSC_INPUT_FINETUNE, controller); }
+	public:
+		/* attach methods */
+		void attachNote(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_NOTE, controller); }
+		void attachWaveform(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_WAVEFORM, controller); }
+		void attachCoarse(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_COARSE, controller); }
+		void attachFinetune(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_FINETUNE, controller); }
 
     protected:
         VstInt32 lWaveform;

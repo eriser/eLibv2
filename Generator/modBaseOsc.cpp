@@ -86,18 +86,18 @@ double BaseOscillator::Process(VstInt16 Note)
     return data;
 }
 
-double BaseOscillator::processIOs(void)
+double BaseOscillator::processConnection(void)
 {
 	double input = 0.0, res;
 
-	if (isAttached(OSC_INPUT_COARSE))
-		setCoarse(controlIOs[OSC_INPUT_COARSE]->processIOs());
-	if (isAttached(OSC_INPUT_FINETUNE))
-		setFinetune(controlIOs[OSC_INPUT_FINETUNE]->processIOs());
-	if (isAttached(OSC_INPUT_WAVEFORM))
-		setWaveform((VstInt16)controlIOs[OSC_INPUT_WAVEFORM]->processIOs());
-	if (isAttached(OSC_INPUT_NOTE))
-		input = controlIOs[OSC_INPUT_NOTE]->processIOs();
+	if (isConnected(CONNECTION_OSC_INPUT_COARSE))
+		setCoarse(connections[CONNECTION_OSC_INPUT_COARSE]->processConnection());
+	if (isConnected(CONNECTION_OSC_INPUT_FINETUNE))
+		setFinetune(connections[CONNECTION_OSC_INPUT_FINETUNE]->processConnection());
+	if (isConnected(CONNECTION_OSC_INPUT_WAVEFORM))
+		setWaveform((VstInt16)connections[CONNECTION_OSC_INPUT_WAVEFORM]->processConnection());
+	if (isConnected(CONNECTION_OSC_INPUT_NOTE))
+		input = connections[CONNECTION_OSC_INPUT_NOTE]->processConnection();
 
 	ModuleLogger::print("%s::processIOs C:%lf/F:%lf/W:%ld/I:%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
 	res = Process((VstInt16)input);

@@ -1,5 +1,7 @@
 #include <Effect/modClip.h>
 
+using namespace eLibV2;
+
 void FxClip::setClipLevel(double ClipLevel)
 {
 	dClipLevel = clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX);
