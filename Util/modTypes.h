@@ -7,4 +7,10 @@ typedef signed short int SSHORT;
 typedef unsigned long int ULONG;
 typedef signed long int SLONG;
 
+union flint
+{
+	float f;
+	VstInt32 i;
+};
+
 #endif

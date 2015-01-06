@@ -131,7 +131,7 @@ void BaseWavetable::DeleteWaveform(VstInt32 Index)
 bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
 {
     WaveLoader WL;
-    WaveFormat WF;
+    WaveLoader::WaveFormat WF;
     double *WD;
 
     try

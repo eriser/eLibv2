@@ -3,9 +3,10 @@
 
 // block modules
 #include <Blocks/modBaseConnector.h>
-#include <Blocks/modInputConnector.h>
-#include <Blocks/modScalingConnector.h>
 #include <Blocks/modConstantConnector.h>
+#include <Blocks/modInputConnector.h>
+#include <Blocks/modOutputConnector.h>
+#include <Blocks/modScalingConnector.h>
 
 // loader modules
 #include <Loader/modLPSLoader.h>

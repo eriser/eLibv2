@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 
+using namespace eLibV2;
+
 int PresetLoader::Load(std::string filename)
 {
     size_t found;
@@ -83,9 +85,7 @@ int PresetLoader::Save(std::string filename)
             OutFile << std::endl;
         }
         OutFile << std::endl << "};" << std::endl;
-
     }
-
     OutFile.close();
     return ERR_PRESET_NO_ERROR;
 }

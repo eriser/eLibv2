@@ -23,11 +23,10 @@ namespace eLibV2
 		BaseModule() : BaseName("BaseModule") {}
 
         virtual void Init(void) = 0;
+		virtual bool Test(void) = 0;
 
         virtual double getSamplerate(void) {return dSamplerate;}
         virtual void setSamplerate(double Samplerate) {dSamplerate = Samplerate;}
-
-		virtual bool Test(void) = 0;
 
 		// for testing purposes
 		virtual void TestBeginMsg() { ModuleLogger::print("Begin Test (%s))", getModuleName().c_str()); }

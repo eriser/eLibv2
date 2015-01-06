@@ -26,10 +26,7 @@ namespace eLibV2
 		} EQBand;
 
 	public:
-		Fx3BandEQ(std::string name = "Fx3BandEQ")
-			: BaseConnector(name, 1, 1) {
-			Init();
-		}
+		Fx3BandEQ(std::string name = "Fx3BandEQ") : BaseName(name), BaseConnector(1, 1) { Init(); }
 
         void Init(void);
         void Reset(void);

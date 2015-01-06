@@ -2,7 +2,6 @@
 #define MODDITHER_H_
 
 #include <Base/modBaseEffect.h>
-#include <Util/modTestCase.h>
 #include <Util/modLogger.h>
 
 #include <math.h>
@@ -29,9 +28,7 @@ namespace eLibV2
 
     public:
 		FxDither(std::string name = "FxDither")
-			: BaseConnector(name, 1, 1) {
-			Init();
-		}
+			: BaseName(name), BaseConnector(1, 1) { Init(); }
 
         virtual void Init(void);
         virtual void Reset(void);

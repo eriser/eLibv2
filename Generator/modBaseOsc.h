@@ -23,10 +23,7 @@ namespace eLibV2
 		};
 
     public:
-		BaseOscillator(std::string name = "BaseOscillator")
-			: BaseConnector(name, 4, 1) {
-			Init();
-		}
+		BaseOscillator(std::string name = "BaseOscillator")	: BaseName(name), BaseConnector(4, 1) {	Init(); }
 		~BaseOscillator();
 
 	public:

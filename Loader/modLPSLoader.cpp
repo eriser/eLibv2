@@ -1,5 +1,7 @@
 #include <Loader/modLPSLoader.h>
 
+using namespace eLibV2;
+
 LPSLoader::~LPSLoader()
 {
     Unload();
@@ -59,31 +61,21 @@ int LPSLoader::Load(std::string filename)
     }
 
     lpsfile.read((char*)&LPSFile.Version, sizeof(LPSFile.Version));
-#if LPS_DEBUG_MODE
 	ModuleLogger::print("Version: %li.%02li", (LPSFile.Version & 0xFF00) >> 8, LPSFile.Version & 0x00FF);
-#endif
 
     lpsfile.read((char*)&LPSFile.Name, sizeof(LPSFile.Name));
-#if LPS_DEBUG_MODE
 	ModuleLogger::print("Name: '%s'", (char*)&LPSFile.Name);
-#endif
 
     lpsfile.read((char*)&LPSFile.BPM, sizeof(LPSFile.BPM));
-#if LPS_DEBUG_MODE
 	ModuleLogger::print("BPM: %i", LPSFile.BPM);
-#endif
 
     lpsfile.read((char*)&LPSFile.MaxLengthTracks, sizeof(LPSFile.MaxLengthTracks));
     // divide by 2 for mono tracks
     LPSFile.MaxLengthTracks /= 2;
-#if LPS_DEBUG_MODE
 	ModuleLogger::print("Length: %li", LPSFile.MaxLengthTracks);
-#endif
 
     lpsfile.read((char*)&LPSFile.NumTracks, sizeof(LPSFile.NumTracks));
-#if LPS_DEBUG_MODE
 	ModuleLogger::print("Num: %li", LPSFile.NumTracks);
-#endif
 
     for (tracknum = 0; tracknum < LPSFile.NumTracks; tracknum++)
     {
@@ -113,11 +105,9 @@ int LPSLoader::Load(std::string filename)
         }
         else
             LPSTracks[tracknum]->LengthUnCompressed = LPSFile.MaxLengthTracks;
-
-#if LPS_DEBUG_MODE
 		ModuleLogger::print("Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
-#endif
-        /* allocate temp buffers */
+
+		/* allocate temp buffers */
         TrackCompressed = new BYTE[LPSTracks[tracknum]->LengthCompressed];
         LengthUncompressed = LPSTracks[tracknum]->LengthUnCompressed * 2;
         TempBuffer = new BYTE[LengthUncompressed];
@@ -155,10 +145,7 @@ int LPSLoader::Load(std::string filename)
         TempBuffer = 0;
     }
     lpsfile.close();
-
-#if LPS_DEBUG_MODE
 	ModuleLogger::print("File '%s' successfully loaded", filename.c_str());
-#endif
 
     FileLoaded = true;
     return LPS_ERROR_NONE;

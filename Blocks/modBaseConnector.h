@@ -19,8 +19,8 @@ namespace eLibV2
 		};
 
 	public:
-		BaseConnector(std::string name = "BaseConnector", int numInputs = 0, int numOutputs = 0)
-			: BaseName(name), numberOfInputs(numInputs), numberOfOutputs(numOutputs) {}
+		BaseConnector(int numInputs = 0, int numOutputs = 0)
+			: numberOfInputs(numInputs), numberOfOutputs(numOutputs) {}
 
 		/* process signal chain */
 		virtual double processConnection();

@@ -10,8 +10,6 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#define WAVE_DEBUG_MODE  1
-
 // Wave Formats and Subchunks
 #define WAVE_MAGIC_RIFF "RIFF"
 #define WAVE_MAGIC_WAVE "WAVE"
@@ -27,64 +25,63 @@
 #define WAVE_MAGIC_SMPL "smpl"
 #define WAVE_MAGIC_INST "inst"
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-    enum { MAX_WAVE_BUFFER = 0x10000 };
-
-    enum
-    {
-        WAVE_COMPR_UNKNWON = 0,
-        WAVE_COMPR_PCM,
-        WAVE_COMPR_MS_ADPCM,
-        WAVE_COMPR_ALAW = 6,
-        WAVE_COMPR_ULAW,
-        WAVE_COMPR_IMA_ADPCM = 17,
-        WAVE_COMPR_EXPERIMENTAL = 0xFFFF
-    };
-
-    // Data Compression
-    struct waveHeader
-    {
-        BYTE Magic[4];              // should be "RIFF"
-        ULONG Size;                 // Filesize in Bytes without Header and Size
-        BYTE RiffType[4];           // should be "WAVE"
-    };
-
-    struct chunkData
-    {
-        BYTE ChunkID[4];            // Type of WaveChunk
-        ULONG ChunkSize;            // Size of Chunk
-        BYTE* Data;                 // Data of Chunk
-    };
-
-    typedef struct fmtChunk
-    {
-        USHORT Compression;         // Type of Compression
-        USHORT NumChannels;         // Number of Channels (1 = Mono, 2 = Stereo)
-        ULONG SampleRate;           // Samplerate in Hertz
-        ULONG BytesPerSec;          // Average Bytes per Second
-        USHORT BlockAlign;          // Block Align
-        USHORT BitsPerSample;       // Significant Bits per Sample
-        USHORT ExtraFormatLng;      // Length of Extra Format
-        BYTE* ExtraFormatData;      // Extra Format Bytes
-    } WaveFormat;
-
-    struct dataChunk
-    {
-        double* Data;               // Data
-    };
-
-    struct waveFile
-    {
-        struct waveHeader Header;
-        WaveFormat fmt;
-        struct dataChunk data;
-    };
-
     class WaveLoader : public BaseModule
     {
+	public:
+		enum { MAX_WAVE_BUFFER = 0x10000 };
+
+		enum
+		{
+			WAVE_COMPR_UNKNWON = 0,
+			WAVE_COMPR_PCM,
+			WAVE_COMPR_MS_ADPCM,
+			WAVE_COMPR_ALAW = 6,
+			WAVE_COMPR_ULAW,
+			WAVE_COMPR_IMA_ADPCM = 17,
+			WAVE_COMPR_EXPERIMENTAL = 0xFFFF
+		};
+
+		// Data Compression
+		struct waveHeader
+		{
+			BYTE Magic[4];              // should be "RIFF"
+			ULONG Size;                 // Filesize in Bytes without Header and Size
+			BYTE RiffType[4];           // should be "WAVE"
+		};
+
+		struct chunkData
+		{
+			BYTE ChunkID[4];            // Type of WaveChunk
+			ULONG ChunkSize;            // Size of Chunk
+			BYTE* Data;                 // Data of Chunk
+		};
+
+		typedef struct fmtChunk
+		{
+			USHORT Compression;         // Type of Compression
+			USHORT NumChannels;         // Number of Channels (1 = Mono, 2 = Stereo)
+			ULONG SampleRate;           // Samplerate in Hertz
+			ULONG BytesPerSec;          // Average Bytes per Second
+			USHORT BlockAlign;          // Block Align
+			USHORT BitsPerSample;       // Significant Bits per Sample
+			USHORT ExtraFormatLng;      // Length of Extra Format
+			BYTE* ExtraFormatData;      // Extra Format Bytes
+		} WaveFormat;
+
+		struct dataChunk
+		{
+			double* Data;               // Data
+		};
+
+		struct waveFile
+		{
+			struct waveHeader Header;
+			WaveFormat fmt;
+			struct dataChunk data;
+		};
+
     public:
 		WaveLoader() : BaseName("WaveLoader") { Init(); }
         ~WaveLoader();
@@ -107,10 +104,6 @@ namespace eLibV2
         struct chunkData Chunk;
         double *WaveData;
         long SizeOfData;
-
-    #if WAVE_DEBUG_MODE
-        char debug_temp[1024];
-    #endif
     };
 }
 

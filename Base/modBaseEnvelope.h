@@ -17,8 +17,7 @@ namespace eLibV2
 		};
 
     public:
-		BaseEnvelope(std::string name = "BaseEnvelope")
-			: BaseConnector(name, 1, 1) {}
+		BaseEnvelope(std::string name = "BaseEnvelope")	: BaseName(name), BaseConnector(1, 1) {}
 
         virtual void Init(void) = 0;
         virtual void Reset(void) = 0;
