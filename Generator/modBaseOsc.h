@@ -2,6 +2,9 @@
 #define MODBASEOSC_H_
 
 #include <Base/modBaseGenerator.h>
+#include <Generator/modWavetable.h>
+
+#include <Util/modFrequencyTable.h>
 #include <Util/modLogger.h>
 
 using namespace eLibV2;
@@ -60,6 +63,8 @@ namespace eLibV2
         double dPhase;
         double dSamplerate;
 		double dScaler;
+		BaseWavetable *pBaseWavetable;
+
     };
 }
 

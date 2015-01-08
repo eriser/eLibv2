@@ -1,5 +1,7 @@
 #include <Util/modLogger.h>
 
+using namespace eLibV2;
+
 bool ModuleLogger::debugActive[DBG_CLASS_END] = { false, false, false };
 
 void ModuleLogger::print(const char* format, ...)

@@ -16,7 +16,7 @@ void BaseOscillator::Init(void)
     setSamplerate(44100.0);
     dPhase = 0.0;
 
-    SetupFreqs();
+    FrequencyTable::SetupFreqs();
 }
 
 void BaseOscillator::Reset(void)
@@ -69,15 +69,15 @@ double BaseOscillator::Process(VstInt16 Note)
 
     data = pBaseWavetable->getWaveData(lWaveform, dPhase);
 
-    dBase = freqtab[(Note + (VstInt16)(dCoarse)) & 0x7f];
+    dBase = FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)) & 0x7f);
     if (dFinetune >= 0.0)
     {
-		dTune = (freqtab[(Note + (VstInt16)(dCoarse)+1) & 0x7f] - dBase) * (((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
+		dTune = (FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)+1) & 0x7f) - dBase) * (((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
         dFreq = (dBase + dTune) * dScaler;
     }
     else
     {
-		dTune = (dBase - freqtab[(Note + (VstInt16)(dCoarse)-1) & 0x7f]) * (0.5 - ((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
+		dTune = (dBase - FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)-1) & 0x7f)) * (0.5 - ((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
         dFreq = (dBase - dTune) * dScaler;
     }
     dPhase += dFreq;
