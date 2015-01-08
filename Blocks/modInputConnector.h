@@ -1,7 +1,7 @@
 #ifndef MODINPUTCONNECTOR_H_
 #define MODINPUTCONNECTOR_H_
 
-#include <Blocks/modBaseConnector.h>
+#include <Base/modBaseConnection.h>
 
 #include <Util/modLogger.h>
 
@@ -9,10 +9,10 @@
 
 namespace eLibV2
 {
-	class InputConnector: public BaseConnector
+	class InputConnector : public BaseConnection
 	{
 	public:
-		InputConnector(std::string name = "InputConnector")	: BaseName(name), BaseConnector(1, 0) {}
+		InputConnector(std::string name = "InputConnector")	: BaseName(name) {}
 
 		virtual void setInput(double value) { ModuleLogger::print("%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
 		virtual double processConnection() { return processInputs(); }

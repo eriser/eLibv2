@@ -1,7 +1,7 @@
 #ifndef MODOUTPUTCONNECTOR_H_
 #define MODOUTPUTCONNECTOR_H_
 
-#include <Blocks/modBaseConnector.h>
+#include <Base/modBaseConnection.h>
 
 #include <Util/modLogger.h>
 
@@ -9,10 +9,10 @@
 
 namespace eLibV2
 {
-	class OutputConnector : public BaseConnector
+	class OutputConnector : public BaseConnection
 	{
 	public:
-		OutputConnector(std::string name = "InputConnector") : BaseName(name), BaseConnector(1, 0) {}
+		OutputConnector(std::string name = "InputConnector") : BaseName(name) {}
 
 	protected:
 		double mValue;

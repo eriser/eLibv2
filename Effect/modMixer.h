@@ -3,8 +3,6 @@
 
 #include <Base/modBaseEffect.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
     enum

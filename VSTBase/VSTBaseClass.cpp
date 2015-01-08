@@ -1,7 +1,3 @@
-/*
- * VSTBaseClass
- */
-
 #include <VSTBase/VSTBaseClass.h>
 
 using namespace eLibV2;
@@ -291,7 +287,7 @@ bool VSTBaseClass::setProcessPrecision(VstInt32 precision)
 //-----------------------------------------------------------------------------------------
 VstInt32 VSTBaseClass::getNumMidiInputChannels()
 {
-    return NUM_MIDI_OUTPUT_CHANNELS;
+    return NUM_MIDI_INPUT_CHANNELS;
 }
 
 //-----------------------------------------------------------------------------------------

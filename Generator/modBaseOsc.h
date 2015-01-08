@@ -23,7 +23,7 @@ namespace eLibV2
 		};
 
     public:
-		BaseOscillator(std::string name = "BaseOscillator")	: BaseName(name), BaseConnector(4, 1) {	Init(); }
+		BaseOscillator(std::string name = "BaseOscillator")	: BaseName(name) { Init(); }
 		~BaseOscillator();
 
 	public:
@@ -48,10 +48,10 @@ namespace eLibV2
 
 	public:
 		/* attach methods */
-		void attachNote(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_NOTE, controller); }
-		void attachWaveform(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_WAVEFORM, controller); }
-		void attachCoarse(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_COARSE, controller); }
-		void attachFinetune(BaseConnector *controller) { connect(CONNECTION_OSC_INPUT_FINETUNE, controller); }
+		void attachNote(BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_NOTE, controller); }
+		void attachWaveform(BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_WAVEFORM, controller); }
+		void attachCoarse(BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_COARSE, controller); }
+		void attachFinetune(BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_FINETUNE, controller); }
 
     protected:
         VstInt32 lWaveform;

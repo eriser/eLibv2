@@ -16,8 +16,7 @@ namespace eLibV2
 			CONNECTION_OVERDRIVE_LEVEL
 		};
 
-		FxOverdrive(std::string name = "FxOverdrive")
-			: BaseName(name) { Init(); }
+		FxOverdrive(std::string name = "FxOverdrive") : BaseName(name) { Init(); }
 
 		void Init() { setLevel(150.0); }
 		void Reset() {}
@@ -29,8 +28,8 @@ namespace eLibV2
         double getLevel(void) {return dLevel;}
 
 	public:
-		void attachInput(BaseConnector *controller) { connect(CONNECTION_OVERDRIVE_INPUT, controller); }
-		void attachLevel(BaseConnector *controller) { connect(CONNECTION_OVERDRIVE_LEVEL, controller); }
+		void attachInput(BaseConnection *controller) { connect(CONNECTION_OVERDRIVE_INPUT, controller); }
+		void attachLevel(BaseConnection *controller) { connect(CONNECTION_OVERDRIVE_LEVEL, controller); }
 
 	protected:
         double dLevel;

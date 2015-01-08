@@ -1,5 +1,7 @@
 #include <Effect/modMixer.h>
 
+using namespace eLibV2;
+
 void FxMixer::Init(void)
 {
     setVolume(0.0);

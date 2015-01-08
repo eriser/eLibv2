@@ -11,8 +11,7 @@ namespace eLibV2
 		enum { kNumNotes = 128 };
 
 	public:
-		BaseGenerator(std::string name = "BaseGenerator")
-			: BaseName(name), BaseConnector(0, 1) {}
+		BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
 
 		virtual void Init(void) = 0;
 		virtual void Reset(void) = 0;

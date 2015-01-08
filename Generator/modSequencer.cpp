@@ -49,7 +49,6 @@ void BaseSequencer::addSteps(long Count)
 double BaseSequencer::Process(void)
 {
     double ret;
-    bool advance = false;
     long lNeededSamplePosition = 0;
 
     ret = getStepValue(lCurrentStepIndex);

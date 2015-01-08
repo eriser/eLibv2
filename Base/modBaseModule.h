@@ -1,7 +1,7 @@
 #ifndef MODBASEMODULE_H_
 #define MODBASEMODULE_H_
 
-#include <Blocks/modBaseConnector.h>
+#include <Base/modBaseConnection.h>
 
 #include <Util/modDefines.h>
 #include <Util/modHelper.h>
@@ -17,7 +17,7 @@
 
 namespace eLibV2
 {
-	class BaseModule : virtual public BaseConnector, public ModuleHelper, public ModuleTestCase
+	class BaseModule : virtual public BaseConnection, public ModuleHelper, public ModuleTestCase
     {
     public:
 		BaseModule() : BaseName("BaseModule") {}

@@ -30,8 +30,8 @@ namespace eLibV2
         void setWrapLevel(double WrapLevel) {dWrapLevel = WrapLevel;}
 
 	public:
-		void attachInput(BaseConnector *controller) { connect(WAVEWRAP_INPUT, controller); }
-		void attachLevel(BaseConnector *controller) { connect(WAVEWRAP_LEVEL, controller); }
+		void attachInput(BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
+		void attachLevel(BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
 
 
     private:

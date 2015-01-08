@@ -2,7 +2,6 @@
 #define __ELBI2_H__
 
 // block modules
-#include <Blocks/modBaseConnector.h>
 #include <Blocks/modConstantConnector.h>
 #include <Blocks/modInputConnector.h>
 #include <Blocks/modOutputConnector.h>

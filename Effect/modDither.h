@@ -27,8 +27,7 @@ namespace eLibV2
 		};
 
     public:
-		FxDither(std::string name = "FxDither")
-			: BaseName(name), BaseConnector(1, 1) { Init(); }
+		FxDither(std::string name = "FxDither")	: BaseName(name) { Init(); }
 
         virtual void Init(void);
         virtual void Reset(void);
@@ -41,8 +40,8 @@ namespace eLibV2
 		void setBitsize(VstInt16 Bitsize);
 
 	public:
-		void attachInput(BaseConnector *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
-		void attachBitsize(BaseConnector *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
+		void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
+		void attachBitsize(BaseConnection *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
 
     private:
 		VstInt16 mBitsize;
