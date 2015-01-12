@@ -2,10 +2,11 @@
 #define __ELBI2_H__
 
 // block modules
-#include <Blocks/modConstantConnector.h>
-#include <Blocks/modInputConnector.h>
-#include <Blocks/modOutputConnector.h>
-#include <Blocks/modScalingConnector.h>
+#include <Blocks/modConstantConnection.h>
+#include <Blocks/modInputConnection.h>
+#include <Blocks/modOutputConnection.h>
+#include <Blocks/modMultiplierConection.h>
+#include <Blocks/modScalingConnection.h>
 
 // loader modules
 #include <Loader/modLPSLoader.h>

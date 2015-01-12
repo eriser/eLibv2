@@ -1,6 +1,6 @@
 #include <MIDI/modMidiEventAdapter.h>
 
-double MidiEventAdapter::processIOs()
+double MidiEventAdapter::processConnection()
 {
 	double res = 0.0;
 	std::vector<MidiEvent> events;

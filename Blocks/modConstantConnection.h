@@ -1,7 +1,7 @@
 #ifndef MODCONSTANTCONNECTOR_H_
 #define MODCONSTANTCONNECTOR_H_
 
-#include <Blocks/modInputConnector.h>
+#include <Blocks/modInputConnection.h>
 
 #include <Util/modLogger.h>
 
@@ -9,10 +9,10 @@
 
 namespace eLibV2
 {
-	class ConstantConnector : public InputConnector
+	class ConstantConnection : public InputConnection
 	{
 	public:
-		ConstantConnector(double value) : BaseName("ConstantConnector"), mValue(value) {}
+		ConstantConnection(double value) : BaseName("ConstantConnection"), mValue(value) {}
 
 		virtual double processIOs() { return processInputs(); }
 		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }

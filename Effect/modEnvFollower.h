@@ -2,6 +2,7 @@
 #define MODENVFOLLOWER_H_
 
 #include <Base/modBaseEffect.h>
+#include <Util/modHelper.h>
 
 using namespace eLibV2;
 

@@ -2,5 +2,5 @@
 
 double NoiseGenerator::Process(void)
 {
-    return GenerateTestSignal();
+	return ModuleHelper::GenerateTestSignal();
 }

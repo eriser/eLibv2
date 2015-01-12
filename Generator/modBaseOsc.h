@@ -6,16 +6,17 @@
 
 #include <Util/modFrequencyTable.h>
 #include <Util/modLogger.h>
+#include <Util/modHelper.h>
 
 using namespace eLibV2;
 
 namespace eLibV2
 {
-    static const double BASEOSC_COARSE_RANGE = 24.0;
-    static const double BASEOSC_FINE_RANGE = 100.0;
+	static const double BASEOSC_COARSE_RANGE = 24.0;
+	static const double BASEOSC_FINE_RANGE = 100.0;
 
-    class BaseOscillator : public BaseGenerator
-    {
+	class BaseOscillator : public BaseGenerator
+	{
 	protected:
 		enum
 		{
@@ -25,13 +26,12 @@ namespace eLibV2
 			CONNECTION_OSC_INPUT_FINETUNE
 		};
 
-    public:
+	public:
 		BaseOscillator(std::string name = "BaseOscillator")	: BaseName(name) { Init(); }
-		~BaseOscillator();
 
 	public:
-        virtual void Init(void);
-        virtual void Reset(void);
+		virtual void Init(void);
+		virtual void Reset(void);
 		virtual bool Test(void) { return true; }
 		virtual double Process(VstInt16 Note);
 		virtual double processConnection();
@@ -39,15 +39,15 @@ namespace eLibV2
 	public:
 		/* set and get methods */
 		void setWaveform(VstInt32 Waveform);
-        void setCoarse(double Coarse);
-        void setFinetune(double Finetune);
-        void setSamplerate(double Samplerate);
+		void setCoarse(double Coarse);
+		void setFinetune(double Finetune);
+		void setSamplerate(double Samplerate);
 		void adjustScaler();
 
-        VstInt32 getWaveform(void) {return lWaveform;}
-        double getCoarse(void) {return dCoarse;}
-        double getFinetune(void) {return dFinetune;}
-        VstInt32 getNumWaveforms(void);
+		VstInt32 getWaveform(void) {return lWaveform;}
+		double getCoarse(void) {return dCoarse;}
+		double getFinetune(void) {return dFinetune;}
+		VstInt32 getNumWaveforms(void);
 
 	public:
 		/* attach methods */
@@ -56,16 +56,14 @@ namespace eLibV2
 		void attachCoarse(BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_COARSE, controller); }
 		void attachFinetune(BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_FINETUNE, controller); }
 
-    protected:
-        VstInt32 lWaveform;
-        double dCoarse;
-        double dFinetune;
-        double dPhase;
-        double dSamplerate;
+	protected:
+		VstInt32 lWaveform;
+		double dCoarse;
+		double dFinetune;
+		double dPhase;
+		double dSamplerate;
 		double dScaler;
-		BaseWavetable *pBaseWavetable;
-
-    };
+	};
 }
 
 #endif

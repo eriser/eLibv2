@@ -5,9 +5,9 @@
 
 namespace eLibV2
 {
-    class FxWaveWrap : public BaseEffect
-    {
-    public:
+	class FxWaveWrap : public BaseEffect
+	{
+	public:
 		enum { WRAP_WAVESIZE = 32768 };
 		enum
 		{
@@ -26,18 +26,18 @@ namespace eLibV2
 		virtual double processConnection();
 
 	public:
-        double getWrapLevel(void) {return dWrapLevel;}
-        void setWrapLevel(double WrapLevel) {dWrapLevel = WrapLevel;}
+		double getWrapLevel(void) {return dWrapLevel;}
+		void setWrapLevel(double WrapLevel) {dWrapLevel = WrapLevel;}
 
 	public:
 		void attachInput(BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
 		void attachLevel(BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
 
 
-    private:
-        double dWrapLevel;
-        double triangle[WRAP_WAVESIZE];
-    };
+	private:
+		double dWrapLevel;
+		double triangle[WRAP_WAVESIZE];
+	};
 }
 
 #endif

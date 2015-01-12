@@ -17,7 +17,7 @@ namespace eLibV2
 		MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
 
 		/* process first existing note on selected channel */
-		virtual double processIOs();
+		virtual double processConnection();
 
 	private:
 		const int mChannel;

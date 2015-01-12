@@ -5,7 +5,7 @@
 
 namespace eLibV2
 {
-	class ScalingConnector : public BaseConnection
+	class ScalingConnection : public BaseConnection
 	{
 	public:
 		enum
@@ -16,7 +16,7 @@ namespace eLibV2
 		};
 
 	public:
-		ScalingConnector(std::string name = "ScalingConnector", double factor = 1.0, double offset = 0.0)
+		ScalingConnection(std::string name = "ScalingConnection", double factor = 1.0, double offset = 0.0)
 			: BaseName(name), numInputs(0), mFactor(factor), mOffset(offset) {}
 
 		virtual void Init() {}

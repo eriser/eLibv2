@@ -5,7 +5,7 @@ using namespace eLibV2;
 double FxOverdrive::Process(double input)
 {
     double ret = input * dLevel;
-	ret = clamp(ret, -1.0, 1.0);
+	ret = ModuleHelper::clamp(ret, -1.0, 1.0);
 
 	return ret;
 }

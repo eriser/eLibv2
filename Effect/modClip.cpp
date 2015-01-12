@@ -4,12 +4,12 @@ using namespace eLibV2;
 
 void FxClip::setClipLevel(double ClipLevel)
 {
-	dClipLevel = clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX);
+	dClipLevel = ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX);
 }
 
 void FxClip::setClipMode(long ClipMode)
 {
-	lClipMode = clamp(ClipMode, CLIP_MODE_MIN, CLIP_MODE_MAX);
+	lClipMode = ModuleHelper::clamp(ClipMode, CLIP_MODE_MIN, CLIP_MODE_MAX);
 }
 
 void FxClip::Init()
@@ -61,7 +61,7 @@ bool FxClip::Test(void)
         setClipLevel(0.8);
         for (long ii = 0; ii < 10; ii++)
         {
-            In = GenerateTestSignal();
+            In = ModuleHelper::GenerateTestSignal();
             Out = Process(In);
 			ModuleLogger::print("mode: %li in: %lf out: %lf", TestMode, In, Out);
         }

@@ -2,196 +2,196 @@
 
 void EnvelopeDADSR::Init(void)
 {
-    setDelay(0.25);
-    setDelayScale(1.0);
-    setAttack(0.5);
-    setAttackScale(1.0);
-    setDecay(0.5);
-    setDecayScale(1.0);
-    setSustain(0.75);
-    setRelease(0.1);
-    setReleaseScale(1.0);
-    setSamplerate(44100.0);
-    setEnvelopeMode(ENVELOPE_MODE_LINEAR);
+	setDelay(0.25);
+	setDelayScale(1.0);
+	setAttack(0.5);
+	setAttackScale(1.0);
+	setDecay(0.5);
+	setDecayScale(1.0);
+	setSustain(0.75);
+	setRelease(0.1);
+	setReleaseScale(1.0);
+	setSamplerate(44100.0);
+	setEnvelopeMode(ENVELOPE_MODE_LINEAR);
 
-    setActive(true);
-    Reset();
+	setActive(true);
+	Reset();
 }
 
 void EnvelopeDADSR::Reset(void)
 {
-    lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
-    bTrigger = bOldTrigger = false;
+	lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
+	bTrigger = bOldTrigger = false;
 }
 
 bool EnvelopeDADSR::isReady(void)
 {
-    return ((lEnvelopeState == ENVELOPE_DADSR_STATE_INIT) && ((bTrigger | bOldTrigger) == false));
+	return ((lEnvelopeState == ENVELOPE_DADSR_STATE_INIT) && ((bTrigger | bOldTrigger) == false));
 }
 
 double EnvelopeDADSR::Process(void)
 {
-    double res = 0.0, div = 0.0;
+	double res = 0.0, div = 0.0;
 
-    if (bActive)
-    {
-        switch (lEnvelopeState)
-        {
-            case ENVELOPE_DADSR_STATE_INIT:
-                tDelay = tAttack = tDecay = tRelease = 0;
+	if (bActive)
+	{
+		switch (lEnvelopeState)
+		{
+			case ENVELOPE_DADSR_STATE_INIT:
+				tDelay = tAttack = tDecay = tRelease = 0;
 
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (bTrigger)
-                    {
-                        lEnvelopeState++;
-                        break;
-                    }
-                }
-                break;
+				// trigger changed
+				if (bOldTrigger != bTrigger)
+				{
+					bOldTrigger = bTrigger;
+					if (bTrigger)
+					{
+						lEnvelopeState++;
+						break;
+					}
+				}
+				break;
 
-            case ENVELOPE_DADSR_STATE_DELAY:
-                tDelayEnd = (VstInt32)(dDelay * dDelayScale * dSamplerate);
+			case ENVELOPE_DADSR_STATE_DELAY:
+				tDelayEnd = (VstInt32)(dDelay * dDelayScale * samplerate);
 
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
+				// trigger changed
+				if (bOldTrigger != bTrigger)
+				{
+					bOldTrigger = bTrigger;
+					if (!bTrigger)
+					{
+						lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+						break;
+					}
+				}
 
-                // normal processing
-                if (tDelay < tDelayEnd)
-                    tDelay++;
-                else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_ATTACK;
-                break;
+				// normal processing
+				if (tDelay < tDelayEnd)
+					tDelay++;
+				else
+					lEnvelopeState = ENVELOPE_DADSR_STATE_ATTACK;
+				break;
 
-            case ENVELOPE_DADSR_STATE_ATTACK:
-                tAttackEnd = (VstInt32)(dAttack * dAttackScale * dSamplerate);
+			case ENVELOPE_DADSR_STATE_ATTACK:
+				tAttackEnd = (VstInt32)(dAttack * dAttackScale * samplerate);
 
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
+				// trigger changed
+				if (bOldTrigger != bTrigger)
+				{
+					bOldTrigger = bTrigger;
+					if (!bTrigger)
+					{
+						lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+						break;
+					}
+				}
 
-                // normal processing
-                if (dAttack > LOWEST)
-                    div = dAttack * dAttackScale * dSamplerate;
-                else
-                    div = LOWEST * dAttackScale * dSamplerate;
-                res = (double)tAttack / div;
+				// normal processing
+				if (dAttack > LOWEST)
+					div = dAttack * dAttackScale * samplerate;
+				else
+					div = LOWEST * dAttackScale * samplerate;
+				res = (double)tAttack / div;
 
-                if (tAttack < tAttackEnd)
-                    tAttack++;
-                else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_DECAY;
-                break;
+				if (tAttack < tAttackEnd)
+					tAttack++;
+				else
+					lEnvelopeState = ENVELOPE_DADSR_STATE_DECAY;
+				break;
 
-            case ENVELOPE_DADSR_STATE_DECAY:
-                tDecayEnd = (VstInt32)(dDecay * dDecayScale * dSamplerate);
+			case ENVELOPE_DADSR_STATE_DECAY:
+				tDecayEnd = (VstInt32)(dDecay * dDecayScale * samplerate);
 
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
+				// trigger changed
+				if (bOldTrigger != bTrigger)
+				{
+					bOldTrigger = bTrigger;
+					if (!bTrigger)
+					{
+						lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+						break;
+					}
+				}
 
-                // normal processing
-                if (dDecay > LOWEST)
-                    div = dDecay * dDecayScale * dSamplerate;
-                else
-                    div = LOWEST * dDecayScale * dSamplerate;
-                res = (((double)tDecay * (dSustain - 1.0)) / div) + 1.0;
+				// normal processing
+				if (dDecay > LOWEST)
+					div = dDecay * dDecayScale * samplerate;
+				else
+					div = LOWEST * dDecayScale * samplerate;
+				res = (((double)tDecay * (dSustain - 1.0)) / div) + 1.0;
 
-                if (tDecay < tDecayEnd)
-                    tDecay++;
-                else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_SUSTAIN;
-                break;
+				if (tDecay < tDecayEnd)
+					tDecay++;
+				else
+					lEnvelopeState = ENVELOPE_DADSR_STATE_SUSTAIN;
+				break;
 
-            case ENVELOPE_DADSR_STATE_SUSTAIN:
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
+			case ENVELOPE_DADSR_STATE_SUSTAIN:
+				// trigger changed
+				if (bOldTrigger != bTrigger)
+				{
+					bOldTrigger = bTrigger;
+					if (!bTrigger)
+					{
+						lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+						break;
+					}
+				}
 
-                res = dSustain;
-                dLastLevel = res;
-                break;
+				res = dSustain;
+				dLastLevel = res;
+				break;
 
-            case ENVELOPE_DADSR_STATE_RELEASE:
-                tReleaseEnd = (VstInt32)(dRelease * dReleaseScale * dSamplerate);
+			case ENVELOPE_DADSR_STATE_RELEASE:
+				tReleaseEnd = (VstInt32)(dRelease * dReleaseScale * samplerate);
 
-                // normal processing
-                if (dRelease > LOWEST)
-                    div = dRelease * dReleaseScale * dSamplerate;
-                else
-                    div = LOWEST * dReleaseScale * dSamplerate;
-                res = (((double)tRelease * (-dLastLevel)) / div) + dLastLevel;
+				// normal processing
+				if (dRelease > LOWEST)
+					div = dRelease * dReleaseScale * samplerate;
+				else
+					div = LOWEST * dReleaseScale * samplerate;
+				res = (((double)tRelease * (-dLastLevel)) / div) + dLastLevel;
 
-                if (tRelease < tReleaseEnd)
-                    tRelease++;
-                else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
-                break;
-        }
-    }
-    else
-    {
+				if (tRelease < tReleaseEnd)
+					tRelease++;
+				else
+					lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
+				break;
+		}
+	}
+	else
+	{
 		Reset();
-    }
-    dLastLevel = res;
-    return res;
+	}
+	dLastLevel = res;
+	return res;
 }
 
 bool EnvelopeDADSR::Test(void)
 {
-    double Value;
-    long oldstate = 0;
+	double Value;
+	long oldstate = 0;
 
-    TestBeginMsg();
-    ModuleLogger::print("using delay: %lf", dDelay);
+	TestBeginMsg();
+	ModuleLogger::print("using delay: %lf", dDelay);
 	ModuleLogger::print("using attack: %lf", dAttack);
 	ModuleLogger::print("using decay: %lf", dDecay);
 	ModuleLogger::print("using sustain: %lf", dSustain);
 	ModuleLogger::print("using release: %lf", dRelease);
-    setTrigger(true);
-    for (long EnvTime = 0; EnvTime < 200000; EnvTime++)
-    {
-        Value = Process();
-        if (oldstate != lEnvelopeState)
-        {
+	setTrigger(true);
+	for (long EnvTime = 0; EnvTime < 200000; EnvTime++)
+	{
+		Value = Process();
+		if (oldstate != lEnvelopeState)
+		{
 			ModuleLogger::print("time: %li state: %li value: %lf", EnvTime, lEnvelopeState, Value);
-            oldstate = lEnvelopeState;
-        }
-        if (EnvTime > 60000)
-            setTrigger(false);
-    }
-    TestEndMsg();
+			oldstate = lEnvelopeState;
+		}
+		if (EnvTime > 60000)
+			setTrigger(false);
+	}
+	TestEndMsg();
 
 	return true;
 }

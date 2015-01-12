@@ -3,25 +3,23 @@
 
 #include <Base/modBaseModule.h>
 #include <Loader/modWaveLoader.h>
+#include <Util/modHelper.h>
 
 #include <time.h>
 #include <math.h>
 #include <stdlib.h>
 
+#include <string>
+#include <vector>
+
 using namespace eLibV2;
 
 namespace eLibV2
 {
-    class BaseWavetable : public BaseModule
-    {
+	class BaseWavetable : public BaseModule
+	{
 	protected:
 		enum { kWavesize = 65536 };
-
-		enum
-		{
-			WAVEFORM_INDEX_NONE = 0,
-			WAVEFORM_INDEX_MAX = 200
-		};
 
 		typedef struct
 		{
@@ -31,12 +29,15 @@ namespace eLibV2
 			double *WaveData;
 		} Waveform;
 
-    public:
+	private:
 		BaseWavetable(std::string name = "BaseWavetable")
 			: BaseName(name) { Init(); }
-        ~BaseWavetable();
 
-        virtual void Init(void);
+	public:
+		static BaseWavetable *getInstance();
+		~BaseWavetable();
+
+		virtual void Init(void);
 		virtual bool Test(void);
 
 	private:
@@ -51,17 +52,18 @@ namespace eLibV2
 		void DeleteWaveform(VstInt32 Index);
 
 	public:
-        long getWaveSize(VstInt16 WaveIndex);
-        double adjustPhase(double phase);
-        double adjustPhase(VstInt16 WaveIndex, double phase);
-        double getWaveData(VstInt32 WaveIndex, double dPhase);
-        bool getWaveName(VstInt32 WaveIndex, char* name);
-        long getNumLoadedWaveforms(void) {return LoadedWaveforms;}
+		long getWaveSize(VstInt16 WaveIndex);
+		double adjustPhase(double phase);
+		double adjustPhase(VstInt16 WaveIndex, double phase);
+		double getWaveData(VstInt32 WaveIndex, double dPhase);
+		bool getWaveName(VstInt32 WaveIndex, char* name);
+		long getNumLoadedWaveforms(void) { return Waveforms.size(); }
 
-    private:
-        Waveform Waveforms[WAVEFORM_INDEX_MAX];
-        long LoadedWaveforms;
-    };
+	private:
+		std::vector<Waveform> Waveforms;
+
+		static BaseWavetable *instance;
+	};
 }
 
 #endif

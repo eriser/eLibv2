@@ -3,6 +3,7 @@
 
 #include <Base/modBaseEffect.h>
 #include <Util/modLogger.h>
+#include <Util/modHelper.h>
 
 #include <math.h>
 
@@ -10,8 +11,8 @@ using namespace eLibV2;
 
 namespace eLibV2
 {
-    class FxDither : public BaseEffect
-    {
+	class FxDither : public BaseEffect
+	{
 	public:
 		enum
 		{
@@ -26,11 +27,11 @@ namespace eLibV2
 			DITHER_BITSIZE_MAX = 32
 		};
 
-    public:
+	public:
 		FxDither(std::string name = "FxDither")	: BaseName(name) { Init(); }
 
-        virtual void Init(void);
-        virtual void Reset(void);
+		virtual void Init(void);
+		virtual void Reset(void);
 		virtual bool Test(void);
 		virtual double Process(double Input);
 		virtual double processConnection();
@@ -43,9 +44,9 @@ namespace eLibV2
 		void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
 		void attachBitsize(BaseConnection *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
 
-    private:
+	private:
 		VstInt16 mBitsize;
-    };
+	};
 }
 
 #endif

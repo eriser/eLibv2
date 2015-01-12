@@ -5,8 +5,8 @@
 
 namespace eLibV2
 {
-    class BaseEnvelope : public BaseModule
-    {
+	class BaseEnvelope : public BaseModule
+	{
 	protected:
 		enum
 		{
@@ -16,25 +16,22 @@ namespace eLibV2
 			ENVELOPE_MODE_EXPONENTIAL
 		};
 
-    public:
+	public:
 		BaseEnvelope(std::string name = "BaseEnvelope")	: BaseName(name) {}
 
-        virtual void Init(void) = 0;
-        virtual void Reset(void) = 0;
-        virtual double Process(void) = 0;
+		virtual void Reset(void) = 0;
+		virtual double Process(void) = 0;
 
-        virtual void setSampleRate(double Samplerate) {dSamplerate = Samplerate;}
-        virtual void setActive(bool Active) {bActive = Active;}
-        virtual void setEnvelopeMode(VstInt16 EnvelopeMode) {lEnvelopeMode = EnvelopeMode;}
-        virtual void setTrigger(bool Trigger) {bTrigger = Trigger;}
+		virtual void setActive(bool Active) {bActive = Active;}
+		virtual void setEnvelopeMode(VstInt16 EnvelopeMode) {lEnvelopeMode = EnvelopeMode;}
+		virtual void setTrigger(bool Trigger) {bTrigger = Trigger;}
 
-    protected:
-        bool bActive, bTrigger, bOldTrigger;
-        double dSamplerate;
-        double dLastLevel;
+	protected:
+		bool bActive, bTrigger, bOldTrigger;
+		double dLastLevel;
 
-        VstInt16 lEnvelopeMode;
-    };
+		VstInt16 lEnvelopeMode;
+	};
 }
 
 #endif

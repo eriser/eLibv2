@@ -5,7 +5,7 @@
 
 #include <audioeffectx.h>
 
-#include <Blocks/modInputConnector.h>
+#include <Blocks/modInputConnection.h>
 #include <Util/modLogger.h>
 #include <MIDI/modMidiEventHandler.h>
 
@@ -33,7 +33,7 @@ namespace eLibV2
                 void attachMidiEventHandler(MidiEventHandler *handler);
 
                 // attach parameters
-                void attachParameter(VSTBaseParameter param, InputConnector *inputConnector = 0);
+                void attachParameter(VSTBaseParameter param, InputConnection *inputConnection = 0);
 
             // virtual functions from AudioEffectX
             protected:
@@ -92,7 +92,7 @@ namespace eLibV2
 
                 // parameter properties
                 std::vector<VSTBaseParameter> mParameters;
-				std::vector<InputConnector*> mParameterConnectors;
+				std::vector<InputConnection*> mParameterConnections;
 
                 // parameter values contained in programs
                 std::vector<VSTBaseProgram> mPrograms;

@@ -2,6 +2,7 @@
 #define MODNOISEGENERATOR_H_
 
 #include <Base/modBaseModule.h>
+#include <Util/modHelper.h>
 
 using namespace eLibV2;
 

@@ -15,7 +15,6 @@ namespace eLibV2
 	public:
 		BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
 
-		virtual void Init(void) = 0;
 		virtual void Reset(void) = 0;
 		virtual double Process(VstInt16 Note) = 0;
 	};
