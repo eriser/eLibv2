@@ -45,6 +45,7 @@
 #include <Util/modParamRandom.h>
 #include <Util/modTypes.h>
 #include <Util/modTestCase.h>
+#include <Util/modXmlParser.h>
 
 // VSTBase
 #include <VSTBase/VSTBaseBitmapManager.h>
