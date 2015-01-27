@@ -3,7 +3,7 @@
 using namespace eLibV2;
 using namespace eLibV2::VSTBase;
 
-VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets, VstInt16 numParameters, VSTBaseProperties properties) : AudioEffectX(audioMaster, numPresets, numParameters)
+VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets, VstInt16 numParameters, PluginProperties properties) : AudioEffectX(audioMaster, numPresets, numParameters)
 {
 	ModuleLogger::print("VSTBaseClass::constructor");
 	mProperties = properties;
@@ -18,7 +18,9 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets,
 			isSynth();
 		if (mProperties.canProcessReplacing())
 			canProcessReplacing();
-		setUniqueID(properties.getPluginIdAsVstInt32());
+		if (mProperties.canDoubleReplacing())
+			canDoubleReplacing();
+		setUniqueID(properties.getIdAsLong());
 	}
 	suspend();
 }
@@ -215,7 +217,7 @@ bool VSTBaseClass::getEffectName(char* name)
 	std::stringstream temp;
 
 	ModuleLogger::print("VSTBaseClass::getEffectName");
-	temp << mProperties.getPluginId() << " " << (int)mProperties.getVersion();
+	temp << mProperties.getId() << " " << (int)mProperties.getVersion();
 
 	vst_strncpy (name, temp.str().c_str(), kVstMaxEffectNameLen);
 	return true;
@@ -227,7 +229,7 @@ bool VSTBaseClass::getProductString(char* text)
 	std::stringstream temp;
 
 	ModuleLogger::print("VSTBaseClass::getProductString");
-	temp << mProperties.getPluginId() << " " << (int)mProperties.getVersion();
+	temp << mProperties.getId() << " " << (int)mProperties.getVersion();
 
 	vst_strncpy (text, temp.str().c_str(), kVstMaxEffectNameLen);
 	return true;

@@ -1,4 +1,4 @@
-#include <Util/modXercesDom.h>
+#include <Util/Xml/modXercesDom.h>
 
 bool DOMPrintErrorHandler::handleError(const DOMError &domError)
 {

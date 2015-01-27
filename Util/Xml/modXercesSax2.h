@@ -11,7 +11,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
-#include <Util/modXercesUtil.h>
+#include <Util/Xml/modXercesUtil.h>
 
 #include <iostream>
 

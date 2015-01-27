@@ -15,7 +15,7 @@
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 
-#include <Util/modXercesUtil.h>
+#include <Util/Xml/modXercesUtil.h>
 
 #include <string.h>
 #include <stdlib.h>
