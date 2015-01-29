@@ -45,7 +45,6 @@
 #include <Util/modParamRandom.h>
 #include <Util/modTypes.h>
 #include <Util/modTestCase.h>
-#include <Util/Xml/modXmlParser.h>
 
 // VSTBase
 #include <VSTBase/VSTBaseBitmapManager.h>
@@ -53,7 +52,5 @@
 #include <VSTBase/VSTBaseEditor.h>
 #include <VSTBase/VSTBaseParameter.h>
 #include <VSTBase/VSTBaseProgram.h>
-
-#include <VSTBase/modPluginProperties.h>
 
 #endif

@@ -11,7 +11,7 @@ VSTBaseEditor::VSTBaseEditor(AudioEffect *effect) : AEffGUIEditor(effect)
 {
 }
 
-void VSTBaseEditor::setupEditor(const VSTBaseEditorProperties properties)
+void VSTBaseEditor::setupEditor(const EditorProperties properties)
 {
     mProperties = properties;
 

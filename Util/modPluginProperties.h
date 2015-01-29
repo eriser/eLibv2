@@ -3,6 +3,7 @@
 
 #include <Util/modDefines.h>
 #include <Util/Xml/modGenericNode.h>
+#include <Util/Xml/modXmlParser.h>
 
 #include <string>
 
@@ -15,38 +16,48 @@ namespace eLibV2
 			public:
 				PluginProperties() { mSynth = false; mId = "NoId"; mVersion = 0x0815; }
 
-				void createFromNodeVector(NodeVector node)
+				static PluginProperties loadFromXml(std::string filename)
 				{
-					for (NodeVector::iterator nodeIt = node.begin(); nodeIt != node.end(); nodeIt++)
+					PluginProperties props;
+					XmlParser parser(filename);
+					nodeVector *nodes = parser.getNodes();
+					if (nodes)
 					{
-						if ((*nodeIt)->getName() == "plugin")
-						{
-							for (StringMap::iterator attributeIt = (*nodeIt)->getAttributes().begin(); attributeIt != (*nodeIt)->getAttributes().end(); attributeIt++)
-							{
-								std::string attributeName = (*attributeIt).first;
-								std::string attributeValue = (*attributeIt).second;
+						ModuleLogger::setActive(true);
+						ModuleLogger::print("%li elements", nodes->size());
 
-								if (attributeName == "id")
-									setId(attributeValue);
-								else if (attributeName == "version")
-									setVersion(atol(attributeValue.c_str()));
-								else if (attributeName == "inputs")
-									setNumInputs(atol(attributeValue.c_str()));
-								else if (attributeName == "outputs")
-									setNumOutputs(atol(attributeValue.c_str()));
-								else if (attributeName == "parameters")
-									setNumOutputs(atol(attributeValue.c_str()));
-								else if (attributeName == "programs")
-									setNumOutputs(atol(attributeValue.c_str()));
-								else if (attributeName == "synth")
+						for (NodeVector::iterator nodeIt = nodes->begin(); nodeIt != nodes->end(); nodeIt++)
+						{
+							if ((*nodeIt)->getName() == "plugin")
+							{
+								for (StringMap::iterator attributeIt = (*nodeIt)->getAttributes().begin(); attributeIt != (*nodeIt)->getAttributes().end(); attributeIt++)
 								{
-									if (attributeValue == "true")
-										setSynth();
+									std::string attributeName = (*attributeIt).first;
+									std::string attributeValue = (*attributeIt).second;
+
+									if (attributeName == "id")
+										props.setId(attributeValue);
+									else if (attributeName == "version")
+										props.setVersion(atol(attributeValue.c_str()));
+									else if (attributeName == "inputs")
+										props.setNumInputs(atol(attributeValue.c_str()));
+									else if (attributeName == "outputs")
+										props.setNumOutputs(atol(attributeValue.c_str()));
+									else if (attributeName == "parameters")
+										props.setNumOutputs(atol(attributeValue.c_str()));
+									else if (attributeName == "programs")
+										props.setNumOutputs(atol(attributeValue.c_str()));
+									else if (attributeName == "synth")
+									{
+										if (attributeValue == "true")
+											props.setSynth();
+									}
 								}
+								break;
 							}
-							break;
 						}
 					}
+					return props;
 				}
 
 				bool isSynth() { return mSynth; }

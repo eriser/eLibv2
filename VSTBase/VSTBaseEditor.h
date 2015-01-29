@@ -7,8 +7,9 @@
 #include <string>
 
 #include <Util/modLogger.h>
-#include <VSTBASE/VSTBaseBitmapManager.h>
-#include <VSTBase/VSTBaseEditorProperties.h>
+#include <Util/modEditorProperties.h>
+
+#include <VSTBase/VSTBaseBitmapManager.h>
 
 // vst headers
 #include <audioeffectx.h>
@@ -34,7 +35,7 @@ namespace eLibV2
             VSTBaseEditor(AudioEffect* effect);
             virtual ~VSTBaseEditor() {}
 
-            virtual void setupEditor(const VSTBaseEditorProperties properties);
+            virtual void setupEditor(const EditorProperties properties);
 
             virtual void setParameter(VstInt32 index, float value) = 0;
             virtual void valueChanged(CDrawContext* context, CControl* control) = 0;
@@ -52,7 +53,7 @@ namespace eLibV2
             virtual bool openInvoked() = 0;
 
         private:
-            VSTBaseEditorProperties mProperties;
+            EditorProperties mProperties;
             VSTBaseBitmapManager bitmapManager;
 
             // controls

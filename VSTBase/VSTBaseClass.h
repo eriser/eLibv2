@@ -7,9 +7,9 @@
 
 #include <Blocks/modInputConnection.h>
 #include <Util/modLogger.h>
+#include <Util/modPluginProperties.h>
 #include <MIDI/modMidiEventHandler.h>
 
-#include <VSTBase/modPluginProperties.h>
 #include <VSTBase/VSTBaseProgram.h>
 #include <VSTBase/VSTBaseParameter.h>
 
