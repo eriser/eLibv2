@@ -7,11 +7,11 @@
 
 #include <Blocks/modInputConnection.h>
 #include <Util/modLogger.h>
-#include <Util/modPluginProperties.h>
 #include <MIDI/modMidiEventHandler.h>
 
-#include <VSTBase/VSTBaseProgram.h>
-#include <VSTBase/VSTBaseParameter.h>
+#include <Data/modPluginProgram.h>
+#include <Data/modPluginParameter.h>
+#include <Data/modPluginProperties.h>
 
 #define NUM_MIDI_INPUT_CHANNELS     16
 #define NUM_MIDI_OUTPUT_CHANNELS    16
@@ -23,17 +23,17 @@ namespace eLibV2
 		class VSTBaseClass : public AudioEffectX
 		{
 			public:
-				VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPreset, VstInt16 numParameters, PluginProperties properties);
+				VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties);
 				~VSTBaseClass() {}
 
 				// attach externally provided programs to plugin
-				void attachPrograms(VSTBasePrograms programs);
+				void attachPrograms(PluginPrograms programs);
 
 				// attach midi event handler to process midi-events
 				void attachMidiEventHandler(MidiEventHandler *handler);
 
 				// attach parameters
-				void attachParameter(VSTBaseParameter param, InputConnection *inputConnection = 0);
+				void attachParameter(PluginParameter param, InputConnection *inputConnection = 0);
 
 			// virtual functions from AudioEffectX
 			protected:
@@ -91,11 +91,11 @@ namespace eLibV2
 				MidiEventHandler *mMidiEventHandler;
 
 				// parameter properties
-				std::vector<VSTBaseParameter> mParameters;
+				std::vector<PluginParameter> mParameters;
 				std::vector<InputConnection*> mParameterConnections;
 
 				// parameter values contained in programs
-				std::vector<VSTBaseProgram> mPrograms;
+				std::vector<PluginProgram> mPrograms;
 				VstInt32 mCurrentProgram;
 
 		};

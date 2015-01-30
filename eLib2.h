@@ -8,6 +8,11 @@
 #include <Blocks/modMultiplierConection.h>
 #include <Blocks/modScalingConnection.h>
 
+// data types
+#include <Data/modPluginParameter.h>
+#include <Data/modPluginProgram.h>
+#include <Data/modPluginParameterLoader.h>
+
 // loader modules
 #include <Loader/modLPSLoader.h>
 #include <Loader/modPresetLoader.h>
@@ -50,7 +55,5 @@
 #include <VSTBase/VSTBaseBitmapManager.h>
 #include <VSTBase/VSTBaseClass.h>
 #include <VSTBase/VSTBaseEditor.h>
-#include <VSTBase/VSTBaseParameter.h>
-#include <VSTBase/VSTBaseProgram.h>
 
 #endif

@@ -3,7 +3,7 @@
 using namespace eLibV2;
 using namespace eLibV2::VSTBase;
 
-VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets, VstInt16 numParameters, PluginProperties properties) : AudioEffectX(audioMaster, numPresets, numParameters)
+VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties) : AudioEffectX(audioMaster, properties.getNumPresets(), properties.getNumParameters())
 {
 	ModuleLogger::print("VSTBaseClass::constructor");
 	mProperties = properties;
@@ -28,11 +28,11 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, VstInt16 numPresets,
 //------------------------------------------------------------------------
 // attach externally provided programs to plugin
 //------------------------------------------------------------------------
-void VSTBaseClass::attachPrograms(VSTBasePrograms programs)
+void VSTBaseClass::attachPrograms(PluginPrograms programs)
 {
 	ModuleLogger::print("VSTBaseClass::attachPrograms");
 	mPrograms.clear();
-	for (VSTBasePrograms::iterator it = programs.begin(); it != programs.end(); it++)
+	for (PluginPrograms::iterator it = programs.begin(); it != programs.end(); it++)
 		mPrograms.push_back(*it);
 }
 
@@ -48,7 +48,7 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
 //------------------------------------------------------------------------
 // attach parameters
 //------------------------------------------------------------------------
-void VSTBaseClass::attachParameter(VSTBaseParameter param, InputConnection *inputConnection)
+void VSTBaseClass::attachParameter(PluginParameter param, InputConnection *inputConnection)
 {
 	ModuleLogger::print("VSTBaseClass::attachParameter");
 	mParameters.push_back(param);
@@ -108,7 +108,7 @@ bool VSTBaseClass::getProgramNameIndexed(VstInt32 category, VstInt32 index, char
 //------------------------------------------------------------------------
 void VSTBaseClass::setParameter(VstInt32 index, float value)
 {
-	//ModuleLogger::print("setParameter: %d %f", index, value);
+	ModuleLogger::print("setParameter: %d %f", index, value);
 
 	// set value of internal parameter
 	mPrograms[mCurrentProgram].setParameter(index, value);
@@ -126,7 +126,7 @@ float VSTBaseClass::getParameter(VstInt32 index)
 {
 	double res = mPrograms[mCurrentProgram].getParameter(index);
 
-	//ModuleLogger::print("VSTBaseClass::getParameter: %d %f", index, res);
+	ModuleLogger::print("VSTBaseClass::getParameter: %d %f", index, res);
 	return res;
 }
 
@@ -149,7 +149,7 @@ float VSTBaseClass::getParameterScaled(VstInt32 index)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterName(VstInt32 index, char *label)
 {
-	//ModuleLogger::print("getParameterName: %d", index);
+	ModuleLogger::print("getParameterName: %d", index);
 
 	if (!label)
 		return;
@@ -165,7 +165,7 @@ void VSTBaseClass::getParameterName(VstInt32 index, char *label)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterDisplay(VstInt32 index, char *text)
 {
-	//ModuleLogger::print("getParameterDisplay: %d", index);
+	ModuleLogger::print("getParameterDisplay: %d", index);
 
 	if (!text)
 		return;
@@ -181,7 +181,7 @@ void VSTBaseClass::getParameterDisplay(VstInt32 index, char *text)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterLabel(VstInt32 index, char *label)
 {
-	//ModuleLogger::print("getParameterLabel: %d", index);
+	ModuleLogger::print("getParameterLabel: %d", index);
 
 	if (!label)
 		return;
@@ -219,7 +219,7 @@ bool VSTBaseClass::getEffectName(char* name)
 	ModuleLogger::print("VSTBaseClass::getEffectName");
 	temp << mProperties.getId() << " " << (int)mProperties.getVersion();
 
-	vst_strncpy (name, temp.str().c_str(), kVstMaxEffectNameLen);
+	vst_strncpy(name, temp.str().c_str(), kVstMaxEffectNameLen);
 	return true;
 }
 
@@ -231,7 +231,7 @@ bool VSTBaseClass::getProductString(char* text)
 	ModuleLogger::print("VSTBaseClass::getProductString");
 	temp << mProperties.getId() << " " << (int)mProperties.getVersion();
 
-	vst_strncpy (text, temp.str().c_str(), kVstMaxEffectNameLen);
+	vst_strncpy(text, temp.str().c_str(), kVstMaxEffectNameLen);
 	return true;
 }
 

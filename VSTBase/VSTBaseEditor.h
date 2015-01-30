@@ -7,7 +7,7 @@
 #include <string>
 
 #include <Util/modLogger.h>
-#include <Util/modEditorProperties.h>
+#include <Data/modEditorProperties.h>
 
 #include <VSTBase/VSTBaseBitmapManager.h>
 
