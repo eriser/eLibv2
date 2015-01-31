@@ -13,18 +13,23 @@
 #include <Data/modPluginParameter.h>
 #include <Data/modPluginProperties.h>
 
-#define NUM_MIDI_INPUT_CHANNELS     16
-#define NUM_MIDI_OUTPUT_CHANNELS    16
-
 namespace eLibV2
 {
 	namespace VSTBase
 	{
+		enum
+		{
+			NUM_MIDI_INPUT_CHANNELS = 16,
+			NUM_MIDI_OUTPUT_CHANNELS = 16
+		};
+
 		class VSTBaseClass : public AudioEffectX
 		{
 			public:
 				VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties);
 				~VSTBaseClass() {}
+
+				PluginProperties getProperties() { return mProperties; }
 
 				// attach externally provided programs to plugin
 				void attachPrograms(PluginPrograms programs);
@@ -102,4 +107,4 @@ namespace eLibV2
 	}
 }
 
-#endif /* VSTBASECLASS_H_ */
+#endif

@@ -10,6 +10,7 @@
 #include <Data/modEditorProperties.h>
 
 #include <VSTBase/VSTBaseBitmapManager.h>
+#include <VSTBase/VSTBaseClass.h>
 
 // vst headers
 #include <audioeffectx.h>
@@ -17,53 +18,55 @@
 
 namespace eLibV2
 {
-    namespace VSTBase
-    {
-        enum ControlType
-        {
-            kOnOffButton = 1,
-            kKickButton,
-            kTextLabel,
-            kOptionMenu,
-            kAnimKnob,
-            kNumControls
-        };
+	namespace VSTBase
+	{
+		enum ControlType
+		{
+			kOnOffButton = 1,
+			kKickButton,
+			kTextLabel,
+			kOptionMenu,
+			kAnimKnob,
+			kNumControls
+		};
 
-        class VSTBaseEditor : public AEffGUIEditor
-        {
-        public:
-            VSTBaseEditor(AudioEffect* effect);
-            virtual ~VSTBaseEditor() {}
+		class VSTBaseEditor : public AEffGUIEditor
+		{
+		public:
+			VSTBaseEditor(VSTBaseClass* effect);
 
-            virtual void setupEditor(const EditorProperties properties);
+			virtual VSTBaseClass* getEffect();
 
-            virtual void setParameter(VstInt32 index, float value) = 0;
-            virtual void valueChanged(CDrawContext* context, CControl* control) = 0;
+			virtual void setupEditor(const EditorProperties properties);
 
-            virtual bool open(void *ptr);
-            virtual void close();
+			virtual void setParameter(VstInt32 index, float value) = 0;
+			virtual void valueChanged(CDrawContext* context, CControl* control) = 0;
 
-            virtual void idle();
+			virtual bool open(void *ptr);
+			virtual void close();
 
-            CBitmap* getBitmap(const VstInt32 id);
-            CView* addControl(ControlType type, CControlListener *listener, CPoint size, CPoint offset, VstInt32 tag, VstInt32 bitmapId, CPoint handle);
-            void attachToPage(VstInt32 pageIndex, CView * control);
+			virtual void idle();
 
-        protected:
-            virtual bool openInvoked() = 0;
+			CBitmap* getBitmap(const VstInt32 id);
+			CView* addControl(ControlType type, CControlListener *listener, CPoint size, CPoint offset, VstInt32 tag, VstInt32 bitmapId, CPoint handle);
+			void attachToPage(VstInt32 pageIndex, CView * control);
 
-        private:
-            EditorProperties mProperties;
-            VSTBaseBitmapManager bitmapManager;
+		protected:
+			virtual bool openInvoked() = 0;
 
-            // controls
-            std::vector<CKickButton *> mKickButtons;
+		private:
+			VSTBaseClass *mEffect;
+			EditorProperties mProperties;
+			VSTBaseBitmapManager bitmapManager;
 
-        protected:
-            VstInt16 mActivePage;
-            std::vector<CViewContainer*> mEditorPage;
-        };
-    }
+			// controls
+			std::vector<CKickButton *> mKickButtons;
+
+		protected:
+			VstInt16 mActivePage;
+			std::vector<CViewContainer*> mEditorPage;
+		};
+	}
 }
 
-#endif /* VSTBASEEDITOR_H_ */
+#endif

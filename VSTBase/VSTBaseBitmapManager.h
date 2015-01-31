@@ -14,22 +14,22 @@
 
 namespace eLibV2
 {
-    namespace VSTBase
-    {
-        class VSTBaseBitmapManager
-        {
-        public:
-            VSTBaseBitmapManager() {}
-            ~VSTBaseBitmapManager();
+	namespace VSTBase
+	{
+		class VSTBaseBitmapManager
+		{
+		public:
+			VSTBaseBitmapManager() {}
+			~VSTBaseBitmapManager();
 
-            void addBitmap(const VstInt32 id, CBitmap *bitmap);
-            CBitmap *getBitmap(const VstInt32 bitmapId) { return mBitmaps[bitmapId]; }
-            void forgetBitmap(const VstInt32 id);
+			void addBitmap(const VstInt32 id, CBitmap *bitmap);
+			CBitmap *getBitmap(const VstInt32 bitmapId) { return mBitmaps[bitmapId]; }
+			void forgetBitmap(const VstInt32 id);
 
-        private:
-            std::map<VstInt32, CBitmap*> mBitmaps;
-        };
-    }
+		private:
+			std::map<VstInt32, CBitmap*> mBitmaps;
+		};
+	}
 }
 
-#endif /* VSTBASEBITMAPMANAGER_H_ */
+#endif

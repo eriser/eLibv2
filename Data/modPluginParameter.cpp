@@ -13,7 +13,7 @@ PluginParameter::PluginParameter(const int id, const std::string name, const std
 {
 }
 
-std::string PluginParameter::getValue(const double in)
+std::string PluginParameter::getValue(const double in) const
 {
 	std::stringstream res;
 
@@ -22,7 +22,7 @@ std::string PluginParameter::getValue(const double in)
 	switch (mType)
 	{
 	case ParameterTypeBoolean:
-		res << (in < ((mMaxValue - mMinValue) + mMinValue) / 2) ? "false" : "true";
+		res << (in < ((mMaxValue - mMinValue) / 2)) ? "false" : "true";
 		break;
 
 	case ParameterTypeDouble:

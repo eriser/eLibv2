@@ -12,7 +12,7 @@ namespace eLibV2
 	class PluginProperties
 	{
 	public:
-		PluginProperties() { mSynth = false; mEditor = false; mId = "NoId"; mVersion = 0x0815; mNumInputs = 2; mNumOutputs = 2; mNumParameters = 2; mNumPresets = 16; }
+		PluginProperties() { mSynth = false; mEditor = false; mId = "NoId"; mVersion = 0x0815; mNumInputs = 2; mNumOutputs = 2; mNumParameters = 2; mNumPrograms = 16; }
 
 		static PluginProperties loadFromXml(std::string filename)
 		{
@@ -41,29 +41,16 @@ namespace eLibV2
 							else if (attributeName == "outputs")
 								props.setNumOutputs(atol(attributeValue.c_str()));
 							else if (attributeName == "parameters")
-								props.setNumOutputs(atol(attributeValue.c_str()));
+								props.setNumParameters(atol(attributeValue.c_str()));
 							else if (attributeName == "programs")
-								props.setNumOutputs(atol(attributeValue.c_str()));
+								props.setNumPrograms(atol(attributeValue.c_str()));
 							else if (attributeName == "synth")
-							{
-								if (attributeValue == "true")
-									props.setSynth();
-							}
-						}
-					}
-					if ((*nodeIt)->getName() == "editor")
-					{
-						StringMap attributes = (*nodeIt)->getAttributes();
-						ModuleLogger::print("%li attributes", attributes.size());
-						for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
-						{
-							std::string attributeName = (*attributeIt).first;
-							std::string attributeValue = (*attributeIt).second;
-
-							if (attributeName == "active")
+								props.setSynth((attributeValue == "true") ? true : false);
+							else if (attributeName == "editor")
 								props.setEditor((attributeValue == "true") ? true : false);
+							else if (attributeName == "double")
+								props.setDoubleReplacing((attributeValue == "true") ? true : false);
 						}
-						break;
 					}
 				}
 			}
@@ -74,7 +61,7 @@ namespace eLibV2
 		bool hasEditor() { return mEditor; }
 		bool canProcessReplacing() { return mCanProcessReplacing; }
 		bool canDoubleReplacing() { return mCanDoubleReplacing; }
-		int getNumPresets() { return mNumPresets; }
+		int getNumPrograms() { return mNumPrograms; }
 		int getNumParameters() { return mNumParameters; }
 		int getNumInputs() { return mNumInputs; }
 		int getNumOutputs() { return mNumOutputs; }
@@ -91,16 +78,16 @@ namespace eLibV2
 		int getVersion() { return mVersion; }
 
 	private:
-		void setSynth() { mSynth = true; }
-		void setProcessReplacing() { mCanProcessReplacing = true; }
-		void setDoubleReplacing() { mCanDoubleReplacing = true; }
-		void setNumPresets(int numPresets) { mNumPresets = numPresets; }
+		void setNumPrograms(int numPrograms) { mNumPrograms = numPrograms; }
 		void setNumParameters(int numParameters) { mNumParameters = numParameters; }
 		void setNumInputs(int numInputs) { mNumInputs = numInputs; }
 		void setNumOutputs(int numOutputs) { mNumOutputs = numOutputs; }
 		void setId(std::string id) { mId = id; }
 		void setVersion(int version) { mVersion = version; }
+		void setSynth(bool synth) { mSynth = synth; }
 		void setEditor(bool active) { mEditor = active; }
+		void setProcessReplacing(bool processReplacing) { mCanProcessReplacing = processReplacing; }
+		void setDoubleReplacing(bool doubleReplacing) { mCanDoubleReplacing = doubleReplacing; }
 
 	private:
 		bool mSynth;
@@ -109,7 +96,7 @@ namespace eLibV2
 		std::string mId;
 		int mVersion;
 		int mNumInputs, mNumOutputs;
-		int mNumPresets, mNumParameters;
+		int mNumPrograms, mNumParameters;
 	};
 }
 

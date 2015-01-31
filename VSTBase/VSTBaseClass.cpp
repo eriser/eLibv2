@@ -3,9 +3,11 @@
 using namespace eLibV2;
 using namespace eLibV2::VSTBase;
 
-VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties) : AudioEffectX(audioMaster, properties.getNumPresets(), properties.getNumParameters())
+VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties) : AudioEffectX(audioMaster, properties.getNumPrograms(), properties.getNumParameters())
 {
 	ModuleLogger::print("VSTBaseClass::constructor");
+	ModuleLogger::print("%li programs %li parameters", properties.getNumPrograms(), properties.getNumParameters());
+
 	mProperties = properties;
 	mCurrentProgram = 0;
 

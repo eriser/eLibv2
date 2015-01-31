@@ -6,9 +6,6 @@
 #include <map>
 #include <string>
 
-// vst headers
-#include <audioeffectx.h>
-
 namespace eLibV2
 {
 	class PluginProgram

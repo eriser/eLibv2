@@ -20,10 +20,11 @@ namespace eLibV2
 	public:
 		PluginParameter(const int id, const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue = 0.0);
 
-		std::string getName() { return mParameterName; }
-		std::string getLabel() { return mUnitLabel; }
-		std::string getValue(const double in);
+		std::string getName() const { return mParameterName; }
+		std::string getLabel() const { return mUnitLabel; }
+		std::string getValue(const double in) const;
 
+		int getId() const { return mId; }
 		double getMinValue() const { return mMinValue; }
 		double getMaxValue() const { return mMaxValue; }
 
