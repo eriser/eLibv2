@@ -7,46 +7,47 @@
 
 #include <math.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-	class FxDither : public BaseEffect
-	{
-	public:
-		enum
-		{
-			CONNECTION_DITHER_INPUT,
-			CONNECTION_DITHER_BITSIZE
-		};
+    namespace Effect
+    {
+        class FxDither : public BaseEffect
+        {
+        public:
+            enum
+            {
+                CONNECTION_DITHER_INPUT,
+                CONNECTION_DITHER_BITSIZE
+            };
 
-	private:
-		enum
-		{
-			DITHER_BITSIZE_MIN = 0,
-			DITHER_BITSIZE_MAX = 32
-		};
+        private:
+            enum
+            {
+                DITHER_BITSIZE_MIN = 0,
+                DITHER_BITSIZE_MAX = 32
+            };
 
-	public:
-		FxDither(std::string name = "FxDither")	: BaseName(name) { Init(); }
+        public:
+            FxDither(std::string name = "FxDither") : BaseName(name) { Init(); }
 
-		virtual void Init(void);
-		virtual void Reset(void);
-		virtual bool Test(void);
-		virtual double Process(double Input);
-		virtual double processConnection();
+            virtual void Init(void);
+            virtual void Reset(void);
+            virtual bool Test(void);
+            virtual double Process(double Input);
+            virtual double processConnection();
 
-	public:
-		VstInt16 getBitsize(void) { return mBitsize; }
-		void setBitsize(VstInt16 Bitsize);
+        public:
+            VstInt16 getBitsize(void) { return mBitsize; }
+            void setBitsize(VstInt16 Bitsize);
 
-	public:
-		void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
-		void attachBitsize(BaseConnection *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
+        public:
+            void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
+            void attachBitsize(BaseConnection *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
 
-	private:
-		VstInt16 mBitsize;
-	};
+        private:
+            VstInt16 mBitsize;
+        };
+    }
 }
 
 #endif

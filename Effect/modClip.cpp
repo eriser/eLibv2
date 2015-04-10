@@ -1,15 +1,16 @@
 #include <Effect/modClip.h>
 
 using namespace eLibV2;
+using namespace eLibV2::Effect;
 
 void FxClip::setClipLevel(double ClipLevel)
 {
-	dClipLevel = ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX);
+    dClipLevel = ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX);
 }
 
-void FxClip::setClipMode(long ClipMode)
+void FxClip::setClipMode(ClipModes ClipMode)
 {
-	lClipMode = ModuleHelper::clamp(ClipMode, CLIP_MODE_MIN, CLIP_MODE_MAX);
+    eClipMode = ClipMode;
 }
 
 void FxClip::Init()
@@ -22,7 +23,7 @@ double FxClip::Process(double Input)
 {
     double res = 0.0;
 
-    switch (lClipMode)
+    switch (eClipMode)
     {
         case CLIP_MODE_POSITIVE:
             if (Input > dClipLevel)
@@ -51,22 +52,23 @@ double FxClip::Process(double Input)
 bool FxClip::Test(void)
 {
     double In, Out;
+    ClipModes modes[] = { CLIP_MODE_POSITIVE, CLIP_MODE_NEGATIVE, CLIP_MODE_BOTH };
 
-	ModuleLogger::print("Begin Test");
-    for (long TestMode = CLIP_MODE_POSITIVE; TestMode <= CLIP_MODE_BOTH; TestMode++)
+    ModuleLogger::print("Begin Test");
+    for (unsigned int TestMode = 0; TestMode <= sizeof(modes) / sizeof(ClipModes); TestMode++)
     {
         ModuleLogger::print("setting mode to: %li", TestMode);
-        setClipMode(TestMode);
-		ModuleLogger::print("setting level to: 0.5");
+        setClipMode(modes[TestMode]);
+        ModuleLogger::print("setting level to: 0.5");
         setClipLevel(0.8);
         for (long ii = 0; ii < 10; ii++)
         {
             In = ModuleHelper::GenerateTestSignal();
             Out = Process(In);
-			ModuleLogger::print("mode: %li in: %lf out: %lf", TestMode, In, Out);
+            ModuleLogger::print("mode: %li in: %lf out: %lf", TestMode, In, Out);
         }
     }
-	ModuleLogger::print("End Test");
+    ModuleLogger::print("End Test");
 
-	return true;
+    return true;
 }

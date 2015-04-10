@@ -9,17 +9,20 @@
 
 namespace eLibV2
 {
-	class ConstantConnection : public InputConnection
-	{
-	public:
-		ConstantConnection(double value) : BaseName("ConstantConnection"), mValue(value) {}
+    namespace Connection
+    {
+        class ConstantConnection : public InputConnection
+        {
+        public:
+            ConstantConnection(double value) : BaseName("ConstantConnection"), mValue(value) {}
 
-		virtual double processIOs() { return processInputs(); }
-		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
+            virtual double processIOs() { return processInputs(); }
+            double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
 
-	protected:
-		const double mValue;
-	};
+        protected:
+            const double mValue;
+        };
+    }
 }
 
 #endif

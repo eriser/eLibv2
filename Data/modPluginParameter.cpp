@@ -2,40 +2,57 @@
 
 using namespace eLibV2;
 
-PluginParameter::PluginParameter(const int id, const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue)
-	: mId(id)
-	, mParameterName(name)
-	, mUnitLabel(label)
-	, mType(type)
-	, mMinValue(minValue)
-	, mMaxValue(maxValue)
-	, mInitialValue(initValue)
+PluginParameter::PluginParameter(const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue)
+    : mParameterName(name)
+    , mUnitLabel(label)
+    , mType(type)
+    , mMinValue(minValue)
+    , mMaxValue(maxValue)
+    , mInitialValue(initValue)
 {
 }
 
-std::string PluginParameter::getValue(const double in) const
+double PluginParameter::getValue(const double in) const
 {
-	std::stringstream res;
+    double output;
+    output = (in * (mMaxValue - mMinValue)) + mMinValue;
 
-	double output = (in * (mMaxValue - mMinValue)) + mMinValue;
+    if (isBooleanType())
+        return (in < 0.5) ? 0 : 1;
+    else if (isIntegerType())
+        return ((float)((int)output));
+    else
+        return (float)output;
+}
 
-	switch (mType)
-	{
-	case ParameterTypeBoolean:
-		res << (in < ((mMaxValue - mMinValue) / 2)) ? "false" : "true";
-		break;
+std::string PluginParameter::getValueAsString(const double in) const
+{
+    std::stringstream res;
 
-	case ParameterTypeDouble:
-		res << (double)output;
-		break;
+    double output = getValue(in);
 
-	case ParameterTypeInteger:
-		res << (int)output;
-		break;
+    switch (mType)
+    {
+    case ParameterTypeBoolean:
+        res << (in < ((mMaxValue - mMinValue) / 2)) ? "false" : "true";
+        break;
 
-	default:
-		res << "...";
-		break;
-	}
-	return res.str();
+    case ParameterTypeDouble:
+        res << (double)output;
+        break;
+
+    case ParameterTypeInteger:
+        res << (int)output;
+        break;
+
+    default:
+        res << "...";
+        break;
+    }
+    return res.str();
+}
+
+double PluginParameter::getRawValue(const double in) const
+{
+    return (in - mMinValue) / (mMaxValue - mMinValue);
 }

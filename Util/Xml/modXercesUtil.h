@@ -11,19 +11,19 @@ XERCES_CPP_NAMESPACE_USE
 class StrX
 {
 public:
-	StrX(const XMLCh* toTranscode) { fLocalForm = XMLString::transcode(toTranscode); }
-	~StrX() { XMLString::release(&fLocalForm); }
+    StrX(const XMLCh* toTranscode) { fLocalForm = XMLString::transcode(toTranscode); }
+    ~StrX() { XMLString::release(&fLocalForm); }
 
-	const char* localForm() const { return fLocalForm; }
+    const char* localForm() const { return fLocalForm; }
 
 private:
-	char* fLocalForm;
+    char* fLocalForm;
 };
 
 inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
-	target << toDump.localForm();
-	return target;
+    target << toDump.localForm();
+    return target;
 }
 
 #endif

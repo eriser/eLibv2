@@ -10,16 +10,16 @@
 
 namespace eLibV2
 {
-	typedef std::vector<GenericNode*> nodeVector;
-	class XmlParser
-	{
-	public:
-		XmlParser(std::string filename);
-		nodeVector* getNodes() { return nodes; }
+    typedef std::vector<GenericNode*> nodeVector;
+    class XmlParser
+    {
+    public:
+        XmlParser(std::string filename);
+        nodeVector* getNodes() { return nodes; }
 
-	private:
-		nodeVector *nodes;
-	};
+    private:
+        nodeVector *nodes;
+    };
 }
 
 #endif

@@ -18,7 +18,7 @@ int ParamRandomizer::AddParam(long Id, double Min, double Max)
         return Id;
     }
     else
-    	return -1;
+        return -1;
 }
 
 int ParamRandomizer::DeleteParam(long Id)

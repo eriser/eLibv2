@@ -45,51 +45,51 @@ int LPSLoader::Load(std::string filename)
     // cleanup previously used memory
     Unload();
 
-	lpsfile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
+    lpsfile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!lpsfile.good())
     {
-		ModuleLogger::print("file '%s' not found\nplease reload manually", filename.c_str());
+        ModuleLogger::print("file '%s' not found\nplease reload manually", filename.c_str());
         return LPS_ERROR_FILENOTFOUND;
     }
     tracknum = 0;
     lpsfile.read((char*)&LPSFile.Magic, sizeof(LPSFile.Magic));
     if (strncmp((char*)&LPSFile.Magic, LPS_MAGIC, 4))
     {
-		ModuleLogger::print("not a LPS-File");
+        ModuleLogger::print("not a LPS-File");
         lpsfile.close();
         return LPS_ERROR_FILETYPE;
     }
 
     lpsfile.read((char*)&LPSFile.Version, sizeof(LPSFile.Version));
-	ModuleLogger::print("Version: %li.%02li", (LPSFile.Version & 0xFF00) >> 8, LPSFile.Version & 0x00FF);
+    ModuleLogger::print("Version: %li.%02li", (LPSFile.Version & 0xFF00) >> 8, LPSFile.Version & 0x00FF);
 
     lpsfile.read((char*)&LPSFile.Name, sizeof(LPSFile.Name));
-	ModuleLogger::print("Name: '%s'", (char*)&LPSFile.Name);
+    ModuleLogger::print("Name: '%s'", (char*)&LPSFile.Name);
 
     lpsfile.read((char*)&LPSFile.BPM, sizeof(LPSFile.BPM));
-	ModuleLogger::print("BPM: %i", LPSFile.BPM);
+    ModuleLogger::print("BPM: %i", LPSFile.BPM);
 
     lpsfile.read((char*)&LPSFile.MaxLengthTracks, sizeof(LPSFile.MaxLengthTracks));
     // divide by 2 for mono tracks
     LPSFile.MaxLengthTracks /= 2;
-	ModuleLogger::print("Length: %li", LPSFile.MaxLengthTracks);
+    ModuleLogger::print("Length: %li", LPSFile.MaxLengthTracks);
 
     lpsfile.read((char*)&LPSFile.NumTracks, sizeof(LPSFile.NumTracks));
-	ModuleLogger::print("Num: %li", LPSFile.NumTracks);
+    ModuleLogger::print("Num: %li", LPSFile.NumTracks);
 
     for (tracknum = 0; tracknum < LPSFile.NumTracks; tracknum++)
     {
         LPSTracks[tracknum] = new lpsData;
         if (!LPSTracks[tracknum])
         {
-			ModuleLogger::print("Error allocating memory for Track");
+            ModuleLogger::print("Error allocating memory for Track");
             return LPS_ERROR_MEMORY_TRACK;
         }
         LPSFile.TrackData[tracknum] = LPSTracks[tracknum];
         TrackData[tracknum] = new double[LPSFile.MaxLengthTracks];
         if (!TrackData[tracknum])
         {
-			ModuleLogger::print("Error allocation memory for Trackdata");
+            ModuleLogger::print("Error allocation memory for Trackdata");
             return LPS_ERROR_MEMORY_TRACKDATA;
         }
         LPSFile.TrackData[tracknum]->Data = TrackData[tracknum];
@@ -105,9 +105,9 @@ int LPSLoader::Load(std::string filename)
         }
         else
             LPSTracks[tracknum]->LengthUnCompressed = LPSFile.MaxLengthTracks;
-		ModuleLogger::print("Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
+        ModuleLogger::print("Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
 
-		/* allocate temp buffers */
+        /* allocate temp buffers */
         TrackCompressed = new BYTE[LPSTracks[tracknum]->LengthCompressed];
         LengthUncompressed = LPSTracks[tracknum]->LengthUnCompressed * 2;
         TempBuffer = new BYTE[LengthUncompressed];
@@ -145,7 +145,7 @@ int LPSLoader::Load(std::string filename)
         TempBuffer = 0;
     }
     lpsfile.close();
-	ModuleLogger::print("File '%s' successfully loaded", filename.c_str());
+    ModuleLogger::print("File '%s' successfully loaded", filename.c_str());
 
     FileLoaded = true;
     return LPS_ERROR_NONE;

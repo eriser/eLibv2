@@ -29,73 +29,73 @@ namespace eLibV2
 {
     class WaveLoader : public BaseModule
     {
-	public:
-		enum { MAX_WAVE_BUFFER = 0x10000 };
+    public:
+        enum { MAX_WAVE_BUFFER = 0x10000 };
 
-		enum
-		{
-			WAVE_COMPR_UNKNWON = 0,
-			WAVE_COMPR_PCM,
-			WAVE_COMPR_MS_ADPCM,
-			WAVE_COMPR_ALAW = 6,
-			WAVE_COMPR_ULAW,
-			WAVE_COMPR_IMA_ADPCM = 17,
-			WAVE_COMPR_EXPERIMENTAL = 0xFFFF
-		};
+        enum
+        {
+            WAVE_COMPR_UNKNWON = 0,
+            WAVE_COMPR_PCM,
+            WAVE_COMPR_MS_ADPCM,
+            WAVE_COMPR_ALAW = 6,
+            WAVE_COMPR_ULAW,
+            WAVE_COMPR_IMA_ADPCM = 17,
+            WAVE_COMPR_EXPERIMENTAL = 0xFFFF
+        };
 
-		// Data Compression
-		struct waveHeader
-		{
-			BYTE Magic[4];              // should be "RIFF"
-			ULONG Size;                 // Filesize in Bytes without Header and Size
-			BYTE RiffType[4];           // should be "WAVE"
-		};
+        // Data Compression
+        struct waveHeader
+        {
+            BYTE Magic[4];              // should be "RIFF"
+            ULONG Size;                 // Filesize in Bytes without Header and Size
+            BYTE RiffType[4];           // should be "WAVE"
+        };
 
-		struct chunkData
-		{
-			BYTE ChunkID[4];            // Type of WaveChunk
-			ULONG ChunkSize;            // Size of Chunk
-			BYTE* Data;                 // Data of Chunk
-		};
+        struct chunkData
+        {
+            BYTE ChunkID[4];            // Type of WaveChunk
+            ULONG ChunkSize;            // Size of Chunk
+            BYTE* Data;                 // Data of Chunk
+        };
 
-		typedef struct fmtChunk
-		{
-			USHORT Compression;         // Type of Compression
-			USHORT NumChannels;         // Number of Channels (1 = Mono, 2 = Stereo)
-			ULONG SampleRate;           // Samplerate in Hertz
-			ULONG BytesPerSec;          // Average Bytes per Second
-			USHORT BlockAlign;          // Block Align
-			USHORT BitsPerSample;       // Significant Bits per Sample
-			USHORT ExtraFormatLng;      // Length of Extra Format
-			BYTE* ExtraFormatData;      // Extra Format Bytes
-		} WaveFormat;
+        typedef struct fmtChunk
+        {
+            USHORT Compression;         // Type of Compression
+            USHORT NumChannels;         // Number of Channels (1 = Mono, 2 = Stereo)
+            ULONG SampleRate;           // Samplerate in Hertz
+            ULONG BytesPerSec;          // Average Bytes per Second
+            USHORT BlockAlign;          // Block Align
+            USHORT BitsPerSample;       // Significant Bits per Sample
+            USHORT ExtraFormatLng;      // Length of Extra Format
+            BYTE* ExtraFormatData;      // Extra Format Bytes
+        } WaveFormat;
 
-		struct dataChunk
-		{
-			double* Data;               // Data
-		};
+        struct dataChunk
+        {
+            double* Data;               // Data
+        };
 
-		struct waveFile
-		{
-			struct waveHeader Header;
-			WaveFormat fmt;
-			struct dataChunk data;
-		};
+        struct waveFile
+        {
+            struct waveHeader Header;
+            WaveFormat fmt;
+            struct dataChunk data;
+        };
 
     public:
-		WaveLoader() : BaseName("WaveLoader") { Init(); }
+        WaveLoader() : BaseName("WaveLoader") { Init(); }
         ~WaveLoader();
 
-	public:
+    public:
         void Init(void);
-		virtual bool Test(void);
+        virtual bool Test(void);
 
-	public:
+    public:
         int Load(std::string filename);
         void Unload(void);
 
-	public:
-		double *getWaveData(void) {return WaveData;}
+    public:
+        double *getWaveData(void) {return WaveData;}
         long getWaveSize(void) {return SizeOfData;}
         void getWaveFormat(WaveFormat *Format);
 

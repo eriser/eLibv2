@@ -1,6 +1,7 @@
 #include <Effect/modWaveWrap.h>
 
 using namespace eLibV2;
+using namespace eLibV2::Effect;
 
 /*
       ^
@@ -44,23 +45,23 @@ double FxWaveWrap::Process(double Input)
 
 double FxWaveWrap::processConnection()
 {
-	double input = 0.0;
+    double input = 0.0;
 
-	if (isConnected(WAVEWRAP_LEVEL))
-		setWrapLevel(connections[WAVEWRAP_LEVEL]->processConnection());
-	else if (isConnected(WAVEWRAP_INPUT))
-		input = connections[WAVEWRAP_INPUT]->processConnection();
-	ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
+    if (isConnected(WAVEWRAP_LEVEL))
+        setWrapLevel(connections[WAVEWRAP_LEVEL]->processConnection());
+    else if (isConnected(WAVEWRAP_INPUT))
+        input = connections[WAVEWRAP_INPUT]->processConnection();
+    ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
-	return Process(input);
+    return Process(input);
 }
 
 bool FxWaveWrap::Test()
 {
-	for (long i = 0; i < WRAP_WAVESIZE; i++)
-	{
-		if (i % 256 == 0)
-			ModuleLogger::print("Triangle: %li %lf", i, triangle[i]);
-	}
-	return true;
+    for (long i = 0; i < WRAP_WAVESIZE; i++)
+    {
+        if (i % 256 == 0)
+            ModuleLogger::print("Triangle: %li %lf", i, triangle[i]);
+    }
+    return true;
 }

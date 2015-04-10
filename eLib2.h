@@ -49,7 +49,6 @@
 #include <Util/modLogger.h>
 #include <Util/modParamRandom.h>
 #include <Util/modTypes.h>
-#include <Util/modTestCase.h>
 
 // VSTBase
 #include <VSTBase/VSTBaseBitmapManager.h>

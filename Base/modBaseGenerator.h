@@ -7,17 +7,17 @@
 
 namespace eLibV2
 {
-	class BaseGenerator : public BaseModule
-	{
-	public:
-		enum { kNumNotes = 128 };
+    class BaseGenerator : public BaseModule
+    {
+    public:
+        enum { kNumNotes = 128 };
 
-	public:
-		BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
+    public:
+        BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
 
-		virtual void Reset(void) = 0;
-		virtual double Process(VstInt16 Note) = 0;
-	};
+        virtual void Reset(void) = 0;
+        virtual double Process(VstInt16 Note) = 0;
+    };
 }
 
 #endif

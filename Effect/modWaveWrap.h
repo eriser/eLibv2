@@ -5,39 +5,44 @@
 
 namespace eLibV2
 {
-	class FxWaveWrap : public BaseEffect
-	{
-	public:
-		enum { WRAP_WAVESIZE = 32768 };
-		enum
-		{
-			WAVEWRAP_INPUT,
-			WAVEWRAP_LEVEL
-		};
+    namespace Effect
+    {
+        class FxWaveWrap : public BaseEffect
+        {
+        public:
+            enum { WRAP_WAVESIZE = 32768 };
+            enum
+            {
+                WAVEWRAP_INPUT,
+                WAVEWRAP_LEVEL
+            };
 
-	public:
-		FxWaveWrap(std::string name = "FxWaveWrap")
-			: BaseName(name) { Init(); }
+        public:
+            FxWaveWrap(std::string name = "FxWaveWrap")
+                : BaseName(name) {
+                Init();
+            }
 
-		virtual void Init(void);
-		virtual void Reset(void) {}
-		virtual bool Test();
-		virtual double Process(double Input);
-		virtual double processConnection();
+            virtual void Init(void);
+            virtual void Reset(void) {}
+            virtual bool Test();
+            virtual double Process(double Input);
+            virtual double processConnection();
 
-	public:
-		double getWrapLevel(void) {return dWrapLevel;}
-		void setWrapLevel(double WrapLevel) {dWrapLevel = WrapLevel;}
+        public:
+            double getWrapLevel(void) { return dWrapLevel; }
+            void setWrapLevel(double WrapLevel) { dWrapLevel = WrapLevel; }
 
-	public:
-		void attachInput(BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
-		void attachLevel(BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
+        public:
+            void attachInput(BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
+            void attachLevel(BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
 
 
-	private:
-		double dWrapLevel;
-		double triangle[WRAP_WAVESIZE];
-	};
+        private:
+            double dWrapLevel;
+            double triangle[WRAP_WAVESIZE];
+        };
+    }
 }
 
 #endif

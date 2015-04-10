@@ -17,44 +17,44 @@ namespace eLibV2
 {
     class LPSLoader : public BaseModule
     {
-	public:
-		enum
-		{
-			LPS_MAXTRACKS = 16,
-			LPS_MAXLENTRACK = 10 * 1024 * 1024,
-			LPS_MAXREADBUF = 0x100000,
-		};
+    public:
+        enum
+        {
+            LPS_MAXTRACKS = 16,
+            LPS_MAXLENTRACK = 10 * 1024 * 1024,
+            LPS_MAXREADBUF = 0x100000,
+        };
 
-		enum
-		{
-			LPS_ERROR_NONE = 0,
-			LPS_ERROR_FILENOTFOUND,
-			LPS_ERROR_FILETYPE,
-			LPS_ERROR_MEMORY_TRACK,
-			LPS_ERROR_MEMORY_TRACKDATA
-		};
+        enum
+        {
+            LPS_ERROR_NONE = 0,
+            LPS_ERROR_FILENOTFOUND,
+            LPS_ERROR_FILETYPE,
+            LPS_ERROR_MEMORY_TRACK,
+            LPS_ERROR_MEMORY_TRACKDATA
+        };
 
-		struct lpsData
-		{
-			BYTE    Name[64];                       // Name der Spur
-			ULONG   LengthCompressed;               // L�nge der komprimierten Spur
-			ULONG   LengthUnCompressed;             // L�nge der unkomprimierten Spur
-			double  *Data;                          // Daten
-		};
+        struct lpsData
+        {
+            BYTE    Name[64];                       // Name der Spur
+            ULONG   LengthCompressed;               // L�nge der komprimierten Spur
+            ULONG   LengthUnCompressed;             // L�nge der unkomprimierten Spur
+            double  *Data;                          // Daten
+        };
 
-		struct lpsHeader
-		{
-			BYTE    Magic[4];                       // "sLps"-Kennung
-			ULONG   Version;                        // Erstellt f�r Version
-			BYTE    Name[64];                       // Loop-Name
-			USHORT  BPM;                            // Geschwindigkeit
-			ULONG   MaxLengthTracks;                // L�nge der l�ngsten Spur
-			USHORT  NumTracks;                      // Anzahl Spuren
-			lpsData *TrackData[LPS_MAXTRACKS];      // Daten der einzelnen Spuren
-		};
+        struct lpsHeader
+        {
+            BYTE    Magic[4];                       // "sLps"-Kennung
+            ULONG   Version;                        // Erstellt f�r Version
+            BYTE    Name[64];                       // Loop-Name
+            USHORT  BPM;                            // Geschwindigkeit
+            ULONG   MaxLengthTracks;                // L�nge der l�ngsten Spur
+            USHORT  NumTracks;                      // Anzahl Spuren
+            lpsData *TrackData[LPS_MAXTRACKS];      // Daten der einzelnen Spuren
+        };
 
     public:
-		LPSLoader() : BaseName("LPSLoader") { Init(); }
+        LPSLoader() : BaseName("LPSLoader") { Init(); }
         ~LPSLoader();
 
         void Init(void);

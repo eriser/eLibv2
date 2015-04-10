@@ -1,6 +1,7 @@
 #include <Effect/modMixer.h>
 
 using namespace eLibV2;
+using namespace eLibV2::Effect;
 
 void FxMixer::Init(void)
 {

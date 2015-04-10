@@ -28,57 +28,57 @@ class DOMPrintErrorHandler : public DOMErrorHandler
 {
 public:
 
-	DOMPrintErrorHandler(){};
-	~DOMPrintErrorHandler(){};
+    DOMPrintErrorHandler(){};
+    ~DOMPrintErrorHandler(){};
 
-	/** @name The error handler interface */
-	bool handleError(const DOMError& domError);
-	void resetErrors(){};
+    /** @name The error handler interface */
+    bool handleError(const DOMError& domError);
+    void resetErrors(){};
 
 private:
-	/* Unimplemented constructors and operators */
-	DOMPrintErrorHandler(const DOMErrorHandler&);
-	void operator=(const DOMErrorHandler&);
+    /* Unimplemented constructors and operators */
+    DOMPrintErrorHandler(const DOMErrorHandler&);
+    void operator=(const DOMErrorHandler&);
 };
 
 class DOMPrintFilter : public DOMLSSerializerFilter {
 public:
 
-	DOMPrintFilter(ShowType whatToShow = DOMNodeFilter::SHOW_ALL);
-	~DOMPrintFilter(){};
+    DOMPrintFilter(ShowType whatToShow = DOMNodeFilter::SHOW_ALL);
+    ~DOMPrintFilter(){};
 
-	virtual FilterAction acceptNode(const DOMNode*) const;
-	virtual ShowType getWhatToShow() const { return fWhatToShow; };
+    virtual FilterAction acceptNode(const DOMNode*) const;
+    virtual ShowType getWhatToShow() const { return fWhatToShow; };
 
 private:
-	// unimplemented copy ctor and assignement operator
-	DOMPrintFilter(const DOMPrintFilter&);
-	DOMPrintFilter & operator = (const DOMPrintFilter&);
+    // unimplemented copy ctor and assignement operator
+    DOMPrintFilter(const DOMPrintFilter&);
+    DOMPrintFilter & operator = (const DOMPrintFilter&);
 
-	ShowType fWhatToShow;
+    ShowType fWhatToShow;
 };
 
 class DOMTreeErrorReporter : public ErrorHandler
 {
 public:
-	// -----------------------------------------------------------------------
-	//  Constructors and Destructor
-	// -----------------------------------------------------------------------
-	DOMTreeErrorReporter() : fSawErrors(false) {}
-	~DOMTreeErrorReporter() {}
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    DOMTreeErrorReporter() : fSawErrors(false) {}
+    ~DOMTreeErrorReporter() {}
 
-	void warning(const SAXParseException& toCatch);
-	void error(const SAXParseException& toCatch);
-	void fatalError(const SAXParseException& toCatch);
-	void resetErrors();
+    void warning(const SAXParseException& toCatch);
+    void error(const SAXParseException& toCatch);
+    void fatalError(const SAXParseException& toCatch);
+    void resetErrors();
 
-	bool getSawErrors() const;
-	bool fSawErrors;
+    bool getSawErrors() const;
+    bool fSawErrors;
 };
 
 inline bool DOMTreeErrorReporter::getSawErrors() const
 {
-	return fSawErrors;
+    return fSawErrors;
 }
 
 #endif

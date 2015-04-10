@@ -9,18 +9,21 @@
 
 namespace eLibV2
 {
-	class InputConnection : public BaseConnection
-	{
-	public:
-		InputConnection(std::string name = "InputConnection") : BaseName(name) {}
+    namespace Connection
+    {
+        class InputConnection : public BaseConnection
+        {
+        public:
+            InputConnection(std::string name = "InputConnection") : BaseName(name) {}
 
-		virtual void setInput(double value) { ModuleLogger::print("%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
-		virtual double processConnection() { return processInputs(); }
-		double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
+            virtual void setInput(double value) { ModuleLogger::print("%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
+            virtual double processConnection() { return processInputs(); }
+            virtual double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
 
-	protected:
-		double mValue;
-	};
+        protected:
+            double mValue;
+        };
+    }
 }
 
 #endif

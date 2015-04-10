@@ -11,16 +11,16 @@ using namespace eLibV2;
 
 namespace eLibV2
 {
-	struct sRandom
-	{
-		double Min;
-		double Max;
-	};
+    struct sRandom
+    {
+        double Min;
+        double Max;
+    };
 
-	class ParamRandomizer : public BaseModule
-	{
+    class ParamRandomizer : public BaseModule
+    {
     public:
-		ParamRandomizer() : BaseName("ParamRandomizer") { Init(); }
+        ParamRandomizer() : BaseName("ParamRandomizer") { Init(); }
 
         void Init(void);
 
@@ -31,8 +31,8 @@ namespace eLibV2
 
     private:
         std::map<long, sRandom> RandomizerMap;
-		std::map<long, sRandom>::iterator RandomizerMapIterator;
-	};
+        std::map<long, sRandom>::iterator RandomizerMapIterator;
+    };
 
 }
 

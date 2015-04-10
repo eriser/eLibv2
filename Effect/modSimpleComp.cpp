@@ -1,5 +1,8 @@
 #include <Effect/modSimpleComp.h>
 
+using namespace eLibV2;
+using namespace eLibV2::Effect;
+
 void FxSimpleComp::Init()
 {
     dThreshold = 1.0;

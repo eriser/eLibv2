@@ -9,8 +9,8 @@ typedef signed long int SLONG;
 
 union flint
 {
-	float f;
-	VstInt32 i;
+    float f;
+    VstInt32 i;
 };
 
 #endif

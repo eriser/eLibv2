@@ -11,18 +11,18 @@ using namespace eLibV2;
 
 namespace eLibV2
 {
-	class MidiEventAdapter : public BaseConnection
-	{
-	public:
-		MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
+    class MidiEventAdapter : public BaseConnection
+    {
+    public:
+        MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
 
-		/* process first existing note on selected channel */
-		virtual double processConnection();
+        /* process first existing note on selected channel */
+        virtual double processConnection();
 
-	private:
-		const int mChannel;
-		MidiEventHandler *mHandler;
-	};
+    private:
+        const int mChannel;
+        MidiEventHandler *mHandler;
+    };
 }
 
 #endif

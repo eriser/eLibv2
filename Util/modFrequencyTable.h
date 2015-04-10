@@ -3,18 +3,18 @@
 
 namespace eLibV2
 {
-	class FrequencyTable
-	{
-	public:
-		enum { kNumNotes = 128 };
+    class FrequencyTable
+    {
+    public:
+        enum { kNumNotes = 128 };
 
-		static void SetupFreqs(void);
-		static double ForNote(unsigned char note);
+        static void SetupFreqs(void);
+        static double ForNote(unsigned char note);
 
-	private:
-		FrequencyTable();
-		static bool initialized;
-		static double freqtab[kNumNotes];
-	};
+    private:
+        FrequencyTable();
+        static bool initialized;
+        static double freqtab[kNumNotes];
+    };
 }
 #endif
