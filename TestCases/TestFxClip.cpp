@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include <Effect/modClip.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
 
 TEST(TestFxClip, ClipLevel)
@@ -15,7 +14,36 @@ TEST(TestFxClip, ClipLevel)
 TEST(TestFxClip, ClipMode)
 {
     FxClip clip;
-    clip.setClipMode(ClipModes::CLIP_MODE_BOTH);
+    clip.setClipMode(FxClipMode::CLIP_MODE_BOTH);
 
-    ASSERT_EQ(ClipModes::CLIP_MODE_BOTH, clip.getClipMode());
+    ASSERT_EQ(FxClipMode::CLIP_MODE_BOTH, clip.getClipMode());
 }
+
+TEST(TestFxClip, ProcessPositive)
+{
+    FxClip clip;
+    clip.setClipLevel(1.0);
+    clip.setClipMode(FxClipMode::CLIP_MODE_POSITIVE);
+
+    ASSERT_EQ(1.0, clip.Process(2.0));
+}
+
+TEST(TestFxClip, ProcessNegative)
+{
+    FxClip clip;
+    clip.setClipLevel(1.0);
+    clip.setClipMode(FxClipMode::CLIP_MODE_NEGATIVE);
+
+    ASSERT_EQ(-1.0, clip.Process(-2.0));
+}
+
+TEST(TestFxClip, ProcessBoth)
+{
+    FxClip clip;
+    clip.setClipLevel(1.0);
+    clip.setClipMode(FxClipMode::CLIP_MODE_BOTH);
+
+    ASSERT_EQ(1.0, clip.Process(2.0));
+    ASSERT_EQ(-1.0, clip.Process(-2.0));
+}
+

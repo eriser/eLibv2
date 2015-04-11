@@ -88,7 +88,6 @@ namespace eLibV2
 
     public:
         void Init(void);
-        virtual bool Test(void);
 
     public:
         int Load(std::string filename);

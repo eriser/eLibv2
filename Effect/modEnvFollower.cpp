@@ -1,6 +1,5 @@
 #include <Effect/modEnvFollower.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
 
 void FxEnvFollower::Init(void)

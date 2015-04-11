@@ -8,15 +8,15 @@ namespace eLibV2
 {
     namespace Effect
     {
-        enum ClipModes
+        static const double CLIP_LEVEL_MIN = 0.0;
+        static const double CLIP_LEVEL_MAX = 1.0;
+
+        enum FxClipMode
         {
             CLIP_MODE_POSITIVE = 0,
             CLIP_MODE_NEGATIVE,
             CLIP_MODE_BOTH
         };
-
-        static const double CLIP_LEVEL_MIN = 0.0;
-        static const double CLIP_LEVEL_MAX = 1.0;
 
         class FxClip : public BaseEffect
         {
@@ -29,19 +29,18 @@ namespace eLibV2
             /* inherited */
             void Init(void);
             void Reset(void) {}
-            bool Test();
             double Process(double Input);
 
             /* setter, getter */
-            void setClipLevel(double ClipLevel);
+            void setClipLevel(double ClipLevel) { dClipLevel = ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX); }
             double getClipLevel(void) { return dClipLevel; }
 
-            void setClipMode(ClipModes ClipMode);
-            ClipModes getClipMode(void) { return eClipMode; }
+            void setClipMode(FxClipMode ClipMode) { eClipMode = ClipMode; }
+            FxClipMode getClipMode(void) { return eClipMode; }
 
         private:
             double dClipLevel;
-            ClipModes eClipMode;
+            FxClipMode eClipMode;
         };
     }
 }

@@ -2,11 +2,15 @@
 #define MODWAVEWRAP_H_
 
 #include <Base/modBaseEffect.h>
+#include <Util/modHelper.h>
 
 namespace eLibV2
 {
     namespace Effect
     {
+        static const double WAVEWRAP_LEVEL_MIN = 1.0;
+        static const double WAVEWRAP_LEVEL_MAX = 10.0;
+
         class FxWaveWrap : public BaseEffect
         {
         public:
@@ -22,16 +26,16 @@ namespace eLibV2
                 : BaseName(name) {
                 Init();
             }
+            ~FxWaveWrap() { if (triangle) delete[] triangle; }
 
             virtual void Init(void);
             virtual void Reset(void) {}
-            virtual bool Test();
             virtual double Process(double Input);
             virtual double processConnection();
 
         public:
             double getWrapLevel(void) { return dWrapLevel; }
-            void setWrapLevel(double WrapLevel) { dWrapLevel = WrapLevel; }
+            void setWrapLevel(double WrapLevel) { dWrapLevel = ModuleHelper::clamp(WrapLevel, WAVEWRAP_LEVEL_MIN, WAVEWRAP_LEVEL_MAX); }
 
         public:
             void attachInput(BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
@@ -40,7 +44,7 @@ namespace eLibV2
 
         private:
             double dWrapLevel;
-            double triangle[WRAP_WAVESIZE];
+            double *triangle;
         };
     }
 }

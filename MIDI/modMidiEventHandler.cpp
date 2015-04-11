@@ -79,28 +79,3 @@ void MidiEventHandler::Init()
     for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
         mMidiEvents[i] = new MidiEventVector();
 }
-
-bool MidiEventHandler::Test()
-{
-    MidiEvent res;
-    bool del;
-
-//    TestBeginMsg();
-    insertEvent(0, MidiEvent(123, 10));
-    ModuleLogger::print("size: %d", mMidiEvents[0]->size());
-    insertEvent(0, MidiEvent(124, 20));
-    ModuleLogger::print("size: %d", mMidiEvents[0]->size());
-
-    del = deleteEvent(0, MidiEvent(123, 0));
-    ModuleLogger::print("delete -> %d", del);
-    ModuleLogger::print("size: %d", mMidiEvents[0]->size());
-
-    res = mMidiEvents[0]->front();
-    ModuleLogger::print("event -> note: %d velocity: %d", res.getNote(), res.getVelocity());
-    del = deleteEvent(0, MidiEvent(124, 0));
-    ModuleLogger::print("delete -> %d", del);
-    ModuleLogger::print("size: %d", mMidiEvents[0]->size());
-//    TestEndMsg();
-
-    return true;
-}

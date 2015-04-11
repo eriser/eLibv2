@@ -11,7 +11,7 @@ namespace eLibV2
         // helper functions for truncating given value at minimum / maximum
         static double minval(double value, double minvalue) { return ((value < minvalue) ? minvalue : value); }
         static double maxval(double value, double maxvalue) { return ((value > maxvalue) ? maxvalue : value); }
-        static double clamp(double value, double minvalue, double maxvalue) { double res = minval(value, minvalue); res = maxval(value, maxvalue); return res; }
+        static double clamp(double value, double minvalue, double maxvalue) { value = minval(value, minvalue); value = maxval(value, maxvalue); return value; }
 
         // helper functions for conversion between time / frequency / quarter and samples
         static double ms2samples(double ms, double samplerate) { return (ms / 1000.0) * samplerate; }

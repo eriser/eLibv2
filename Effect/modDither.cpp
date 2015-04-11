@@ -1,12 +1,6 @@
 #include <Effect/modDither.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
-
-void FxDither::setBitsize(VstInt16 Bitsize)
-{
-    mBitsize = ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX);
-}
 
 void FxDither::Init(void)
 {
@@ -45,25 +39,4 @@ double FxDither::processConnection()
     ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
     return Process(input);
-}
-
-bool FxDither::Test(void)
-{
-    double In, Out;
-
-//    TestBeginMsg();
-    for (VstInt16 bitsize = 16; bitsize >= 2; bitsize--)
-    {
-        ModuleLogger::print("setting bitsize to: %li", bitsize);
-        setBitsize(bitsize);
-        for (long ii = 0; ii < 10; ii++)
-        {
-            In = ModuleHelper::GenerateTestSignal();
-            Out = Process(In);
-            ModuleLogger::print("bitsize: %li in: %lf out: %lf", bitsize, In, Out);
-        }
-    }
-//    TestEndMsg();
-
-    return true;
 }

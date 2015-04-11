@@ -14,7 +14,6 @@ namespace eLibV2
             : BaseName(name) {}
 
         virtual double Process(void);
-        virtual bool Test(void) { return true; }
     };
 }
 

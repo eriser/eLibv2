@@ -11,6 +11,9 @@ namespace eLibV2
 {
     namespace Effect
     {
+        static const VstInt16 DITHER_BITSIZE_MIN = 1;
+        static const VstInt16 DITHER_BITSIZE_MAX = 32;
+
         class FxDither : public BaseEffect
         {
         public:
@@ -20,25 +23,17 @@ namespace eLibV2
                 CONNECTION_DITHER_BITSIZE
             };
 
-        private:
-            enum
-            {
-                DITHER_BITSIZE_MIN = 0,
-                DITHER_BITSIZE_MAX = 32
-            };
-
         public:
             FxDither(std::string name = "FxDither") : BaseName(name) { Init(); }
 
             virtual void Init(void);
             virtual void Reset(void);
-            virtual bool Test(void);
             virtual double Process(double Input);
             virtual double processConnection();
 
         public:
             VstInt16 getBitsize(void) { return mBitsize; }
-            void setBitsize(VstInt16 Bitsize);
+            void setBitsize(VstInt16 Bitsize) { mBitsize = ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:
             void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }

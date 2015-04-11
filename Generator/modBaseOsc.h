@@ -32,7 +32,6 @@ namespace eLibV2
     public:
         virtual void Init(void);
         virtual void Reset(void);
-        virtual bool Test(void) { return true; }
         virtual double Process(VstInt16 Note);
         virtual double processConnection();
 

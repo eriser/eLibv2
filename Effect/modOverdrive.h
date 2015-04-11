@@ -8,6 +8,9 @@ namespace eLibV2
 {
     namespace Effect
     {
+        static const double OVERDRIVE_LEVEL_MIN = 0.0;
+        static const double OVERDRIVE_LEVEL_MAX = 100.0;
+
         class FxOverdrive : public BaseEffect
         {
         public:
@@ -17,15 +20,16 @@ namespace eLibV2
                 CONNECTION_OVERDRIVE_LEVEL
             };
 
+        public:
             FxOverdrive(std::string name = "FxOverdrive") : BaseName(name) { Init(); }
 
-            void Init() { setLevel(150.0); }
+            void Init() { setLevel(50.0); }
             void Reset() {}
             double Process(double input);
             virtual double processConnection();
 
         public:
-            void setLevel(double Level) { dLevel = Level; }
+            void setLevel(double Level) { dLevel = ModuleHelper::clamp(Level, OVERDRIVE_LEVEL_MIN, OVERDRIVE_LEVEL_MAX); }
             double getLevel(void) { return dLevel; }
 
         public:

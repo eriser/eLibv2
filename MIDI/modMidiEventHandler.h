@@ -25,7 +25,6 @@ namespace eLibV2
         bool hasEventsOnAnyChannel();
 
         void Init();
-        bool Test();
 
     private:
         MidiEventVector *mMidiEvents[MAX_MIDI_CHANNELS];

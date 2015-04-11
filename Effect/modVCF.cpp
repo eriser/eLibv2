@@ -1,6 +1,5 @@
 #include <Effect/modVCF.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
 
 void FxVCF::Init()

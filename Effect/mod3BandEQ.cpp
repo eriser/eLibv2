@@ -1,6 +1,5 @@
 #include <Effect/mod3BandEQ.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
 
 void Fx3BandEQ::Init()

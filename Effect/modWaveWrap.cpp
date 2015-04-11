@@ -1,6 +1,5 @@
 #include <Effect/modWaveWrap.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
 
 /*
@@ -21,9 +20,10 @@ using namespace eLibV2::Effect;
 void FxWaveWrap::Init()
 {
     // Positive Triangle
+    triangle = new double[WRAP_WAVESIZE];
     for (long i = 0; i < WRAP_WAVESIZE; i++)
         triangle[i] = (double)(i < (WRAP_WAVESIZE / 2)) ? ((double)(2.0 / (((double)WRAP_WAVESIZE / 2))) * i - 1.0) : (double)((double)(-2.0 / (((double)WRAP_WAVESIZE / 2))) * (i - (double)(WRAP_WAVESIZE / 2)) + 1.0);
-    setWrapLevel(0.0);
+    setWrapLevel(1.0);
 }
 
 double FxWaveWrap::Process(double Input)
@@ -54,14 +54,4 @@ double FxWaveWrap::processConnection()
     ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
 
     return Process(input);
-}
-
-bool FxWaveWrap::Test()
-{
-    for (long i = 0; i < WRAP_WAVESIZE; i++)
-    {
-        if (i % 256 == 0)
-            ModuleLogger::print("Triangle: %li %lf", i, triangle[i]);
-    }
-    return true;
 }

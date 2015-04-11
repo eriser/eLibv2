@@ -38,7 +38,6 @@ namespace eLibV2
         ~BaseWavetable();
 
         virtual void Init(void);
-        virtual bool Test(void);
 
     private:
         bool AddWaveform(std::string Filename, std::string WaveName);

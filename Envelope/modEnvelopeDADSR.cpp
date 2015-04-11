@@ -1,5 +1,7 @@
 #include <Envelope/modEnvelopeDADSR.h>
 
+using namespace eLibV2::Envelope;
+
 void EnvelopeDADSR::Init(void)
 {
     setDelay(0.25);
@@ -168,6 +170,7 @@ double EnvelopeDADSR::Process(void)
     return res;
 }
 
+#if 0
 bool EnvelopeDADSR::Test(void)
 {
     double Value;
@@ -195,3 +198,4 @@ bool EnvelopeDADSR::Test(void)
 
     return true;
 }
+#endif

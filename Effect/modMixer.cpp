@@ -1,6 +1,5 @@
 #include <Effect/modMixer.h>
 
-using namespace eLibV2;
 using namespace eLibV2::Effect;
 
 void FxMixer::Init(void)
@@ -18,7 +17,7 @@ double FxMixer::Process2(double Input1, double Input2)
 {
     double res = 0.0;
 
-    switch (lMode)
+    switch (eMode)
     {
         case MODE_MIXER_ADD:
             res = Input1 + Input2;

@@ -316,8 +316,3 @@ double BaseWavetable::adjustPhase(VstInt16 WaveIndex, double phase)
     else
         return phase;
 }
-
-bool BaseWavetable::Test(void)
-{
-    return true;
-}
