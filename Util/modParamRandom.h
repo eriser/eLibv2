@@ -17,10 +17,10 @@ namespace eLibV2
         double Max;
     };
 
-    class ParamRandomizer : public BaseModule
+    class ParamRandomizer : public Base::BaseModule
     {
     public:
-        ParamRandomizer() : BaseName("ParamRandomizer") { Init(); }
+        ParamRandomizer() : Base::BaseName("ParamRandomizer") { Init(); }
 
         void Init(void);
 

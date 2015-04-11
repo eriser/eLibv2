@@ -1,5 +1,7 @@
 #include <Generator/modBaseOsc.h>
 
+using namespace eLibV2::Generator;
+
 void BaseOscillator::Init(void)
 {
     setWaveform(1);

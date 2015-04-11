@@ -14,7 +14,7 @@ namespace eLibV2
         static const VstInt16 DITHER_BITSIZE_MIN = 1;
         static const VstInt16 DITHER_BITSIZE_MAX = 32;
 
-        class FxDither : public BaseEffect
+        class FxDither : public Base::BaseEffect
         {
         public:
             enum
@@ -24,7 +24,7 @@ namespace eLibV2
             };
 
         public:
-            FxDither(std::string name = "FxDither") : BaseName(name) { Init(); }
+            FxDither(std::string name = "FxDither") : Base::BaseName(name) { Init(); }
 
             virtual void Init(void);
             virtual void Reset(void);

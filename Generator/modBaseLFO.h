@@ -3,18 +3,19 @@
 
 #include <Generator/modBaseOsc.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-    class BaseLFO : public BaseOscillator
+    namespace Generator
     {
-    public:
-        BaseLFO(std::string name = "BaseLFO")
-            : BaseName(name) {}
+        class BaseLFO : public BaseOscillator
+        {
+        public:
+            BaseLFO(std::string name = "BaseLFO")
+                : BaseName(name) {}
 
-        virtual double Process(void);
-    };
+            virtual double Process(void);
+        };
+    }
 }
 
 #endif

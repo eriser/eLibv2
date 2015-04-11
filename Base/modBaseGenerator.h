@@ -7,17 +7,31 @@
 
 namespace eLibV2
 {
-    class BaseGenerator : public BaseModule
+    namespace Base
     {
-    public:
-        enum { kNumNotes = 128 };
+        static const VstInt16 GENERATOR_NUM_NOTES = 128; ///< number of notes used in generators
 
-    public:
-        BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
+        /**
+        this module provides methods for generating output signals in its subclasses
+        */
+        class BaseGenerator : public BaseModule
+        {
+        public:
+            BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
 
-        virtual void Reset(void) = 0;
-        virtual double Process(VstInt16 Note) = 0;
-    };
+            /**
+            reset internal module state to initialization
+            */
+            virtual void Reset(void) = 0;
+
+            /**
+            generate output signal using given note
+            @param Note input note
+            @return the output signal
+            */
+            virtual double Process(VstInt16 Note) = 0;
+        };
+    }
 }
 
 #endif

@@ -4,21 +4,22 @@
 #include <Base/modBaseModule.h>
 #include <Util/modHelper.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-    class NoiseGenerator : public BaseModule
+    namespace Generator
     {
-    public:
-        NoiseGenerator(std::string name = "NoiseGenerator")
-            : BaseName(name) {}
+        class NoiseGenerator : public Base::BaseModule
+        {
+        public:
+            NoiseGenerator(std::string name = "NoiseGenerator")
+                : Base::BaseName(name) {}
 
-        double Process(void);
+            double Process(void);
 
-    protected:
-        double *pBuffer;
-    };
+        protected:
+            double *pBuffer;
+        };
+    }
 }
 
 #endif

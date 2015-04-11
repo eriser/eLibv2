@@ -15,19 +15,37 @@
 
 namespace eLibV2
 {
-    class BaseModule : virtual public BaseConnection
+    namespace Base
     {
-    public:
-        BaseModule() : BaseName("BaseModule") {}
+        /**
+        this module provides basic methods used in its subclasses
+        */
+        class BaseModule : virtual public BaseConnection
+        {
+        public:
+            BaseModule() : BaseName("BaseModule") {}
 
-        virtual void Init(void) = 0;
+            /**
+            initialization method for subclasses
+            */
+            virtual void Init(void) = 0;
 
-        virtual double getSamplerate(void) { return samplerate; }
-        virtual void setSamplerate(double Samplerate) { samplerate = Samplerate; }
+            /**
+            get currently set samplerate
+            @return samplerate in Hz
+            */
+            virtual double getSamplerate(void) { return samplerate; }
 
-    protected:
-        double samplerate;
-    };
+            /**
+            set samplerate for module
+            @param Samplerate samplerate in Hz
+            */
+            virtual void setSamplerate(double Samplerate) { samplerate = Samplerate; }
+
+        protected:
+            double samplerate; ///< internally used samplerate
+        };
+    }
 }
 
 #endif

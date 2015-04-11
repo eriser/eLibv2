@@ -9,7 +9,7 @@ namespace eLibV2
 {
     namespace Envelope
     {
-        class EnvelopeDADSR : public BaseEnvelope
+        class EnvelopeDADSR : public Base::BaseEnvelope
         {
         public:
             enum
@@ -24,7 +24,7 @@ namespace eLibV2
 
         public:
             EnvelopeDADSR(std::string name = "EnvelopeDADSR")
-                : BaseName(name) {
+                : Base::BaseName(name) {
                 Init();
             }
 

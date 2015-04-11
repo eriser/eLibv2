@@ -5,33 +5,69 @@
 
 namespace eLibV2
 {
-    class BaseEnvelope : public BaseModule
+    namespace Base
     {
-    protected:
-        enum
+        /**
+        this module provides methods used by envelope-modules
+        */
+        class BaseEnvelope : public BaseModule
         {
-            ENVELOPE_MODE_UNDEF = 0,
-            ENVELOPE_MODE_LINEAR,
-            ENVELOPE_MODE_LOGARITHMIC,
-            ENVELOPE_MODE_EXPONENTIAL
+        protected:
+
+            /**
+            enumeration of possible envelope modes:
+            - linear
+            - logarithmic
+            - exponential
+            */
+            enum EnvelopeMode
+            {
+                ENVELOPE_MODE_UNDEF = 0,
+                ENVELOPE_MODE_LINEAR,
+                ENVELOPE_MODE_LOGARITHMIC,
+                ENVELOPE_MODE_EXPONENTIAL
+            };
+
+        public:
+            BaseEnvelope(std::string name = "BaseEnvelope") : BaseName(name) {}
+
+            /**
+            reset internal module state to initialization
+            */
+            virtual void Reset(void) = 0;
+
+            /**
+            generate envelope output and adjust internal state
+            */
+            virtual double Process(void) = 0;
+
+            /**
+            activate/deactivate processing
+            @param Active active state of module
+            */
+            virtual void setActive(bool Active) { bActive = Active; }
+
+            /**
+            set envelope mode
+            @param Mode envelope mode to set
+            */
+            virtual void setEnvelopeMode(EnvelopeMode Mode) { lEnvelopeMode = Mode; }
+
+            /**
+            set trigger for internal state machine
+            @param Trigger trigger active/inactive
+            */
+            virtual void setTrigger(bool Trigger) { bTrigger = Trigger; }
+
+        protected:
+            bool bActive; ///< internal active state
+            bool bTrigger; ///< internal trigger state
+            bool bOldTrigger; ///< last set trigger state
+            double dLastLevel; ///< last calculated level for aliasing
+
+            EnvelopeMode lEnvelopeMode; ///< internal envelope mode
         };
-
-    public:
-        BaseEnvelope(std::string name = "BaseEnvelope")    : BaseName(name) {}
-
-        virtual void Reset(void) = 0;
-        virtual double Process(void) = 0;
-
-        virtual void setActive(bool Active) {bActive = Active;}
-        virtual void setEnvelopeMode(VstInt16 EnvelopeMode) {lEnvelopeMode = EnvelopeMode;}
-        virtual void setTrigger(bool Trigger) {bTrigger = Trigger;}
-
-    protected:
-        bool bActive, bTrigger, bOldTrigger;
-        double dLastLevel;
-
-        VstInt16 lEnvelopeMode;
-    };
+    }
 }
 
 #endif

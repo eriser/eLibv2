@@ -7,7 +7,7 @@ namespace eLibV2
 {
     namespace Connection
     {
-        class MultiplierConnection : public BaseConnection
+        class MultiplierConnection : public Base::BaseConnection
         {
         public:
             enum
@@ -17,7 +17,7 @@ namespace eLibV2
 
         public:
             MultiplierConnection(std::string name = "MultiplierConnection")
-                : BaseName(name), numInputs(0) {}
+                : Base::BaseName(name), numInputs(0) {}
 
             virtual void Init() {}
             virtual double processConnection()

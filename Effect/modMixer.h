@@ -16,11 +16,11 @@ namespace eLibV2
             MODE_MIXER_COUNT
         };
 
-        class FxMixer : public BaseEffect
+        class FxMixer : public Base::BaseEffect
         {
         public:
             FxMixer(std::string name = "FxMixer")
-                : BaseName(name) {
+                : Base::BaseName(name) {
                 Init();
             }
 

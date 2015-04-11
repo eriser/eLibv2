@@ -11,10 +11,10 @@ namespace eLibV2
 {
     namespace Connection
     {
-        class InputConnection : public BaseConnection
+        class InputConnection : public Base::BaseConnection
         {
         public:
-            InputConnection(std::string name = "InputConnection") : BaseName(name) {}
+            InputConnection(std::string name = "InputConnection") : Base::BaseName(name) {}
 
             virtual void setInput(double value) { ModuleLogger::print("%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
             virtual double processConnection() { return processInputs(); }

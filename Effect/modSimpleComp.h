@@ -9,11 +9,11 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class FxSimpleComp : public BaseEffect
+        class FxSimpleComp : public Base::BaseEffect
         {
         public:
             FxSimpleComp(std::string name = "FxSimpleComp")
-                : BaseName(name) {
+                : Base::BaseName(name) {
                 Init();
             }
 

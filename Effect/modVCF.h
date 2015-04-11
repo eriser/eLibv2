@@ -16,11 +16,11 @@ namespace eLibV2
             FILTER_TYPE_MOOG2
         };
 
-        class FxVCF : public BaseEffect
+        class FxVCF : public Base::BaseEffect
         {
         public:
             FxVCF(std::string name = "FxVCF")
-                : BaseName(name) {
+                : Base::BaseName(name) {
                 Init();
             }
 

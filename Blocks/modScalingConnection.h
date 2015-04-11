@@ -7,7 +7,7 @@ namespace eLibV2
 {
     namespace Connection
     {
-        class ScalingConnection : public BaseConnection
+        class ScalingConnection : public Base::BaseConnection
         {
         public:
             enum
@@ -19,7 +19,7 @@ namespace eLibV2
 
         public:
             ScalingConnection(std::string name = "ScalingConnection", double factor = 1.0, double offset = 0.0)
-                : BaseName(name), numInputs(0), mFactor(factor), mOffset(offset) {}
+                : Base::BaseName(name), numInputs(0), mFactor(factor), mOffset(offset) {}
 
             virtual void Init() {}
             virtual double processConnection()

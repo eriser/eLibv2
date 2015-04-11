@@ -11,7 +11,7 @@ namespace eLibV2
         static const double WAVEWRAP_LEVEL_MIN = 1.0;
         static const double WAVEWRAP_LEVEL_MAX = 10.0;
 
-        class FxWaveWrap : public BaseEffect
+        class FxWaveWrap : public Base::BaseEffect
         {
         public:
             enum { WRAP_WAVESIZE = 32768 };
@@ -23,7 +23,7 @@ namespace eLibV2
 
         public:
             FxWaveWrap(std::string name = "FxWaveWrap")
-                : BaseName(name) {
+                : Base::BaseName(name) {
                 Init();
             }
             ~FxWaveWrap() { if (triangle) delete[] triangle; }
@@ -38,8 +38,8 @@ namespace eLibV2
             void setWrapLevel(double WrapLevel) { dWrapLevel = ModuleHelper::clamp(WrapLevel, WAVEWRAP_LEVEL_MIN, WAVEWRAP_LEVEL_MAX); }
 
         public:
-            void attachInput(BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
-            void attachLevel(BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
+            void attachInput(Base::BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
+            void attachLevel(Base::BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
 
 
         private:

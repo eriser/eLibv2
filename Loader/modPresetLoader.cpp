@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 
-using namespace eLibV2;
+using namespace eLibV2::Loader;
 
 int PresetLoader::Load(std::string filename)
 {

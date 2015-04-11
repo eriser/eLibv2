@@ -1,5 +1,8 @@
 #include <Generator/modWavetable.h>
 
+using namespace eLibV2::Generator;
+using namespace eLibV2::Loader;
+
 BaseWavetable* BaseWavetable::instance = 0;
 
 BaseWavetable::~BaseWavetable()

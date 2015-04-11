@@ -9,13 +9,13 @@ using namespace eLibV2;
 
 namespace eLibV2
 {
-    class MidiEventHandler : public BaseModule
+    class MidiEventHandler : public Base::BaseModule
     {
     public:
         enum { MAX_MIDI_CHANNELS = 16 };
 
     public:
-        MidiEventHandler() : BaseName("MidiEventHandler") { Init(); }
+        MidiEventHandler() : Base::BaseName("MidiEventHandler") { Init(); }
         ~MidiEventHandler();
 
         void insertEvent(int channel, MidiEvent event);

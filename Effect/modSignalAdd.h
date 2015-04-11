@@ -9,11 +9,11 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class FxSignalAdd : public BaseEffect
+        class FxSignalAdd : public Base::BaseEffect
         {
         public:
             FxSignalAdd(std::string name = "FxSignalAdd")
-                : BaseName(name) {}
+                : Base::BaseName(name) {}
 
             void Init(void) {}
             void Reset(void) {}

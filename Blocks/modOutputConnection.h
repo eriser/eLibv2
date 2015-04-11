@@ -11,10 +11,10 @@ namespace eLibV2
 {
     namespace Connection
     {
-        class OutputConnection : public BaseConnection
+        class OutputConnection : public Base::BaseConnection
         {
         public:
-            OutputConnection(std::string name = "InputConnection") : BaseName(name) {}
+            OutputConnection(std::string name = "InputConnection") : Base::BaseName(name) {}
 
         protected:
             double mValue;

@@ -12,7 +12,7 @@ namespace eLibV2
     {
         static const double vsa = (1.0 / 4294967295.0);   // Very small amount (Denormal Fix)
 
-        class Fx3BandEQ : public BaseEffect
+        class Fx3BandEQ : public Base::BaseEffect
         {
         private:
             enum
@@ -29,7 +29,7 @@ namespace eLibV2
             } EQBand;
 
         public:
-            Fx3BandEQ(std::string name = "Fx3BandEQ") : BaseName(name), BaseConnection(1, 1) { Init(); }
+            Fx3BandEQ(std::string name = "Fx3BandEQ") : Base::BaseName(name), Base::BaseConnection(1, 1) { Init(); }
 
             /* inherited */
             virtual void Init(void);

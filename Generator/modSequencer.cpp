@@ -1,5 +1,7 @@
 #include <Generator/modSequencer.h>
 
+using namespace eLibV2::Generator;
+
 void BaseSequencer::Init()
 {
     setSamplerate(44100.0);
