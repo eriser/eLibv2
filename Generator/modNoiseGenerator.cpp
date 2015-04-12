@@ -4,5 +4,5 @@ using namespace eLibV2::Generator;
 
 double NoiseGenerator::Process(void)
 {
-    return ModuleHelper::GenerateTestSignal();
+    return Util::ModuleHelper::GenerateTestSignal();
 }

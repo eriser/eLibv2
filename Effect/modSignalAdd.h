@@ -4,11 +4,11 @@
 #include <Base/modBaseEffect.h>
 #include <Util/modHelper.h>
 
-/// @todo the process-method does not really do what it supposed to do
 namespace eLibV2
 {
     namespace Effect
     {
+        /// @todo the process-method does not really do what it supposed to do
         class FxSignalAdd : public Base::BaseEffect
         {
         public:

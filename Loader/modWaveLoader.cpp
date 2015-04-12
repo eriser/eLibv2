@@ -1,6 +1,7 @@
 #include <Loader/modWaveLoader.h>
 
 using namespace eLibV2::Loader;
+using namespace eLibV2::Util;
 
 WaveLoader::~WaveLoader()
 {

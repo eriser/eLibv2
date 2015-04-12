@@ -4,7 +4,7 @@ using namespace eLibV2::Effect;
 
 void FxVCF::Init()
 {
-    setFiltertype(0);
+    setFiltertype(FILTER_TYPE_SIMPLE);
     setFrequency(0.5);
     setResonance(0.5);
     setQ(0.5);
@@ -15,7 +15,7 @@ void FxVCF::Init()
 
 double FxVCF::Process(double Input)
 {
-    switch (lFiltertype)
+    switch (eFilterType)
     {
     case FILTER_TYPE_SIMPLE:
         return SimpleFilter(Input);

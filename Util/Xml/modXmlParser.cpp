@@ -5,7 +5,8 @@
 
 XERCES_CPP_NAMESPACE_USE;
 
-using namespace eLibV2;
+using namespace eLibV2::Util;
+using namespace eLibV2::XML;
 
 void parseNodes(std::vector<GenericNode*> *nodes, XERCES_CPP_NAMESPACE::DOMNode *node)
 {

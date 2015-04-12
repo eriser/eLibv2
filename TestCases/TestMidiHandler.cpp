@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <MIDI/modMidiEventHandler.h>
 
-using namespace eLibV2;
+using namespace eLibV2::MIDI;
 
 TEST(TestMidiHandler, hasEventsOnChannel)
 {

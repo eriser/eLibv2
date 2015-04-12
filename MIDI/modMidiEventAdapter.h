@@ -7,22 +7,28 @@
 #include <MIDI/modMidiEvent.h>
 #include <MIDI/modMidiEventHandler.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-    class MidiEventAdapter : public Base::BaseConnection
+    namespace MIDI
     {
-    public:
-        MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : Base::BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
+        /**
+        adapter for connecting the MidiEventHandler into the module signal flow
+        */
+        class MidiEventAdapter : public Base::BaseConnection
+        {
+        public:
+            MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : Base::BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
 
-        /* process first existing note on selected channel */
-        virtual double processConnection();
+            /**
+            process first existing note on selected channel
+            */
+            virtual double processConnection();
 
-    private:
-        const int mChannel;
-        MidiEventHandler *mHandler;
-    };
+        private:
+            const int mChannel; ///< MIDI-channel to check
+            MidiEventHandler *mHandler; ///< MidiEventHandler to use
+        };
+    }
 }
 
 #endif

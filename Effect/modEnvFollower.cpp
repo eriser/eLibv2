@@ -23,8 +23,8 @@ double FxEnvFollower::Process(double input)
     double res = 0.0;
     long tATime, tRTime;
 
-    tATime = (long)(ModuleHelper::ms2samples(dAttack, dSampleRate)) * 10;
-    tRTime = (long)(ModuleHelper::ms2samples(dRelease, dSampleRate)) * 10;
+    tATime = (long)(Util::ModuleHelper::ms2samples(dAttack, dSampleRate)) * 10;
+    tRTime = (long)(Util::ModuleHelper::ms2samples(dRelease, dSampleRate)) * 10;
 
     tATime = (tATime == 0) ? 1 : tATime;
     tRTime = (tRTime == 0) ? 1 : tRTime;

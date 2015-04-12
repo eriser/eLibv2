@@ -5,13 +5,16 @@
 
 #include <audioeffectx.h>
 
-#include <Blocks/modInputConnection.h>
+#include <Connection/modInputConnection.h>
 #include <Util/modLogger.h>
 #include <MIDI/modMidiEventHandler.h>
 
 #include <Data/modPluginProgram.h>
 #include <Data/modPluginParameter.h>
 #include <Data/modPluginProperties.h>
+
+using namespace eLibV2::Data;
+using namespace eLibV2::Util;
 
 namespace eLibV2
 {
@@ -35,7 +38,7 @@ namespace eLibV2
                 void attachPrograms(PluginPrograms programs);
 
                 // attach midi event handler to process midi-events
-                void attachMidiEventHandler(MidiEventHandler *handler);
+                void attachMidiEventHandler(MIDI::MidiEventHandler *handler);
 
                 // attach parameters
                 void attachParameter(PluginParameter *param, Connection::InputConnection *inputConnection = 0);
@@ -98,7 +101,7 @@ namespace eLibV2
                 PluginProperties mProperties;
 
                 // active midi event handler
-                MidiEventHandler *mMidiEventHandler;
+                MIDI::MidiEventHandler *mMidiEventHandler;
 
                 // parameter properties
                 std::vector<PluginParameter*> mParameters;

@@ -6,9 +6,9 @@ using namespace eLibV2::Effect;
 TEST(TestFxMixer, Mode)
 {
     FxMixer mixer;
-    mixer.setMode(MixerModes::MODE_MIXER_ADD);
+    mixer.setMode(MixerMode::MIXER_MODE_ADD);
 
-    ASSERT_EQ(MixerModes::MODE_MIXER_ADD, mixer.getMode());
+    ASSERT_EQ(MixerMode::MIXER_MODE_ADD, mixer.getMode());
 }
 
 TEST(TestFxMixer, Volume)
@@ -22,7 +22,7 @@ TEST(TestFxMixer, Volume)
 TEST(TestFxMixer, ProcessModeAdd)
 {
     FxMixer mixer;
-    mixer.setMode(MixerModes::MODE_MIXER_ADD);
+    mixer.setMode(MixerMode::MIXER_MODE_ADD);
 
     ASSERT_EQ(0.579, mixer.Process2(0.123, 0.456));
 }
@@ -30,7 +30,7 @@ TEST(TestFxMixer, ProcessModeAdd)
 TEST(TestFxMixer, ProcessModeSubtract)
 {
     FxMixer mixer;
-    mixer.setMode(MixerModes::MODE_MIXER_SUBTRACT);
+    mixer.setMode(MixerMode::MIXER_MODE_SUBTRACT);
 
     ASSERT_EQ(0.333, mixer.Process2(0.456, 0.123));
 }
@@ -38,7 +38,7 @@ TEST(TestFxMixer, ProcessModeSubtract)
 TEST(TestFxMixer, ProcessModeInvSubtract)
 {
     FxMixer mixer;
-    mixer.setMode(MixerModes::MODE_MIXER_INVSUBTRACT);
+    mixer.setMode(MixerMode::MIXER_MODE_INVSUBTRACT);
 
     ASSERT_EQ(0.333, mixer.Process2(0.123, 0.456));
 }

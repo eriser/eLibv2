@@ -2,19 +2,19 @@
 #define __ELBI2_H__
 
 // block modules
-#include <Blocks/modConstantConnection.h>
-#include <Blocks/modInputConnection.h>
-#include <Blocks/modOutputConnection.h>
-#include <Blocks/modMultiplierConection.h>
-#include <Blocks/modScalingConnection.h>
+#include <Connection/modConstantConnection.h>
+#include <Connection/modInputConnection.h>
+#include <Connection/modOutputConnection.h>
+#include <Connection/modMultiplierConection.h>
+#include <Connection/modScalingConnection.h>
 
 // data types
 #include <Data/modPluginParameter.h>
 #include <Data/modPluginProgram.h>
-#include <Data/modPluginParameterLoader.h>
 
 // loader modules
 #include <Loader/modLPSLoader.h>
+#include <Loader/modPluginParameterLoader.h>
 #include <Loader/modPresetLoader.h>
 #include <Loader/modWaveLoader.h>
 

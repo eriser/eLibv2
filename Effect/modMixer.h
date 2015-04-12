@@ -7,13 +7,12 @@ namespace eLibV2
 {
     namespace Effect
     {
-        enum MixerModes
+        enum MixerMode
         {
-            MODE_MIXER_NONE = 0,
-            MODE_MIXER_ADD,
-            MODE_MIXER_SUBTRACT,
-            MODE_MIXER_INVSUBTRACT,
-            MODE_MIXER_COUNT
+            MIXER_MODE_UNDEF = 0,
+            MIXER_MODE_ADD,
+            MIXER_MODE_SUBTRACT,
+            MIXER_MODE_INVSUBTRACT
         };
 
         class FxMixer : public Base::BaseEffect
@@ -30,8 +29,8 @@ namespace eLibV2
             void setVolume(double Volume) { dVolume = Volume; }
             double getVolume(void) { return dVolume; }
 
-            void setMode(MixerModes Mode) { eMode = Mode; }
-            MixerModes getMode(void) { return eMode; }
+            void setMode(MixerMode Mode) { eMode = Mode; }
+            MixerMode getMode(void) { return eMode; }
 
             double Process2(double Input1, double Input2);
 
@@ -40,7 +39,7 @@ namespace eLibV2
 
         private:
             double dVolume;
-            MixerModes eMode;
+            MixerMode eMode;
         };
     }
 }

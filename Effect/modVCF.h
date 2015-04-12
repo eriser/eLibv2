@@ -9,15 +9,17 @@ namespace eLibV2
 {
     namespace Effect
     {
-        enum
-        {
-            FILTER_TYPE_SIMPLE = 0,
-            FILTER_TYPE_MOOG,
-            FILTER_TYPE_MOOG2
-        };
-
         class FxVCF : public Base::BaseEffect
         {
+        public:
+            enum FilterType
+            {
+                FILTER_TYPE_UNDEF = 0,
+                FILTER_TYPE_SIMPLE,
+                FILTER_TYPE_MOOG,
+                FILTER_TYPE_MOOG2
+            };
+
         public:
             FxVCF(std::string name = "FxVCF")
                 : Base::BaseName(name) {
@@ -27,12 +29,12 @@ namespace eLibV2
             void Init(void);
             void Reset(void) {}
 
-            long getFiltertype(void) { return lFiltertype; }
+            FilterType getFiltertype(void) { return eFilterType; }
             double getFrequency(void) { return dFrequency; }
             double getResonance(void) { return dResonance; }
             double getQ(void) { return dQ; }
 
-            void setFiltertype(long FilterType) { lFiltertype = FilterType; }
+            void setFiltertype(FilterType Type) { eFilterType = Type; }
             void setFrequency(double Frequency) { dFrequency = Frequency; }
             void setResonance(double Resonance) { dResonance = Resonance; }
             void setQ(double Q) { dQ = Q; }
@@ -43,7 +45,7 @@ namespace eLibV2
             double SimpleFilter(double Input);
 
         private:
-            long lFiltertype;
+            FilterType eFilterType;
             double dFrequency;
             double dResonance;
             double dQ;

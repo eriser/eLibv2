@@ -1,6 +1,7 @@
 #include <Effect/modOverdrive.h>
 
 using namespace eLibV2::Effect;
+using namespace eLibV2::Util;
 
 double FxOverdrive::Process(double input)
 {

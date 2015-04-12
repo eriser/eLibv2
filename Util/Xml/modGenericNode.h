@@ -7,25 +7,29 @@
 
 namespace eLibV2
 {
-    typedef std::map<std::string, std::string> StringMap;
-    class GenericNode
+    namespace XML
     {
-    public:
-        GenericNode(std::string name, StringMap attributes)
+        typedef std::map<std::string, std::string> StringMap;
+        class GenericNode
         {
-            mName = name;
-            for (StringMap::iterator it = attributes.begin(); it != attributes.end(); it++)
-                mAttributes[it->first] = it->second;
-        }
+        public:
+            GenericNode(std::string name, StringMap attributes)
+            {
+                mName = name;
+                for (StringMap::iterator it = attributes.begin(); it != attributes.end(); it++)
+                    mAttributes[it->first] = it->second;
+            }
 
-        std::string getName() { return mName; }
-        StringMap getAttributes() { return mAttributes; }
+            std::string getName() { return mName; }
+            StringMap getAttributes() { return mAttributes; }
 
-    private:
-        std::string mName;
-        StringMap mAttributes;
-    };
+        private:
+            std::string mName;
+            StringMap mAttributes;
+        };
 
-    typedef std::vector<GenericNode *> NodeVector;
+        typedef std::vector<GenericNode *> NodeVector;
+    }
 }
+
 #endif

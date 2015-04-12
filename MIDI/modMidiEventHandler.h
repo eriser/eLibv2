@@ -5,30 +5,63 @@
 #include <MIDI/modMidiEvent.h>
 #include <Util/modLogger.h>
 
-using namespace eLibV2;
-
 namespace eLibV2
 {
-    class MidiEventHandler : public Base::BaseModule
+    namespace MIDI
     {
-    public:
-        enum { MAX_MIDI_CHANNELS = 16 };
+        /**
+        handle incoming MIDI-Events
+        */
+        class MidiEventHandler : public Base::BaseModule
+        {
+        public:
+            enum { MAX_MIDI_CHANNELS = 16 };
 
-    public:
-        MidiEventHandler() : Base::BaseName("MidiEventHandler") { Init(); }
-        ~MidiEventHandler();
+        public:
+            MidiEventHandler() : Base::BaseName("MidiEventHandler") { Init(); }
+            ~MidiEventHandler();
 
-        void insertEvent(int channel, MidiEvent event);
-        bool deleteEvent(int channel, MidiEvent event);
-        MidiEventVector getEvents(int channel);
-        bool hasEventsOnChannel(int channel);
-        bool hasEventsOnAnyChannel();
+            /**
+            insert event for given channel
+            @param channel the channel to process
+            @param event to insert
+            */
+            void insertEvent(int channel, MidiEvent event);
 
-        void Init();
+            /**
+            delete event in given channel
+            @param channel the channel to process
+            @param event to delete
+            @return true if event was successfully deleted
+            */
+            bool deleteEvent(int channel, MidiEvent event);
 
-    private:
-        MidiEventVector *mMidiEvents[MAX_MIDI_CHANNELS];
-    };
+            /**
+            get all events currently bound to given channel
+            @param channel the channel to process
+            @return vector of all events for given channel
+            */
+            MidiEventVector getEvents(int channel);
+
+            /**
+            check if channel has currently any events
+            @param channel the channel to process
+            @return true if any events are currently present
+            */
+            bool hasEventsOnChannel(int channel);
+
+            /**
+            check if there are events on any channel
+            @return true if any channel has events
+            */
+            bool hasEventsOnAnyChannel();
+
+            void Init();
+
+        private:
+            MidiEventVector *mMidiEvents[MAX_MIDI_CHANNELS]; ///< events for all channels
+        };
+    }
 }
 
 #endif

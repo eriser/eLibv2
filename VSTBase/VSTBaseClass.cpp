@@ -2,6 +2,7 @@
 
 using namespace eLibV2;
 using namespace eLibV2::VSTBase;
+using namespace eLibV2::MIDI;
 
 VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties) : AudioEffectX(audioMaster, properties.getNumPrograms(), properties.getNumParameters())
 {

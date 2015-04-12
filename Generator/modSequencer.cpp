@@ -1,6 +1,7 @@
 #include <Generator/modSequencer.h>
 
 using namespace eLibV2::Generator;
+using namespace eLibV2::Util;
 
 void BaseSequencer::Init()
 {

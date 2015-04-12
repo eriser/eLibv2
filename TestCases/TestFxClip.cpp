@@ -14,16 +14,16 @@ TEST(TestFxClip, ClipLevel)
 TEST(TestFxClip, ClipMode)
 {
     FxClip clip;
-    clip.setClipMode(FxClipMode::CLIP_MODE_BOTH);
+    clip.setClipMode(ClipMode::CLIP_MODE_BOTH);
 
-    ASSERT_EQ(FxClipMode::CLIP_MODE_BOTH, clip.getClipMode());
+    ASSERT_EQ(ClipMode::CLIP_MODE_BOTH, clip.getClipMode());
 }
 
 TEST(TestFxClip, ProcessPositive)
 {
     FxClip clip;
     clip.setClipLevel(1.0);
-    clip.setClipMode(FxClipMode::CLIP_MODE_POSITIVE);
+    clip.setClipMode(ClipMode::CLIP_MODE_POSITIVE);
 
     ASSERT_EQ(1.0, clip.Process(2.0));
 }
@@ -32,7 +32,7 @@ TEST(TestFxClip, ProcessNegative)
 {
     FxClip clip;
     clip.setClipLevel(1.0);
-    clip.setClipMode(FxClipMode::CLIP_MODE_NEGATIVE);
+    clip.setClipMode(ClipMode::CLIP_MODE_NEGATIVE);
 
     ASSERT_EQ(-1.0, clip.Process(-2.0));
 }
@@ -41,7 +41,7 @@ TEST(TestFxClip, ProcessBoth)
 {
     FxClip clip;
     clip.setClipLevel(1.0);
-    clip.setClipMode(FxClipMode::CLIP_MODE_BOTH);
+    clip.setClipMode(ClipMode::CLIP_MODE_BOTH);
 
     ASSERT_EQ(1.0, clip.Process(2.0));
     ASSERT_EQ(-1.0, clip.Process(-2.0));

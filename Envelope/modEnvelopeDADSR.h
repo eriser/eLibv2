@@ -3,16 +3,15 @@
 
 #include <Base/modBaseEnvelope.h>
 
-/// @todo transfer test-case to googletest
-
 namespace eLibV2
 {
     namespace Envelope
     {
+        /// @todo transfer test-case to googletest
         class EnvelopeDADSR : public Base::BaseEnvelope
         {
         public:
-            enum
+            enum EnvelopeState
             {
                 ENVELOPE_DADSR_STATE_INIT = 0,
                 ENVELOPE_DADSR_STATE_DELAY,
@@ -46,7 +45,7 @@ namespace eLibV2
             virtual void setReleaseScale(double ReleaseScale) { dReleaseScale = ReleaseScale; }
 
         protected:
-            VstInt16 lEnvelopeState;
+            EnvelopeState eEnvelopeState;
             VstInt32 tDelay, tAttack, tDecay, tRelease;
             VstInt32 tDelayEnd, tAttackEnd, tDecayEnd, tReleaseEnd;
 

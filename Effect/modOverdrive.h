@@ -29,7 +29,7 @@ namespace eLibV2
             virtual double processConnection();
 
         public:
-            void setLevel(double Level) { dLevel = ModuleHelper::clamp(Level, OVERDRIVE_LEVEL_MIN, OVERDRIVE_LEVEL_MAX); }
+            void setLevel(double Level) { dLevel = Util::ModuleHelper::clamp(Level, OVERDRIVE_LEVEL_MIN, OVERDRIVE_LEVEL_MAX); }
             double getLevel(void) { return dLevel; }
 
         public:

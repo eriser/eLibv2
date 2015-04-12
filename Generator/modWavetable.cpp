@@ -2,6 +2,7 @@
 
 using namespace eLibV2::Generator;
 using namespace eLibV2::Loader;
+using namespace eLibV2::Util;
 
 BaseWavetable* BaseWavetable::instance = 0;
 

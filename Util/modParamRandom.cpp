@@ -1,5 +1,7 @@
 #include <Util/modParamRandom.h>
 
+using namespace eLibV2::Util;
+
 void ParamRandomizer::Init(void)
 {
     RandomizerMap.clear();

@@ -7,6 +7,8 @@
 #include <map>
 #include <sstream>
 
+using namespace eLibV2::Util;
+
 namespace eLibV2
 {
     namespace Base

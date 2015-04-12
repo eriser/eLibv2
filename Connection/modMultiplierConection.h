@@ -7,6 +7,10 @@ namespace eLibV2
 {
     namespace Connection
     {
+        /**
+        creates a input connection which multiplies all input with a previously set factor
+        @todo is this really complete?
+        */
         class MultiplierConnection : public Base::BaseConnection
         {
         public:
@@ -19,7 +23,6 @@ namespace eLibV2
             MultiplierConnection(std::string name = "MultiplierConnection")
                 : Base::BaseName(name), numInputs(0) {}
 
-            virtual void Init() {}
             virtual double processConnection()
             {
                 double input = 1.0;

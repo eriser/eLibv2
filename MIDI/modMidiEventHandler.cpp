@@ -1,5 +1,7 @@
 #include <MIDI/modMidiEventHandler.h>
 
+using namespace eLibV2::MIDI;
+
 MidiEventHandler::~MidiEventHandler(void)
 {
     for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
@@ -26,10 +28,9 @@ bool MidiEventHandler::deleteEvent(int channel, MidiEvent event)
         {
             if (it->getNote() == noteToSearch)
             {
-                // !!! iterator gets invalid when deleting or inserting elements !!!
-                mMidiEvents[channel]->erase(it);
+                // adjust iterator to the element after the deleted one
+                it = mMidiEvents[channel]->erase(it);
                 deleted = true;
-                break;
             }
         }
     }

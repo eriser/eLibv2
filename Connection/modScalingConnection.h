@@ -7,6 +7,9 @@ namespace eLibV2
 {
     namespace Connection
     {
+        /**
+        creates a input connection which processes every input with a factor and an offset
+        */
         class ScalingConnection : public Base::BaseConnection
         {
         public:
@@ -21,7 +24,6 @@ namespace eLibV2
             ScalingConnection(std::string name = "ScalingConnection", double factor = 1.0, double offset = 0.0)
                 : Base::BaseName(name), numInputs(0), mFactor(factor), mOffset(offset) {}
 
-            virtual void Init() {}
             virtual double processConnection()
             {
                 double input = 0.0;

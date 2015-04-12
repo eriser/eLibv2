@@ -1,6 +1,7 @@
 #include <VSTBase/VSTBaseBitmapManager.h>
 
 using namespace eLibV2;
+using namespace eLibV2::Util;
 using namespace eLibV2::VSTBase;
 
 VSTBaseBitmapManager::~VSTBaseBitmapManager()

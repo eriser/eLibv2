@@ -33,7 +33,7 @@ namespace eLibV2
 
         public:
             VstInt16 getBitsize(void) { return mBitsize; }
-            void setBitsize(VstInt16 Bitsize) { mBitsize = ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
+            void setBitsize(VstInt16 Bitsize) { mBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:
             void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }

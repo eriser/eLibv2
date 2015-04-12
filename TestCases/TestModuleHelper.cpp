@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <Util/modHelper.h>
 
-using namespace eLibV2;
+using namespace eLibV2::Util;
 
 TEST(TestModuleHelper, minval)
 {

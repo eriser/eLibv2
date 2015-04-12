@@ -35,7 +35,7 @@ namespace eLibV2
 
         public:
             double getWrapLevel(void) { return dWrapLevel; }
-            void setWrapLevel(double WrapLevel) { dWrapLevel = ModuleHelper::clamp(WrapLevel, WAVEWRAP_LEVEL_MIN, WAVEWRAP_LEVEL_MAX); }
+            void setWrapLevel(double WrapLevel) { dWrapLevel = Util::ModuleHelper::clamp(WrapLevel, WAVEWRAP_LEVEL_MIN, WAVEWRAP_LEVEL_MAX); }
 
         public:
             void attachInput(Base::BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }

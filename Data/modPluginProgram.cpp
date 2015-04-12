@@ -1,6 +1,6 @@
 #include <Data/modPluginProgram.h>
 
-using namespace eLibV2;
+using namespace eLibV2::Data;
 
 void PluginProgram::addParameter(const float value)
 {

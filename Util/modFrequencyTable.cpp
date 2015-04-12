@@ -1,6 +1,6 @@
 #include <Util/modFrequencyTable.h>
 
-using namespace eLibV2;
+using namespace eLibV2::Util;
 
 bool FrequencyTable::initialized = false;
 double FrequencyTable::freqtab[FrequencyTable::kNumNotes] = { 0 };

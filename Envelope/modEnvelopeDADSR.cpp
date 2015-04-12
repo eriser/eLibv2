@@ -22,13 +22,13 @@ void EnvelopeDADSR::Init(void)
 
 void EnvelopeDADSR::Reset(void)
 {
-    lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
+    eEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
     bTrigger = bOldTrigger = false;
 }
 
 bool EnvelopeDADSR::isReady(void)
 {
-    return ((lEnvelopeState == ENVELOPE_DADSR_STATE_INIT) && ((bTrigger | bOldTrigger) == false));
+    return ((eEnvelopeState == ENVELOPE_DADSR_STATE_INIT) && ((bTrigger | bOldTrigger) == false));
 }
 
 double EnvelopeDADSR::Process(void)
@@ -37,7 +37,7 @@ double EnvelopeDADSR::Process(void)
 
     if (bActive)
     {
-        switch (lEnvelopeState)
+        switch (eEnvelopeState)
         {
             case ENVELOPE_DADSR_STATE_INIT:
                 tDelay = tAttack = tDecay = tRelease = 0;
@@ -48,7 +48,7 @@ double EnvelopeDADSR::Process(void)
                     bOldTrigger = bTrigger;
                     if (bTrigger)
                     {
-                        lEnvelopeState++;
+                        eEnvelopeState = ENVELOPE_DADSR_STATE_DELAY;
                         break;
                     }
                 }
@@ -63,7 +63,7 @@ double EnvelopeDADSR::Process(void)
                     bOldTrigger = bTrigger;
                     if (!bTrigger)
                     {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
                         break;
                     }
                 }
@@ -72,7 +72,7 @@ double EnvelopeDADSR::Process(void)
                 if (tDelay < tDelayEnd)
                     tDelay++;
                 else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_ATTACK;
+                    eEnvelopeState = ENVELOPE_DADSR_STATE_ATTACK;
                 break;
 
             case ENVELOPE_DADSR_STATE_ATTACK:
@@ -84,7 +84,7 @@ double EnvelopeDADSR::Process(void)
                     bOldTrigger = bTrigger;
                     if (!bTrigger)
                     {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
                         break;
                     }
                 }
@@ -99,7 +99,7 @@ double EnvelopeDADSR::Process(void)
                 if (tAttack < tAttackEnd)
                     tAttack++;
                 else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_DECAY;
+                    eEnvelopeState = ENVELOPE_DADSR_STATE_DECAY;
                 break;
 
             case ENVELOPE_DADSR_STATE_DECAY:
@@ -111,7 +111,7 @@ double EnvelopeDADSR::Process(void)
                     bOldTrigger = bTrigger;
                     if (!bTrigger)
                     {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
                         break;
                     }
                 }
@@ -126,7 +126,7 @@ double EnvelopeDADSR::Process(void)
                 if (tDecay < tDecayEnd)
                     tDecay++;
                 else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_SUSTAIN;
+                    eEnvelopeState = ENVELOPE_DADSR_STATE_SUSTAIN;
                 break;
 
             case ENVELOPE_DADSR_STATE_SUSTAIN:
@@ -136,7 +136,7 @@ double EnvelopeDADSR::Process(void)
                     bOldTrigger = bTrigger;
                     if (!bTrigger)
                     {
-                        lEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
+                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
                         break;
                     }
                 }
@@ -158,7 +158,7 @@ double EnvelopeDADSR::Process(void)
                 if (tRelease < tReleaseEnd)
                     tRelease++;
                 else
-                    lEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
+                    eEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
                 break;
         }
     }

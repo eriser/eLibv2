@@ -5,7 +5,7 @@ using namespace eLibV2::Effect;
 void FxMixer::Init(void)
 {
     setVolume(0.0);
-    setMode(MODE_MIXER_ADD);
+    setMode(MIXER_MODE_ADD);
 }
 
 void FxMixer::Reset(void)
@@ -19,15 +19,15 @@ double FxMixer::Process2(double Input1, double Input2)
 
     switch (eMode)
     {
-        case MODE_MIXER_ADD:
+        case MIXER_MODE_ADD:
             res = Input1 + Input2;
             break;
 
-        case MODE_MIXER_SUBTRACT:
+        case MIXER_MODE_SUBTRACT:
             res = Input1 - Input2;
             break;
 
-        case MODE_MIXER_INVSUBTRACT:
+        case MIXER_MODE_INVSUBTRACT:
             res = Input2 - Input1;
             break;
     }

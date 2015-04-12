@@ -1,6 +1,7 @@
 #include <Generator/modBaseOsc.h>
 
 using namespace eLibV2::Generator;
+using namespace eLibV2::Util;
 
 void BaseOscillator::Init(void)
 {
@@ -10,7 +11,7 @@ void BaseOscillator::Init(void)
     setSamplerate(44100.0);
     dPhase = 0.0;
 
-    FrequencyTable::SetupFreqs();
+    Util::FrequencyTable::SetupFreqs();
 }
 
 void BaseOscillator::Reset(void)
@@ -59,15 +60,15 @@ double BaseOscillator::Process(VstInt16 Note)
 
     data = BaseWavetable::getInstance()->getWaveData(lWaveform, dPhase);
 
-    dBase = FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)) & 0x7f);
+    dBase = Util::FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)) & 0x7f);
     if (dFinetune >= 0.0)
     {
-        dTune = (FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)+1) & 0x7f) - dBase) * (((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
+        dTune = (Util::FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)+1) & 0x7f) - dBase) * (((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
         dFreq = (dBase + dTune) * dScaler;
     }
     else
     {
-        dTune = (dBase - FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)-1) & 0x7f)) * (0.5 - ((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
+        dTune = (dBase - Util::FrequencyTable::ForNote((Note + (VstInt16)(dCoarse)-1) & 0x7f)) * (0.5 - ((dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
         dFreq = (dBase - dTune) * dScaler;
     }
     dPhase += dFreq;

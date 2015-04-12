@@ -11,8 +11,9 @@ namespace eLibV2
         static const double CLIP_LEVEL_MIN = 0.0;
         static const double CLIP_LEVEL_MAX = 1.0;
 
-        enum FxClipMode
+        enum ClipMode
         {
+            CLIP_MODE_UNDEF = 0,
             CLIP_MODE_POSITIVE = 0,
             CLIP_MODE_NEGATIVE,
             CLIP_MODE_BOTH
@@ -32,15 +33,15 @@ namespace eLibV2
             double Process(double Input);
 
             /* setter, getter */
-            void setClipLevel(double ClipLevel) { dClipLevel = ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX); }
+            void setClipLevel(double ClipLevel) { dClipLevel = Util::ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX); }
             double getClipLevel(void) { return dClipLevel; }
 
-            void setClipMode(FxClipMode ClipMode) { eClipMode = ClipMode; }
-            FxClipMode getClipMode(void) { return eClipMode; }
+            void setClipMode(ClipMode Mode) { eClipMode = Mode; }
+            ClipMode getClipMode(void) { return eClipMode; }
 
         private:
             double dClipLevel;
-            FxClipMode eClipMode;
+            ClipMode eClipMode;
         };
     }
 }

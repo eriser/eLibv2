@@ -1,6 +1,7 @@
 #include <Loader/modLPSLoader.h>
 
 using namespace eLibV2::Loader;
+using namespace eLibV2::Util;
 
 LPSLoader::~LPSLoader()
 {
