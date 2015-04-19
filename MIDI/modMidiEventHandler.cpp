@@ -2,69 +2,61 @@
 
 using namespace eLibV2::MIDI;
 
-MidiEventHandler::~MidiEventHandler(void)
+void MidiEventHandler::insertEvent(const int channel, const MidiEvent& event)
 {
-    for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
-    {
-        if (mMidiEvents[i])
-            delete mMidiEvents[i];
-    }
+    if (channelInRange(channel))
+        mMidiEvents[channel].push_back(event);
 }
 
-void MidiEventHandler::insertEvent(int channel, MidiEvent event)
-{
-    if (mMidiEvents[channel])
-        mMidiEvents[channel]->push_back(event);
-}
-
-bool MidiEventHandler::deleteEvent(int channel, MidiEvent event)
+bool MidiEventHandler::deleteEvent(const int channel, const MidiEvent& event)
 {
     bool deleted = false;
+    int noteToSearch = event.getNote();
 
-    if (mMidiEvents[channel])
+    if (channelInRange(channel))
     {
-        int noteToSearch = event.getNote();
-        for (std::vector<MidiEvent>::iterator it = mMidiEvents[channel]->begin(); it != mMidiEvents[channel]->end(); it++)
+        for (MidiEventIterator eventIterator = mMidiEvents[channel].begin(); eventIterator != mMidiEvents[channel].end(); eventIterator++)
         {
-            if (it->getNote() == noteToSearch)
+            if (eventIterator->getNote() == noteToSearch)
             {
                 // adjust iterator to the element after the deleted one
-                it = mMidiEvents[channel]->erase(it);
+                eventIterator = mMidiEvents[channel].erase(eventIterator);
                 deleted = true;
+                break;
             }
         }
     }
     return deleted;
 }
 
-MidiEventVector MidiEventHandler::getEvents(int channel)
+MidiEventVector MidiEventHandler::getEvents(const int channel) const
 {
     MidiEventVector events;
     int size = 0;
-    if (mMidiEvents[channel])
+    if (channelInRange(channel))
     {
-        for (MidiEventIterator it = mMidiEvents[channel]->begin(); it != mMidiEvents[channel]->end(); it++)
+        for (ConstMidiEventIterator it = mMidiEvents[channel].begin(); it != mMidiEvents[channel].end(); it++)
             events.push_back(*it);
-        size = mMidiEvents[channel]->size();
+        size = mMidiEvents[channel].size();
     }
     return events;
 }
 
-bool MidiEventHandler::hasEventsOnChannel(int channel)
+bool MidiEventHandler::hasEventsOnChannel(const int channel) const
 {
     bool has = false;
 
-    if (mMidiEvents[channel])
-        has = (mMidiEvents[channel]->size() != 0);
+    if (channelInRange(channel))
+        has = (mMidiEvents[channel].size() != 0);
 
     return has;
 }
 
-bool MidiEventHandler::hasEventsOnAnyChannel()
+bool MidiEventHandler::hasEventsOnAnyChannel() const
 {
     bool hasEvents = false;
 
-    for (int channelIndex = MidiEvent::MIDI_CHANNEL_1; channelIndex < MidiEvent::MIDI_CHANNEL_MAX; channelIndex++)
+    for (int channelIndex = MIDI_CHANNEL_MIN; channelIndex < MIDI_CHANNEL_MAX; channelIndex++)
     {
         if (hasEventsOnChannel(channelIndex))
         {
@@ -73,10 +65,4 @@ bool MidiEventHandler::hasEventsOnAnyChannel()
         }
     }
     return hasEvents;
-}
-
-void MidiEventHandler::Init()
-{
-    for (int i = 0; i < MAX_MIDI_CHANNELS; i++)
-        mMidiEvents[i] = new MidiEventVector();
 }

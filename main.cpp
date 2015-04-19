@@ -2,6 +2,7 @@
 #include <eLib2.h>
 
 using namespace eLibV2;
+using namespace eLibV2::MIDI;
 using namespace eLibV2::VSTBase;
 
 #define kNumParams 16
@@ -11,7 +12,7 @@ using namespace eLibV2::VSTBase;
 class VSTBaseTest : public VSTBase::VSTBaseClass
 {
 public:
-    VSTBaseTest(audioMasterCallback audioMaster, VstInt32 numPresets, VstInt32 numParameters, VSTBase::PluginProperties properties) : VSTBaseClass(audioMaster, numPresets, numParameters, properties) {}
+    VSTBaseTest(audioMasterCallback audioMaster, VstInt32 numPresets, VstInt32 numParameters, Data::PluginProperties properties) : VSTBaseClass(audioMaster, properties) {}
     virtual ~VSTBaseTest() {}
 
     void setParameterInvoked(VstInt32 index, float value) {}
@@ -29,14 +30,18 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
     nodeVector *nodes = parser.getNodes();
     if (nodes)
     {
-        props.createFromNodeVector(*nodes);
+        props.loadFromXml("E:\\test.xml");
         ModuleLogger::print("%li elements", nodes->size());
     }
-    cVSTBaseTest = new VSTBaseTest(audioMaster, props.getNumPresets(), props.getNumParameters(), props);
+    cVSTBaseTest = new VSTBaseTest(audioMaster, props.getNumPrograms(), props.getNumParameters(), props);
     return cVSTBaseTest;
 }
 
 int main(void)
 {
+    MidiEventHandler handler;
+    handler.insertEvent(0, MidiEvent(65, 100));
+    handler.deleteEvent(0, MidiEvent(65, 100));
+
     return 0;
 }

@@ -11,7 +11,8 @@ WaveLoader::~WaveLoader()
 
 void WaveLoader::Init()
 {
-    WaveData = 0;
+    for (int channelIndex = 0; channelIndex < MAX_CHANNEL_NUM; channelIndex++)
+        WaveData[channelIndex] = NULL;
 }
 
 int WaveLoader::Load(std::string filename)
@@ -20,7 +21,6 @@ int WaveLoader::Load(std::string filename)
     ULONG i, NumRemain, NumPages;
     BYTE buf[MAX_WAVE_BUFFER];
     BYTE *TempByteBuffer;
-    SSHORT help = 0;
 
     wavefile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!wavefile.good())
@@ -57,25 +57,25 @@ int WaveLoader::Load(std::string filename)
         if (!strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_FMT, 4))
         {
             ModuleLogger::print("fmt-Chunk size: %li", Chunk.ChunkSize);
-            wavefile.read((char*)&Wave.fmt.Compression, sizeof(BYTE) * sizeof(Wave.fmt.Compression));
-            wavefile.read((char*)&Wave.fmt.NumChannels, sizeof(BYTE) * sizeof(Wave.fmt.NumChannels));
-            wavefile.read((char*)&Wave.fmt.SampleRate, sizeof(BYTE) * sizeof(Wave.fmt.SampleRate));
-            wavefile.read((char*)&Wave.fmt.BytesPerSec, sizeof(BYTE) * sizeof(Wave.fmt.BytesPerSec));
-            wavefile.read((char*)&Wave.fmt.BlockAlign, sizeof(BYTE) * sizeof(Wave.fmt.BlockAlign));
-            wavefile.read((char*)&Wave.fmt.BitsPerSample, sizeof(BYTE) * sizeof(Wave.fmt.BitsPerSample));
-            ModuleLogger::print("Compression: %i", Wave.fmt.Compression);
-            ModuleLogger::print("Number of Channels: %i", Wave.fmt.NumChannels);
-            ModuleLogger::print("Samplerate: %li Hz", Wave.fmt.SampleRate);
-            ModuleLogger::print("bytes/sec: %li", Wave.fmt.BytesPerSec);
-            ModuleLogger::print("BlockAlign: %i", Wave.fmt.BlockAlign);
-            ModuleLogger::print("bits/sample: %i", Wave.fmt.BitsPerSample);
+            wavefile.read((char*)&Wave.format.Compression, sizeof(BYTE) * sizeof(Wave.format.Compression));
+            wavefile.read((char*)&Wave.format.NumChannels, sizeof(BYTE) * sizeof(Wave.format.NumChannels));
+            wavefile.read((char*)&Wave.format.SampleRate, sizeof(BYTE) * sizeof(Wave.format.SampleRate));
+            wavefile.read((char*)&Wave.format.BytesPerSec, sizeof(BYTE) * sizeof(Wave.format.BytesPerSec));
+            wavefile.read((char*)&Wave.format.BlockAlign, sizeof(BYTE) * sizeof(Wave.format.BlockAlign));
+            wavefile.read((char*)&Wave.format.BitsPerSample, sizeof(BYTE) * sizeof(Wave.format.BitsPerSample));
+            ModuleLogger::print("Compression: %i", Wave.format.Compression);
+            ModuleLogger::print("Number of Channels: %i", Wave.format.NumChannels);
+            ModuleLogger::print("Samplerate: %li Hz", Wave.format.SampleRate);
+            ModuleLogger::print("bytes/sec: %li", Wave.format.BytesPerSec);
+            ModuleLogger::print("BlockAlign: %i", Wave.format.BlockAlign);
+            ModuleLogger::print("bits/sample: %i", Wave.format.BitsPerSample);
             if (Chunk.ChunkSize > 16)
             {
-                wavefile.read((char*)&Wave.fmt.ExtraFormatLng, sizeof(BYTE) * sizeof(Wave.fmt.ExtraFormatLng));
-                ModuleLogger::print("Extra Format Length: %i", Wave.fmt.ExtraFormatLng);
-                if (Wave.fmt.ExtraFormatLng)
+                wavefile.read((char*)&Wave.format.ExtraFormatLng, sizeof(BYTE) * sizeof(Wave.format.ExtraFormatLng));
+                ModuleLogger::print("Extra Format Length: %i", Wave.format.ExtraFormatLng);
+                if (Wave.format.ExtraFormatLng)
                 {
-                    for (i = 0; i < Wave.fmt.ExtraFormatLng; i++)
+                    for (i = 0; i < Wave.format.ExtraFormatLng; i++)
                         wavefile.read((char*)buf, sizeof(BYTE));
                 }
             }
@@ -98,17 +98,72 @@ int WaveLoader::Load(std::string filename)
                 wavefile.read((char*)buf, sizeof(BYTE) * MAX_WAVE_BUFFER);
                 memcpy(&TempByteBuffer[i * MAX_WAVE_BUFFER], buf, NumRemain);
             }
-            SizeOfData = Chunk.ChunkSize / 2;
-            WaveData = new double[SizeOfData];
+            SizeOfData = (Chunk.ChunkSize / Wave.format.BitsPerSample) << 3;
 
-            for (long numread = 0; numread < SizeOfData; numread++)
+            for (int channelIndex = 0; channelIndex < Wave.format.NumChannels; channelIndex++)
             {
-                help = (TempByteBuffer[numread * 2 + 1] << 8) + TempByteBuffer[numread * 2];
-                WaveData[numread] = ((double)(help)) / 0x10000;
+                if (channelIndex >= MAX_CHANNEL_NUM)
+                {
+                    // since all data has been already read just break the processing, if too many channels
+                    ModuleLogger::print("data contains more than %li channel. remaining data ignored.", MAX_CHANNEL_NUM);
+                    break;
+                }
+
+                // alloc memory for wavedata (will use 32 bits for storage disregarding input format)
+                WaveData[channelIndex] = new __int32[SizeOfData];
+                int byteAdvance = Wave.format.BitsPerSample / 8;
+
+                long dataIndex = 0;
+                // iterate over samples
+                for (long numread = 0; numread < SizeOfData; numread += byteAdvance)
+                {
+                    // input data will be stored left-aligned
+                    switch (Wave.format.BitsPerSample)
+                    {
+                    case WAVE_SAMPLE_SIZE_8:
+                        WaveData[channelIndex][dataIndex++] = TempByteBuffer[numread] << 24;
+                        break;
+
+                    case WAVE_SAMPLE_SIZE_16:
+                        WaveData[channelIndex][dataIndex++] = (TempByteBuffer[numread * byteAdvance + 1] << 24) + (TempByteBuffer[numread * byteAdvance] << 16);
+                        break;
+
+                    case WAVE_SAMPLE_SIZE_24:
+                        WaveData[channelIndex][dataIndex++] = (TempByteBuffer[numread * byteAdvance + 2] << 24) + (TempByteBuffer[numread * byteAdvance + 1] << 16)
+                            + (TempByteBuffer[numread * byteAdvance] << 8);
+                        break;
+
+                    case WAVE_SAMPLE_SIZE_32:
+                    {
+                        __int32 help = (TempByteBuffer[numread * byteAdvance + 3] << 24) + (TempByteBuffer[numread * byteAdvance + 2] << 16)
+                            + (TempByteBuffer[numread * byteAdvance + 1] << 8) + TempByteBuffer[numread * byteAdvance];
+
+                        switch (Wave.format.Compression)
+                        {
+                        case WAVE_COMPR_PCM:
+
+                            WaveData[channelIndex][dataIndex++] = help;
+                            break;
+
+                        case WAVE_COMPR_IEEE:
+                            __int32 *pi = &help;
+                            double *pd = (double*)pi;
+                            WaveData[channelIndex][dataIndex++] = *pi;
+                            break;
+                        }
+                    }
+                    break;
+
+                    case WAVE_SAMPLE_SIZE_64:
+                        WaveData[channelIndex][dataIndex++] = (TempByteBuffer[numread * byteAdvance + 7] << 24) + (TempByteBuffer[numread * byteAdvance + 6] << 16)
+                            + (TempByteBuffer[numread * byteAdvance + 5] << 8) + TempByteBuffer[numread * byteAdvance + 4];
+                        break;
+                    }
+                }
             }
             free(TempByteBuffer);
             TempByteBuffer = 0;
-            Wave.data.Data = WaveData;
+            Wave.data.DataPtr = WaveData;
         }
         else
         {
@@ -125,13 +180,15 @@ int WaveLoader::Load(std::string filename)
 
 void WaveLoader::Unload(void)
 {
-    if (WaveData)
-        delete WaveData;
-    WaveData = 0;
+    for (int channelIndex = 0; channelIndex < MAX_CHANNEL_NUM; channelIndex++)
+    {
+        if (WaveData[channelIndex])
+            delete WaveData[channelIndex];
+        WaveData[channelIndex] = 0;
+    }
 }
 
-void WaveLoader::getWaveFormat(WaveFormat *Format)
+const WaveLoader::WaveFormat& WaveLoader::getWaveFormat()
 {
-    if (WaveData)
-        memcpy((void*)Format, &Wave.fmt, sizeof(Wave.fmt));
+    return Wave.format;
 }

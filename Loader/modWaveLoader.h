@@ -32,17 +32,33 @@ namespace eLibV2
         class WaveLoader : public Base::BaseModule
         {
         public:
-            enum { MAX_WAVE_BUFFER = 0x10000 };
+            enum { MAX_WAVE_BUFFER = 0x10000, MAX_CHANNEL_NUM = 6 };
 
             enum
             {
                 WAVE_COMPR_UNKNWON = 0,
                 WAVE_COMPR_PCM,
                 WAVE_COMPR_MS_ADPCM,
+                WAVE_COMPR_IEEE,
                 WAVE_COMPR_ALAW = 6,
                 WAVE_COMPR_ULAW,
                 WAVE_COMPR_IMA_ADPCM = 17,
                 WAVE_COMPR_EXPERIMENTAL = 0xFFFF
+            };
+
+            enum
+            {
+                WAVE_FORMAT_MONO = 1,
+                WAVE_FORMAT_STEREO = 2
+            };
+
+            enum
+            {
+                WAVE_SAMPLE_SIZE_8 = 8,
+                WAVE_SAMPLE_SIZE_16 = 16,
+                WAVE_SAMPLE_SIZE_24 = 24,
+                WAVE_SAMPLE_SIZE_32 = 32,
+                WAVE_SAMPLE_SIZE_64 = 64,
             };
 
             // Data Compression
@@ -74,13 +90,13 @@ namespace eLibV2
 
             struct dataChunk
             {
-                double* Data;               // Data
+                __int32** DataPtr;           // Data
             };
 
             struct waveFile
             {
                 struct waveHeader Header;
-                WaveFormat fmt;
+                struct fmtChunk format;
                 struct dataChunk data;
             };
 
@@ -96,14 +112,21 @@ namespace eLibV2
             void Unload(void);
 
         public:
-            double *getWaveData(void) { return WaveData; }
+            __int32 *getWaveData(void) { return WaveData[0]; }
+            __int32 *getWaveData(BYTE channel)
+            {
+                if (channel < Wave.format.NumChannels)
+                    return WaveData[channel];
+                else
+                    return NULL;
+            }
             long getWaveSize(void) { return SizeOfData; }
-            void getWaveFormat(WaveFormat *Format);
+            const WaveFormat& getWaveFormat();
 
         private:
             struct waveFile Wave;
             struct chunkData Chunk;
-            double *WaveData;
+            __int32 *WaveData[MAX_CHANNEL_NUM];
             long SizeOfData;
         };
     }

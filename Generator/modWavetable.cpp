@@ -159,14 +159,14 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
     WaveLoader WL;
     WaveLoader::WaveFormat WF;
     Waveform waveform;
-    double *WD;
+    __int32 *WD;
 
     try
     {
         if (WL.Load(Filename))
             return false;
 
-        WL.getWaveFormat(&WF);
+        WF = WL.getWaveFormat();
         waveform.ChannelNum = WF.NumChannels;
         waveform.WaveSize = WL.getWaveSize();
         waveform.WaveName.assign(WaveName);
@@ -178,7 +178,7 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
             return false;
 
         for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
-            waveform.WaveData[SampleIndex] = WD[SampleIndex];
+            waveform.WaveData[SampleIndex] = ((double)WD[SampleIndex]) / 0x10000000;
 
         WL.Unload();
         Waveforms.push_back(waveform);

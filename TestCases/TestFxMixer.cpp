@@ -25,6 +25,9 @@ TEST(TestFxMixer, ProcessModeAdd)
     mixer.setMode(MixerMode::MIXER_MODE_ADD);
 
     ASSERT_EQ(0.579, mixer.Process2(0.123, 0.456));
+    ASSERT_EQ(0.333, mixer.Process2(-0.123, 0.456));
+    ASSERT_EQ(-0.333, mixer.Process2(0.123, -0.456));
+    ASSERT_EQ(-0.579, mixer.Process2(-0.123, -0.456));
 }
 
 TEST(TestFxMixer, ProcessModeSubtract)

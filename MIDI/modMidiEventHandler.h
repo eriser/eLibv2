@@ -19,14 +19,13 @@ namespace eLibV2
 
         public:
             MidiEventHandler() : Base::BaseName("MidiEventHandler") { Init(); }
-            ~MidiEventHandler();
 
             /**
             insert event for given channel
             @param channel the channel to process
             @param event to insert
             */
-            void insertEvent(int channel, MidiEvent event);
+            void insertEvent(const int channel, const MidiEvent& event);
 
             /**
             delete event in given channel
@@ -34,32 +33,34 @@ namespace eLibV2
             @param event to delete
             @return true if event was successfully deleted
             */
-            bool deleteEvent(int channel, MidiEvent event);
+            bool deleteEvent(const int channel, const MidiEvent& event);
 
             /**
             get all events currently bound to given channel
             @param channel the channel to process
             @return vector of all events for given channel
             */
-            MidiEventVector getEvents(int channel);
+            MidiEventVector getEvents(const int channel) const;
 
             /**
             check if channel has currently any events
             @param channel the channel to process
             @return true if any events are currently present
             */
-            bool hasEventsOnChannel(int channel);
+            bool hasEventsOnChannel(const int channel) const;
 
             /**
             check if there are events on any channel
             @return true if any channel has events
             */
-            bool hasEventsOnAnyChannel();
+            bool hasEventsOnAnyChannel() const;
 
-            void Init();
+            void Init() {}
 
         private:
-            MidiEventVector *mMidiEvents[MAX_MIDI_CHANNELS]; ///< events for all channels
+            bool channelInRange(const int channel) const { return ((channel >= 0) && (channel < MAX_MIDI_CHANNELS)); }
+
+            MidiEventVector mMidiEvents[MAX_MIDI_CHANNELS]; ///< events for all channels
         };
     }
 }

@@ -390,12 +390,14 @@ VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
             VstMidiEvent* event = (VstMidiEvent*)ev->events[i];
             char* midiData = event->midiData;
             VstInt16 channel = midiData[0] & 0x0f;
-            VstInt32 status = midiData[0] & 0xf0;
-            VstInt32 note = midiData[1] & 0x7f;
-            VstInt32 velocity = midiData[2] & 0x7f;
+            VstInt16 status = midiData[0] & 0xf0;
+            VstInt16 note = midiData[1]; // &0x7f;
+            VstInt16 velocity = midiData[2]; // &0x7f;
 
             if (status == 0x80)
                 velocity = 0;
+
+            ModuleLogger::print("VSTBaseClass::processEvents: mididata[3] = %d", midiData[3]);
 
             if (!processMidiEvent(channel, status, note, velocity))
                 return 0;
@@ -418,27 +420,63 @@ VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
 VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstInt16 note, VstInt16 velocity)
 {
     std::stringstream s;
-    bool noteIsOn = false;
 
-    if (status == 0x90)
-        noteIsOn = (velocity > 0) ? true : false;
+    if (!mMidiEventHandler)
+        return 0;
 
-    if (mMidiEventHandler)
+    switch (status)
     {
-        if (noteIsOn)
-        {
-            mMidiEventHandler->insertEvent(channel, MidiEvent(note, velocity));
-            ModuleLogger::print("VSTBaseClass::processMidiEvents: inserting note %d/%d", note, velocity);
-        }
-        else
-        {
-            mMidiEventHandler->deleteEvent(channel, MidiEvent(note, 0));
-            ModuleLogger::print("VSTBaseClass::processMidiEvents: deleting note %d", note);
-        }
+        // note off
+        case 0x80:
+        // note on
+        case 0x90:
+            if (velocity > 0)
+            {
+                mMidiEventHandler->insertEvent(channel, MidiEvent(note, velocity));
+                ModuleLogger::print("VSTBaseClass::processMidiEvents: inserting note %d/%d", note, velocity);
+            }
+            else
+            {
+                bool i = mMidiEventHandler->deleteEvent(channel, MidiEvent(note, 0));
+                ModuleLogger::print("VSTBaseClass::processMidiEvents: deleting note %d %s", note, i ? "success" : "failure");
+            }
+            break;
+
+        // aftertouch
+        case 0xa0:
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: aftertouch");
+            break;
+
+        // control change
+        case 0xb0:
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: control change");
+            break;
+
+        // program change
+        case 0xc0:
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: program change");
+            break;
+
+        // chanel pressure
+        case 0xd0:
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: channel pressure");
+            break;
+
+        // pitch bend change
+        case 0xe0:
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: pitch bend");
+            break;
+
+        // system exclusive
+        case 0xf0:
+            ModuleLogger::print("VSTBaseClass::processMidiEvents: sysex");
+            break;
     }
 
     s << "VSTBaseClass::processMidiEvents: Midi Data: ";
-    s << "channel: " << (int)channel << " Status: " << (int)status << " Note: " << (int)note << " Velocity: " << (int)velocity;
+    s.setf(std::ios::hex, std::ios::basefield);
+    s.setf(std::ios::showbase);
+    s << "channel: " << (int)channel << " Status: " << (int)status << " Byte2: " << (int)note << " Byte3: " << (int)velocity;
 
     ModuleLogger::print(s.str().c_str());
     return 1;
@@ -451,7 +489,7 @@ VstInt32 VSTBaseClass::processSysexEvent(VstInt32 size, char *data)
 
     s << "Sysex Data: Size: " << (int)size;
     s.setf(std::ios::hex, std::ios::basefield);
-    s.setf (std::ios::showbase);
+    s.setf(std::ios::showbase);
     for (VstInt16 i = 0; i < size; i++)
         s << (int)data[i];
 
