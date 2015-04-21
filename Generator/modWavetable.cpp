@@ -173,7 +173,9 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
         waveform.WaveData = new double[waveform.WaveSize];
 
         // copy wave data
-        WD = WL.getWaveData();
+        if (WL.getWaveFormat().NumChannels > 1)
+            ModuleLogger::print("loaded multichannel file.");
+        WD = WL.getWaveData(0);
         if (!WD)
             return false;
 
