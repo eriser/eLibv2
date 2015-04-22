@@ -109,7 +109,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 wavefile.read((char*)buf, sizeof(BYTE) * NumRemain);
                 memcpy(&TempByteBuffer[i * MAX_WAVE_BUFFER], buf, NumRemain);
             }
-            SizeOfData = Chunk.ChunkSize / Wave.format.BlockAlign;
+            SizeOfData = Chunk.ChunkSize / ((Wave.format.BitsPerSample / 8) * Wave.format.NumChannels);
 
             for (int channelIndex = 0; channelIndex < Wave.format.NumChannels; channelIndex++)
             {
@@ -125,41 +125,45 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 WaveData[channelIndex] = new __int32[SizeOfData];
                 int byteAdvance = Wave.format.BlockAlign / Wave.format.NumChannels;
 
-                long dataIndex = 0, numread;
+                long byteOffset = channelIndex * byteAdvance;
+                ModuleLogger::print("advancing %li bytes from offset: %li", byteAdvance);
+
                 // iterate over samples
-                for (numread = 0; numread < SizeOfData; numread += byteAdvance)
+                for (long sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
                 {
                     // input data will be stored left-aligned
                     switch (Wave.format.BitsPerSample)
                     {
                     case WAVE_SAMPLE_SIZE_8:
-                        WaveData[channelIndex][dataIndex++] = TempByteBuffer[numread] << 24;
+                        WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset] << 24) + 0x00ffffff;
+                        //+(TempByteBuffer[byteOffset] << 16) + (TempByteBuffer[byteOffset] << 8) + TempByteBuffer[byteOffset];
                         break;
 
                     case WAVE_SAMPLE_SIZE_16:
-                        WaveData[channelIndex][dataIndex++] = (TempByteBuffer[numread * byteAdvance + 1] << 24) + (TempByteBuffer[numread * byteAdvance] << 16);
+                        WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset + 1] << 24) + (TempByteBuffer[byteOffset] << 16)
+                            + (TempByteBuffer[byteOffset + 1] << 8) + TempByteBuffer[byteOffset];
                         break;
 
                     case WAVE_SAMPLE_SIZE_24:
-                        WaveData[channelIndex][dataIndex++] = (TempByteBuffer[numread * byteAdvance + 2] << 24) + (TempByteBuffer[numread * byteAdvance + 1] << 16)
-                            + (TempByteBuffer[numread * byteAdvance] << 8);
+                        WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset + 2] << 24) + (TempByteBuffer[byteOffset + 1] << 16)
+                            + (TempByteBuffer[byteOffset] << 8);
                         break;
 
                     case WAVE_SAMPLE_SIZE_32:
                     {
-                        __int32 help = (TempByteBuffer[numread * byteAdvance + 3] << 24) + (TempByteBuffer[numread * byteAdvance + 2] << 16)
-                            + (TempByteBuffer[numread * byteAdvance + 1] << 8) + TempByteBuffer[numread * byteAdvance];
+                        __int32 help = (TempByteBuffer[byteOffset + 3] << 24) + (TempByteBuffer[byteOffset + 2] << 16)
+                            + (TempByteBuffer[byteOffset + 1] << 8) + TempByteBuffer[byteOffset];
 
                         switch (Wave.format.Compression)
                         {
                         case WAVE_COMPR_PCM:
-                            WaveData[channelIndex][dataIndex++] = help;
+                            WaveData[channelIndex][sampleIndex] = help;
                             break;
 
                         case WAVE_COMPR_IEEE:
                             __int32 *pi = &help;
                             double *pd = (double*)pi;
-                            WaveData[channelIndex][dataIndex++] = *pi;
+                            WaveData[channelIndex][sampleIndex] = *pi;
                             break;
                         }
                     }
@@ -167,8 +171,8 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
 
                     case WAVE_SAMPLE_SIZE_64:
                         // will use only highest four bytes, dropping the rest
-                        __int32 help = (TempByteBuffer[numread * byteAdvance + 7] << 24) + (TempByteBuffer[numread * byteAdvance + 6] << 16)
-                            + (TempByteBuffer[numread * byteAdvance + 5] << 8) + TempByteBuffer[numread * byteAdvance + 4];
+                        __int32 help = (TempByteBuffer[byteOffset + 7] << 24) + (TempByteBuffer[byteOffset + 6] << 16)
+                            + (TempByteBuffer[byteOffset + 5] << 8) + TempByteBuffer[byteOffset + 4];
 
                         // compression should be floating point
                         switch (Wave.format.Compression)
@@ -180,13 +184,13 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                         case WAVE_COMPR_IEEE:
                             __int32 *pi = &help;
                             double *pd = (double*)pi;
-                            WaveData[channelIndex][dataIndex++] = *pi;
+                            WaveData[channelIndex][sampleIndex] = *pi;
                             break;
                         }
                         break;
                     }
+                    byteOffset += Wave.format.BlockAlign;
                 }
-                ModuleLogger::print("read %li frames", numread);
             }
             free(TempByteBuffer);
             TempByteBuffer = 0;
