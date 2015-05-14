@@ -82,6 +82,7 @@ namespace eLibV2
             void SetupCallbacks();
 
             ASIOCallbacks asioCallbacks;
+            static void *externalBuffer[kMaxOutputChannels];
 
             static void bufferSwitch(long index, ASIOBool processNow);
             static ASIOTime *bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOBool processNow);

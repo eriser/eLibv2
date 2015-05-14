@@ -68,6 +68,9 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
         int channel = asioDriverInfo.bufferInfos[bufferIndex].channelNum;
 
         // skip channels without data
+//        if (!externalBuffer)
+//            continue;
+
         if (!waveLoader.getWaveData(channel))
             continue;
 
