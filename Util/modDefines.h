@@ -25,9 +25,6 @@
 #define LOWEST 0.0001
 #endif
 
-#define PLUGIN_TYPE_SYNTH   1
-#define PLUGIN_TYPE_EFFECT  2
-
 #define DEBUG_MSG_MAX       1024
 
 #ifndef sgn

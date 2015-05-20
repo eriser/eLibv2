@@ -9,7 +9,8 @@ PluginInterface::PluginInterface()
     m_fSamplerate(44100.0),
     m_uiBlocksize(512),
     m_uiMidiChannel(0),
-    m_uiAudioChannel(0)
+    m_uiAudioChannel(0),
+    m_ePluginType(PluginType::PLUGIN_TYPE_UNSET)
 {
 }
 
@@ -59,7 +60,7 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
 void PluginInterface::Unload()
 {
     std::cout << "Plugin> Close effect..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, 0, 0);
+    m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
 }
 
 bool PluginInterface::CallPluginEntry()
@@ -94,28 +95,40 @@ bool PluginInterface::CallPluginEntry()
 void PluginInterface::Setup()
 {
     std::cout << "Plugin> Setting up plugin..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effOpen, 0, 0, NULL, 0);
+    m_pEffect->dispatcher(m_pEffect, effOpen, 0, 0, NULL, 0.0f);
     m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
-    m_pEffect->dispatcher(m_pEffect, effSetBlockSize, 0, m_uiBlocksize, NULL, 0);
-    m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0);
+    m_pEffect->dispatcher(m_pEffect, effSetBlockSize, 0, m_uiBlocksize, NULL, 0.0f);
+    m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
 
     // get plugin id
     char pluginID[5] = { 0 };
-    for (int i = 0; i < 4; i++)
-        pluginID[i] = ((m_pEffect->uniqueID & (0xff << ((3 - i) * 8))) >> ((3 - i) * 8));
+    GetPluginStringFromLong(m_pEffect->uniqueID, pluginID);
     m_PluginID.assign(pluginID);
+
+    if (m_pEffect->flags & effFlagsIsSynth)
+        m_ePluginType = PluginType::PLUGIN_TYPE_INSTRUMENT;
+    else
+        m_ePluginType = PluginType::PLUGIN_TYPE_EFFECT;
+
+    if (m_pEffect->dispatcher(m_pEffect, effGetPlugCategory, 0, 0, NULL, 0.0f) == kPlugCategShell)
+    {
+        std::cout << "Plugin> This is a shell plugin..." << std::endl;
+        m_ePluginType = PluginType::PLUGIN_TYPE_SHELL;
+    }
 }
 
 void PluginInterface::Start()
 {
     std::cout << "Plugin> " << m_PluginID << " Start requested..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, 0, 0);
+    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
+    m_pEffect->dispatcher(m_pEffect, effStartProcess, 0, 0, NULL, 0.0f);
 }
 
 void PluginInterface::Stop()
 {
     std::cout << "Plugin> " << m_PluginID << " Stop requested..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, 0, 0);
+    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0);
+    m_pEffect->dispatcher(m_pEffect, effStopProcess, 0, 0, NULL, 0.0f);
 }
 
 void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
@@ -140,7 +153,7 @@ void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
     else if (status == 0xb0)
     {
     }
-    m_pEffect->dispatcher(m_pEffect, effProcessEvents, 0, 0, &events, 0);
+    m_pEffect->dispatcher(m_pEffect, effProcessEvents, 0, 0, &events, 0.0f);
 }
 
 void PluginInterface::PrintProperties()
@@ -150,10 +163,13 @@ void PluginInterface::PrintProperties()
     char effectName[256] = { 0 };
     char vendorString[256] = { 0 };
     char productString[256] = { 0 };
+    VstInt32 vendorVersion;
 
-    m_pEffect->dispatcher(m_pEffect, effGetEffectName, 0, 0, effectName, 0);
-    m_pEffect->dispatcher(m_pEffect, effGetVendorString, 0, 0, vendorString, 0);
-    m_pEffect->dispatcher(m_pEffect, effGetProductString, 0, 0, productString, 0);
+    m_pEffect->dispatcher(m_pEffect, effGetEffectName, 0, 0, effectName, 0.0f);
+    m_pEffect->dispatcher(m_pEffect, effGetVendorString, 0, 0, vendorString, 0.0f);
+    vendorVersion = m_pEffect->dispatcher(m_pEffect, effGetVendorVersion, 0, 0, NULL, 0.0f);
+    
+    m_pEffect->dispatcher(m_pEffect, effGetProductString, 0, 0, productString, 0.0f);
 
     std::cout << "Name: " << effectName << std::endl;
     std::cout << "Vendor: " << vendorString << std::endl;
@@ -163,6 +179,29 @@ void PluginInterface::PrintProperties()
     std::cout << "numParams: " << m_pEffect->numParams << std::endl;
     std::cout << "numInputs: " << m_pEffect->numInputs << std::endl;
     std::cout << "numOutputs: " << m_pEffect->numOutputs << std::endl;
+
+    std::cout << "InitialDelay: " << m_pEffect->initialDelay << " frames" << std::endl;
+
+    if (m_ePluginType == PluginType::PLUGIN_TYPE_SHELL)
+    {
+        char nameBuffer[kVstMaxProductStrLen];
+        std::cout << "Sub-plugins:" << std::endl;
+
+        while (true)
+        {
+            memset(nameBuffer, 0, sizeof(nameBuffer));
+            VstInt32 shellPluginId = (VstInt32)m_pEffect->dispatcher(m_pEffect, effShellGetNextPlugin, 0, 0, nameBuffer, 0.0f);
+
+            if (shellPluginId == 0 || nameBuffer[0] == '0')
+                break;
+            else
+            {
+                char pluginID[5] = { 0 };
+                GetPluginStringFromLong(shellPluginId, pluginID);
+                std::cout << " '" << pluginID << "' (" << nameBuffer << ")" << std::endl;
+            }
+        }
+    }
 }
 
 void PluginInterface::PrintPrograms()
@@ -172,10 +211,10 @@ void PluginInterface::PrintPrograms()
     for (VstInt32 progIndex = 0; progIndex < m_pEffect->numPrograms; progIndex++)
     {
         char progName[256] = { 0 };
-        if (!m_pEffect->dispatcher(m_pEffect, effGetProgramNameIndexed, progIndex, 0, progName, 0))
+        if (!m_pEffect->dispatcher(m_pEffect, effGetProgramNameIndexed, progIndex, 0, progName, 0.0f))
         {
-            m_pEffect->dispatcher(m_pEffect, effSetProgram, 0, progIndex, 0, 0); // Note: old program not restored here!
-            m_pEffect->dispatcher(m_pEffect, effGetProgramName, 0, 0, progName, 0);
+            m_pEffect->dispatcher(m_pEffect, effSetProgram, 0, progIndex, NULL, 0.0f); // Note: old program not restored here!
+            m_pEffect->dispatcher(m_pEffect, effGetProgramName, 0, 0, progName, 0.0f);
         }
         std::cout << "Program " << (int)progIndex << ": " << progName << std::endl;
     }
@@ -191,9 +230,9 @@ void PluginInterface::PrintParameters()
         char paramLabel[256] = { 0 };
         char paramDisplay[256] = { 0 };
 
-        m_pEffect->dispatcher(m_pEffect, effGetParamName, paramIndex, 0, paramName, 0);
-        m_pEffect->dispatcher(m_pEffect, effGetParamLabel, paramIndex, 0, paramLabel, 0);
-        m_pEffect->dispatcher(m_pEffect, effGetParamDisplay, paramIndex, 0, paramDisplay, 0);
+        m_pEffect->dispatcher(m_pEffect, effGetParamName, paramIndex, 0, paramName, 0.0f);
+        m_pEffect->dispatcher(m_pEffect, effGetParamLabel, paramIndex, 0, paramLabel, 0.0f);
+        m_pEffect->dispatcher(m_pEffect, effGetParamDisplay, paramIndex, 0, paramDisplay, 0.0f);
         float value = m_pEffect->getParameter(m_pEffect, paramIndex);
 
         std::cout << "Param " << (int)paramIndex << ": " << paramName << "[" << paramDisplay << " " << paramLabel << "] (default: " << value << ")" << std::endl;
@@ -219,7 +258,7 @@ void PluginInterface::PrintCapabilities()
     for (VstInt32 canDoIndex = 0; canDoIndex < sizeof(canDos) / sizeof(canDos[0]); canDoIndex++)
     {
         std::cout << "Can do " << canDos[canDoIndex] << "... ";
-        VstInt32 result = (VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDos[canDoIndex], 0);
+        VstInt32 result = (VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDos[canDoIndex], 0.0f);
         switch (result)
         {
         case 0:
@@ -270,7 +309,7 @@ void PluginInterface::ProcessReplacing()
     }
 
     std::cout << "HOST> Resume effect..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, 0, 0);
+    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
 
     // here the host should send a play command to gather some samples
 
@@ -283,7 +322,7 @@ void PluginInterface::ProcessReplacing()
     // here the host should send the gatheredd samples to the audio driver (asio?)
 
     std::cout << "HOST> Suspend effect..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, 0, 0);
+    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
 
     if (numInputs > 0)
     {

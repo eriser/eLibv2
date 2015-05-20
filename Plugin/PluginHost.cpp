@@ -2,6 +2,13 @@
 
 using namespace eLibV2::Host;
 
+double PluginHost::ms_dSamplerate = kSampleRate;
+double PluginHost::ms_dTempo = 140.0f;
+unsigned int PluginHost::ms_uiBlocksize = kBlockSize;
+unsigned int PluginHost::ms_uiTimeSignatureBeatsPerMeasure = 4;
+unsigned int PluginHost::ms_uiTimeSignatureNoteValue = 4;
+VstTimeInfo PluginHost::_VstTimeInfo;
+
 PluginHost::PluginHost(): m_NumLoadedPlugins(0)
 {
 }
@@ -165,6 +172,66 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterGetTime:
+        // These values are always valid
+        _VstTimeInfo.samplePos = 0;
+        _VstTimeInfo.sampleRate = kSampleRate;
+
+        // Set flags for transport state
+        _VstTimeInfo.flags = 0;
+        _VstTimeInfo.flags |= kVstTransportChanged;
+        _VstTimeInfo.flags |= kVstTransportPlaying;
+
+        // Fill values based on other flags which may have been requested
+        if (value & kVstNanosValid)
+        {
+            // It doesn't make sense to return this value, as the plugin may try to calculate
+            // something based on the current system time. As we are running offline, anything
+            // the plugin calculates here will probably be wrong given the way we are running.
+            // However, for realtime mode, this flag should be implemented in that case.
+        }
+
+        if (value & kVstPpqPosValid)
+        {
+            // TODO: Move calculations to AudioClock
+            double samplesPerBeat = (60.0 / GetTempo()) * GetSampleRate();
+            // Musical time starts with 1, not 0
+            _VstTimeInfo.ppqPos = (_VstTimeInfo.samplePos / samplesPerBeat) + 1.0;
+            _VstTimeInfo.flags |= kVstPpqPosValid;
+        }
+
+        if (value & kVstTempoValid) {
+            _VstTimeInfo.tempo = 140.0f;
+            _VstTimeInfo.flags |= kVstTempoValid;
+        }
+
+        if (value & kVstBarsValid)
+        {
+            if (!(value & kVstPpqPosValid))
+                std::cout << "Plugin requested position in bars, but not PPQ" << std::endl;
+
+            // TODO: Move calculations to AudioClock
+            double currentBarPos = floor(_VstTimeInfo.ppqPos / (double)GetTimeSignatureBeatsPerMeasure());
+            _VstTimeInfo.barStartPos = currentBarPos * (double)GetTimeSignatureBeatsPerMeasure() + 1.0;
+            std::cout << "Current bar is " << _VstTimeInfo.barStartPos << std::endl;
+            _VstTimeInfo.flags |= kVstBarsValid;
+        }
+
+        if (value & kVstCyclePosValid)
+            std::cout << "We don't support cycling, so this is always 0" << std::endl;
+
+        if (value & kVstTimeSigValid) {
+            _VstTimeInfo.timeSigNumerator = GetTimeSignatureBeatsPerMeasure();
+            _VstTimeInfo.timeSigDenominator = GetTimeSignatureNoteValue();
+            _VstTimeInfo.flags |= kVstTimeSigValid;
+        }
+
+        if (value & kVstSmpteValid)
+            std::cout << "Current time in SMPTE format" << std::endl;
+
+        if (value & kVstClockValid)
+            std::cout << "Sample frames until next clock" << std::endl;
+
+        result = (VstIntPtr)&_VstTimeInfo;
         std::cout << "requesting VstTimeInfo:" << std::hex << value << std::dec << std::endl;
         result = NULL;
         break;
@@ -179,20 +246,20 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
     case audioMasterGetSampleRate:
         std::cout << "samplerate requested." << std::endl;
-        result = kSampleRate;
+        result = (int)GetSampleRate();
         break;
 
     case audioMasterGetBlockSize:
         std::cout << "blocksize requested." << std::endl;
-        result = kBlockSize;
+        result = (VstIntPtr)GetBlocksize();
         break;
 
     case audioMasterGetInputLatency:
-        result = 100;
+        result = 0;
         break;
 
     case audioMasterGetOutputLatency:
-        result = 100;
+        result = 0;
         break;
 
     case audioMasterGetVendorString:

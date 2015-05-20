@@ -18,6 +18,12 @@ namespace eLibV2
         typedef std::map<std::string, PluginInterface*> PluginMap;
         typedef std::vector<PluginInterface*> PluginInterfaceList;
 
+        typedef AEffect *(*Vst2xPluginEntryFunc)(audioMasterCallback host);
+        typedef VstIntPtr(*Vst2xPluginDispatcherFunc)(AEffect *effect, VstInt32 opCode, VstInt32 index, VstIntPtr value, void *ptr, float opt);
+        typedef float(*Vst2xPluginGetParameterFunc)(AEffect *effect, VstInt32 index);
+        typedef void(*Vst2xPluginSetParameterFunc)(AEffect *effect, VstInt32 index, float value);
+        typedef void(*Vst2xPluginProcessFunc)(AEffect *effect, float **inputs, float **outputs, VstInt32 sampleFrames);
+
         class PluginHost
         {
         public:
@@ -35,6 +41,12 @@ namespace eLibV2
 
             void InsertMidiEvent(int channel, int status, int data1, int data2);
 
+            static unsigned int GetBlocksize() { return ms_uiBlocksize; }
+            static double GetTempo() { return ms_dTempo; }
+            static double GetSampleRate() { return ms_dSamplerate; }
+            static double GetTimeSignatureBeatsPerMeasure() { return ms_uiTimeSignatureBeatsPerMeasure; }
+            static double GetTimeSignatureNoteValue() { return ms_uiTimeSignatureNoteValue; }
+
             /**
             callback function to receive messages from the plugin
             warning this is a static function, so it cannot access internal members (except when using singleton)
@@ -47,6 +59,15 @@ namespace eLibV2
             @return return value of action to send to plugin
             */
             static VstIntPtr VSTCALLBACK HostCallback(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt);
+
+        public:
+            /// used as address in HostCallback to send to plugin
+            static VstTimeInfo _VstTimeInfo;
+            static unsigned int ms_uiBlocksize;
+            static double ms_dTempo;
+            static double ms_dSamplerate;
+            static unsigned int ms_uiTimeSignatureBeatsPerMeasure;
+            static unsigned int ms_uiTimeSignatureNoteValue;
 
         private:
             PluginInterfaceList GetPluginsForMidiChannel(int channel);

@@ -20,6 +20,26 @@ namespace eLibV2
     {
         typedef AEffect* (*PluginEntryProc) (audioMasterCallback audioMaster);
 
+        enum PluginType
+        {
+            PLUGIN_TYPE_UNSET = 0,
+            PLUGIN_TYPE_INSTRUMENT,
+            PLUGIN_TYPE_EFFECT,
+            PLUGIN_TYPE_SHELL,
+        };
+
+        /**
+        This class provides an abstraction for VST plugins.
+        It uses the filename of the plugin as an input and encapsulates all further things.
+        Loads the plugin's library and connects it to the host-callback
+
+        Handles:
+        - Plugintype (Instrument, Effect, Shell-Plugin)
+        - MidiInput channel (if applicable)
+        - AudioOutput channel
+
+
+        */
         class PluginInterface
         {
         public:
@@ -57,6 +77,12 @@ namespace eLibV2
             */
             void Setup();
 
+            inline void GetPluginStringFromLong(VstInt32 id, char* pluginID)
+            {
+                for (int i = 0; i < 4; i++)
+                    pluginID[i] = (char)(id >> ((3 - i) * 8) & 0xff);
+            }
+
         private:
             
             void*               m_pModule;          ///< low-level module for LoadLibrary
@@ -68,6 +94,7 @@ namespace eLibV2
             std::string         m_PluginID;         ///< pluginID
             unsigned int        m_uiMidiChannel;    ///< Midi channel to receive messages
             unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
+            PluginType          m_ePluginType;      ///< Type of Plugin
         };
     }
 }
