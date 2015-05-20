@@ -35,6 +35,8 @@ namespace eLibV2
             void StartAll();
             void StopAll();
 
+            VstInt32 CheckCanDo(char *canDo);
+
             PluginInterface *GetPluginByID(std::string pluginID);
             PluginInterface *GetPluginByIndex(int pluginIndex);
             PluginInterfaceList GetLoadedPlugins();

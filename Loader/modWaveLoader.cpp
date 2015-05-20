@@ -126,7 +126,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 int byteAdvance = Wave.format.BlockAlign / Wave.format.NumChannels;
 
                 long byteOffset = channelIndex * byteAdvance;
-                ModuleLogger::print("advancing %li bytes from offset: %li", byteAdvance);
+                ModuleLogger::print("advancing %li bytes", byteAdvance);
 
                 // iterate over samples
                 for (long sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
@@ -136,7 +136,6 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                     {
                     case WAVE_SAMPLE_SIZE_8:
                         WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset] << 24) + 0x00ffffff;
-                        //+(TempByteBuffer[byteOffset] << 16) + (TempByteBuffer[byteOffset] << 8) + TempByteBuffer[byteOffset];
                         break;
 
                     case WAVE_SAMPLE_SIZE_16:

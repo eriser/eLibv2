@@ -59,7 +59,7 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
 
 void PluginInterface::Unload()
 {
-    std::cout << "Plugin> Close effect..." << std::endl;
+    std::cout << "Plugin> " << m_PluginID << " Close requested..." << std::endl;
     m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
 }
 
@@ -308,12 +308,12 @@ void PluginInterface::ProcessReplacing()
         }
     }
 
-    std::cout << "HOST> Resume effect..." << std::endl;
+    std::cout << "Plugin> Resume effect..." << std::endl;
     m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
 
     // here the host should send a play command to gather some samples
 
-    std::cout << "HOST> Process Replacing..." << std::endl;
+    std::cout << "Plugin> Process Replacing..." << std::endl;
     for (VstInt32 processCount = 0; processCount < kNumProcessCycles; processCount++)
     {
         m_pEffect->processReplacing(m_pEffect, inputs, outputs, m_uiBlocksize);
@@ -321,7 +321,7 @@ void PluginInterface::ProcessReplacing()
 
     // here the host should send the gatheredd samples to the audio driver (asio?)
 
-    std::cout << "HOST> Suspend effect..." << std::endl;
+    std::cout << "Plugin> Suspend effect..." << std::endl;
     m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
 
     if (numInputs > 0)

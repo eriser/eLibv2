@@ -66,6 +66,39 @@ void PluginHost::StopAll()
         (*it).second->Stop();
 }
 
+VstInt32 CanHostDo(char *canDo)
+{
+    static const char* hostCanDos[] =
+    {
+        "sendVstEvents",
+        "sendVstMidiEvent",
+        "sendVstTimeInfo",
+        "receiveVstEvents",
+        "receiveVstMidiEvent",
+        "receiveVstTimeInfo",
+        "acceptIOChanges",
+        "sizeWindow",
+        "asyncProcessing",
+        "offline",
+        "supplyIdle",
+        "supportShell",
+        "openFileSelector",
+        "editFile",
+        "closeFileSelector"
+    };
+
+    VstInt32 res = -1;
+    for (VstInt32 canDoIndex = 0; canDoIndex < sizeof(hostCanDos) / sizeof(hostCanDos[0]); canDoIndex++)
+    {
+        if (strcmp(canDo, hostCanDos[canDoIndex]) == 0)
+        {
+            res = 1;
+            break;
+        }
+    }
+    return res;
+}
+
 PluginInterfaceList PluginHost::GetLoadedPlugins()
 {
     PluginInterfaceList list;
@@ -262,6 +295,14 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         result = 0;
         break;
 
+    case audioMasterGetCurrentProcessLevel:
+        result = kVstProcessLevelOffline;
+        break;
+
+    case audioMasterGetAutomationState:
+        result = kVstAutomationOff;
+        break;
+
     case audioMasterGetVendorString:
         std::cout << "vendor string requested" << std::endl;
         strncpy((char*)ptr, "e:fope media", kVstMaxVendorStrLen);
@@ -275,6 +316,20 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     case audioMasterGetVendorVersion:
         std::cout << "product version requested" << std::endl;
         result = 1;
+        break;
+
+    case audioMasterVendorSpecific:
+        std::cout << "vendor specific requested: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
+        break;
+
+    case audioMasterCanDo:
+        std::cout << "request for master canDo '" << (char*)ptr << "'" << std::endl;
+        result = CanHostDo((char*)ptr);
+        break;
+
+    case audioMasterGetLanguage:
+        std::cout << "host language requested" << std::endl;
+        result = kVstLangEnglish;
         break;
 
     case audioMasterUpdateDisplay:
