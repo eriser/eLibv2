@@ -162,6 +162,11 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 {
     VstIntPtr result = 0;
 
+    char pluginID[5] = "????";
+    if (effect)
+        PluginInterface::GetPluginStringFromLong(effect->uniqueID, pluginID);
+    std::cout << "HOST> '" << pluginID << "': ";
+
 #if 0
     // Filter idle calls...
     bool filtered = false;
@@ -265,12 +270,16 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
             std::cout << "Sample frames until next clock" << std::endl;
 
         result = (VstIntPtr)&_VstTimeInfo;
-        std::cout << "requesting VstTimeInfo:" << std::hex << value << std::dec << std::endl;
+        std::cout << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
         result = NULL;
         break;
 
     case audioMasterProcessEvents:
         std::cout << "events from plugin received " << std::hex << ptr << std::dec << std::endl;
+        break;
+
+    case audioMasterIOChanged:
+        std::cout << "number of inputs/outputs changed" << std::endl;
         break;
 
     case audioMasterSizeWindow:

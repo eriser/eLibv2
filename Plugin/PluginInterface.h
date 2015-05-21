@@ -64,6 +64,12 @@ namespace eLibV2
             void PrintCapabilities();
             void ProcessReplacing();
 
+            static inline void GetPluginStringFromLong(VstInt32 id, char* pluginID)
+            {
+                for (int i = 0; i < 4; i++)
+                    pluginID[i] = (char)(id >> ((3 - i) * 8) & 0xff);
+            }
+
         private:
             PluginEntryProc GetMainEntry();
 
@@ -76,12 +82,6 @@ namespace eLibV2
             set up internal plugin data (e.g. samplerate and blocksize)
             */
             void Setup();
-
-            inline void GetPluginStringFromLong(VstInt32 id, char* pluginID)
-            {
-                for (int i = 0; i < 4; i++)
-                    pluginID[i] = (char)(id >> ((3 - i) * 8) & 0xff);
-            }
 
         private:
             
