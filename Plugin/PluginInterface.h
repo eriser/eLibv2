@@ -83,8 +83,10 @@ namespace eLibV2
             */
             void Setup();
 
+            void SetupProcessingMemory();
+            void FreeProcessingMemory();
+
         private:
-            
             void*               m_pModule;          ///< low-level module for LoadLibrary
             AEffect*            m_pEffect;          ///< the AEffect main entry
             std::string         m_FileName;         ///< associated filename
@@ -95,6 +97,11 @@ namespace eLibV2
             unsigned int        m_uiMidiChannel;    ///< Midi channel to receive messages
             unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
             PluginType          m_ePluginType;      ///< Type of Plugin
+
+            float**             m_ppInputs;
+            float**             m_ppOutputs;
+            VstInt32            m_uiNumInputs;
+            VstInt32            m_uiNumOutputs;
         };
     }
 }

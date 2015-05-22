@@ -8,8 +8,10 @@ unsigned int PluginHost::ms_uiBlocksize = kBlockSize;
 unsigned int PluginHost::ms_uiTimeSignatureBeatsPerMeasure = 4;
 unsigned int PluginHost::ms_uiTimeSignatureNoteValue = 4;
 VstTimeInfo PluginHost::_VstTimeInfo;
+bool PluginHost::ms_bTransportPlaying = false;
+LARGE_INTEGER PluginHost::ms_liElapsedMicroseconds;
 
-PluginHost::PluginHost(): m_NumLoadedPlugins(0)
+PluginHost::PluginHost() : m_NumLoadedPlugins(0)
 {
 }
 
@@ -22,7 +24,7 @@ bool PluginHost::OpenPlugin(std::string fileName)
     {
         m_LoadedPlugins[plugin->GetPluginID()] = plugin;
 
-#if 0
+#if 1
         plugin->PrintProperties();
         plugin->PrintPrograms();
         plugin->PrintParameters();
@@ -58,12 +60,30 @@ void PluginHost::StartAll()
 {
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
         (*it).second->Start();
+    ms_bTransportPlaying = true;
+    StartTimer();
 }
 
 void PluginHost::StopAll()
 {
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
         (*it).second->Stop();
+    ms_bTransportPlaying = false;
+    StopTimer();
+}
+
+void PluginHost::StartTimer()
+{
+    QueryPerformanceFrequency(&m_liFrequency);
+    QueryPerformanceCounter(&m_liStartingTime);
+}
+
+void PluginHost::StopTimer()
+{
+    QueryPerformanceCounter(&m_liEndingTime);
+    ms_liElapsedMicroseconds.QuadPart = m_liEndingTime.QuadPart - m_liStartingTime.QuadPart;
+    ms_liElapsedMicroseconds.QuadPart *= 1000000;
+    ms_liElapsedMicroseconds.QuadPart /= m_liFrequency.QuadPart;
 }
 
 VstInt32 CanHostDo(char *canDo)
@@ -107,33 +127,6 @@ PluginInterfaceList PluginHost::GetLoadedPlugins()
     return list;
 }
 
-PluginInterface *PluginHost::GetPluginByID(std::string pluginID)
-{
-    if (m_LoadedPlugins.count(pluginID) > 0)
-        return m_LoadedPlugins[pluginID];
-    else
-        return NULL;
-}
-
-PluginInterface *PluginHost::GetPluginByIndex(const int pluginIndex)
-{
-    PluginInterface *res = NULL;
-    if (pluginIndex < m_LoadedPlugins.size())
-    {
-        int currentPluginIndex = 0;
-        for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
-        {
-            if (currentPluginIndex == pluginIndex)
-            {
-                res = (*it).second;
-                break;
-            }
-            currentPluginIndex++;
-        }
-    }
-    return res;
-}
-
 PluginInterfaceList PluginHost::GetPluginsForMidiChannel(int channel)
 {
     PluginInterfaceList list;
@@ -165,7 +158,9 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     char pluginID[5] = "????";
     if (effect)
         PluginInterface::GetPluginStringFromLong(effect->uniqueID, pluginID);
-    std::cout << "HOST> '" << pluginID << "': ";
+
+    if (opcode && opcode != audioMasterIdle)
+        std::cout << "HOST> '" << pluginID << "': ";
 
 #if 0
     // Filter idle calls...
@@ -191,7 +186,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     switch (opcode)
     {
     case audioMasterAutomate:
-//        std::cout << "received change for parameter " << index << " value: " << opt << std::endl;
+        //        std::cout << "received change for parameter " << index << " value: " << opt << std::endl;
         break;
 
     case audioMasterVersion:
@@ -205,19 +200,19 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     case audioMasterIdle:
         break;
 
-    case 6:
-        std::cout << "deprecated (audioMasterWantMidi)" << std::endl;
-        break;
-
     case audioMasterGetTime:
+        std::cout << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
+
         // These values are always valid
         _VstTimeInfo.samplePos = 0;
-        _VstTimeInfo.sampleRate = kSampleRate;
+        _VstTimeInfo.sampleRate = GetSampleRate();
 
         // Set flags for transport state
         _VstTimeInfo.flags = 0;
-        _VstTimeInfo.flags |= kVstTransportChanged;
-        _VstTimeInfo.flags |= kVstTransportPlaying;
+        // TODO:        if (HasTransportChanged())
+        //_VstTimeInfo.flags |= kVstTransportChanged;
+        if (IsTransportPlaying())
+            _VstTimeInfo.flags |= kVstTransportPlaying;
 
         // Fill values based on other flags which may have been requested
         if (value & kVstNanosValid)
@@ -226,6 +221,8 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
             // something based on the current system time. As we are running offline, anything
             // the plugin calculates here will probably be wrong given the way we are running.
             // However, for realtime mode, this flag should be implemented in that case.
+            _VstTimeInfo.nanoSeconds = 0;
+            _VstTimeInfo.flags |= kVstNanosValid;
         }
 
         if (value & kVstPpqPosValid)
@@ -237,8 +234,9 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
             _VstTimeInfo.flags |= kVstPpqPosValid;
         }
 
-        if (value & kVstTempoValid) {
-            _VstTimeInfo.tempo = 140.0f;
+        if (value & kVstTempoValid)
+        {
+            _VstTimeInfo.tempo = GetTempo();
             _VstTimeInfo.flags |= kVstTempoValid;
         }
 
@@ -248,8 +246,8 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
                 std::cout << "Plugin requested position in bars, but not PPQ" << std::endl;
 
             // TODO: Move calculations to AudioClock
-            double currentBarPos = floor(_VstTimeInfo.ppqPos / (double)GetTimeSignatureBeatsPerMeasure());
-            _VstTimeInfo.barStartPos = currentBarPos * (double)GetTimeSignatureBeatsPerMeasure() + 1.0;
+            double currentBarPos = floor(_VstTimeInfo.ppqPos / GetTimeSignatureBeatsPerMeasure());
+            _VstTimeInfo.barStartPos = currentBarPos * GetTimeSignatureBeatsPerMeasure() + 1.0;
             std::cout << "Current bar is " << _VstTimeInfo.barStartPos << std::endl;
             _VstTimeInfo.flags |= kVstBarsValid;
         }
@@ -257,7 +255,8 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         if (value & kVstCyclePosValid)
             std::cout << "We don't support cycling, so this is always 0" << std::endl;
 
-        if (value & kVstTimeSigValid) {
+        if (value & kVstTimeSigValid)
+        {
             _VstTimeInfo.timeSigNumerator = GetTimeSignatureBeatsPerMeasure();
             _VstTimeInfo.timeSigDenominator = GetTimeSignatureNoteValue();
             _VstTimeInfo.flags |= kVstTimeSigValid;
@@ -270,8 +269,6 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
             std::cout << "Sample frames until next clock" << std::endl;
 
         result = (VstIntPtr)&_VstTimeInfo;
-        std::cout << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
-        result = NULL;
         break;
 
     case audioMasterProcessEvents:
@@ -279,11 +276,13 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterIOChanged:
-        std::cout << "number of inputs/outputs changed" << std::endl;
+        std::cout << "number of inputs/outputs changing not supported" << std::endl;
+        result = 0;
         break;
 
     case audioMasterSizeWindow:
         std::cout << "editor size changed. width: " << index << " height: " << value << std::endl;
+        result = 0;
         break;
 
     case audioMasterGetSampleRate:
@@ -329,6 +328,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
     case audioMasterVendorSpecific:
         std::cout << "vendor specific requested: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
+        result = 0;
         break;
 
     case audioMasterCanDo:
@@ -346,19 +346,21 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterBeginEdit:
-        std::cout << "editor started editing" << std::endl;
+        std::cout << "editing parameter " << index << std::endl;
         break;
 
     case audioMasterEndEdit:
-        std::cout << "editor ended editing mode" << std::endl;
+        std::cout << "ended editing parameter " << index << std::endl;
         break;
 
     case audioMasterOpenFileSelector:
         std::cout << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        result = 0;
         break;
 
     case audioMasterCloseFileSelector:
         std::cout << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        result = 0;
         break;
 
     default:
@@ -367,4 +369,15 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     }
 
     return result;
+}
+
+DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
+{
+    PluginInterfaceList *pList = reinterpret_cast<PluginInterfaceList*>(lpParam);
+
+    for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
+    {
+        (*it)->ProcessReplacing();
+    }
+    return 0;
 }

@@ -30,24 +30,29 @@ namespace eLibV2
             PluginHost();
             ~PluginHost() {}
 
+            // Plugin Management
             bool OpenPlugin(std::string fileName);
             void CloseAll();
             void StartAll();
             void StopAll();
 
+            // Timer methods
+            void StartTimer();
+            void StopTimer();
+
             VstInt32 CheckCanDo(char *canDo);
 
-            PluginInterface *GetPluginByID(std::string pluginID);
-            PluginInterface *GetPluginByIndex(int pluginIndex);
             PluginInterfaceList GetLoadedPlugins();
 
             void InsertMidiEvent(int channel, int status, int data1, int data2);
 
+            // Static methods
             static unsigned int GetBlocksize() { return ms_uiBlocksize; }
             static double GetTempo() { return ms_dTempo; }
             static double GetSampleRate() { return ms_dSamplerate; }
             static double GetTimeSignatureBeatsPerMeasure() { return ms_uiTimeSignatureBeatsPerMeasure; }
             static double GetTimeSignatureNoteValue() { return ms_uiTimeSignatureNoteValue; }
+            static bool IsTransportPlaying() { return ms_bTransportPlaying; }
 
             /**
             callback function to receive messages from the plugin
@@ -61,15 +66,20 @@ namespace eLibV2
             @return return value of action to send to plugin
             */
             static VstIntPtr VSTCALLBACK HostCallback(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt);
+#ifdef WIN32
+            static DWORD WINAPI ProcessReplacing(LPVOID lpParam);
+#endif
 
         public:
-            /// used as address in HostCallback to send to plugin
+            /// the following variables have to be static to be accessed from HostCallback
             static VstTimeInfo _VstTimeInfo;
             static unsigned int ms_uiBlocksize;
             static double ms_dTempo;
             static double ms_dSamplerate;
             static unsigned int ms_uiTimeSignatureBeatsPerMeasure;
             static unsigned int ms_uiTimeSignatureNoteValue;
+            static bool ms_bTransportPlaying;
+            static LARGE_INTEGER ms_liElapsedMicroseconds;
 
         private:
             PluginInterfaceList GetPluginsForMidiChannel(int channel);
@@ -78,6 +88,7 @@ namespace eLibV2
         private:
             PluginMap m_LoadedPlugins;
             unsigned int m_NumLoadedPlugins;
+            LARGE_INTEGER m_liStartingTime, m_liEndingTime, m_liFrequency;
         };
     }
 }

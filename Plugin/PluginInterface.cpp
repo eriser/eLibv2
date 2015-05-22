@@ -10,21 +10,17 @@ PluginInterface::PluginInterface()
     m_uiBlocksize(512),
     m_uiMidiChannel(0),
     m_uiAudioChannel(0),
-    m_ePluginType(PluginType::PLUGIN_TYPE_UNSET)
+    m_ePluginType(PluginType::PLUGIN_TYPE_UNSET),
+    m_uiNumInputs(0),
+    m_uiNumOutputs(0),
+    m_ppInputs(NULL),
+    m_ppOutputs(NULL)
 {
 }
 
 PluginInterface::~PluginInterface()
 {
-    if (m_pModule)
-    {
-#if _WIN32
-        FreeLibrary((HMODULE)m_pModule);
-#elif TARGET_API_MAC_CARBON
-        CFBundleUnloadExecutable((CFBundleRef)module);
-        CFRelease((CFBundleRef)module);
-#endif
-    }
+
 }
 
 bool PluginInterface::Load(const std::string fileName, audioMasterCallback callback)
@@ -60,7 +56,25 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
 void PluginInterface::Unload()
 {
     std::cout << "Plugin> " << m_PluginID << " Close requested..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
+    if (m_pEffect)
+    {
+        m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
+        m_pEffect = NULL;
+    }
+
+    FreeProcessingMemory();
+
+    if (m_pModule)
+    {
+#if _WIN32
+        FreeLibrary((HMODULE)m_pModule);
+#elif TARGET_API_MAC_CARBON
+        CFBundleUnloadExecutable((CFBundleRef)module);
+        CFRelease((CFBundleRef)module);
+#endif
+        m_pHostCallback = NULL;
+        m_pModule = NULL;
+    }
 }
 
 bool PluginInterface::CallPluginEntry()
@@ -115,6 +129,51 @@ void PluginInterface::Setup()
         std::cout << "Plugin> This is a shell plugin..." << std::endl;
         m_ePluginType = PluginType::PLUGIN_TYPE_SHELL;
     }
+    SetupProcessingMemory();
+}
+
+void PluginInterface::SetupProcessingMemory()
+{
+    // get number of inputs/outputs -> these will NOT change during lifetime
+    m_uiNumInputs = m_pEffect->numInputs;
+    m_uiNumOutputs = m_pEffect->numOutputs;
+
+    if (m_uiNumInputs > 0)
+    {
+        m_ppInputs = new float*[m_uiNumInputs];
+        for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+        {
+            m_ppInputs[i] = new float[m_uiBlocksize];
+            memset(m_ppInputs[i], 0, m_uiBlocksize * sizeof(float));
+        }
+    }
+
+    if (m_uiNumOutputs > 0)
+    {
+        m_ppOutputs = new float*[m_uiNumOutputs];
+        for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
+        {
+            m_ppOutputs[i] = new float[m_uiBlocksize];
+            memset(m_ppOutputs[i], 0, m_uiBlocksize * sizeof(float));
+        }
+    }
+}
+
+void PluginInterface::FreeProcessingMemory()
+{
+    if (m_uiNumInputs > 0)
+    {
+        for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+            delete[] m_ppInputs[i];
+        delete[] m_ppInputs;
+    }
+
+    if (m_uiNumOutputs > 0)
+    {
+        for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
+            delete[] m_ppOutputs[i];
+        delete[] m_ppOutputs;
+    }
 }
 
 void PluginInterface::Start()
@@ -138,6 +197,7 @@ void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
 
     if (status == 0x90)
     {
+        // MIDI Event
         VstMidiEvent midiEvent = {};
 
         midiEvent.byteSize = sizeof(VstMidiEvent);
@@ -152,6 +212,7 @@ void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
     }
     else if (status == 0xb0)
     {
+        // Sysex Event
     }
     m_pEffect->dispatcher(m_pEffect, effProcessEvents, 0, 0, &events, 0.0f);
 }
@@ -274,7 +335,7 @@ void PluginInterface::PrintCapabilities()
             break;
 
         default:
-            std::cout << "?????";
+            std::cout << "w00t?";
             break;
         }
         std::cout << std::endl;
@@ -283,58 +344,9 @@ void PluginInterface::PrintCapabilities()
 
 void PluginInterface::ProcessReplacing()
 {
-    float** inputs = 0;
-    float** outputs = 0;
-    VstInt32 numInputs = m_pEffect->numInputs;
-    VstInt32 numOutputs = m_pEffect->numOutputs;
-
-    if (numInputs > 0)
-    {
-        inputs = new float*[numInputs];
-        for (VstInt32 i = 0; i < numInputs; i++)
-        {
-            inputs[i] = new float[m_uiBlocksize];
-            memset(inputs[i], 0, m_uiBlocksize * sizeof(float));
-        }
-    }
-
-    if (numOutputs > 0)
-    {
-        outputs = new float*[numOutputs];
-        for (VstInt32 i = 0; i < numOutputs; i++)
-        {
-            outputs[i] = new float[m_uiBlocksize];
-            memset(outputs[i], 0, m_uiBlocksize * sizeof(float));
-        }
-    }
-
-    std::cout << "Plugin> Resume effect..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
-
-    // here the host should send a play command to gather some samples
-
     std::cout << "Plugin> Process Replacing..." << std::endl;
     for (VstInt32 processCount = 0; processCount < kNumProcessCycles; processCount++)
     {
-        m_pEffect->processReplacing(m_pEffect, inputs, outputs, m_uiBlocksize);
-    }
-
-    // here the host should send the gatheredd samples to the audio driver (asio?)
-
-    std::cout << "Plugin> Suspend effect..." << std::endl;
-    m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
-
-    if (numInputs > 0)
-    {
-        for (VstInt32 i = 0; i < numInputs; i++)
-            delete[] inputs[i];
-        delete[] inputs;
-    }
-
-    if (numOutputs > 0)
-    {
-        for (VstInt32 i = 0; i < numOutputs; i++)
-            delete[] outputs[i];
-        delete[] outputs;
+        m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, m_uiBlocksize);
     }
 }
