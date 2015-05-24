@@ -1,14 +1,16 @@
 #include <ASIO/AsioLoader.h>
 #include <ASIO/SampleConversion.h>
-
-// TODO: move asio files into seperate library
+#include <Util/modManagedBuffer.h>
 
 using namespace eLibV2::ASIO;
 using namespace eLibV2::Loader;
+using namespace eLibV2::Util;
 
 // asio callbacks directly access these variables
-eLibV2::ASIO::AsioLoader::DriverInfo asioDriverInfo;
-eLibV2::Loader::WaveLoader waveLoader;
+AsioLoader::DriverInfo asioDriverInfo;
+WaveLoader waveLoader;
+#define USE_MANAGED_BUFFER 0
+extern ManagedBuffer managedBuffer;
 
 //----------------------------------------------------------------------------------
 // conversion from 64 bit ASIOSample/ASIOTimeStamp to double float
@@ -67,15 +69,22 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
 
         int channel = asioDriverInfo.bufferInfos[bufferIndex].channelNum;
 
-        // skip channels without data
-//        if (!externalBuffer)
-//            continue;
+        void* source = NULL;
 
+#if USE_MANAGED_BUFFER == 1
+        // skip channels without data
+        if (channel >= managedBuffer.GetBufferCount())
+            continue;
+
+        source = new int[buffSize];
+        int readSize = managedBuffer.Read(channel, buffSize, (int*)source);
+#else
         if (!waveLoader.getWaveData(channel))
             continue;
 
         long size = waveLoader.getWaveSize();
-        void* source = waveLoader.getWaveData(channel) + (processedSamples % waveLoader.getWaveSize());
+        source = waveLoader.getWaveData(channel) + (processedSamples % waveLoader.getWaveSize());
+#endif
         void* dest = asioDriverInfo.bufferInfos[bufferIndex].buffers[index];
 
         // OK do processing for the outputs only
@@ -143,9 +152,11 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
     if (asioDriverInfo.postOutput)
         ASIOOutputReady();
 
+/*
     if (processedSamples >= asioDriverInfo.sampleRate * TEST_RUN_TIME)    // roughly measured
         asioDriverInfo.stopped = true;
     else
+    */
         processedSamples += buffSize;
 
     return 0L;

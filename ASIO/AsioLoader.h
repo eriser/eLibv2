@@ -8,8 +8,6 @@
 #include <Loader/modWaveLoader.h>
 #include <Util/modLogger.h>
 
-#define TEST_RUN_TIME  10.0        // run for 5 seconds
-
 namespace eLibV2
 {
     namespace ASIO

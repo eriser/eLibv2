@@ -24,8 +24,8 @@ bool PluginHost::OpenPlugin(std::string fileName)
     {
         m_LoadedPlugins[plugin->GetPluginID()] = plugin;
 
-#if 1
         plugin->PrintProperties();
+#if 0
         plugin->PrintPrograms();
         plugin->PrintParameters();
         plugin->PrintCapabilities();
@@ -159,7 +159,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     if (effect)
         PluginInterface::GetPluginStringFromLong(effect->uniqueID, pluginID);
 
-    if (opcode && opcode != audioMasterIdle)
+    if (opcode && opcode != audioMasterIdle && opcode != audioMasterGetTime)
         std::cout << "HOST> '" << pluginID << "': ";
 
 #if 0
@@ -201,7 +201,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterGetTime:
-        std::cout << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
+//        std::cout << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
 
         // These values are always valid
         _VstTimeInfo.samplePos = 0;
@@ -373,11 +373,51 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
 DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
 {
+    extern bool stopProcessing;
     PluginInterfaceList *pList = reinterpret_cast<PluginInterfaceList*>(lpParam);
 
+    // get number of inputs/outputs -> these will NOT change during lifetime
+    int m_uiNumInputs = 0;
+    int m_uiNumOutputs = 0;
     for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
     {
-        (*it)->ProcessReplacing();
+        if (m_uiNumInputs < (*it)->GetEffect()->numInputs)
+            m_uiNumInputs = (*it)->GetEffect()->numInputs;
+        if (m_uiNumOutputs < (*it)->GetEffect()->numOutputs)
+            m_uiNumOutputs = (*it)->GetEffect()->numOutputs;
     }
+
+    float**             m_ppInputs = NULL;
+    float**             m_ppOutputs = NULL;
+
+    if (m_uiNumInputs > 0)
+    {
+        m_ppInputs = new float*[m_uiNumInputs];
+        for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+        {
+            m_ppInputs[i] = new float[kBlockSize];
+            memset(m_ppInputs[i], 0, kBlockSize * sizeof(float));
+        }
+    }
+
+    if (m_uiNumOutputs > 0)
+    {
+        m_ppOutputs = new float*[m_uiNumOutputs];
+        for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
+        {
+            m_ppOutputs[i] = new float[kBlockSize];
+            memset(m_ppOutputs[i], 0, kBlockSize * sizeof(float));
+        }
+    }
+
+    while (!stopProcessing)
+    {
+        for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
+        {
+            (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, kBlockSize);
+
+        }
+    }
+    std::cout << "processing stopped" << std::endl;
     return 0;
 }
