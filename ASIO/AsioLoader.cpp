@@ -6,13 +6,11 @@ using namespace eLibV2::ASIO;
 using namespace eLibV2::Loader;
 using namespace eLibV2::Host;
 
-#define USE_MANAGED_BUFFER 0
+#define USE_MANAGED_BUFFER 1
 
 // asio callbacks directly access these variables
 AsioLoader::DriverInfo asioDriverInfo;
-#if USE_MANAGED_BUFFER != 1
 WaveLoader waveLoader;
-#endif
 
 //----------------------------------------------------------------------------------
 // conversion from 64 bit ASIOSample/ASIOTimeStamp to double float
@@ -59,6 +57,14 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
 
     // buffer size in samples
     long buffSize = asioDriverInfo.preferredSize;
+
+    // send a request for new audio data with the specified buffer size
+    PluginHost::RequestBufferFill(buffSize);
+
+    while (!PluginHost::BufferFilled())
+    {
+        // wait till buffer is filled
+    }
 
     // perform the processing
     for (int bufferIndex = 0; bufferIndex < asioDriverInfo.inputBuffers + asioDriverInfo.outputBuffers; bufferIndex++)
@@ -204,14 +210,14 @@ long AsioLoader::asioMessages(long selector, long value, void* message, double* 
     switch (selector)
     {
         case kAsioSelectorSupported:
-            if (value == kAsioResetRequest
-                || value == kAsioEngineVersion
-                || value == kAsioResyncRequest
-                || value == kAsioLatenciesChanged
+            if (value == kAsioResetRequest ||
+                value == kAsioEngineVersion ||
+                value == kAsioResyncRequest ||
+                value == kAsioLatenciesChanged ||
                 // the following three were added for ASIO 2.0, you don't necessarily have to support them
-                || value == kAsioSupportsTimeInfo
-                || value == kAsioSupportsTimeCode
-                || value == kAsioSupportsInputMonitor)
+                value == kAsioSupportsTimeInfo ||
+                value == kAsioSupportsTimeCode ||
+                value == kAsioSupportsInputMonitor)
                 ret = 1L;
             break;
         case kAsioResetRequest:

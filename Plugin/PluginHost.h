@@ -56,8 +56,11 @@ namespace eLibV2
             static double GetTimeSignatureBeatsPerMeasure() { return ms_uiTimeSignatureBeatsPerMeasure; }
             static double GetTimeSignatureNoteValue() { return ms_uiTimeSignatureNoteValue; }
             static bool IsTransportPlaying() { return ms_bTransportPlaying; }
+
             static void SetManagedBuffer(ManagedBuffer *buffer) { ms_managedBuffer = buffer; }
             static ManagedBuffer* GetManagedBuffer() { return ms_managedBuffer; }
+            static void RequestBufferFill(int bufferSize) { ms_bBufferRequested = true; ms_iBufferRequestedSize = bufferSize; }
+            static bool BufferFilled() { return !ms_bBufferRequested; }
 
             /**
             callback function to receive messages from the plugin
@@ -86,6 +89,8 @@ namespace eLibV2
             static bool ms_bTransportPlaying;
             static LARGE_INTEGER ms_liElapsedMicroseconds;
             static ManagedBuffer *ms_managedBuffer;
+            static bool ms_bBufferRequested;
+            static int ms_iBufferRequestedSize;
 
         private:
             PluginInterfaceList GetPluginsForMidiChannel(int channel);

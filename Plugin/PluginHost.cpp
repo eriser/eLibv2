@@ -11,6 +11,8 @@ VstTimeInfo PluginHost::_VstTimeInfo;
 bool PluginHost::ms_bTransportPlaying = false;
 LARGE_INTEGER PluginHost::ms_liElapsedMicroseconds;
 ManagedBuffer* PluginHost::ms_managedBuffer = NULL;
+bool PluginHost::ms_bBufferRequested = false;
+int PluginHost::ms_iBufferRequestedSize = 0;
 
 PluginHost::PluginHost() : m_NumLoadedPlugins(0)
 {
@@ -247,12 +249,16 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
             // TODO: Move calculations to AudioClock
             double currentBarPos = floor(_VstTimeInfo.ppqPos / GetTimeSignatureBeatsPerMeasure());
             _VstTimeInfo.barStartPos = currentBarPos * GetTimeSignatureBeatsPerMeasure() + 1.0;
-            std::cout << "Current bar is " << _VstTimeInfo.barStartPos << std::endl;
+//            std::cout << "Current bar is " << _VstTimeInfo.barStartPos << std::endl;
             _VstTimeInfo.flags |= kVstBarsValid;
         }
 
         if (value & kVstCyclePosValid)
-            std::cout << "We don't support cycling, so this is always 0" << std::endl;
+        {
+            _VstTimeInfo.cycleStartPos = 1;
+            _VstTimeInfo.cycleEndPos = 4;
+            _VstTimeInfo.flags |= kVstCyclePosValid;
+        }
 
         if (value & kVstTimeSigValid)
         {
@@ -303,7 +309,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterGetCurrentProcessLevel:
-        result = kVstProcessLevelOffline;
+        result = kVstProcessLevelRealtime;
         break;
 
     case audioMasterGetAutomationState:
@@ -413,13 +419,17 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
     {
         while (!stopProcessing)
         {
-            for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
+            if (ms_bBufferRequested && ms_iBufferRequestedSize > 0)
             {
-                (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, kBlockSize);
-                for (int bufferIndex = 0; bufferIndex < ms_managedBuffer->GetBufferCount(); bufferIndex++)
+                for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
                 {
-                    ms_managedBuffer->Write(bufferIndex, kBlockSize, (int*)m_ppOutputs[bufferIndex]);
+                    (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, ms_iBufferRequestedSize);
+                    for (int bufferIndex = 0; bufferIndex < ms_managedBuffer->GetBufferCount(); bufferIndex++)
+                    {
+                        ms_managedBuffer->Write(bufferIndex, ms_iBufferRequestedSize, (int*)m_ppOutputs[bufferIndex]);
+                    }
                 }
+                ms_bBufferRequested = false;
             }
         }
     }
