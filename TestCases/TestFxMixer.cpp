@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <Effect/modMixer.h>
+#include <Effect/Mixer.h>
 
 using namespace eLibV2::Effect;
 

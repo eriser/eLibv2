@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <Effect/modWaveWrap.h>
+#include <Effect/WaveWrap.h>
 
 using namespace eLibV2::Effect;
 

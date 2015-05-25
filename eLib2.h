@@ -2,53 +2,53 @@
 #define __ELBI2_H__
 
 // block modules
-#include <Connection/modConstantConnection.h>
-#include <Connection/modInputConnection.h>
-#include <Connection/modOutputConnection.h>
-#include <Connection/modMultiplierConection.h>
-#include <Connection/modScalingConnection.h>
+#include <Connection/ConstantConnection.h>
+#include <Connection/InputConnection.h>
+#include <Connection/OutputConnection.h>
+#include <Connection/MultiplierConection.h>
+#include <Connection/ScalingConnection.h>
 
 // data types
-#include <Data/modPluginParameter.h>
-#include <Data/modPluginProgram.h>
+#include <Data/PluginParameter.h>
+#include <Data/PluginProgram.h>
 
 // loader modules
-#include <Loader/modLPSLoader.h>
-#include <Loader/modPluginParameterLoader.h>
-#include <Loader/modPresetLoader.h>
-#include <Loader/modWaveLoader.h>
+#include <Loader/LPSLoader.h>
+#include <Loader/PluginParameterLoader.h>
+#include <Loader/PresetLoader.h>
+#include <Loader/WaveLoader.h>
 
 // generator modules
-#include <Generator/modBaseLFO.h>
-#include <Generator/modBaseOsc.h>
-#include <Generator/modNoiseGenerator.h>
-#include <Generator/modSequencer.h>
-#include <Generator/modWavetable.h>
+#include <Generator/BaseLFO.h>
+#include <Generator/BaseOsc.h>
+#include <Generator/NoiseGenerator.h>
+#include <Generator/Sequencer.h>
+#include <Generator/Wavetable.h>
 
 // envelope modules
-#include <Envelope/modEnvelopeDADSR.h>
+#include <Envelope/EnvelopeDADSR.h>
 
 // effect modules
-#include <Effect/mod3BandEQ.h>
-#include <Effect/modClip.h>
-#include <Effect/modDither.h>
-#include <Effect/modEnvFollower.h>
-#include <Effect/modMixer.h>
-#include <Effect/modOverdrive.h>
-#include <Effect/modSignalAdd.h>
-#include <Effect/modSimpleComp.h>
-#include <Effect/modVCF.h>
-#include <Effect/modWaveWrap.h>
+#include <Effect/3BandEQ.h>
+#include <Effect/Clip.h>
+#include <Effect/Dither.h>
+#include <Effect/EnvFollower.h>
+#include <Effect/Mixer.h>
+#include <Effect/Overdrive.h>
+#include <Effect/SignalAdd.h>
+#include <Effect/SimpleComp.h>
+#include <Effect/VCF.h>
+#include <Effect/WaveWrap.h>
 
 // midi event handling
-#include <MIDI/modMidiEvent.h>
-#include <MIDI/modMidiEventHandler.h>
-#include <MIDI/modMidiEventAdapter.h>
+#include <MIDI/MidiEvent.h>
+#include <MIDI/MidiEventHandler.h>
+#include <MIDI/MidiEventAdapter.h>
 
 // helper modules
-#include <Util/modLogger.h>
-#include <Util/modParamRandom.h>
-#include <Util/modTypes.h>
+#include <Util/Logger.h>
+#include <Util/ParamRandom.h>
+#include <Util/Types.h>
 
 // VSTBase
 #include <VSTBase/VSTBaseBitmapManager.h>

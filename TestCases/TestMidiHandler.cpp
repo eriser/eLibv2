@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <MIDI/modMidiEventHandler.h>
+#include <MIDI/MidiEventHandler.h>
 
 using namespace eLibV2::MIDI;
 

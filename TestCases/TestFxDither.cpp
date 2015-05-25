@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <Effect/modDither.h>
+#include <Effect/Dither.h>
 
 using namespace eLibV2::Effect;
 

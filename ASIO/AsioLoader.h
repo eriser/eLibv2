@@ -5,8 +5,8 @@
 #include "asio.h"
 #include "asiodrivers.h"
 
-#include <Loader/modWaveLoader.h>
-#include <Util/modLogger.h>
+#include <Loader/WaveLoader.h>
+#include <Util/Logger.h>
 
 namespace eLibV2
 {

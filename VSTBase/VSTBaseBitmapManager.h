@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-#include "Util/modLogger.h"
+#include <Util/Logger.h>
 
 // vst headers
 #include <audioeffectx.h>

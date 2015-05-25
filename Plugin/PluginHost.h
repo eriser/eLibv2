@@ -4,7 +4,7 @@
 #include "aeffectx.h"
 
 #include "PluginInterface.h"
-#include <Util/modManagedBuffer.h>
+#include <Util/ManagedBuffer.h>
 #include <map>
 #include <vector>
 

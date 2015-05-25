@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <Effect/modSignalAdd.h>
+#include <Effect/SignalAdd.h>
 
 using namespace eLibV2::Effect;
 

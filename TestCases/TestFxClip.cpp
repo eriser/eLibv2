@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <Effect/modClip.h>
+#include <Effect/Clip.h>
 
 using namespace eLibV2::Effect;
 

@@ -6,8 +6,8 @@
 #include <map>
 #include <string>
 
-#include <Util/modLogger.h>
-#include <Data/modEditorProperties.h>
+#include <Util/Logger.h>
+#include <Data/EditorProperties.h>
 
 #include <VSTBase/VSTBaseBitmapManager.h>
 #include <VSTBase/VSTBaseClass.h>

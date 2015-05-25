@@ -5,13 +5,13 @@
 
 #include <audioeffectx.h>
 
-#include <Connection/modInputConnection.h>
-#include <Util/modLogger.h>
-#include <MIDI/modMidiEventHandler.h>
+#include <Connection/InputConnection.h>
+#include <Util/Logger.h>
+#include <MIDI/MidiEventHandler.h>
 
-#include <Data/modPluginProgram.h>
-#include <Data/modPluginParameter.h>
-#include <Data/modPluginProperties.h>
+#include <Data/PluginProgram.h>
+#include <Data/PluginParameter.h>
+#include <Data/PluginProperties.h>
 
 using namespace eLibV2::Data;
 using namespace eLibV2::Util;
