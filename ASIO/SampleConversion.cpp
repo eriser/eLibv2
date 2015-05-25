@@ -2,15 +2,6 @@
 #include "SampleConversion.h"
 #include <math.h>
 
-#if MAC
-#define TRUNCATE 0
-
-#elif ASIO_CPU_X86 || ASIO_CPU_SPARC || ASIO_CPU_MIPS
-#define TRUNCATE 1
-#undef MAXFLOAT
-#define MAXFLOAT 0x7fffff00L
-#endif
-
 using namespace eLibV2::ASIO;
 
 //-------------------------------------------------------------------------------------------
@@ -887,9 +878,9 @@ void SampleConversion::int16to32inPlace(void* buffer, long frames)
 //------------------------------------------------------------------------------------------
 // float to int
 //-------------------------------------------------------------------------------------------
-const double fScaler16 = (double)0x7fffL;
-const double fScaler24 = (double)0x7fffffL;
-const double fScaler32 = (double)0x7fffffffL;
+static const double fScaler16 = (double)0x7fffL;
+static const double fScaler24 = (double)0x7fffffL;
+static const double fScaler32 = (double)0x7fffffffL;
 
 void SampleConversion::float32toInt16inPlace(float* buffer, long frames)
 {

@@ -7,8 +7,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
-#include <memory.h>
+#include <memory>
 
 // Wave Formats and Subchunks
 #define WAVE_MAGIC_RIFF "RIFF"
@@ -133,7 +132,7 @@ namespace eLibV2
             */
             struct dataChunk
             {
-                __int32** DataPtr;           ///< pointer to memory
+                float** DataPtr;           ///< pointer to memory
             };
 
             /**
@@ -170,7 +169,7 @@ namespace eLibV2
             @param channel the channel to retrieve data for
             @return pointer to data
             */
-            __int32 *getWaveData(BYTE channel);
+            float *getWaveData(BYTE channel);
 
             /**
             get size of loaded wavefile in samples
@@ -186,12 +185,21 @@ namespace eLibV2
 
         private:
             void Init(void);
+            float Int32toFloat32(__int32 input)
+            {
+                double sc = fScaler32 + .49999;
+                float output = ((double)input / sc);
+
+                return output;
+            }
 
         private:
+            const double fScaler32 = (double)0x7fffffffL;
             struct waveFile Wave;
             struct chunkData Chunk;
-            __int32 *WaveData[MAX_CHANNEL_NUM];
+            float **WaveData;
             long SizeOfData;
+            bool m_bLoaded;
         };
     }
 }

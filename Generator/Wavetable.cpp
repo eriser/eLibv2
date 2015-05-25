@@ -156,33 +156,34 @@ void BaseWavetable::DeleteWaveform(VstInt32 Index)
 
 bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
 {
-    WaveLoader WL;
-    WaveLoader::WaveFormat WF;
+    WaveLoader waveLoader;
+    WaveLoader::WaveFormat waveFormat;
     Waveform waveform;
-    __int32 *WD;
+    float *waveData;
 
     try
     {
-        if (WL.Load(Filename))
+        if (waveLoader.Load(Filename))
             return false;
 
-        WF = WL.getWaveFormat();
-        waveform.ChannelNum = WF.NumChannels;
-        waveform.WaveSize = WL.getWaveSize();
+        waveFormat = waveLoader.getWaveFormat();
+        waveform.ChannelNum = waveFormat.NumChannels;
+        waveform.WaveSize = waveLoader.getWaveSize();
         waveform.WaveName.assign(WaveName);
         waveform.WaveData = new double[waveform.WaveSize];
 
         // copy wave data
-        if (WL.getWaveFormat().NumChannels > 1)
+        if (waveLoader.getWaveFormat().NumChannels > 1)
             ModuleLogger::print("loaded multichannel file.");
-        WD = WL.getWaveData(0);
-        if (!WD)
+        waveData = waveLoader.getWaveData(0);
+        if (!waveData)
             return false;
 
+        // get only data of first channel
         for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
-            waveform.WaveData[SampleIndex] = ((double)WD[SampleIndex]) / 0x10000000;
+            waveform.WaveData[SampleIndex] = ((double)waveData[SampleIndex]);
 
-        WL.Unload();
+        waveLoader.Unload();
         Waveforms.push_back(waveform);
     }
     catch (std::bad_alloc& alloc)

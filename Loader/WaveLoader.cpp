@@ -11,15 +11,14 @@ WaveLoader::~WaveLoader()
 
 void WaveLoader::Init()
 {
-    for (int channelIndex = 0; channelIndex < MAX_CHANNEL_NUM; channelIndex++)
-        WaveData[channelIndex] = NULL;
+    m_bLoaded = false;
     memset(&Wave, 0, sizeof(Wave));
     SizeOfData = 0;
 }
 
-__int32 *WaveLoader::getWaveData(BYTE channel)
+float *WaveLoader::getWaveData(BYTE channel)
 {
-    if (channel < Wave.format.NumChannels)
+    if (m_bLoaded && channel < Wave.format.NumChannels)
         return WaveData[channel];
     else
         return NULL;
@@ -111,6 +110,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
             }
             SizeOfData = Chunk.ChunkSize / ((Wave.format.BitsPerSample / 8) * Wave.format.NumChannels);
 
+            WaveData = new float*[Wave.format.NumChannels];
             for (int channelIndex = 0; channelIndex < Wave.format.NumChannels; channelIndex++)
             {
                 if (channelIndex >= MAX_CHANNEL_NUM)
@@ -120,9 +120,9 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                     break;
                 }
 
-                // allocate memory for wavedata (will use 32 bits for storage disregarding input format)
+                // allocate memory for wavedata (will use 32bit-floats for storage disregarding input format)
                 ModuleLogger::print("allocating %li frames for data of channel %li.", SizeOfData, channelIndex);
-                WaveData[channelIndex] = new __int32[SizeOfData];
+                WaveData[channelIndex] = new float[SizeOfData];
                 int byteAdvance = Wave.format.BlockAlign / Wave.format.NumChannels;
 
                 long byteOffset = channelIndex * byteAdvance;
@@ -131,62 +131,65 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 // iterate over samples
                 for (long sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
                 {
+                    __int32 tempData = 0;
                     // input data will be stored left-aligned
                     switch (Wave.format.BitsPerSample)
                     {
-                    case WAVE_SAMPLE_SIZE_8:
-                        WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset] << 24) + 0x00ffffff;
-                        break;
+                        case WAVE_SAMPLE_SIZE_8:
+                            tempData = (TempByteBuffer[byteOffset] << 24) + 0x00ffffff;
+                            WaveData[channelIndex][sampleIndex] = Int32toFloat32(tempData);;
+                            break;
 
-                    case WAVE_SAMPLE_SIZE_16:
-                        WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset + 1] << 24) + (TempByteBuffer[byteOffset] << 16)
-                            + (TempByteBuffer[byteOffset + 1] << 8) + TempByteBuffer[byteOffset];
-                        break;
+                        case WAVE_SAMPLE_SIZE_16:
+                            tempData = (TempByteBuffer[byteOffset + 1] << 24) + (TempByteBuffer[byteOffset] << 16)
+                                + (TempByteBuffer[byteOffset + 1] << 8) + TempByteBuffer[byteOffset];
+                            WaveData[channelIndex][sampleIndex] = Int32toFloat32(tempData);;
+                            break;
 
-                    case WAVE_SAMPLE_SIZE_24:
-                        WaveData[channelIndex][sampleIndex] = (TempByteBuffer[byteOffset + 2] << 24) + (TempByteBuffer[byteOffset + 1] << 16)
-                            + (TempByteBuffer[byteOffset] << 8);
-                        break;
+                        case WAVE_SAMPLE_SIZE_24:
+                            tempData = (TempByteBuffer[byteOffset + 2] << 24) + (TempByteBuffer[byteOffset + 1] << 16)
+                                + (TempByteBuffer[byteOffset] << 8);
+                            WaveData[channelIndex][sampleIndex] = Int32toFloat32(tempData);;
+                            break;
 
-                    case WAVE_SAMPLE_SIZE_32:
-                    {
-                        __int32 help = (TempByteBuffer[byteOffset + 3] << 24) + (TempByteBuffer[byteOffset + 2] << 16)
-                            + (TempByteBuffer[byteOffset + 1] << 8) + TempByteBuffer[byteOffset];
-
-                        switch (Wave.format.Compression)
+                        case WAVE_SAMPLE_SIZE_32:
                         {
-                        case WAVE_COMPR_PCM:
-                            WaveData[channelIndex][sampleIndex] = help;
-                            break;
+                            tempData = (TempByteBuffer[byteOffset + 3] << 24) + (TempByteBuffer[byteOffset + 2] << 16)
+                                + (TempByteBuffer[byteOffset + 1] << 8) + TempByteBuffer[byteOffset];
 
-                        case WAVE_COMPR_IEEE:
-                            __int32 *pi = &help;
-                            double *pd = (double*)pi;
-                            WaveData[channelIndex][sampleIndex] = *pi;
-                            break;
-                        }
-                    }
-                    break;
+                            switch (Wave.format.Compression)
+                            {
+                                case WAVE_COMPR_PCM:
+                                    WaveData[channelIndex][sampleIndex] = Int32toFloat32(tempData);;
+                                    break;
 
-                    case WAVE_SAMPLE_SIZE_64:
-                        // will use only highest four bytes, dropping the rest
-                        __int32 help = (TempByteBuffer[byteOffset + 7] << 24) + (TempByteBuffer[byteOffset + 6] << 16)
-                            + (TempByteBuffer[byteOffset + 5] << 8) + TempByteBuffer[byteOffset + 4];
-
-                        // compression should be floating point
-                        switch (Wave.format.Compression)
-                        {
-                        case WAVE_COMPR_PCM:
-                            ModuleLogger::print("64 bit integer wave?");
-                            break;
-
-                        case WAVE_COMPR_IEEE:
-                            __int32 *pi = &help;
-                            double *pd = (double*)pi;
-                            WaveData[channelIndex][sampleIndex] = *pi;
-                            break;
+                                case WAVE_COMPR_IEEE:
+                                    float *pf = (float*)(&tempData);
+                                    WaveData[channelIndex][sampleIndex] = *pf;
+                                    break;
+                            }
                         }
                         break;
+
+                        case WAVE_SAMPLE_SIZE_64:
+                            // will use only highest four bytes, dropping the rest (keeps about 99.5% accuracy)
+                            tempData = (TempByteBuffer[byteOffset + 7] << 24) + (TempByteBuffer[byteOffset + 6] << 16)
+                                + (TempByteBuffer[byteOffset + 5] << 8) + TempByteBuffer[byteOffset + 4];
+
+                            // compression should be floating point
+                            switch (Wave.format.Compression)
+                            {
+                                case WAVE_COMPR_PCM:
+                                    ModuleLogger::print("64 bit integer wave?");
+                                    WaveData[channelIndex][sampleIndex] = Int32toFloat32(tempData);;
+                                    break;
+
+                                case WAVE_COMPR_IEEE:
+                                    float *pf = (float*)(&tempData);
+                                    WaveData[channelIndex][sampleIndex] = *pf;
+                                    break;
+                            }
+                            break;
                     }
                     byteOffset += Wave.format.BlockAlign;
                 }
@@ -205,15 +208,21 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         }
     }
     wavefile.close();
+    m_bLoaded = true;
     return WAVE_ERROR_NO_ERROR;
 }
 
 void WaveLoader::Unload(void)
 {
-    for (int channelIndex = 0; channelIndex < MAX_CHANNEL_NUM; channelIndex++)
+    if (m_bLoaded && Wave.format.NumChannels > 0)
     {
-        if (WaveData[channelIndex])
-            delete WaveData[channelIndex];
-        WaveData[channelIndex] = NULL;
+        for (int channelIndex = 0; channelIndex < Wave.format.NumChannels; channelIndex++)
+        {
+            if (WaveData[channelIndex])
+                delete[] WaveData[channelIndex];
+            WaveData[channelIndex] = NULL;
+        }
+        delete[] WaveData;
+        m_bLoaded = false;
     }
 }

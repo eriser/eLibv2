@@ -6,10 +6,13 @@ using namespace eLibV2::ASIO;
 using namespace eLibV2::Loader;
 using namespace eLibV2::Host;
 
+#define USE_MANAGED_BUFFER 0
+
 // asio callbacks directly access these variables
 AsioLoader::DriverInfo asioDriverInfo;
+#if USE_MANAGED_BUFFER != 1
 WaveLoader waveLoader;
-#define USE_MANAGED_BUFFER 1
+#endif
 
 //----------------------------------------------------------------------------------
 // conversion from 64 bit ASIOSample/ASIOTimeStamp to double float
@@ -54,11 +57,9 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
     else
         asioDriverInfo.tcSamples = 0;
 
-    long outputSample;
     // buffer size in samples
     long buffSize = asioDriverInfo.preferredSize;
 
-    SampleConversion convert;
     // perform the processing
     for (int bufferIndex = 0; bufferIndex < asioDriverInfo.inputBuffers + asioDriverInfo.outputBuffers; bufferIndex++)
     {
@@ -89,63 +90,66 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
         void* dest = asioDriverInfo.bufferInfos[bufferIndex].buffers[index];
 
         // OK do processing for the outputs only
+        // internal format is float32 -> convert to int32
+        SampleConversion::float32toInt32inPlace((float*)source, buffSize);
+
         switch (asioDriverInfo.channelInfos[bufferIndex].type)
         {
-        case ASIOSTInt16LSB:
-            convert.convertMono16LSB((long*)source, (short*)dest, buffSize);
-            break;
+            case ASIOSTInt16LSB:
+                SampleConversion::convertMono16LSB((long*)source, (short*)dest, buffSize);
+                break;
 
-        case ASIOSTInt24LSB:        // used for 20 bits as well
-            convert.convertMono24LSB((long*)source, (char*)dest, buffSize);
-            break;
+            case ASIOSTInt24LSB:        // used for 20 bits as well
+                SampleConversion::convertMono24LSB((long*)source, (char*)dest, buffSize);
+                break;
 
-        case ASIOSTInt32LSB:
-            memcpy(dest, source, buffSize * 4);
-            break;
+            case ASIOSTInt32LSB:
+                memcpy(dest, source, buffSize * 4);
+                break;
 
-        case ASIOSTFloat32LSB:        // IEEE 754 32 bit float, as found on Intel x86 architecture
-            memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
-            break;
+            case ASIOSTFloat32LSB:        // IEEE 754 32 bit float, as found on Intel x86 architecture
+                memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
+                break;
 
-        case ASIOSTFloat64LSB:         // IEEE 754 64 bit double float, as found on Intel x86 architecture
-//            convert.convertMono64LSB((long*)source, (char*)dest, buffSize); // TODO FLOAT
-            memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 8);
-            break;
+            case ASIOSTFloat64LSB:         // IEEE 754 64 bit double float, as found on Intel x86 architecture
+                //            convert.convertMono64LSB((long*)source, (char*)dest, buffSize); // TODO FLOAT
+                memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 8);
+                break;
 
-            // these are used for 32 bit data buffer, with different alignment of the data inside
-            // 32 bit PCI bus systems can more easily used with these
-        case ASIOSTInt32LSB16:        // 32 bit data with 16 bit alignment
-        case ASIOSTInt32LSB18:        // 32 bit data with 18 bit alignment
-        case ASIOSTInt32LSB20:        // 32 bit data with 20 bit alignment
-        case ASIOSTInt32LSB24:        // 32 bit data with 24 bit alignment
-            memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
-            break;
+                // these are used for 32 bit data buffer, with different alignment of the data inside
+                // 32 bit PCI bus systems can more easily used with these
+            case ASIOSTInt32LSB16:        // 32 bit data with 16 bit alignment
+            case ASIOSTInt32LSB18:        // 32 bit data with 18 bit alignment
+            case ASIOSTInt32LSB20:        // 32 bit data with 20 bit alignment
+            case ASIOSTInt32LSB24:        // 32 bit data with 24 bit alignment
+                memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
+                break;
 
-        case ASIOSTInt16MSB:
-            convert.convertMono16MSB((long*)source, (short*)dest, buffSize);
-            break;
-        case ASIOSTInt24MSB:        // used for 20 bits as well
-            convert.convertMono24MSB((long*)source, (char*)dest, buffSize);
-            break;
-        case ASIOSTInt32MSB:
-            memcpy(dest, source, buffSize * 4);
-            convert.reverseEndian((long*)dest, 4, buffSize);
-            break;
-        case ASIOSTFloat32MSB:        // IEEE 754 32 bit float, as found on Intel x86 architecture
-            memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
-            break;
-        case ASIOSTFloat64MSB:         // IEEE 754 64 bit double float, as found on Intel x86 architecture
-            memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 8);
-            break;
+            case ASIOSTInt16MSB:
+                SampleConversion::convertMono16MSB((long*)source, (short*)dest, buffSize);
+                break;
+            case ASIOSTInt24MSB:        // used for 20 bits as well
+                SampleConversion::convertMono24MSB((long*)source, (char*)dest, buffSize);
+                break;
+            case ASIOSTInt32MSB:
+                memcpy(dest, source, buffSize * 4);
+                SampleConversion::reverseEndian((long*)dest, 4, buffSize);
+                break;
+            case ASIOSTFloat32MSB:        // IEEE 754 32 bit float, as found on Intel x86 architecture
+                memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
+                break;
+            case ASIOSTFloat64MSB:         // IEEE 754 64 bit double float, as found on Intel x86 architecture
+                memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 8);
+                break;
 
-            // these are used for 32 bit data buffer, with different alignment of the data inside
-            // 32 bit PCI bus systems can more easily used with these
-        case ASIOSTInt32MSB16:        // 32 bit data with 18 bit alignment
-        case ASIOSTInt32MSB18:        // 32 bit data with 18 bit alignment
-        case ASIOSTInt32MSB20:        // 32 bit data with 20 bit alignment
-        case ASIOSTInt32MSB24:        // 32 bit data with 24 bit alignment
-            memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
-            break;
+                // these are used for 32 bit data buffer, with different alignment of the data inside
+                // 32 bit PCI bus systems can more easily used with these
+            case ASIOSTInt32MSB16:        // 32 bit data with 18 bit alignment
+            case ASIOSTInt32MSB18:        // 32 bit data with 18 bit alignment
+            case ASIOSTInt32MSB20:        // 32 bit data with 20 bit alignment
+            case ASIOSTInt32MSB24:        // 32 bit data with 24 bit alignment
+                memset(asioDriverInfo.bufferInfos[bufferIndex].buffers[index], 0, buffSize * 4);
+                break;
         }
     }
 
@@ -153,12 +157,12 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
     if (asioDriverInfo.postOutput)
         ASIOOutputReady();
 
-/*
+    /*
     if (processedSamples >= asioDriverInfo.sampleRate * TEST_RUN_TIME)    // roughly measured
-        asioDriverInfo.stopped = true;
+    asioDriverInfo.stopped = true;
     else
     */
-        processedSamples += buffSize;
+    processedSamples += buffSize;
 
     return 0L;
 }
@@ -199,59 +203,59 @@ long AsioLoader::asioMessages(long selector, long value, void* message, double* 
     long ret = 0;
     switch (selector)
     {
-    case kAsioSelectorSupported:
-        if (value == kAsioResetRequest
-            || value == kAsioEngineVersion
-            || value == kAsioResyncRequest
-            || value == kAsioLatenciesChanged
-            // the following three were added for ASIO 2.0, you don't necessarily have to support them
-            || value == kAsioSupportsTimeInfo
-            || value == kAsioSupportsTimeCode
-            || value == kAsioSupportsInputMonitor)
+        case kAsioSelectorSupported:
+            if (value == kAsioResetRequest
+                || value == kAsioEngineVersion
+                || value == kAsioResyncRequest
+                || value == kAsioLatenciesChanged
+                // the following three were added for ASIO 2.0, you don't necessarily have to support them
+                || value == kAsioSupportsTimeInfo
+                || value == kAsioSupportsTimeCode
+                || value == kAsioSupportsInputMonitor)
+                ret = 1L;
+            break;
+        case kAsioResetRequest:
+            // defer the task and perform the reset of the driver during the next "safe" situation
+            // You cannot reset the driver right now, as this code is called from the driver.
+            // Reset the driver is done by completely destruct is. I.e. ASIOStop(), ASIODisposeBuffers(), Destruction
+            // Afterwards you initialize the driver again.
+            asioDriverInfo.stopped;  // In this sample the processing will just stop
             ret = 1L;
-        break;
-    case kAsioResetRequest:
-        // defer the task and perform the reset of the driver during the next "safe" situation
-        // You cannot reset the driver right now, as this code is called from the driver.
-        // Reset the driver is done by completely destruct is. I.e. ASIOStop(), ASIODisposeBuffers(), Destruction
-        // Afterwards you initialize the driver again.
-        asioDriverInfo.stopped;  // In this sample the processing will just stop
-        ret = 1L;
-        break;
-    case kAsioResyncRequest:
-        // This informs the application, that the driver encountered some non fatal data loss.
-        // It is used for synchronization purposes of different media.
-        // Added mainly to work around the Win16Mutex problems in Windows 95/98 with the
-        // Windows Multimedia system, which could loose data because the Mutex was hold too long
-        // by another thread.
-        // However a driver can issue it in other situations, too.
-        ret = 1L;
-        break;
-    case kAsioLatenciesChanged:
-        // This will inform the host application that the drivers were latencies changed.
-        // Beware, it this does not mean that the buffer sizes have changed!
-        // You might need to update internal delay data.
-        ret = 1L;
-        break;
-    case kAsioEngineVersion:
-        // return the supported ASIO version of the host application
-        // If a host applications does not implement this selector, ASIO 1.0 is assumed
-        // by the driver
-        ret = 2L;
-        break;
-    case kAsioSupportsTimeInfo:
-        // informs the driver wether the asioCallbacks.bufferSwitchTimeInfo() callback
-        // is supported.
-        // For compatibility with ASIO 1.0 drivers the host application should always support
-        // the "old" bufferSwitch method, too.
-        ret = 1;
-        break;
-    case kAsioSupportsTimeCode:
-        // informs the driver wether application is interested in time code info.
-        // If an application does not need to know about time code, the driver has less work
-        // to do.
-        ret = 0;
-        break;
+            break;
+        case kAsioResyncRequest:
+            // This informs the application, that the driver encountered some non fatal data loss.
+            // It is used for synchronization purposes of different media.
+            // Added mainly to work around the Win16Mutex problems in Windows 95/98 with the
+            // Windows Multimedia system, which could loose data because the Mutex was hold too long
+            // by another thread.
+            // However a driver can issue it in other situations, too.
+            ret = 1L;
+            break;
+        case kAsioLatenciesChanged:
+            // This will inform the host application that the drivers were latencies changed.
+            // Beware, it this does not mean that the buffer sizes have changed!
+            // You might need to update internal delay data.
+            ret = 1L;
+            break;
+        case kAsioEngineVersion:
+            // return the supported ASIO version of the host application
+            // If a host applications does not implement this selector, ASIO 1.0 is assumed
+            // by the driver
+            ret = 2L;
+            break;
+        case kAsioSupportsTimeInfo:
+            // informs the driver wether the asioCallbacks.bufferSwitchTimeInfo() callback
+            // is supported.
+            // For compatibility with ASIO 1.0 drivers the host application should always support
+            // the "old" bufferSwitch method, too.
+            ret = 1;
+            break;
+        case kAsioSupportsTimeCode:
+            // informs the driver wether application is interested in time code info.
+            // If an application does not need to know about time code, the driver has less work
+            // to do.
+            ret = 0;
+            break;
     }
     return ret;
 }
