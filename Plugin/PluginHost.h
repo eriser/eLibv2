@@ -4,11 +4,14 @@
 #include "aeffectx.h"
 
 #include "PluginInterface.h"
+#include <Util/modManagedBuffer.h>
 #include <map>
 #include <vector>
 
 #define kBlockSize 512
 #define kSampleRate 44000.f
+
+using namespace eLibV2::Util;
 
 namespace eLibV2
 {
@@ -53,6 +56,8 @@ namespace eLibV2
             static double GetTimeSignatureBeatsPerMeasure() { return ms_uiTimeSignatureBeatsPerMeasure; }
             static double GetTimeSignatureNoteValue() { return ms_uiTimeSignatureNoteValue; }
             static bool IsTransportPlaying() { return ms_bTransportPlaying; }
+            static void SetManagedBuffer(ManagedBuffer *buffer) { ms_managedBuffer = buffer; }
+            static ManagedBuffer* GetManagedBuffer() { return ms_managedBuffer; }
 
             /**
             callback function to receive messages from the plugin
@@ -80,6 +85,7 @@ namespace eLibV2
             static unsigned int ms_uiTimeSignatureNoteValue;
             static bool ms_bTransportPlaying;
             static LARGE_INTEGER ms_liElapsedMicroseconds;
+            static ManagedBuffer *ms_managedBuffer;
 
         private:
             PluginInterfaceList GetPluginsForMidiChannel(int channel);

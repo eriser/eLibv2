@@ -10,6 +10,7 @@ unsigned int PluginHost::ms_uiTimeSignatureNoteValue = 4;
 VstTimeInfo PluginHost::_VstTimeInfo;
 bool PluginHost::ms_bTransportPlaying = false;
 LARGE_INTEGER PluginHost::ms_liElapsedMicroseconds;
+ManagedBuffer* PluginHost::ms_managedBuffer = NULL;
 
 PluginHost::PluginHost() : m_NumLoadedPlugins(0)
 {
@@ -25,12 +26,10 @@ bool PluginHost::OpenPlugin(std::string fileName)
         m_LoadedPlugins[plugin->GetPluginID()] = plugin;
 
         plugin->PrintProperties();
-#if 0
-        plugin->PrintPrograms();
-        plugin->PrintParameters();
+//        plugin->PrintPrograms();
+//        plugin->PrintParameters();
         plugin->PrintCapabilities();
-        plugin->ProcessReplacing();
-#endif
+//        plugin->ProcessReplacing();
 
         return true;
     }
@@ -410,12 +409,18 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
         }
     }
 
-    while (!stopProcessing)
+    if (ms_managedBuffer)
     {
-        for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
+        while (!stopProcessing)
         {
-            (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, kBlockSize);
-
+            for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
+            {
+                (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, kBlockSize);
+                for (int bufferIndex = 0; bufferIndex < ms_managedBuffer->GetBufferCount(); bufferIndex++)
+                {
+                    ms_managedBuffer->Write(bufferIndex, kBlockSize, (int*)m_ppOutputs[bufferIndex]);
+                }
+            }
         }
     }
     std::cout << "processing stopped" << std::endl;

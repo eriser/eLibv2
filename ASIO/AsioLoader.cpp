@@ -1,16 +1,15 @@
 #include <ASIO/AsioLoader.h>
 #include <ASIO/SampleConversion.h>
-#include <Util/modManagedBuffer.h>
+#include <Plugin/PluginHost.h>
 
 using namespace eLibV2::ASIO;
 using namespace eLibV2::Loader;
-using namespace eLibV2::Util;
+using namespace eLibV2::Host;
 
 // asio callbacks directly access these variables
 AsioLoader::DriverInfo asioDriverInfo;
 WaveLoader waveLoader;
-#define USE_MANAGED_BUFFER 0
-extern ManagedBuffer managedBuffer;
+#define USE_MANAGED_BUFFER 1
 
 //----------------------------------------------------------------------------------
 // conversion from 64 bit ASIOSample/ASIOTimeStamp to double float
@@ -73,11 +72,13 @@ ASIOTime* AsioLoader::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
 
 #if USE_MANAGED_BUFFER == 1
         // skip channels without data
-        if (channel >= managedBuffer.GetBufferCount())
+        ManagedBuffer *managedBuffer = PluginHost::GetManagedBuffer();
+
+        if (channel >= managedBuffer->GetBufferCount())
             continue;
 
         source = new int[buffSize];
-        int readSize = managedBuffer.Read(channel, buffSize, (int*)source);
+        int readSize = managedBuffer->Read(channel, buffSize, (int*)source);
 #else
         if (!waveLoader.getWaveData(channel))
             continue;
