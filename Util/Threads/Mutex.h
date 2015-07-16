@@ -5,36 +5,45 @@
 
 #include <windows.h>
 
-class Mutex
+namespace eLibV2
 {
-public:
-    //the default constructor
-    Mutex()
+    namespace Util
     {
-        InitializeCriticalSection(&m_criticalSection);
-    }
+        namespace Threads
+        {
+            class Mutex
+            {
+            public:
+                //the default constructor
+                Mutex()
+                {
+                    InitializeCriticalSection(&m_criticalSection);
+                }
 
-    //destructor
-    ~Mutex()
-    {
-        DeleteCriticalSection(&m_criticalSection);
-    }
+                //destructor
+                ~Mutex()
+                {
+                    DeleteCriticalSection(&m_criticalSection);
+                }
 
-    //lock
-    void lock()
-    {
-        EnterCriticalSection(&m_criticalSection);
-    }
+                //lock
+                void lock()
+                {
+                    EnterCriticalSection(&m_criticalSection);
+                }
 
-    //unlock
-    void unlock()
-    {
-        LeaveCriticalSection(&m_criticalSection);
-    }
+                //unlock
+                void unlock()
+                {
+                    LeaveCriticalSection(&m_criticalSection);
+                }
 
-private:
-    CRITICAL_SECTION m_criticalSection;
-};
+            private:
+                CRITICAL_SECTION m_criticalSection;
+            };
+        }
+    }
+}
 
 #endif
 

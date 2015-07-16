@@ -17,7 +17,7 @@ namespace eLibV2
         class MidiDevice
         {
         public:
-            MidiDevice(const Host::PluginHost& hostThread);
+            MidiDevice(const Host::PluginHost* hostThread);
             ~MidiDevice() {}
 
             bool OpenDevice(int deviceIndex);
@@ -31,7 +31,7 @@ namespace eLibV2
             void EnumerateMidiInDevices();
 
         private:
-            Host::PluginHost m_HostThread;
+            const Host::PluginHost* m_pHostThread;
             HMIDIIN m_OpenedMidiIn;
             unsigned int m_uiNumMidiInDevices;
             std::vector<std::string> m_DeviceNames;

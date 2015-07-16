@@ -5,8 +5,8 @@
 using namespace eLibV2::MIDI;
 using namespace eLibV2::Host;
 
-MidiDevice::MidiDevice(const PluginHost& hostThread)
-    : m_HostThread(hostThread),
+MidiDevice::MidiDevice(const PluginHost* hostThread)
+    : m_pHostThread(hostThread),
     m_OpenedMidiIn(NULL),
     m_uiNumMidiInDevices(0)
 {
@@ -40,7 +40,7 @@ std::string MidiDevice::GetDeviceName(unsigned int deviceIndex)
 bool MidiDevice::OpenDevice(int deviceId)
 {
     std::cout << "opening " << m_DeviceNames[deviceId].c_str() << std::endl;
-    MMRESULT mmr = midiInOpen(&m_OpenedMidiIn, deviceId, (DWORD_PTR)MidiDevice::CallbackFunction, (DWORD_PTR)&m_HostThread, CALLBACK_FUNCTION | MIDI_IO_STATUS);
+    MMRESULT mmr = midiInOpen(&m_OpenedMidiIn, deviceId, (DWORD_PTR)MidiDevice::CallbackFunction, (DWORD_PTR)m_pHostThread, CALLBACK_FUNCTION | MIDI_IO_STATUS);
     if (mmr != MMSYSERR_NOERROR)
         return false;
 

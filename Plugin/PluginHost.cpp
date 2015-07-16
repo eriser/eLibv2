@@ -1,6 +1,8 @@
 #include <Plugin/PluginHost.h>
+#include <ASIO/AsioDevice.h>
 
 using namespace eLibV2::Host;
+using namespace eLibV2::Util::Threads;
 
 double PluginHost::ms_dSamplerate = kSampleRate;
 double PluginHost::ms_dTempo = 140.0f;
@@ -11,11 +13,33 @@ VstTimeInfo PluginHost::_VstTimeInfo;
 bool PluginHost::ms_bTransportPlaying = false;
 LARGE_INTEGER PluginHost::ms_liElapsedMicroseconds;
 ManagedBuffer* PluginHost::ms_managedBuffer = NULL;
-bool PluginHost::ms_bBufferRequested = false;
 int PluginHost::ms_iBufferRequestedSize = 0;
+long PluginHost::ms_SamplesProcessed = 0;
+
+#ifndef USE_EVENT_MANAGER
+HANDLE PluginHost::hProcessingDone = NULL;
+#endif
 
 PluginHost::PluginHost() : m_NumLoadedPlugins(0)
 {
+#ifdef USE_EVENT_MANAGER
+    EventManager::RegisterEvent(EventManager::EVENT_PROCESSING_DONE);
+#else
+    hProcessingDone = CreateEvent(NULL, TRUE, FALSE, NULL);
+#endif
+}
+
+PluginHost::~PluginHost()
+{
+#ifdef USE_EVENT_MANAGER
+    EventManager::UnregisterEvent(EventManager::EVENT_PROCESSING_DONE);
+#else
+    if (hProcessingDone)
+    {
+        CloseHandle(hProcessingDone);
+        hProcessingDone = NULL;
+    }
+#endif
 }
 
 bool PluginHost::OpenPlugin(std::string fileName)
@@ -414,12 +438,13 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
             memset(m_ppOutputs[i], 0, kBlockSize * sizeof(float));
         }
     }
-
+    bool res;
+    DWORD wait;
     if (ms_managedBuffer)
     {
         while (!stopProcessing)
         {
-            if (ms_bBufferRequested && ms_iBufferRequestedSize > 0)
+            if (ms_iBufferRequestedSize > 0)
             {
                 for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
                 {
@@ -429,7 +454,18 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                         ms_managedBuffer->Write(bufferIndex, ms_iBufferRequestedSize, (int*)m_ppOutputs[bufferIndex]);
                     }
                 }
-                ms_bBufferRequested = false;
+                ms_SamplesProcessed += ms_iBufferRequestedSize;
+
+#ifdef USE_EVENT_MANAGER
+                EventManager::ResetEvent(EventManager::EVENT_SAMPLES_WRITTEN);
+                EventManager::SetEvent(EventManager::EVENT_PROCESSING_DONE);
+                EventManager::WaitForEvent(EventManager::EVENT_SAMPLES_WRITTEN);
+#else
+                ResetEvent(ASIO::AsioDevice::hSamplesWritten);
+                SetEvent(hProcessingDone);
+                if (ASIO::AsioDevice::hSamplesWritten)
+                    wait = WaitForSingleObject(ASIO::AsioDevice::hSamplesWritten, INFINITE);
+#endif
             }
         }
     }

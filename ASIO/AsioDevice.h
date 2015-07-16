@@ -10,6 +10,7 @@
 #include <Plugin/PluginHost.h>
 #include <Loader/WaveLoader.h>
 #include <Util/Logger.h>
+#include <Util/Threads/EventManager.h>
 
 #include <vector>
 
@@ -97,6 +98,12 @@ namespace eLibV2
             ASIOCallbacks asioCallbacks;
             static void *externalBuffer[kMaxOutputChannels];
             static DriverInfo ms_asioDriverInfo;
+
+#ifndef USE_EVENT_MANAGER
+            static HANDLE hSamplesWritten;
+#endif
+
+            static long ms_processedSamples;
 
         private:
             void EnumerateDevices();

@@ -3,11 +3,18 @@
 using namespace eLibV2::ASIO;
 using namespace eLibV2::Loader;
 using namespace eLibV2::Host;
+using namespace eLibV2::Util::Threads;
 
 // asio.cpp uses this explicitly as external reference (bad design)
 AsioDrivers *asioDrivers;
 
 AsioDevice::DriverInfo AsioDevice::ms_asioDriverInfo;
+
+#ifndef USE_EVENT_MANAGER
+HANDLE AsioDevice::hSamplesWritten = NULL;
+#endif
+
+long AsioDevice::ms_processedSamples = 0;
 
 AsioDevice::AsioDevice()
     : m_uiNumAsioDevices(0)
@@ -15,6 +22,11 @@ AsioDevice::AsioDevice()
     asioDrivers = new AsioDrivers();
 
     EnumerateDevices();
+#ifdef USE_EVENT_MANAGER
+    EventManager::RegisterEvent(EventManager::EVENT_SAMPLES_WRITTEN);
+#else
+    hSamplesWritten = CreateEvent(NULL, TRUE, FALSE, NULL);
+#endif
 }
 
 AsioDevice::~AsioDevice()
@@ -24,6 +36,15 @@ AsioDevice::~AsioDevice()
         delete asioDrivers;
         asioDrivers = NULL;
     }
+#ifdef USE_EVENT_MANAGER
+    EventManager::UnregisterEvent(EventManager::EVENT_SAMPLES_WRITTEN);
+#else
+    if (hSamplesWritten)
+    {
+        CloseHandle(hSamplesWritten);
+        hSamplesWritten = NULL;
+    }
+#endif
 }
 
 void AsioDevice::EnumerateDevices()
@@ -83,7 +104,10 @@ bool AsioDevice::OpenDevice(int driverIndex)
                 if (CreateBuffers(&ms_asioDriverInfo) == ASE_OK)
                 {
                     if (ASIOStart() == ASE_OK)
+                    {
                         bRes = true;
+                        PluginHost::SetBufferFillsize(ms_asioDriverInfo.preferredSize);
+                    }
                     else
                         ModuleLogger::print("ASIOStart failed");
                 }
@@ -133,11 +157,6 @@ bool AsioDevice::LoadDriver(char *name)
 
 ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOBool processNow)
 {
-    // the actual processing callback.
-    // Beware that this is normally in a seperate thread, hence be sure that you take care
-    // about thread synchronization. This is omitted here for simplicity.
-    static long processedSamples = 0;
-
     // store the timeInfo for later use
     ms_asioDriverInfo.tInfo = *timeInfo;
 
@@ -161,13 +180,17 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
     // buffer size in samples
     long buffSize = ms_asioDriverInfo.preferredSize;
 
+    DWORD wait;
     // send a request for new audio data with the specified buffer size
-    PluginHost::RequestBufferFill(buffSize);
-
-    while (!PluginHost::BufferFilled())
-    {
-        // wait till buffer is filled
-    }
+#ifdef USE_EVENT_MANAGER
+    if (!EventManager::WaitForEvent(EventManager::EVENT_PROCESSING_DONE))
+        return 0L;
+#else
+    if (PluginHost::hProcessingDone)
+        wait = WaitForSingleObject(PluginHost::hProcessingDone, INFINITE);
+    else
+        return 0L;
+#endif
 
     // perform the processing
     for (int bufferIndex = 0; bufferIndex < ms_asioDriverInfo.inputBuffers + ms_asioDriverInfo.outputBuffers; bufferIndex++)
@@ -193,7 +216,6 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
         if (!waveLoader.getWaveData(channel))
             continue;
 
-        long size = waveLoader.getWaveSize();
         source = waveLoader.getWaveData(channel) + (processedSamples % waveLoader.getWaveSize());
 #endif
         void* dest = ms_asioDriverInfo.bufferInfos[bufferIndex].buffers[index];
@@ -266,12 +288,14 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
     if (ms_asioDriverInfo.postOutput)
         ASIOOutputReady();
 
-    /*
-    if (processedSamples >= ms_asioDriverInfo.sampleRate * TEST_RUN_TIME)    // roughly measured
-    ms_asioDriverInfo.stopped = true;
-    else
-    */
-    processedSamples += buffSize;
+    ms_processedSamples += buffSize;
+#ifdef USE_EVENT_MANAGER
+    EventManager::ResetEvent(EventManager::EVENT_PROCESSING_DONE);
+    EventManager::SetEvent(EventManager::EVENT_SAMPLES_WRITTEN);
+#else
+    ResetEvent(PluginHost::hProcessingDone);
+    bool res = SetEvent(hSamplesWritten);
+#endif
 
     return 0L;
 }
