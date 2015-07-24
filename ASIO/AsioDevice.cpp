@@ -9,11 +9,6 @@ using namespace eLibV2::Util::Threads;
 AsioDrivers *asioDrivers;
 
 AsioDevice::DriverInfo AsioDevice::ms_asioDriverInfo;
-
-#ifndef USE_EVENT_MANAGER
-HANDLE AsioDevice::hSamplesWritten = NULL;
-#endif
-
 long AsioDevice::ms_processedSamples = 0;
 
 AsioDevice::AsioDevice()
@@ -22,11 +17,7 @@ AsioDevice::AsioDevice()
     asioDrivers = new AsioDrivers();
 
     EnumerateDevices();
-#ifdef USE_EVENT_MANAGER
-    EventManager::RegisterEvent(EventManager::EVENT_SAMPLES_WRITTEN);
-#else
-    hSamplesWritten = CreateEvent(NULL, TRUE, FALSE, NULL);
-#endif
+    EventManager::RegisterEvent(EventManager::EVENT_DATA_WRITTEN);
 }
 
 AsioDevice::~AsioDevice()
@@ -36,15 +27,7 @@ AsioDevice::~AsioDevice()
         delete asioDrivers;
         asioDrivers = NULL;
     }
-#ifdef USE_EVENT_MANAGER
-    EventManager::UnregisterEvent(EventManager::EVENT_SAMPLES_WRITTEN);
-#else
-    if (hSamplesWritten)
-    {
-        CloseHandle(hSamplesWritten);
-        hSamplesWritten = NULL;
-    }
-#endif
+    EventManager::UnregisterEvent(EventManager::EVENT_DATA_WRITTEN);
 }
 
 void AsioDevice::EnumerateDevices()
@@ -76,7 +59,7 @@ std::string AsioDevice::GetDeviceName(unsigned int deviceIndex)
 bool AsioDevice::OpenDevice(int driverIndex)
 {
     ModuleLogger::enable();
-    ModuleLogger::setConsole();
+    ModuleLogger::setDebugView();
 
     bool bRes = false;
     // load the driver, this will setup all the necessary internal data structures
@@ -135,10 +118,6 @@ void AsioDevice::CloseDevice()
 
 #define USE_MANAGED_BUFFER 1
 
-#if USE_MANAGED_BUFFER != 1
-extern WaveLoader waveLoader;
-#endif
-
 //----------------------------------------------------------------------------------
 // conversion from 64 bit ASIOSample/ASIOTimeStamp to double float
 #if NATIVE_INT64
@@ -182,15 +161,10 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
 
     DWORD wait;
     // send a request for new audio data with the specified buffer size
-#ifdef USE_EVENT_MANAGER
+    EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
     if (!EventManager::WaitForEvent(EventManager::EVENT_PROCESSING_DONE))
         return 0L;
-#else
-    if (PluginHost::hProcessingDone)
-        wait = WaitForSingleObject(PluginHost::hProcessingDone, INFINITE);
-    else
-        return 0L;
-#endif
+    EventManager::ResetEvent(EventManager::EVENT_PROCESSING_DONE);
 
     // perform the processing
     for (int bufferIndex = 0; bufferIndex < ms_asioDriverInfo.inputBuffers + ms_asioDriverInfo.outputBuffers; bufferIndex++)
@@ -288,15 +262,8 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
     if (ms_asioDriverInfo.postOutput)
         ASIOOutputReady();
 
+    EventManager::SetEvent(EventManager::EVENT_DATA_WRITTEN);
     ms_processedSamples += buffSize;
-#ifdef USE_EVENT_MANAGER
-    EventManager::ResetEvent(EventManager::EVENT_PROCESSING_DONE);
-    EventManager::SetEvent(EventManager::EVENT_SAMPLES_WRITTEN);
-#else
-    ResetEvent(PluginHost::hProcessingDone);
-    bool res = SetEvent(hSamplesWritten);
-#endif
-
     return 0L;
 }
 

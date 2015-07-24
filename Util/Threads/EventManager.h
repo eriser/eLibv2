@@ -21,7 +21,7 @@ namespace eLibV2
                 enum Event
                 {
                     EVENT_PROCESSING_DONE,
-                    EVENT_SAMPLES_WRITTEN,
+                    EVENT_DATA_WRITTEN,
                 };
 
             public:
@@ -30,12 +30,14 @@ namespace eLibV2
                     // if an event was already registered, close the handle and create a new one
                     UnregisterEvent(event);
                     EventMap[event] = CreateEvent(NULL, TRUE, FALSE, NULL);
+                    ResetEvent(event);
                 }
 
                 static void UnregisterEvent(EventManager::Event event)
                 {
                     if (EventMap[event])
                     {
+                        ResetEvent(event);
                         CloseHandle(EventMap[event]);
                         EventMap[event] = NULL;
                     }

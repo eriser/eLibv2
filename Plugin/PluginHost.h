@@ -13,8 +13,6 @@
 #define kBlockSize 512
 #define kSampleRate 44000.f
 
-#define USE_EVENT_MANAGER
-
 using namespace eLibV2::Util;
 
 namespace eLibV2
