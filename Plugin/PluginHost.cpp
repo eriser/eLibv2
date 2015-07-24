@@ -16,30 +16,14 @@ ManagedBuffer* PluginHost::ms_managedBuffer = NULL;
 int PluginHost::ms_iBufferRequestedSize = 0;
 long PluginHost::ms_SamplesProcessed = 0;
 
-#ifndef USE_EVENT_MANAGER
-HANDLE PluginHost::hProcessingDone = NULL;
-#endif
-
 PluginHost::PluginHost() : m_NumLoadedPlugins(0)
 {
-#ifdef USE_EVENT_MANAGER
     EventManager::RegisterEvent(EventManager::EVENT_PROCESSING_DONE);
-#else
-    hProcessingDone = CreateEvent(NULL, TRUE, FALSE, NULL);
-#endif
 }
 
 PluginHost::~PluginHost()
 {
-#ifdef USE_EVENT_MANAGER
     EventManager::UnregisterEvent(EventManager::EVENT_PROCESSING_DONE);
-#else
-    if (hProcessingDone)
-    {
-        CloseHandle(hProcessingDone);
-        hProcessingDone = NULL;
-    }
-#endif
 }
 
 bool PluginHost::OpenPlugin(std::string fileName)
@@ -444,11 +428,14 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
     {
         while (!stopProcessing)
         {
+            EventManager::ResetEvent(EventManager::EVENT_PROCESSING_DONE);
             if (ms_iBufferRequestedSize > 0)
             {
+                // samples from all plugins need to be taken and mixed together
                 for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
                 {
                     (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, ms_iBufferRequestedSize);
+
                     for (int bufferIndex = 0; bufferIndex < ms_managedBuffer->GetBufferCount(); bufferIndex++)
                     {
                         ms_managedBuffer->Write(bufferIndex, ms_iBufferRequestedSize, (int*)m_ppOutputs[bufferIndex]);
@@ -456,17 +443,10 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                 }
                 ms_SamplesProcessed += ms_iBufferRequestedSize;
 
-#ifdef USE_EVENT_MANAGER
-                EventManager::ResetEvent(EventManager::EVENT_SAMPLES_WRITTEN);
-                EventManager::SetEvent(EventManager::EVENT_PROCESSING_DONE);
-                EventManager::WaitForEvent(EventManager::EVENT_SAMPLES_WRITTEN);
-#else
-                ResetEvent(ASIO::AsioDevice::hSamplesWritten);
-                SetEvent(hProcessingDone);
-                if (ASIO::AsioDevice::hSamplesWritten)
-                    wait = WaitForSingleObject(ASIO::AsioDevice::hSamplesWritten, INFINITE);
-#endif
             }
+            EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
+            EventManager::SetEvent(EventManager::EVENT_PROCESSING_DONE);
+            EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN);
         }
     }
     std::cout << "processing stopped" << std::endl;

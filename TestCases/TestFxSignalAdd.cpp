@@ -7,10 +7,16 @@ TEST(TestFxSignalAdd, Process)
 {
     FxSignalAdd adder;
 
-    ASSERT_NEAR(-0.43, adder.Process(-0.25, -0.25), 0.01);
-    ASSERT_NEAR(0.56, adder.Process(0.25, 0.25), 0.01);
-    ASSERT_NEAR(-0.07, adder.Process(-0.25, 0.25), 0.01);
-    ASSERT_NEAR(-0.07, adder.Process(0.25, -0.25), 0.01);
+    ASSERT_NEAR(-0.5, adder.Process(-0.25, -0.25), 0.01);
+    ASSERT_NEAR(0.5, adder.Process(0.25, 0.25), 0.01);
+    ASSERT_NEAR(0.0, adder.Process(-0.25, 0.25), 0.01);
+    ASSERT_NEAR(0.0, adder.Process(0.25, -0.25), 0.01);
+
+    ASSERT_NEAR(-0.86, adder.Process(-0.8, -0.3), 0.01);
+    ASSERT_NEAR(0.86, adder.Process(0.8, 0.3), 0.01);
+    ASSERT_NEAR(-0.5, adder.Process(-0.8, 0.3), 0.01);
+    ASSERT_NEAR(0.5, adder.Process(0.8, -0.3), 0.01);
+
     ASSERT_NEAR(-1.0, adder.Process(-1.0, -1.0), 0.01);
-    ASSERT_NEAR(3.0, adder.Process(1.0, 1.0), 0.01);
+    ASSERT_NEAR(1.0, adder.Process(1.0, 1.0), 0.01);
 }
