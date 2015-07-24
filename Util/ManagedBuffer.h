@@ -1,6 +1,7 @@
 #ifndef __MODMANAGEDBUFFER_H__
 #define __MODMANAGEDBUFFER_H__
 
+#include <Util/Logger.h>
 #include <memory>
 
 namespace eLibV2
