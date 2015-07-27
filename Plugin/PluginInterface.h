@@ -50,6 +50,8 @@ namespace eLibV2
             void Unload();
             AEffect* GetEffect() const { return m_pEffect; }
             std::string GetPluginID() { return m_PluginID; }
+            PluginType GetPluginType() { return m_ePluginType; }
+            bool CanReceiveMidi() { return m_bCanReceiveMidi; }
 
             unsigned int GetMidiChannel() { return m_uiMidiChannel; }
             unsigned int GetAudioChannl() { return m_uiAudioChannel; }
@@ -97,11 +99,18 @@ namespace eLibV2
             unsigned int        m_uiMidiChannel;    ///< Midi channel to receive messages
             unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
             PluginType          m_ePluginType;      ///< Type of Plugin
+            bool                m_bCanReceiveMidi;
 
             float**             m_ppInputs;
             float**             m_ppOutputs;
             VstInt32            m_uiNumInputs;
             VstInt32            m_uiNumOutputs;
+
+            // these variables have to be non-local to have plugins
+            // access them after the send-method has been left
+            // TODO: maybe some better solution?
+            VstEvents           events;
+            VstMidiEvent        midiEvent = {};
         };
     }
 }

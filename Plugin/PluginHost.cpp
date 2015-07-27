@@ -35,16 +35,24 @@ bool PluginHost::OpenPlugin(std::string fileName)
     {
         m_LoadedPlugins[plugin->GetPluginID()] = plugin;
 
+#if 1
         plugin->PrintProperties();
 //        plugin->PrintPrograms();
 //        plugin->PrintParameters();
         plugin->PrintCapabilities();
 //        plugin->ProcessReplacing();
+#endif
 
+        // gather all plugins for all midi channels
+        for (int midiChannel = MIDI_CHANNEL_1; midiChannel < MIDI_CHANNEL_MAX; midiChannel++)
+        {
+            PluginInterfaceList list = GetPluginsForMidiChannel(midiChannel);
+            m_PluginsForMIDIChannel[midiChannel] = list;
+        }
         return true;
     }
     else
-        std::cout << "Failed to load VST Plugin library!" << std::endl;
+        std::cout << "Failed to load VST Plugin library \'" << fileName << "\'!" << std::endl;
     return false;
 }
 
@@ -142,7 +150,7 @@ PluginInterfaceList PluginHost::GetPluginsForMidiChannel(int channel)
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
     {
         PluginInterface *p = (*it).second;
-        if (p->GetMidiChannel() == channel)
+        if ((p->CanReceiveMidi()) && (p->GetMidiChannel() == channel))
             list.push_back(p);
     }
     return list;
@@ -150,8 +158,7 @@ PluginInterfaceList PluginHost::GetPluginsForMidiChannel(int channel)
 
 void PluginHost::InsertMidiEvent(int channel, int status, int data1, int data2)
 {
-    PluginInterfaceList list = GetPluginsForMidiChannel(channel);
-
+    PluginInterfaceList list = m_PluginsForMIDIChannel[channel];
     for (PluginInterfaceList::iterator it = list.begin(); it != list.end(); it++)
     {
         PluginInterface *plugin = (*it);
@@ -167,9 +174,6 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     char pluginID[5] = "????";
     if (effect)
         PluginInterface::GetPluginStringFromLong(effect->uniqueID, pluginID);
-
-    if (opcode && opcode != audioMasterIdle && opcode != audioMasterGetTime)
-        std::cout << "HOST> '" << pluginID << "': ";
 
 #if 0
     // Filter idle calls...
@@ -195,7 +199,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     switch (opcode)
     {
     case audioMasterAutomate:
-        //        std::cout << "received change for parameter " << index << " value: " << opt << std::endl;
+//        std::cout << "received change for parameter " << index << " value: " << opt << std::endl;
         break;
 
     case audioMasterVersion:
@@ -207,6 +211,10 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterIdle:
+        break;
+
+    case __audioMasterPinConnectedDeprecated:
+        // this is called by some plugins prior to vst2.4
         break;
 
     case audioMasterGetTime:
@@ -276,35 +284,44 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         }
 
         if (value & kVstSmpteValid)
-            std::cout << "Current time in SMPTE format" << std::endl;
+            std::cout << "HOST> '" << pluginID << "': " << "Current time in SMPTE format" << std::endl;
 
         if (value & kVstClockValid)
-            std::cout << "Sample frames until next clock" << std::endl;
+            std::cout << "HOST> '" << pluginID << "': " << "Sample frames until next clock" << std::endl;
 
         result = (VstIntPtr)&_VstTimeInfo;
         break;
 
     case audioMasterProcessEvents:
-        std::cout << "events from plugin received " << std::hex << ptr << std::dec << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "events from plugin received " << std::hex << ptr << std::dec << std::endl;
         break;
 
     case audioMasterIOChanged:
-        std::cout << "number of inputs/outputs changing not supported" << std::endl;
+        // see AudioEffectX::ioChanged()
+        std::cout << "HOST> '" << pluginID << "': " << "number of inputs/outputs changing not supported" << std::endl;
+        if (effect)
+        {
+            effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0);
+            effect->dispatcher(effect, effStopProcess, 0, 0, NULL, 0.0f);
+            std::cout << "HOST> '" << pluginID << "': number of inputs/outputs after change: " << effect->numInputs << "/" << effect->numOutputs << std::endl;
+            effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
+            effect->dispatcher(effect, effStartProcess, 0, 0, NULL, 0.0f);
+        }
         result = 0;
         break;
 
     case audioMasterSizeWindow:
-        std::cout << "editor size changed. width: " << index << " height: " << value << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "editor size changed. width: " << index << " height: " << value << std::endl;
         result = 0;
         break;
 
     case audioMasterGetSampleRate:
-        std::cout << "samplerate requested." << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "samplerate requested." << std::endl;
         result = (int)GetSampleRate();
         break;
 
     case audioMasterGetBlockSize:
-        std::cout << "blocksize requested." << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "blocksize requested." << std::endl;
         result = (VstIntPtr)GetBlocksize();
         break;
 
@@ -325,59 +342,59 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterGetVendorString:
-        std::cout << "vendor string requested" << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "vendor string requested" << std::endl;
         strncpy((char*)ptr, "e:fope media", kVstMaxVendorStrLen);
         break;
 
     case audioMasterGetProductString:
-        std::cout << "product string requested" << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "product string requested" << std::endl;
         strncpy((char*)ptr, "vst testhost", kVstMaxProductStrLen);
         break;
 
     case audioMasterGetVendorVersion:
-        std::cout << "product version requested" << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "product version requested" << std::endl;
         result = 1;
         break;
 
     case audioMasterVendorSpecific:
-        std::cout << "vendor specific requested: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "vendor specific requested: " << std::hex << index << " value: " << value << " ptr: " << ptr << std::dec << " opt: " << opt << std::endl;
         result = 0;
         break;
 
     case audioMasterCanDo:
-        std::cout << "request for master canDo '" << (char*)ptr << "'" << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "request for master canDo '" << (char*)ptr << "'" << std::endl;
         result = CanHostDo((char*)ptr);
         break;
 
     case audioMasterGetLanguage:
-        std::cout << "host language requested" << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "host language requested" << std::endl;
         result = kVstLangEnglish;
         break;
 
     case audioMasterUpdateDisplay:
-        std::cout << "display updated" << std::endl;
+//        std::cout << "HOST> '" << pluginID << "': " << "display updated" << std::endl;
         break;
 
     case audioMasterBeginEdit:
-        std::cout << "editing parameter " << index << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "editing parameter " << index << std::endl;
         break;
 
     case audioMasterEndEdit:
-        std::cout << "ended editing parameter " << index << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "ended editing parameter " << index << std::endl;
         break;
 
     case audioMasterOpenFileSelector:
-        std::cout << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "ptr: " << std::hex << ptr << std::dec << std::endl;
         result = 0;
         break;
 
     case audioMasterCloseFileSelector:
-        std::cout << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "ptr: " << std::hex << ptr << std::dec << std::endl;
         result = 0;
         break;
 
     default:
-        std::cout << "opcode received: " << opcode << " index: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
+        std::cout << "HOST> '" << pluginID << "': " << "opcode received: " << opcode << " index: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
         break;
     }
 
@@ -389,49 +406,85 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
     extern bool stopProcessing;
     PluginInterfaceList *pList = reinterpret_cast<PluginInterfaceList*>(lpParam);
 
-    // get number of inputs/outputs -> these will NOT change during lifetime
-    int m_uiNumInputs = 0;
-    int m_uiNumOutputs = 0;
-    for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
+    std::vector<ProcessThreadParameters> processThreads;
+    for (int currentPluginIndex = 0; currentPluginIndex < pList->size(); currentPluginIndex++)
     {
-        if (m_uiNumInputs < (*it)->GetEffect()->numInputs)
-            m_uiNumInputs = (*it)->GetEffect()->numInputs;
-        if (m_uiNumOutputs < (*it)->GetEffect()->numOutputs)
-            m_uiNumOutputs = (*it)->GetEffect()->numOutputs;
-    }
+        // allocate memory for each of current plugin's inputs and outputs
+        AEffect* currentPlugin = pList->at(currentPluginIndex)->GetEffect();
+        ProcessThreadParameters currentThread;
 
-    float**             m_ppInputs = NULL;
-    float**             m_ppOutputs = NULL;
+        currentThread.plugin = currentPlugin;
 
-    if (m_uiNumInputs > 0)
-    {
-        m_ppInputs = new float*[m_uiNumInputs];
-        for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+        if (currentPlugin->numInputs)
         {
-            m_ppInputs[i] = new float[kBlockSize];
-            memset(m_ppInputs[i], 0, kBlockSize * sizeof(float));
+            float** ppInputs = new float*[currentPlugin->numInputs];
+            for (VstInt32 i = 0; i < currentPlugin->numInputs; i++)
+            {
+                ppInputs[i] = new float[kBlockSize];
+                memset(ppInputs[i], 0, kBlockSize * sizeof(float));
+            }
+            currentThread.inputs = ppInputs;
         }
+        else
+            currentThread.inputs = NULL;
+
+        if (currentPlugin->numOutputs)
+        {
+            float** ppOutputs = new float*[currentPlugin->numOutputs];
+            for (VstInt32 i = 0; i < currentPlugin->numOutputs; i++)
+            {
+                ppOutputs[i] = new float[kBlockSize];
+                memset(ppOutputs[i], 0, kBlockSize * sizeof(float));
+            }
+            currentThread.outputs = ppOutputs;
+        }
+        else
+            currentThread.outputs = NULL;
+
+        processThreads.push_back(currentThread);
     }
 
-    if (m_uiNumOutputs > 0)
-    {
-        m_ppOutputs = new float*[m_uiNumOutputs];
-        for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
-        {
-            m_ppOutputs[i] = new float[kBlockSize];
-            memset(m_ppOutputs[i], 0, kBlockSize * sizeof(float));
-        }
-    }
-    bool res;
-    DWORD wait;
     if (ms_managedBuffer)
     {
         while (!stopProcessing)
         {
-            EventManager::ResetEvent(EventManager::EVENT_PROCESSING_DONE);
             if (ms_iBufferRequestedSize > 0)
             {
                 // samples from all plugins need to be taken and mixed together
+#if 1
+                int bytesToProcess = ms_iBufferRequestedSize;
+                if (ms_iBufferRequestedSize > kBlockSize)
+                    bytesToProcess = kBlockSize;
+
+                int buffersToProcess = processThreads[0].plugin->numOutputs;
+                if (buffersToProcess > ms_managedBuffer->GetBufferCount())
+                    buffersToProcess = ms_managedBuffer->GetBufferCount();
+
+                for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
+                {
+                    AEffect *currentPlugin = processThreads[currentThreadIndex].plugin;
+                    try
+                    {
+                        currentPlugin->processReplacing(currentPlugin, processThreads[currentThreadIndex].inputs, processThreads[currentThreadIndex].outputs, bytesToProcess);
+                    }
+                    catch (std::exception e)
+                    {
+                        // this does not help with "divide-by-zero"
+                        std::cout << "error while processing: " << e.what() << std::endl;
+                    }
+                }
+
+                // only mix samples when having output
+                if (processThreads[1].outputs != NULL)
+                {
+                    for (int bufferIndex = 0; bufferIndex < buffersToProcess; bufferIndex++)
+                    {
+                        ms_managedBuffer->Write(bufferIndex, bytesToProcess, (int*)processThreads[1].outputs[bufferIndex]);
+                    }
+                }
+#endif
+                // old processing loop
+#if 0
                 for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
                 {
                     (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, ms_iBufferRequestedSize);
@@ -441,14 +494,36 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                         ms_managedBuffer->Write(bufferIndex, ms_iBufferRequestedSize, (int*)m_ppOutputs[bufferIndex]);
                     }
                 }
+#endif
                 ms_SamplesProcessed += ms_iBufferRequestedSize;
 
             }
-            EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
             EventManager::SetEvent(EventManager::EVENT_PROCESSING_DONE);
-            EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN);
+            if (!EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN, 100))
+                break;
+
+            EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
         }
     }
+
+    // release buffers for all loaded plugins
+    for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
+    {
+        if (processThreads[currentThreadIndex].plugin->numInputs)
+        {
+            for (VstInt32 i = 0; i < processThreads[currentThreadIndex].plugin->numInputs; i++)
+                delete[] processThreads[currentThreadIndex].inputs[i];
+            delete[] processThreads[currentThreadIndex].inputs;
+        }
+
+        if (processThreads[currentThreadIndex].plugin->numOutputs)
+        {
+            for (VstInt32 i = 0; i < processThreads[currentThreadIndex].plugin->numOutputs; i++)
+                delete[] processThreads[currentThreadIndex].outputs[i];
+            delete[] processThreads[currentThreadIndex].outputs;
+        }
+    }
+
     std::cout << "processing stopped" << std::endl;
     return 0;
 }

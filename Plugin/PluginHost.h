@@ -6,6 +6,7 @@
 #include "PluginInterface.h"
 #include <Util/ManagedBuffer.h>
 #include <Util/Threads/EventManager.h>
+#include <MIDI/MidiEvent.h>
 
 #include <map>
 #include <vector>
@@ -14,6 +15,7 @@
 #define kSampleRate 44000.f
 
 using namespace eLibV2::Util;
+using namespace eLibV2::MIDI;
 
 namespace eLibV2
 {
@@ -63,10 +65,6 @@ namespace eLibV2
             static ManagedBuffer* GetManagedBuffer() { return ms_managedBuffer; }
             static void SetBufferFillsize(int bufferSize) { ms_iBufferRequestedSize = bufferSize; }
 
-#ifndef USE_EVENT_MANAGER
-            static HANDLE hProcessingDone;
-#endif
-
             /**
             callback function to receive messages from the plugin
             warning this is a static function, so it cannot access internal members (except when using singleton)
@@ -84,6 +82,13 @@ namespace eLibV2
 #endif
 
         public:
+            typedef struct ProcessThreadParameters
+            {
+                AEffect* plugin;
+                float** inputs;
+                float** outputs;
+            };
+
             /// the following variables have to be static to be accessed from HostCallback
             static VstTimeInfo _VstTimeInfo;
             static unsigned int ms_uiBlocksize;
@@ -105,6 +110,7 @@ namespace eLibV2
             PluginMap m_LoadedPlugins;
             unsigned int m_NumLoadedPlugins;
             LARGE_INTEGER m_liStartingTime, m_liEndingTime, m_liFrequency;
+            std::map<int, PluginInterfaceList> m_PluginsForMIDIChannel;
         };
     }
 }

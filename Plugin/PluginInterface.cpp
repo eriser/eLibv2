@@ -14,7 +14,8 @@ PluginInterface::PluginInterface()
     m_uiNumInputs(0),
     m_uiNumOutputs(0),
     m_ppInputs(NULL),
-    m_ppOutputs(NULL)
+    m_ppOutputs(NULL),
+    m_bCanReceiveMidi(false)
 {
 }
 
@@ -50,6 +51,8 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
             return true;
         }
     }
+    // in case of an error free the library
+    Unload();
     return false;
 }
 
@@ -85,24 +88,36 @@ bool PluginInterface::CallPluginEntry()
 #if _WIN32
     mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "VSTPluginMain");
     if (!mainProc)
+    {
+        OutputDebugString(m_FileName.c_str());
+        OutputDebugString(": didn't find 'VSTPluginMain' in module. trying 'main' instead\n");
         mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "main");
+    }
 #elif TARGET_API_MAC_CARBON
     mainProc = (PluginEntryProc)CFBundleGetFunctionPointerForName((CFBundleRef)m_pModule, CFSTR("VSTPluginMain"));
     if (!mainProc)
         mainProc = (PluginEntryProc)CFBundleGetFunctionPointerForName((CFBundleRef)m_pModule, CFSTR("main_macho"));
 #endif
 
-    if (mainProc)
+    try
     {
-        std::cout << "Plugin> Creating effect instance..." << std::endl;
-        m_pEffect = mainProc(m_pHostCallback);
-        if (m_pEffect)
-            return true;
+        if (mainProc)
+        {
+            std::cout << "Plugin> Creating effect instance..." << std::endl;
+            m_pEffect = mainProc(m_pHostCallback);
+
+            if (m_pEffect)
+                return true;
+            else
+                std::cout << "Plugin> Failed to create effect instance!" << std::endl;
+        }
         else
-            std::cout << "Plugin> Failed to create effect instance!" << std::endl;
+            std::cout << "Plugin> VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'." << std::endl;
     }
-    else
-        std::cout << "Plugin> VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'." << std::endl;
+    catch (std::bad_alloc)
+    {
+        std::cout << "std::bad_alloc occured during plugin initialization" << std::endl;
+    }
     return false;
 }
 
@@ -120,9 +135,15 @@ void PluginInterface::Setup()
     m_PluginID.assign(pluginID);
 
     if (m_pEffect->flags & effFlagsIsSynth)
+    {
+        std::cout << "Plugin> This is an instrument plugin..." << std::endl;
         m_ePluginType = PluginType::PLUGIN_TYPE_INSTRUMENT;
+    }
     else
+    {
+        std::cout << "Plugin> This is an effect plugin..." << std::endl;
         m_ePluginType = PluginType::PLUGIN_TYPE_EFFECT;
+    }
 
     if (m_pEffect->dispatcher(m_pEffect, effGetPlugCategory, 0, 0, NULL, 0.0f) == kPlugCategShell)
     {
@@ -132,6 +153,7 @@ void PluginInterface::Setup()
     SetupProcessingMemory();
 }
 
+#if 1
 void PluginInterface::SetupProcessingMemory()
 {
     // get number of inputs/outputs -> these will NOT change during lifetime
@@ -158,7 +180,9 @@ void PluginInterface::SetupProcessingMemory()
         }
     }
 }
+#endif
 
+#if 1
 void PluginInterface::FreeProcessingMemory()
 {
     if (m_uiNumInputs > 0)
@@ -175,6 +199,7 @@ void PluginInterface::FreeProcessingMemory()
         delete[] m_ppOutputs;
     }
 }
+#endif
 
 void PluginInterface::Start()
 {
@@ -193,12 +218,10 @@ void PluginInterface::Stop()
 void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
 {
     std::cout << "Plugin> " << m_PluginID << " Receiving Midi message..." << std::endl;
-    VstEvents events;
 
     if (status == 0x90)
     {
         // MIDI Event
-        VstMidiEvent midiEvent = {};
 
         midiEvent.byteSize = sizeof(VstMidiEvent);
         midiEvent.type = kVstMidiType;
@@ -328,6 +351,8 @@ void PluginInterface::PrintCapabilities()
 
         case 1:
             std::cout << "yes";
+            if (canDoIndex == 3)
+                m_bCanReceiveMidi = true;
             break;
 
         case -1:
@@ -342,6 +367,7 @@ void PluginInterface::PrintCapabilities()
     }
 }
 
+#if 1
 void PluginInterface::ProcessReplacing()
 {
     std::cout << "Plugin> Process Replacing..." << std::endl;
@@ -350,3 +376,4 @@ void PluginInterface::ProcessReplacing()
         m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, m_uiBlocksize);
     }
 }
+#endif
