@@ -82,7 +82,7 @@ bool AsioDevice::OpenDevice(int driverIndex)
             if (Init(&ms_asioDriverInfo) == 0)
             {
                 // ASIOControlPanel(); you might want to check wether the ASIOControlPanel() can open
-                //ASIOControlPanel();
+                // ASIOControlPanel();
 
                 if (CreateBuffers(&ms_asioDriverInfo) == ASE_OK)
                 {
@@ -184,7 +184,15 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
         if (channel >= managedBuffer->GetBufferCount())
             continue;
 
-        source = new int[buffSize];
+        try
+        {
+            source = new int[buffSize];
+        }
+        catch (std::bad_alloc)
+        {
+            std::cout << "BAD memory allocation error" << std::endl;
+            return 0L;
+        }
         int readSize = managedBuffer->Read(channel, buffSize, (int*)source);
 #else
         if (!waveLoader.getWaveData(channel))

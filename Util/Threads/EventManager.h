@@ -3,8 +3,6 @@
 
 #include <map>
 
-//#define USE_EVENT_MANAGER
-
 #ifdef WIN32
 
 #include <Windows.h>
@@ -43,11 +41,11 @@ namespace eLibV2
                     }
                 }
 
-                static bool WaitForEvent(EventManager::Event event)
+                static bool WaitForEvent(EventManager::Event event, DWORD timeout = INFINITE)
                 {
                     if (EventMap[event])
                     {
-                        WaitForSingleObject(EventMap[event], INFINITE);
+                        WaitForSingleObject(EventMap[event], timeout);
                         return true;
                     }
                     return false;

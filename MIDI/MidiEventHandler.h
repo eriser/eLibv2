@@ -15,9 +15,6 @@ namespace eLibV2
         class MidiEventHandler : public Base::BaseModule
         {
         public:
-            enum { MAX_MIDI_CHANNELS = 16 };
-
-        public:
             MidiEventHandler() : Base::BaseName("MidiEventHandler") { Init(); }
 
             /**
@@ -58,9 +55,9 @@ namespace eLibV2
             void Init() {}
 
         private:
-            bool channelInRange(const int channel) const { return ((channel >= 0) && (channel < MAX_MIDI_CHANNELS)); }
+            bool channelInRange(const int channel) const { return ((channel >= MIDI_CHANNEL_MIN) && (channel < MIDI_CHANNEL_MAX)); }
 
-            MidiEventVector mMidiEvents[MAX_MIDI_CHANNELS]; ///< events for all channels
+            MidiEventVector mMidiEvents[MIDI_CHANNEL_MAX]; ///< events for all channels
         };
     }
 }

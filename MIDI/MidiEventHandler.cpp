@@ -32,12 +32,13 @@ bool MidiEventHandler::deleteEvent(const int channel, const MidiEvent& event)
 MidiEventVector MidiEventHandler::getEvents(const int channel) const
 {
     MidiEventVector events;
-    int size = 0;
     if (channelInRange(channel))
     {
-        for (ConstMidiEventIterator it = mMidiEvents[channel].begin(); it != mMidiEvents[channel].end(); it++)
-            events.push_back(*it);
-        size = mMidiEvents[channel].size();
+        if (mMidiEvents[channel].size())
+        {
+            for (ConstMidiEventIterator it = mMidiEvents[channel].begin(); it != mMidiEvents[channel].end(); it++)
+                events.push_back(*it);
+        }
     }
     return events;
 }

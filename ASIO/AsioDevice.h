@@ -98,11 +98,6 @@ namespace eLibV2
             ASIOCallbacks asioCallbacks;
             static void *externalBuffer[kMaxOutputChannels];
             static DriverInfo ms_asioDriverInfo;
-
-#ifndef USE_EVENT_MANAGER
-            static HANDLE hSamplesWritten;
-#endif
-
             static long ms_processedSamples;
 
         private:
