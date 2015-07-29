@@ -105,9 +105,9 @@ int ManagedBuffer::Write(int bufferIndex, int writeSize, int* input)
 
                 // buffer end will be reached
                 // wrap around
-                if (m_readingPosition[bufferIndex] + writeSize > m_bufferSize)
+                if (m_writingPosition[bufferIndex] + writeSize > m_bufferSize)
                 {
-                    int byteCountFirstRead = (m_readingPosition[bufferIndex] + writeSize) % m_bufferSize;
+                    int byteCountFirstRead = (m_writingPosition[bufferIndex] + writeSize) % m_bufferSize;
                     int byteCountSecondRead = writeSize - byteCountFirstRead;
                     memcpy(m_internalBuffer[bufferIndex], input, sizeof(int) * byteCountFirstRead);
                     memcpy(m_internalBuffer[bufferIndex], input + byteCountFirstRead, sizeof(int) * byteCountSecondRead);

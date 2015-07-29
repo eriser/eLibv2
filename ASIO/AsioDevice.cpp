@@ -179,7 +179,7 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
 
 #if USE_MANAGED_BUFFER == 1
         // skip channels without data
-        ManagedBuffer *managedBuffer = PluginHost::GetManagedBuffer();
+        ManagedBuffer *managedBuffer = PluginHost::GetOutputBuffer();
 
         if (channel >= managedBuffer->GetBufferCount())
             continue;
