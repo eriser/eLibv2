@@ -153,7 +153,6 @@ void PluginInterface::Setup()
     SetupProcessingMemory();
 }
 
-#if 1
 void PluginInterface::SetupProcessingMemory()
 {
     // get number of inputs/outputs -> these will NOT change during lifetime
@@ -180,9 +179,7 @@ void PluginInterface::SetupProcessingMemory()
         }
     }
 }
-#endif
 
-#if 1
 void PluginInterface::FreeProcessingMemory()
 {
     if (m_uiNumInputs > 0)
@@ -199,7 +196,6 @@ void PluginInterface::FreeProcessingMemory()
         delete[] m_ppOutputs;
     }
 }
-#endif
 
 void PluginInterface::Start()
 {
@@ -213,6 +209,37 @@ void PluginInterface::Stop()
     std::cout << "Plugin> " << m_PluginID << " Stop requested..." << std::endl;
     m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0);
     m_pEffect->dispatcher(m_pEffect, effStopProcess, 0, 0, NULL, 0.0f);
+}
+
+void PluginInterface::OpenEditor(void* window)
+{
+    std::cout << "Plugin> " << m_PluginID << " Editor Open requested..." << std::endl;
+    m_pEffect->dispatcher(m_pEffect, effEditOpen, 0, 0, window, 0);
+}
+
+void PluginInterface::CloseEditor()
+{
+    std::cout << "Plugin> " << m_PluginID << " Editor Close requested..." << std::endl;
+    m_pEffect->dispatcher(m_pEffect, effEditClose, 0, 0, NULL, 0);
+}
+
+void PluginInterface::IdleEditor()
+{
+    m_pEffect->dispatcher(m_pEffect, effEditIdle, 0, 0, NULL, 0.0f);
+}
+
+ERect* PluginInterface::GetEditorRect()
+{
+    ERect* eRect;
+    m_pEffect->dispatcher(m_pEffect, effEditGetRect, 0, 0, &eRect, 0);
+    return eRect;
+}
+
+std::string PluginInterface::GetEffectName()
+{
+    char effectName[kVstMaxEffectNameLen + 1] = { 0 };
+    m_pEffect->dispatcher(m_pEffect, effGetEffectName, 0, 0, &effectName, 0);
+    return std::string(effectName);
 }
 
 void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
@@ -367,13 +394,29 @@ void PluginInterface::PrintCapabilities()
     }
 }
 
-#if 1
-void PluginInterface::ProcessReplacing()
+void PluginInterface::SyncInputBuffers(ManagedBuffer* managedBuffer, VstInt32 dataSize)
 {
-    std::cout << "Plugin> Process Replacing..." << std::endl;
-    for (VstInt32 processCount = 0; processCount < kNumProcessCycles; processCount++)
+    if (managedBuffer)
     {
-        m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, m_uiBlocksize);
+        for (int bufferIndex = 0; bufferIndex < m_uiNumInputs; ++bufferIndex)
+            managedBuffer->Read(bufferIndex, dataSize, (int*)m_ppInputs[bufferIndex]);
     }
 }
-#endif
+
+void PluginInterface::SyncOutputBuffers(ManagedBuffer* managedBuffer, VstInt32 dataSize)
+{
+    if (managedBuffer)
+    {
+        for (int bufferIndex = 0; bufferIndex < m_uiNumOutputs; ++bufferIndex)
+            managedBuffer->Write(bufferIndex, dataSize, (int*)m_ppOutputs[bufferIndex]);
+    }
+}
+
+void PluginInterface::ProcessReplacing(VstInt32 sampleFrames)
+{
+    //std::cout << "Plugin> Process Replacing..." << std::endl;
+    for (VstInt32 processCount = 0; processCount < kNumProcessCycles; processCount++)
+    {
+        m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, sampleFrames);
+    }
+}

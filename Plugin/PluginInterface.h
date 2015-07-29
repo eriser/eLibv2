@@ -3,6 +3,8 @@
 
 #include "aeffectx.h"
 
+#include <Util/ManagedBuffer.h>
+
 #include <iostream>
 #include <string>
 
@@ -14,18 +16,21 @@
 
 #define kNumProcessCycles 50
 
+using namespace eLibV2::Util;
+
 namespace eLibV2
 {
     namespace Host
     {
         typedef AEffect* (*PluginEntryProc) (audioMasterCallback audioMaster);
 
+        /// type of loaded plugin
         enum PluginType
         {
-            PLUGIN_TYPE_UNSET = 0,
-            PLUGIN_TYPE_INSTRUMENT,
-            PLUGIN_TYPE_EFFECT,
-            PLUGIN_TYPE_SHELL,
+            PLUGIN_TYPE_UNSET = 0,  ///< not yet set
+            PLUGIN_TYPE_INSTRUMENT, ///< VST instrument
+            PLUGIN_TYPE_EFFECT,     ///< VST effect
+            PLUGIN_TYPE_SHELL,      ///< VST shell plugin
         };
 
         /**
@@ -37,8 +42,6 @@ namespace eLibV2
         - Plugintype (Instrument, Effect, Shell-Plugin)
         - MidiInput channel (if applicable)
         - AudioOutput channel
-
-
         */
         class PluginInterface
         {
@@ -46,26 +49,148 @@ namespace eLibV2
             PluginInterface();
             ~PluginInterface();
 
+            /**
+            Loads the plugin and connects to the specified callback-function
+            @param fileName location of the plugin to load
+            @param callback callback-function which receives all plugin requests
+            @return true if successful, otherwise false
+            */
             bool Load(const std::string fileName, audioMasterCallback callback);
+
+            /**
+            Unload the attached plugin
+            */
             void Unload();
-            AEffect* GetEffect() const { return m_pEffect; }
+
+            /**
+            Get the effect instance of the plugin
+            TODO: this should not be used. instead all uses are be delegated to the PluginInterface
+            */
+            //AEffect* GetEffect() const { return m_pEffect; }
+
+            /**
+            Get ID of loaded plugin. This is a unique 4 characters long identification registered at Steinberg
+            @return ID of plugin as string
+            */
             std::string GetPluginID() { return m_PluginID; }
+
+            /**
+            Get type of plugin @see PluginType
+            @return type of plugin
+            */
             PluginType GetPluginType() { return m_ePluginType; }
+
+            /**
+            Information whether loaded plugin supports receiving of MIDI events
+            @return true if plugin can receive MIDI events
+            */
             bool CanReceiveMidi() { return m_bCanReceiveMidi; }
 
-            unsigned int GetMidiChannel() { return m_uiMidiChannel; }
-            unsigned int GetAudioChannl() { return m_uiAudioChannel; }
+            /**
+            Information whether loaded plugin has own editor
+            @return true if plugin has editor
+            */
+            bool HasEditor() { return ((m_pEffect->flags & effFlagsHasEditor) != 0); }
 
+            /**
+            Returns the MIDI channel the plugin receives data
+            @return MIDI channel 0-15
+            */
+            unsigned int GetMidiChannel() { return m_uiMidiChannel; }
+
+            /**
+            Returns the audio channel the plugin uses to send data to
+            @return audio channel
+            */
+            unsigned int GetAudioChannel() { return m_uiAudioChannel; }
+
+            std::string GetEffectName();
+
+            ERect* GetEditorRect();
+
+            /**
+            Start plugin. This just calls the resume-method. It does not process any audio data.
+            */
             void Start();
+
+            /**
+            Stop plugin. This just calls the suspend-method. In this state the plugin will not receive any calls to processReplacing.
+            */
             void Stop();
+
+            /**
+            Open plugin's editor
+            @param pointer to platform-dependent window handle
+            */
+            void OpenEditor(void* window);
+
+            /**
+            Close plugin's editor
+            */
+            void CloseEditor();
+
+            /**
+            Send idle message to plugin's editor
+            */
+            void IdleEditor();
+
+            /**
+            Send MIDI events to plugin
+            @param channel MIDI channel
+            @param status first byte of MIDI event
+            @param data1 second byte of MIDI event
+            @param data2 third byte of MIDI event
+            */
             void SendMidi(int channel, int status, int data1, int data2);
 
+            /**
+            Output properties as number of inputs/outputs, number of presets/parameters to the console
+            */
             void PrintProperties();
-            void PrintPrograms();
-            void PrintParameters();
-            void PrintCapabilities();
-            void ProcessReplacing();
 
+            /**
+            Output all program-names to the console
+            */
+            void PrintPrograms();
+
+            /**
+            Output all parameters to the console
+            */
+            void PrintParameters();
+
+            /**
+            Output all capabilities (CanDoXXX) to the console
+            */
+            void PrintCapabilities();
+
+            /**
+            This calls the processReplacing-method of the plugin
+            @param sampleFrames number of frames to process
+            */
+            void ProcessReplacing(VstInt32 sampleFrames);
+
+            VstInt32 GetNumberOfInputs() { return m_uiNumInputs; }
+            VstInt32 GetNumberOfOutputs() { return m_uiNumOutputs; }
+
+            /**
+            Sync contents of managed buffer with input to use in processReplacing
+            @param managedBuffer source of the data
+            @param dataSize size of data to write (usually number of floats)
+            */
+            void SyncInputBuffers(ManagedBuffer* managedBuffer, VstInt32 dataSize);
+
+            /**
+            Sync contents of output buffer with managed buffer
+            @param managedBuffer destination of the data
+            @param dataSize size of data to write (usually number of floats)
+            */
+            void SyncOutputBuffers(ManagedBuffer* managedBuffer, VstInt32 dataSize);
+
+            /**
+            Convert the 32-bit-integer used for the plugin-ID to a character array
+            @param id the plugin-ID as a 32-bit-integer
+            @param pluginID character array to store readable form of plugin-ID. Must have at least 4 characters of space
+            */
             static inline void GetPluginStringFromLong(VstInt32 id, char* pluginID)
             {
                 for (int i = 0; i < 4; i++)
@@ -73,19 +198,29 @@ namespace eLibV2
             }
 
         private:
+            /**
+            Return the internal main-function of the plugin. Either VSTPlugMain or main
+            */
             PluginEntryProc GetMainEntry();
 
             /**
-            this function calls the main entry function of the plugin
+            This function calls the main entry function of the plugin
             */
             bool CallPluginEntry();
 
             /**
-            set up internal plugin data (e.g. samplerate and blocksize)
+            Set up internal plugin data (e.g. samplerate and blocksize)
             */
             void Setup();
 
+            /**
+            Set up processing memory of the plugin for calls to processReplacing
+            */
             void SetupProcessingMemory();
+
+            /**
+            Free up the reserved memory used to call processReplacing
+            */
             void FreeProcessingMemory();
 
         private:
@@ -99,16 +234,18 @@ namespace eLibV2
             unsigned int        m_uiMidiChannel;    ///< Midi channel to receive messages
             unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
             PluginType          m_ePluginType;      ///< Type of Plugin
-            bool                m_bCanReceiveMidi;
+            bool                m_bCanReceiveMidi;  ///< Plugin can receive MIDI events
 
-            float**             m_ppInputs;
-            float**             m_ppOutputs;
-            VstInt32            m_uiNumInputs;
-            VstInt32            m_uiNumOutputs;
+            float**             m_ppInputs;         ///< Allocated memory for the inputs of the plugin
+            float**             m_ppOutputs;        ///< Allocated memory for the outputs of the plugin
+            VstInt32            m_uiNumInputs;      ///< Number of inputs used by the plugin
+            VstInt32            m_uiNumOutputs;     ///< Number of outputs used by the plugin
 
-            // these variables have to be non-local to have plugins
-            // access them after the send-method has been left
-            // TODO: maybe some better solution?
+            /**
+            these variables have to be non-local to have plugins
+            access them after the send-method has been left
+            TODO: maybe some better solution?
+            */
             VstEvents           events;
             VstMidiEvent        midiEvent = {};
         };

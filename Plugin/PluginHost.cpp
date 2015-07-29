@@ -12,7 +12,8 @@ unsigned int PluginHost::ms_uiTimeSignatureNoteValue = 4;
 VstTimeInfo PluginHost::_VstTimeInfo;
 bool PluginHost::ms_bTransportPlaying = false;
 LARGE_INTEGER PluginHost::ms_liElapsedMicroseconds;
-ManagedBuffer* PluginHost::ms_managedBuffer = NULL;
+ManagedBuffer* PluginHost::ms_inputBuffer = NULL;
+ManagedBuffer* PluginHost::ms_outputBuffer = NULL;
 int PluginHost::ms_iBufferRequestedSize = 0;
 long PluginHost::ms_SamplesProcessed = 0;
 
@@ -407,123 +408,46 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
     PluginInterfaceList *pList = reinterpret_cast<PluginInterfaceList*>(lpParam);
 
     std::vector<ProcessThreadParameters> processThreads;
-    for (int currentPluginIndex = 0; currentPluginIndex < pList->size(); currentPluginIndex++)
+    for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); ++it)
     {
         // allocate memory for each of current plugin's inputs and outputs
-        AEffect* currentPlugin = pList->at(currentPluginIndex)->GetEffect();
+        PluginInterface* currentPlugin = (*it);
         ProcessThreadParameters currentThread;
 
         currentThread.plugin = currentPlugin;
-
-        if (currentPlugin->numInputs)
-        {
-            float** ppInputs = new float*[currentPlugin->numInputs];
-            for (VstInt32 i = 0; i < currentPlugin->numInputs; i++)
-            {
-                ppInputs[i] = new float[kBlockSize];
-                memset(ppInputs[i], 0, kBlockSize * sizeof(float));
-            }
-            currentThread.inputs = ppInputs;
-        }
-        else
-            currentThread.inputs = NULL;
-
-        if (currentPlugin->numOutputs)
-        {
-            float** ppOutputs = new float*[currentPlugin->numOutputs];
-            for (VstInt32 i = 0; i < currentPlugin->numOutputs; i++)
-            {
-                ppOutputs[i] = new float[kBlockSize];
-                memset(ppOutputs[i], 0, kBlockSize * sizeof(float));
-            }
-            currentThread.outputs = ppOutputs;
-        }
-        else
-            currentThread.outputs = NULL;
-
+        currentThread.inputBuffer = ms_inputBuffer;
+        currentThread.outputBuffer = ms_outputBuffer;
         processThreads.push_back(currentThread);
     }
 
-    if (ms_managedBuffer)
+    if (ms_inputBuffer && ms_outputBuffer)
     {
         while (!stopProcessing)
         {
             if (ms_iBufferRequestedSize > 0)
             {
                 // samples from all plugins need to be taken and mixed together
-#if 1
                 int bytesToProcess = ms_iBufferRequestedSize;
                 if (ms_iBufferRequestedSize > kBlockSize)
                     bytesToProcess = kBlockSize;
 
-                int buffersToProcess = processThreads[0].plugin->numOutputs;
-                if (buffersToProcess > ms_managedBuffer->GetBufferCount())
-                    buffersToProcess = ms_managedBuffer->GetBufferCount();
-
+                // tell all plugins to process their inputs/outputs
                 for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
                 {
-                    AEffect *currentPlugin = processThreads[currentThreadIndex].plugin;
-                    try
-                    {
-                        currentPlugin->processReplacing(currentPlugin, processThreads[currentThreadIndex].inputs, processThreads[currentThreadIndex].outputs, bytesToProcess);
-                    }
-                    catch (std::exception e)
-                    {
-                        // this does not help with "divide-by-zero"
-                        std::cout << "error while processing: " << e.what() << std::endl;
-                    }
+                    PluginInterface* plugin = processThreads[currentThreadIndex].plugin;
+//                    plugin->SyncInputBuffers(processThreads[currentThreadIndex].inputBuffer, bytesToProcess);
+                    processThreads[currentThreadIndex].plugin->ProcessReplacing(bytesToProcess);
+                    plugin->SyncOutputBuffers(processThreads[currentThreadIndex].outputBuffer, bytesToProcess);
                 }
-
-                // only mix samples when having output
-                if (processThreads[1].outputs != NULL)
-                {
-                    for (int bufferIndex = 0; bufferIndex < buffersToProcess; bufferIndex++)
-                    {
-                        ms_managedBuffer->Write(bufferIndex, bytesToProcess, (int*)processThreads[1].outputs[bufferIndex]);
-                    }
-                }
-#endif
-                // old processing loop
-#if 0
-                for (PluginInterfaceList::iterator it = pList->begin(); it != pList->end(); it++)
-                {
-                    (*it)->GetEffect()->processReplacing((*it)->GetEffect(), m_ppInputs, m_ppOutputs, ms_iBufferRequestedSize);
-
-                    for (int bufferIndex = 0; bufferIndex < ms_managedBuffer->GetBufferCount(); bufferIndex++)
-                    {
-                        ms_managedBuffer->Write(bufferIndex, ms_iBufferRequestedSize, (int*)m_ppOutputs[bufferIndex]);
-                    }
-                }
-#endif
-                ms_SamplesProcessed += ms_iBufferRequestedSize;
-
+                ms_SamplesProcessed += bytesToProcess;
             }
             EventManager::SetEvent(EventManager::EVENT_PROCESSING_DONE);
-            if (!EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN, 100))
+            if (!EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN, 2500))
                 break;
 
             EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
         }
     }
-
-    // release buffers for all loaded plugins
-    for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
-    {
-        if (processThreads[currentThreadIndex].plugin->numInputs)
-        {
-            for (VstInt32 i = 0; i < processThreads[currentThreadIndex].plugin->numInputs; i++)
-                delete[] processThreads[currentThreadIndex].inputs[i];
-            delete[] processThreads[currentThreadIndex].inputs;
-        }
-
-        if (processThreads[currentThreadIndex].plugin->numOutputs)
-        {
-            for (VstInt32 i = 0; i < processThreads[currentThreadIndex].plugin->numOutputs; i++)
-                delete[] processThreads[currentThreadIndex].outputs[i];
-            delete[] processThreads[currentThreadIndex].outputs;
-        }
-    }
-
     std::cout << "processing stopped" << std::endl;
     return 0;
 }

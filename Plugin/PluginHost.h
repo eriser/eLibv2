@@ -61,8 +61,10 @@ namespace eLibV2
             static double GetTimeSignatureNoteValue() { return ms_uiTimeSignatureNoteValue; }
             static bool IsTransportPlaying() { return ms_bTransportPlaying; }
 
-            static void SetManagedBuffer(ManagedBuffer *buffer) { ms_managedBuffer = buffer; }
-            static ManagedBuffer* GetManagedBuffer() { return ms_managedBuffer; }
+            static void SetInputBuffer(ManagedBuffer *buffer) { ms_inputBuffer = buffer; }
+            static void SetOutputBuffer(ManagedBuffer *buffer) { ms_outputBuffer = buffer; }
+            static ManagedBuffer* GetInputBuffer() { return ms_inputBuffer; }
+            static ManagedBuffer* GetOutputBuffer() { return ms_outputBuffer; }
             static void SetBufferFillsize(int bufferSize) { ms_iBufferRequestedSize = bufferSize; }
 
             /**
@@ -84,9 +86,9 @@ namespace eLibV2
         public:
             typedef struct ProcessThreadParameters
             {
-                AEffect* plugin;
-                float** inputs;
-                float** outputs;
+                ManagedBuffer* inputBuffer;
+                ManagedBuffer* outputBuffer;
+                PluginInterface* plugin;
             };
 
             /// the following variables have to be static to be accessed from HostCallback
@@ -98,7 +100,8 @@ namespace eLibV2
             static unsigned int ms_uiTimeSignatureNoteValue;
             static bool ms_bTransportPlaying;
             static LARGE_INTEGER ms_liElapsedMicroseconds;
-            static ManagedBuffer *ms_managedBuffer;
+            static ManagedBuffer *ms_inputBuffer;
+            static ManagedBuffer *ms_outputBuffer;
             static int ms_iBufferRequestedSize;
             static long ms_SamplesProcessed;
 
