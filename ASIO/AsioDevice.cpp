@@ -175,7 +175,7 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
 
         int channel = ms_asioDriverInfo.bufferInfos[bufferIndex].channelNum;
 
-        void* source = NULL;
+        int* source = NULL;
 
 #if USE_MANAGED_BUFFER == 1
         // skip channels without data
@@ -193,7 +193,7 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
             std::cout << "BAD memory allocation error" << std::endl;
             return 0L;
         }
-        int readSize = managedBuffer->Read(channel, buffSize, (int*)source);
+        int readSize = managedBuffer->Read(channel, buffSize, source);
 #else
         if (!waveLoader.getWaveData(channel))
             continue;

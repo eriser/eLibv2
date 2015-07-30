@@ -46,37 +46,39 @@ int ManagedBuffer::Read(int bufferIndex, int readSize, int* output)
                 if (m_readingPosition[bufferIndex] > m_writingPosition[bufferIndex])
                     ReadAhead = true;
 
-                // buffer end will be reached
-                // wrap around
+//                ModuleLogger::print("read (%li) from %i [%li]\n", readSize, m_readingPosition[bufferIndex], bufferIndex);
                 if (m_readingPosition[bufferIndex] + readSize > m_bufferSize)
                 {
-                    int byteCountFirstRead = (m_readingPosition[bufferIndex] + readSize) % m_bufferSize;
-                    int byteCountSecondRead = readSize - byteCountFirstRead;
-                    memcpy(output, m_internalBuffer[bufferIndex], sizeof(int) * byteCountFirstRead);
-                    memcpy(output + byteCountFirstRead, m_internalBuffer[bufferIndex], sizeof(int) * byteCountSecondRead);
+                    int byteCountSecondRead = (m_readingPosition[bufferIndex] + readSize) % m_bufferSize;
+                    int byteCountFirstRead = readSize - byteCountSecondRead;
+
+                    memcpy(output, m_internalBuffer[bufferIndex] + m_readingPosition[bufferIndex], byteCountFirstRead * sizeof(int));
+                    memcpy(output + byteCountFirstRead, m_internalBuffer[bufferIndex], byteCountSecondRead * sizeof(int));
 
                     m_readingPosition[bufferIndex] = byteCountSecondRead;
-
+#if 0
                     // if still ahead after wrap around -> underrun
                     if (
                         (ReadAhead && m_readingPosition[bufferIndex] > m_writingPosition[bufferIndex]) ||
                         (!ReadAhead && m_readingPosition[bufferIndex] <= m_writingPosition[bufferIndex])
                         )
                         ModuleLogger::print("buffer underrun -> read-marker after write-marker");
+#endif
                 }
                 else
                 {
-                    memcpy(output, m_internalBuffer[bufferIndex], sizeof(int) * readSize);
+                    memcpy(output, m_internalBuffer[bufferIndex] + m_readingPosition[bufferIndex], readSize * sizeof(int));
                     m_readingPosition[bufferIndex] += readSize;
 
+#if 0
                     // was ahead, is not anymore after write or vice versa
                     if (
                         (ReadAhead && m_readingPosition[bufferIndex] <= m_writingPosition[bufferIndex]) ||
                         (!ReadAhead && m_readingPosition[bufferIndex] > m_writingPosition[bufferIndex])
                         )
                         ModuleLogger::print("buffer underrun -> read-marker after write-marker");
+#endif
                 }
-                ModuleLogger::print("read from %i [%li]", m_readingPosition[bufferIndex], bufferIndex);
 
                 return readSize;
             }
@@ -103,38 +105,40 @@ int ManagedBuffer::Write(int bufferIndex, int writeSize, int* input)
                 if (m_writingPosition[bufferIndex] > m_readingPosition[bufferIndex])
                     WriteAhead = true;
 
-                // buffer end will be reached
-                // wrap around
+//                ModuleLogger::print("write (%li) to %i [%li]\n", writeSize, m_writingPosition[bufferIndex], bufferIndex);
                 if (m_writingPosition[bufferIndex] + writeSize > m_bufferSize)
                 {
-                    int byteCountFirstRead = (m_writingPosition[bufferIndex] + writeSize) % m_bufferSize;
-                    int byteCountSecondRead = writeSize - byteCountFirstRead;
-                    memcpy(m_internalBuffer[bufferIndex], input, sizeof(int) * byteCountFirstRead);
-                    memcpy(m_internalBuffer[bufferIndex], input + byteCountFirstRead, sizeof(int) * byteCountSecondRead);
+                    int byteCountSecondRead = (m_writingPosition[bufferIndex] + writeSize) % m_bufferSize;
+                    int byteCountFirstRead = writeSize - byteCountSecondRead;
+
+                    memcpy(m_internalBuffer[bufferIndex] + m_writingPosition[bufferIndex], input, byteCountFirstRead * sizeof(int));
+                    memcpy(m_internalBuffer[bufferIndex], input + byteCountFirstRead, byteCountSecondRead * sizeof(int));
 
                     m_writingPosition[bufferIndex] = byteCountSecondRead;
 
+#if 0
                     // if still ahead after wrap around -> underrun
                     if (
                         (WriteAhead && m_writingPosition[bufferIndex] > m_readingPosition[bufferIndex]) ||
                         (!WriteAhead && m_writingPosition[bufferIndex] <= m_readingPosition[bufferIndex])
                         )
                         ModuleLogger::print("buffer underrun -> write-marker after read-marker");
+#endif
                 }
-                // no wrap around
                 else
                 {
-                    memcpy(m_internalBuffer[bufferIndex], input, sizeof(int) * writeSize);
+                    memcpy(m_internalBuffer[bufferIndex] + m_writingPosition[bufferIndex], input, writeSize * sizeof(int));
                     m_writingPosition[bufferIndex] += writeSize;
 
+#if 0
                     // was ahead, is not anymore after write or vice versa
                     if (
                         (WriteAhead && m_writingPosition[bufferIndex] <= m_readingPosition[bufferIndex]) ||
                         (!WriteAhead && m_writingPosition[bufferIndex] > m_readingPosition[bufferIndex])
                         )
                         ModuleLogger::print("buffer underrun -> write-marker after read-marker");
+#endif
                 }
-                ModuleLogger::print("written to %i [%li]", m_writingPosition[bufferIndex], bufferIndex);
 
                 return writeSize;
             }

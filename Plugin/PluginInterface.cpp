@@ -414,9 +414,5 @@ void PluginInterface::SyncOutputBuffers(ManagedBuffer* managedBuffer, VstInt32 d
 
 void PluginInterface::ProcessReplacing(VstInt32 sampleFrames)
 {
-    //std::cout << "Plugin> Process Replacing..." << std::endl;
-    for (VstInt32 processCount = 0; processCount < kNumProcessCycles; processCount++)
-    {
-        m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, sampleFrames);
-    }
+    m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, sampleFrames);
 }

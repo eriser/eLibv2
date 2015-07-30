@@ -63,12 +63,6 @@ namespace eLibV2
             void Unload();
 
             /**
-            Get the effect instance of the plugin
-            TODO: this should not be used. instead all uses are be delegated to the PluginInterface
-            */
-            //AEffect* GetEffect() const { return m_pEffect; }
-
-            /**
             Get ID of loaded plugin. This is a unique 4 characters long identification registered at Steinberg
             @return ID of plugin as string
             */
@@ -85,6 +79,12 @@ namespace eLibV2
             @return true if plugin can receive MIDI events
             */
             bool CanReceiveMidi() { return m_bCanReceiveMidi; }
+
+            /**
+            Information whether loaded plugin supports processing in double precision
+            @return true if plugin has method processDoubleReplacing
+            */
+            bool CanDoubleReplacing() { return ((m_pEffect->flags & effFlagsCanDoubleReplacing) != 0); }
 
             /**
             Information whether loaded plugin has own editor

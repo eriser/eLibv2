@@ -427,22 +427,22 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
             if (ms_iBufferRequestedSize > 0)
             {
                 // samples from all plugins need to be taken and mixed together
-                int bytesToProcess = ms_iBufferRequestedSize;
+                int framesToProcess = ms_iBufferRequestedSize;
                 if (ms_iBufferRequestedSize > kBlockSize)
-                    bytesToProcess = kBlockSize;
+                    framesToProcess = kBlockSize;
 
                 // tell all plugins to process their inputs/outputs
                 for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
                 {
                     PluginInterface* plugin = processThreads[currentThreadIndex].plugin;
-//                    plugin->SyncInputBuffers(processThreads[currentThreadIndex].inputBuffer, bytesToProcess);
-                    processThreads[currentThreadIndex].plugin->ProcessReplacing(bytesToProcess);
-                    plugin->SyncOutputBuffers(processThreads[currentThreadIndex].outputBuffer, bytesToProcess);
+                    plugin->SyncInputBuffers(processThreads[currentThreadIndex].inputBuffer, framesToProcess);
+                    plugin->ProcessReplacing(framesToProcess);
+                    plugin->SyncOutputBuffers(processThreads[currentThreadIndex].outputBuffer, framesToProcess);
                 }
-                ms_SamplesProcessed += bytesToProcess;
+                ms_SamplesProcessed += framesToProcess;
             }
             EventManager::SetEvent(EventManager::EVENT_PROCESSING_DONE);
-            if (!EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN, 2500))
+            if (!EventManager::WaitForEvent(EventManager::EVENT_DATA_WRITTEN, 500))
                 break;
 
             EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
