@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-#if _WIN32
+#if WIN32
 #include <windows.h>
 #elif TARGET_API_MAC_CARBON
 #include <CoreFoundation/CoreFoundation.h>

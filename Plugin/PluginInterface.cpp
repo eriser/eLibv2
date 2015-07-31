@@ -28,7 +28,7 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
 {
     m_FileName = fileName;
     m_pHostCallback = callback;
-#if _WIN32
+#if WIN32
     m_pModule = LoadLibrary(m_FileName.c_str());
 #elif TARGET_API_MAC_CARBON
     CFStringRef fileNameString = CFStringCreateWithCString(NULL, fileName.c_str(), kCFStringEncodingUTF8);
@@ -69,7 +69,7 @@ void PluginInterface::Unload()
 
     if (m_pModule)
     {
-#if _WIN32
+#if WIN32
         FreeLibrary((HMODULE)m_pModule);
 #elif TARGET_API_MAC_CARBON
         CFBundleUnloadExecutable((CFBundleRef)module);
@@ -85,7 +85,7 @@ bool PluginInterface::CallPluginEntry()
     PluginEntryProc mainProc = NULL;
 
     std::cout << "Plugin> Searching for entry function..." << std::endl;
-#if _WIN32
+#if WIN32
     mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "VSTPluginMain");
     if (!mainProc)
     {
@@ -150,6 +150,11 @@ void PluginInterface::Setup()
         std::cout << "Plugin> This is a shell plugin..." << std::endl;
         m_ePluginType = PluginType::PLUGIN_TYPE_SHELL;
     }
+
+    const char *canDo = "receiveVstMidiEvent";
+    if ((VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDo, 0.0f) == 1)
+        m_bCanReceiveMidi = true;
+
     SetupProcessingMemory();
 }
 
@@ -378,8 +383,6 @@ void PluginInterface::PrintCapabilities()
 
         case 1:
             std::cout << "yes";
-            if (canDoIndex == 3)
-                m_bCanReceiveMidi = true;
             break;
 
         case -1:

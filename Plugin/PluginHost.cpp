@@ -36,12 +36,12 @@ bool PluginHost::OpenPlugin(std::string fileName)
     {
         m_LoadedPlugins[plugin->GetPluginID()] = plugin;
 
-#if 1
+#if DEBUG_OUTPUT_PLUGIN_PROPERTIES
         plugin->PrintProperties();
-//        plugin->PrintPrograms();
-//        plugin->PrintParameters();
+        plugin->PrintPrograms();
+        plugin->PrintParameters();
         plugin->PrintCapabilities();
-//        plugin->ProcessReplacing();
+        plugin->ProcessReplacing();
 #endif
 
         // gather all plugins for all midi channels
