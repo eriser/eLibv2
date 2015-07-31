@@ -177,18 +177,18 @@ bool EnvelopeDADSR::Test(void)
     long oldstate = 0;
 
 //    TestBeginMsg();
-    ModuleLogger::print("using delay: %lf", dDelay);
-    ModuleLogger::print("using attack: %lf", dAttack);
-    ModuleLogger::print("using decay: %lf", dDecay);
-    ModuleLogger::print("using sustain: %lf", dSustain);
-    ModuleLogger::print("using release: %lf", dRelease);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "using delay: %lf", dDelay);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "using attack: %lf", dAttack);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "using decay: %lf", dDecay);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "using sustain: %lf", dSustain);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "using release: %lf", dRelease);
     setTrigger(true);
     for (long EnvTime = 0; EnvTime < 200000; EnvTime++)
     {
         Value = Process();
         if (oldstate != lEnvelopeState)
         {
-            ModuleLogger::print("time: %li state: %li value: %lf", EnvTime, lEnvelopeState, Value);
+            ModuleLogger::print(LOG_CLASS_EFFECT, "time: %li state: %li value: %lf", EnvTime, lEnvelopeState, Value);
             oldstate = lEnvelopeState;
         }
         if (EnvTime > 60000)

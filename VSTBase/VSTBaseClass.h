@@ -93,8 +93,8 @@ namespace eLibV2
                 virtual void setParameterInvoked(VstInt32 index, float value) = 0;
 
                 // 
-                virtual bool beginEdit(VstInt32 index) { ModuleLogger::print("beginEdit()"); return true; }
-                virtual bool endEdit(VstInt32 index) { ModuleLogger::print("endEdit()"); return true; }
+                virtual bool beginEdit(VstInt32 index) { ModuleLogger::print(LOG_CLASS_VST, "beginEdit()"); return true; }
+                virtual bool endEdit(VstInt32 index) { ModuleLogger::print(LOG_CLASS_VST, "endEdit()"); return true; }
 
             private:
                 // properties for plugin

@@ -33,7 +33,7 @@ namespace eLibV2
                     input *= value;
                 }
 
-                ModuleLogger::print("%s::processIOs value: %lf", getModuleName().c_str(), input);
+                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIOs value: %lf", getModuleName().c_str(), input);
                 return input;
             }
 

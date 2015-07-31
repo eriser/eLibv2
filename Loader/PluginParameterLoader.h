@@ -32,7 +32,7 @@ namespace eLibV2
                             double min, max;
 
                             StringMap attributes = (*nodeIt)->getAttributes();
-                            ModuleLogger::print("%li attributes", attributes.size());
+                            ModuleLogger::print(LOG_CLASS_LOADER, "%li attributes", attributes.size());
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
                             {
                                 std::string attributeName = (*attributeIt).first;

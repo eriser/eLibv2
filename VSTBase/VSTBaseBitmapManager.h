@@ -7,6 +7,7 @@
 #include <string>
 
 #include <Util/Logger.h>
+#include <Util/Defines.h>
 
 // vst headers
 #include <audioeffectx.h>

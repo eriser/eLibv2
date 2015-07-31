@@ -137,11 +137,11 @@ void BaseWavetable::Init()
     catch (std::bad_alloc& alloc)
     {
         // reaching here lacks WAVEFORM_BUILTIN_NUM * kWavesize bytes of memory
-        ModuleLogger::print("Init: out of memory");
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "Init: out of memory");
     }
     catch (...)
     {
-        ModuleLogger::print("unknown exception");
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "unknown exception");
     }
 }
 
@@ -174,7 +174,7 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
 
         // copy wave data
         if (waveLoader.getWaveFormat().NumChannels > 1)
-            ModuleLogger::print("loaded multichannel file.");
+            ModuleLogger::print(LOG_CLASS_GENERATOR, "loaded multichannel file.");
         waveData = waveLoader.getWaveData(0);
         if (!waveData)
             return false;
@@ -188,12 +188,12 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
     }
     catch (std::bad_alloc& alloc)
     {
-        ModuleLogger::print("AddWaveform: out of memory (%s)", WaveName.c_str());
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "AddWaveform: out of memory (%s)", WaveName.c_str());
         return false;
     }
     catch (...)
     {
-        ModuleLogger::print("unknown exception");
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "unknown exception");
         return false;
     }
     return true;
@@ -205,7 +205,7 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string
 
     try
     {
-        ModuleLogger::print("AddWaveform: %s/%li", WaveName.c_str(), WaveSize);
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "AddWaveform: %s/%li", WaveName.c_str(), WaveSize);
 
         waveform.ChannelNum = ChannelNum;
         waveform.WaveSize = WaveSize;
@@ -224,12 +224,12 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string
 
     catch (std::bad_alloc& alloc)
     {
-        ModuleLogger::print("AddWaveform: out of memory (%s/%li)", WaveName.c_str(), WaveSize);
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "AddWaveform: out of memory (%s/%li)", WaveName.c_str(), WaveSize);
         return false;
     }
     catch (...)
     {
-        ModuleLogger::print("unknown exception");
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "unknown exception");
         return false;
     }
     return true;
@@ -277,12 +277,12 @@ bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::s
 
     catch (std::bad_alloc& alloc)
     {
-        ModuleLogger::print("AddWaveform: out of memory (%s)", WaveName.c_str());
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "AddWaveform: out of memory (%s)", WaveName.c_str());
         return false;
     }
     catch (...)
     {
-        ModuleLogger::print("unknown exception");
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "unknown exception");
         return false;
     }
     return true;

@@ -51,7 +51,7 @@ double FxWaveWrap::processConnection()
         setWrapLevel(connections[WAVEWRAP_LEVEL]->processConnection());
     else if (isConnected(WAVEWRAP_INPUT))
         input = connections[WAVEWRAP_INPUT]->processConnection();
-    ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 
     return Process(input);
 }

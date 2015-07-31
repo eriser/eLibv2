@@ -31,7 +31,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
     if (nodes)
     {
         props.loadFromXml("E:\\test.xml");
-        ModuleLogger::print("%li elements", nodes->size());
+        ModuleLogger::print(1, "%li elements", nodes->size());
     }
     cVSTBaseTest = new VSTBaseTest(audioMaster, props.getNumPrograms(), props.getNumParameters(), props);
     return cVSTBaseTest;

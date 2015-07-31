@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include <Util/Defines.h>
+
 XERCES_CPP_NAMESPACE_USE;
 
 using namespace eLibV2::Util;
@@ -74,6 +76,6 @@ XmlParser::XmlParser(std::string filename)
     }
     catch (...)
     {
-        ModuleLogger::print("An error occurred during parsing");
+        ModuleLogger::print(LOG_CLASS_UTIL, "An error occurred during parsing");
     }
 }

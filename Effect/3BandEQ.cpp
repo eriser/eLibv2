@@ -72,7 +72,7 @@ double Fx3BandEQ::processConnection()
 
     if (isConnected(BaseConnection::CONNECTION_INPUT))
         input = connections[BaseConnection::CONNECTION_INPUT]->processConnection();
-    ModuleLogger::print("%s::process %lf", getModuleName().c_str(), input);
+    ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 
     return Process(input);
 }

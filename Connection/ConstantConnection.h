@@ -23,7 +23,7 @@ namespace eLibV2
             @return result of procession
             */
             virtual double processIOs() { return processInputs(); }
-            double processInputs() { ModuleLogger::print("%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
+            double processInputs() { ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
 
         protected:
             const double mValue; ///< internal value used for processing

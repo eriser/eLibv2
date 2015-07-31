@@ -31,4 +31,14 @@
 #define sgn(x) x < 0.0 ? -1.0 : 1.0
 #endif
 
+#define LOG_CLASS_ELIB          0x10000000
+#define LOG_CLASS_ASIO          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_1
+#define LOG_CLASS_CONNECTION    LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_2
+#define LOG_CLASS_DATA          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_3
+#define LOG_CLASS_EFFECT        LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_4
+#define LOG_CLASS_GENERATOR     LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_5
+#define LOG_CLASS_LOADER        LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_6
+#define LOG_CLASS_UTIL          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_7
+#define LOG_CLASS_VST           LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_8
+
 #endif

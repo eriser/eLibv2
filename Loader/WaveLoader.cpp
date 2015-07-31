@@ -34,25 +34,25 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
     wavefile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!wavefile.good())
     {
-        ModuleLogger::print("error opening '%s'", filename.c_str());
+        ModuleLogger::print(LOG_CLASS_LOADER, "error opening '%s'", filename.c_str());
         return WAVE_ERROR_OPEN;
     }
 
     wavefile.read((char*)Wave.Header.Magic, sizeof(BYTE) * sizeof(Wave.Header.Magic));
     if (strncmp((char*)Wave.Header.Magic, WAVE_MAGIC_RIFF, 4))
     {
-        ModuleLogger::print("Error not a valid RIFF-File");
+        ModuleLogger::print(LOG_CLASS_LOADER, "Error not a valid RIFF-File");
         wavefile.close();
         return WAVE_ERROR_NO_RIFF;
     }
 
     wavefile.read((char*)&Wave.Header.Size, sizeof(BYTE) * sizeof(Wave.Header.Size));
-    ModuleLogger::print("filesize: %li", Wave.Header.Size);
+    ModuleLogger::print(LOG_CLASS_LOADER, "filesize: %li", Wave.Header.Size);
 
     wavefile.read((char*)&Wave.Header.RiffType, sizeof(BYTE) * sizeof(Wave.Header.RiffType));
     if (strncmp((char*)Wave.Header.RiffType, WAVE_MAGIC_WAVE, 4))
     {
-        ModuleLogger::print("Error not a valid WAVE-File");
+        ModuleLogger::print(LOG_CLASS_LOADER, "Error not a valid WAVE-File");
         wavefile.close();
         return WAVE_ERROR_NO_WAVE;
     }
@@ -65,23 +65,23 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         // format chunk
         if (strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_FMT, 4) == 0)
         {
-            ModuleLogger::print("fmt-Chunk size: %li", Chunk.ChunkSize);
+            ModuleLogger::print(LOG_CLASS_LOADER, "fmt-Chunk size: %li", Chunk.ChunkSize);
             wavefile.read((char*)&Wave.format.Compression, sizeof(BYTE) * sizeof(Wave.format.Compression));
             wavefile.read((char*)&Wave.format.NumChannels, sizeof(BYTE) * sizeof(Wave.format.NumChannels));
             wavefile.read((char*)&Wave.format.SampleRate, sizeof(BYTE) * sizeof(Wave.format.SampleRate));
             wavefile.read((char*)&Wave.format.BytesPerSec, sizeof(BYTE) * sizeof(Wave.format.BytesPerSec));
             wavefile.read((char*)&Wave.format.BlockAlign, sizeof(BYTE) * sizeof(Wave.format.BlockAlign));
             wavefile.read((char*)&Wave.format.BitsPerSample, sizeof(BYTE) * sizeof(Wave.format.BitsPerSample));
-            ModuleLogger::print("Compression: %i", Wave.format.Compression);
-            ModuleLogger::print("Number of Channels: %i", Wave.format.NumChannels);
-            ModuleLogger::print("Samplerate: %li Hz", Wave.format.SampleRate);
-            ModuleLogger::print("bytes/sec: %li", Wave.format.BytesPerSec);
-            ModuleLogger::print("BlockAlign: %i", Wave.format.BlockAlign);
-            ModuleLogger::print("bits/sample: %i", Wave.format.BitsPerSample);
+            ModuleLogger::print(LOG_CLASS_LOADER, "Compression: %i", Wave.format.Compression);
+            ModuleLogger::print(LOG_CLASS_LOADER, "Number of Channels: %i", Wave.format.NumChannels);
+            ModuleLogger::print(LOG_CLASS_LOADER, "Samplerate: %li Hz", Wave.format.SampleRate);
+            ModuleLogger::print(LOG_CLASS_LOADER, "bytes/sec: %li", Wave.format.BytesPerSec);
+            ModuleLogger::print(LOG_CLASS_LOADER, "BlockAlign: %i", Wave.format.BlockAlign);
+            ModuleLogger::print(LOG_CLASS_LOADER, "bits/sample: %i", Wave.format.BitsPerSample);
             if (Chunk.ChunkSize > 16)
             {
                 wavefile.read((char*)&Wave.format.ExtraFormatLng, sizeof(BYTE) * sizeof(Wave.format.ExtraFormatLng));
-                ModuleLogger::print("Extra Format Length: %i", Wave.format.ExtraFormatLng);
+                ModuleLogger::print(LOG_CLASS_LOADER, "Extra Format Length: %i", Wave.format.ExtraFormatLng);
                 if (Wave.format.ExtraFormatLng)
                 {
                     for (i = 0; i < Wave.format.ExtraFormatLng; i++)
@@ -92,12 +92,12 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         // data chunk
         else if (strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_DATA, 4) == 0)
         {
-            ModuleLogger::print("data-Chunk size: %li", Chunk.ChunkSize);
+            ModuleLogger::print(LOG_CLASS_LOADER, "data-Chunk size: %li", Chunk.ChunkSize);
             TempByteBuffer = (BYTE*)malloc(Chunk.ChunkSize);
 
             NumRemain = Chunk.ChunkSize % MAX_WAVE_BUFFER;
             NumPages = (Chunk.ChunkSize - NumRemain) / MAX_WAVE_BUFFER;
-            ModuleLogger::print("reading %li pages with %li bytes and %li remaining bytes.", NumPages, MAX_WAVE_BUFFER, NumRemain);
+            ModuleLogger::print(LOG_CLASS_LOADER, "reading %li pages with %li bytes and %li remaining bytes.", NumPages, MAX_WAVE_BUFFER, NumRemain);
             for (i = 0; i < NumPages; i++)
             {
                 wavefile.read((char*)buf, sizeof(BYTE) * MAX_WAVE_BUFFER);
@@ -116,17 +116,17 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 if (channelIndex >= MAX_CHANNEL_NUM)
                 {
                     // since all data has been already read just break the processing, if too many channels
-                    ModuleLogger::print("data contains more than %li channels. remaining data ignored.", MAX_CHANNEL_NUM);
+                    ModuleLogger::print(LOG_CLASS_LOADER, "data contains more than %li channels. remaining data ignored.", MAX_CHANNEL_NUM);
                     break;
                 }
 
                 // allocate memory for wavedata (will use 32bit-floats for storage disregarding input format)
-                ModuleLogger::print("allocating %li frames for data of channel %li.", SizeOfData, channelIndex);
+                ModuleLogger::print(LOG_CLASS_LOADER, "allocating %li frames for data of channel %li.", SizeOfData, channelIndex);
                 WaveData[channelIndex] = new float[SizeOfData];
                 int byteAdvance = Wave.format.BlockAlign / Wave.format.NumChannels;
 
                 long byteOffset = channelIndex * byteAdvance;
-                ModuleLogger::print("advancing %li bytes", byteAdvance);
+                ModuleLogger::print(LOG_CLASS_LOADER, "advancing %li bytes", byteAdvance);
 
                 // iterate over samples
                 for (long sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
@@ -180,7 +180,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                             switch (Wave.format.Compression)
                             {
                                 case WAVE_COMPR_PCM:
-                                    ModuleLogger::print("64 bit integer wave?");
+                                    ModuleLogger::print(LOG_CLASS_LOADER, "64 bit integer wave?");
                                     WaveData[channelIndex][sampleIndex] = Int32toFloat32(tempData);;
                                     break;
 
@@ -200,7 +200,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         }
         else
         {
-            ModuleLogger::print("unknown chunk: '%c%c%c%c' size: %li", Chunk.ChunkID[0], Chunk.ChunkID[1], Chunk.ChunkID[2], Chunk.ChunkID[3], Chunk.ChunkSize);
+            ModuleLogger::print(LOG_CLASS_LOADER, "unknown chunk: '%c%c%c%c' size: %li", Chunk.ChunkID[0], Chunk.ChunkID[1], Chunk.ChunkID[2], Chunk.ChunkID[3], Chunk.ChunkSize);
             for (i = 0; i < Chunk.ChunkSize; i++)
             {
                 wavefile.read((char*)buf, 1);

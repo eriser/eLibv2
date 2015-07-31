@@ -3,6 +3,7 @@
 
 #include <Base/BaseName.h>
 #include <Util/Logger.h>
+#include <Util/Defines.h>
 
 #include <map>
 #include <sstream>
@@ -36,7 +37,7 @@ namespace eLibV2
             {
                 double res = 0.0;
 
-                ModuleLogger::print("%s::processIO (inputs: %i)", getModuleName().c_str(), connections.size());
+                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIO (inputs: %i)", getModuleName().c_str(), connections.size());
                 for (connectionIterator it = connections.begin(); it != connections.end(); it++)
                     res = it->second->processConnection();
                 return res;
@@ -54,7 +55,7 @@ namespace eLibV2
                 for (int i = 1; i < depth; i++)
                     oss << ' ';
                 oss << getModuleName().c_str() << " " << (int)getNumberOfInputs() << "/" << (int)getNumberOfOutputs();
-                ModuleLogger::print(oss.str().c_str());
+                ModuleLogger::print(LOG_CLASS_CONNECTION, oss.str().c_str());
 
                 if (connections.size() > 0)
                 {

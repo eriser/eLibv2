@@ -69,7 +69,7 @@ bool AsioDevice::OpenDevice(int driverIndex)
         // initialize the driver
         if (ASIOInit(&ms_asioDriverInfo.driverInfo) == ASE_OK)
         {
-            ModuleLogger::print(
+            ModuleLogger::print(LOG_CLASS_ASIO,
                 "asioVersion:   %d\n"
                 "driverVersion: %d\n"
                 "Name:          %s\n"
@@ -92,19 +92,19 @@ bool AsioDevice::OpenDevice(int driverIndex)
                         PluginHost::SetBufferFillsize(ms_asioDriverInfo.preferredSize);
                     }
                     else
-                        ModuleLogger::print("ASIOStart failed");
+                        ModuleLogger::print(LOG_CLASS_ASIO, "ASIOStart failed");
                 }
                 else
-                    ModuleLogger::print("CreateBuffers failed");
+                    ModuleLogger::print(LOG_CLASS_ASIO, "CreateBuffers failed");
             }
             else
-                ModuleLogger::print("Init failed");
+                ModuleLogger::print(LOG_CLASS_ASIO, "Init failed");
         }
         else
-            ModuleLogger::print("ASIOInit failed");
+            ModuleLogger::print(LOG_CLASS_ASIO, "ASIOInit failed");
     }
     else
-        ModuleLogger::print("LoadDriver failed");
+        ModuleLogger::print(LOG_CLASS_ASIO, "LoadDriver failed");
     return bRes;
 }
 
