@@ -14,8 +14,6 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#define kNumProcessCycles 50
-
 using namespace eLibV2::Util;
 
 namespace eLibV2
@@ -46,8 +44,30 @@ namespace eLibV2
         class PluginInterface
         {
         public:
-            PluginInterface();
-            ~PluginInterface();
+			PluginInterface::PluginInterface()
+				: m_pModule(NULL),
+				m_pEffect(NULL),
+				m_pHostCallback(NULL),
+				m_fSamplerate(44100.0),
+				m_uiBlocksize(512),
+				m_uiMidiChannel(0),
+				m_uiAudioChannel(0),
+				m_ePluginType(PluginType::PLUGIN_TYPE_UNSET),
+				m_bCanReceiveMidi(false),
+				m_bHasEditor(false),
+				m_bCanReplacing(false),
+				m_uiVstVersion(0),
+				m_bPluginRunning(false),
+				m_uiNumInputs(0),
+				m_uiNumOutputs(0),
+				m_ppInputs(NULL),
+				m_ppOutputs(NULL)
+			{
+			}
+
+			PluginInterface::~PluginInterface()
+			{
+			}
 
             /**
             Loads the plugin and connects to the specified callback-function
@@ -81,16 +101,10 @@ namespace eLibV2
             bool CanReceiveMidi() { return m_bCanReceiveMidi; }
 
             /**
-            Information whether loaded plugin supports processing in double precision
-            @return true if plugin has method processDoubleReplacing
-            */
-            bool CanDoubleReplacing() { return ((m_pEffect->flags & effFlagsCanDoubleReplacing) != 0); }
-
-            /**
             Information whether loaded plugin has own editor
             @return true if plugin has editor
             */
-            bool HasEditor() { return ((m_pEffect->flags & effFlagsHasEditor) != 0); }
+            bool HasEditor() { return m_bHasEditor; }
 
             /**
             Returns the MIDI channel the plugin receives data
@@ -169,8 +183,23 @@ namespace eLibV2
             */
             void ProcessReplacing(VstInt32 sampleFrames);
 
+			/**
+			Return number of input channels the plugin is using
+			@return number of input channels
+			*/
             VstInt32 GetNumberOfInputs() { return m_uiNumInputs; }
-            VstInt32 GetNumberOfOutputs() { return m_uiNumOutputs; }
+
+			/**
+			Return number of output channels the plugin is using
+			@return number of output channels
+			*/
+			VstInt32 GetNumberOfOutputs() { return m_uiNumOutputs; }
+
+			/**
+			Return VST-version the plugin is implementing
+			@return VST-version (e.g. 2400 for 2.4)
+			*/
+			VstInt16 GetVstVersion() { return m_uiVstVersion; }
 
             /**
             Sync contents of managed buffer with input to use in processReplacing
@@ -201,7 +230,7 @@ namespace eLibV2
             /**
             Return the internal main-function of the plugin. Either VSTPlugMain or main
             */
-            PluginEntryProc GetMainEntry();
+//            PluginEntryProc GetMainEntry();
 
             /**
             This function calls the main entry function of the plugin
@@ -235,6 +264,10 @@ namespace eLibV2
             unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
             PluginType          m_ePluginType;      ///< Type of Plugin
             bool                m_bCanReceiveMidi;  ///< Plugin can receive MIDI events
+			bool				m_bHasEditor;		///< Plugin has editor available
+			bool				m_bCanReplacing;	///< Plugin has processReplacing
+			unsigned int        m_uiVstVersion;		///< VST-Version of plugin
+			bool				m_bPluginRunning;	///< indicates if the plugin is currently running
 
             float**             m_ppInputs;         ///< Allocated memory for the inputs of the plugin
             float**             m_ppOutputs;        ///< Allocated memory for the outputs of the plugin

@@ -41,7 +41,6 @@ bool PluginHost::OpenPlugin(std::string fileName)
         plugin->PrintPrograms();
         plugin->PrintParameters();
         plugin->PrintCapabilities();
-        plugin->ProcessReplacing();
 #endif
 
         // gather all plugins for all midi channels
@@ -67,7 +66,7 @@ void PluginHost::ClosePlugin(std::string pluginID)
     }
 }
 
-void PluginHost::CloseAll()
+void PluginHost::UnloadAll()
 {
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
         (*it).second->Unload();
@@ -104,6 +103,11 @@ void PluginHost::StopTimer()
     ms_liElapsedMicroseconds.QuadPart /= m_liFrequency.QuadPart;
 }
 
+VstInt32 eLibV2::Host::PluginHost::CheckCanDo(char * canDo)
+{
+	return VstInt32();
+}
+
 VstInt32 CanHostDo(char *canDo)
 {
     static const char* hostCanDos[] =
@@ -120,12 +124,12 @@ VstInt32 CanHostDo(char *canDo)
         "offline",
         "supplyIdle",
         "supportShell",
-        "openFileSelector",
+//        "openFileSelector",
         "editFile",
-        "closeFileSelector"
+//        "closeFileSelector"
     };
 
-    VstInt32 res = -1;
+    VstInt32 res = 0;
     for (VstInt32 canDoIndex = 0; canDoIndex < sizeof(hostCanDos) / sizeof(hostCanDos[0]); canDoIndex++)
     {
         if (strcmp(canDo, hostCanDos[canDoIndex]) == 0)
@@ -345,12 +349,14 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     case audioMasterGetVendorString:
 //        std::cout << "HOST> '" << pluginID << "': " << "vendor string requested" << std::endl;
         strncpy((char*)ptr, "e:fope media", kVstMaxVendorStrLen);
+		result = 1;
         break;
 
     case audioMasterGetProductString:
 //        std::cout << "HOST> '" << pluginID << "': " << "product string requested" << std::endl;
         strncpy((char*)ptr, "vst testhost", kVstMaxProductStrLen);
-        break;
+		result = 1;
+		break;
 
     case audioMasterGetVendorVersion:
 //        std::cout << "HOST> '" << pluginID << "': " << "product version requested" << std::endl;
@@ -432,6 +438,7 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                     framesToProcess = kBlockSize;
 
                 // tell all plugins to process their inputs/outputs
+				// this will be done in seperate threads for each plugin
                 for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
                 {
                     PluginInterface* plugin = processThreads[currentThreadIndex].plugin;

@@ -39,7 +39,7 @@ namespace eLibV2
 
             // Plugin Management
             bool OpenPlugin(std::string fileName);
-            void CloseAll();
+            void UnloadAll();
             void StartAll();
             void StopAll();
 
@@ -84,7 +84,7 @@ namespace eLibV2
 #endif
 
         public:
-            typedef struct ProcessThreadParameters
+            struct ProcessThreadParameters
             {
                 ManagedBuffer* inputBuffer;
                 ManagedBuffer* outputBuffer;
