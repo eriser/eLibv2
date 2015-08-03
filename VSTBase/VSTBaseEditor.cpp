@@ -38,7 +38,7 @@ void VSTBaseEditor::setupEditor(const EditorProperties properties)
 //-----------------------------------------------------------------------------
 bool VSTBaseEditor::open(void *ptr)
 {
-	ModuleLogger::print(LOG_CLASS_VST, "open editor");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "open editor");
 
 #if VSTGUI_VERSION_MAJOR == 3 && VSTGUI_VERSION_MINOR == 0
     // !!! always call this !!!
@@ -73,7 +73,7 @@ bool VSTBaseEditor::open(void *ptr)
 
 void VSTBaseEditor::close()
 {
-	ModuleLogger::print(LOG_CLASS_VST, "close editor");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "close editor");
 
     // clear all editor pages
     mEditorPage.clear();
@@ -91,7 +91,7 @@ void VSTBaseEditor::close()
 
 void VSTBaseEditor::idle()
 {
-	ModuleLogger::print(LOG_CLASS_VST, "idle");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "idle");
 
     AEffGUIEditor::idle();
 }

@@ -29,14 +29,14 @@ PluginHost::~PluginHost()
 
 bool PluginHost::OpenPlugin(std::string fileName)
 {
-    std::cout << "HOST> Load VST plugin '" << fileName << "'" << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "HOST> Load VST plugin '%s'", fileName.c_str());
     PluginInterface *plugin = new PluginInterface();
 
     if (plugin->Load(fileName, PluginHost::HostCallback))
     {
         m_LoadedPlugins[plugin->GetPluginID()] = plugin;
 
-#if DEBUG_OUTPUT_PLUGIN_PROPERTIES
+#if OUTPUT_PLUGIN_PROPERTIES == 1
         plugin->PrintProperties();
         plugin->PrintPrograms();
         plugin->PrintParameters();
@@ -52,7 +52,7 @@ bool PluginHost::OpenPlugin(std::string fileName)
         return true;
     }
     else
-        std::cout << "Failed to load VST Plugin library \'" << fileName << "\'!" << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Failed to load VST Plugin library '%s'!", fileName.c_str());
     return false;
 }
 
@@ -105,7 +105,7 @@ void PluginHost::StopTimer()
 
 VstInt32 eLibV2::Host::PluginHost::CheckCanDo(char * canDo)
 {
-	return VstInt32();
+    return VstInt32();
 }
 
 VstInt32 CanHostDo(char *canDo)
@@ -175,10 +175,13 @@ void PluginHost::InsertMidiEvent(int channel, int status, int data1, int data2)
 VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt)
 {
     VstIntPtr result = 0;
+    std::stringstream ss;
 
     char pluginID[5] = "????";
     if (effect)
         PluginInterface::GetPluginStringFromLong(effect->uniqueID, pluginID);
+
+    ss << "HOST> '" << pluginID << "': ";
 
 #if 0
     // Filter idle calls...
@@ -265,7 +268,10 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         if (value & kVstBarsValid)
         {
             if (!(value & kVstPpqPosValid))
-                std::cout << "Plugin requested position in bars, but not PPQ" << std::endl;
+            {
+                ss << "Plugin requested position in bars, but not PPQ" << std::endl;
+                ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+            }
 
             // TODO: Move calculations to AudioClock
             double currentBarPos = floor(_VstTimeInfo.ppqPos / GetTimeSignatureBeatsPerMeasure());
@@ -289,44 +295,62 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         }
 
         if (value & kVstSmpteValid)
-            std::cout << "HOST> '" << pluginID << "': " << "Current time in SMPTE format" << std::endl;
+        {
+            ss << "Current time in SMPTE format" << std::endl;
+            ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+        }
 
         if (value & kVstClockValid)
-            std::cout << "HOST> '" << pluginID << "': " << "Sample frames until next clock" << std::endl;
+        {
+            ss << "Sample frames until next clock" << std::endl;
+            ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+        }
 
         result = (VstIntPtr)&_VstTimeInfo;
         break;
 
     case audioMasterProcessEvents:
-        std::cout << "HOST> '" << pluginID << "': " << "events from plugin received " << std::hex << ptr << std::dec << std::endl;
+        ss << "events from plugin received " << std::hex << ptr << std::dec << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
         break;
 
     case audioMasterIOChanged:
         // see AudioEffectX::ioChanged()
-        std::cout << "HOST> '" << pluginID << "': " << "number of inputs/outputs changing not supported" << std::endl;
+        ss << "number of inputs/outputs changing not supported" << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+
+#if 0   // maybe not cool
         if (effect)
         {
             effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0);
             effect->dispatcher(effect, effStopProcess, 0, 0, NULL, 0.0f);
-            std::cout << "HOST> '" << pluginID << "': number of inputs/outputs after change: " << effect->numInputs << "/" << effect->numOutputs << std::endl;
+            ss << "HOST> '" << pluginID << "': number of inputs/outputs after change: " << effect->numInputs << "/" << effect->numOutputs << std::endl;
+            ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
             effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
             effect->dispatcher(effect, effStartProcess, 0, 0, NULL, 0.0f);
         }
+#endif
         result = 0;
         break;
 
     case audioMasterSizeWindow:
-        std::cout << "HOST> '" << pluginID << "': " << "editor size changed. width: " << index << " height: " << value << std::endl;
+        ss << "editor size changed. width: " << index << " height: " << value << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+
         result = 0;
         break;
 
     case audioMasterGetSampleRate:
-        std::cout << "HOST> '" << pluginID << "': " << "samplerate requested." << std::endl;
+        ss << "samplerate requested." << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+
         result = (int)GetSampleRate();
         break;
 
     case audioMasterGetBlockSize:
-        std::cout << "HOST> '" << pluginID << "': " << "blocksize requested." << std::endl;
+        ss << "blocksize requested." << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+
         result = (VstIntPtr)GetBlocksize();
         break;
 
@@ -349,14 +373,14 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
     case audioMasterGetVendorString:
 //        std::cout << "HOST> '" << pluginID << "': " << "vendor string requested" << std::endl;
         strncpy((char*)ptr, "e:fope media", kVstMaxVendorStrLen);
-		result = 1;
+        result = 1;
         break;
 
     case audioMasterGetProductString:
 //        std::cout << "HOST> '" << pluginID << "': " << "product string requested" << std::endl;
         strncpy((char*)ptr, "vst testhost", kVstMaxProductStrLen);
-		result = 1;
-		break;
+        result = 1;
+        break;
 
     case audioMasterGetVendorVersion:
 //        std::cout << "HOST> '" << pluginID << "': " << "product version requested" << std::endl;
@@ -383,28 +407,32 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterBeginEdit:
-        std::cout << "HOST> '" << pluginID << "': " << "editing parameter " << index << std::endl;
+        ss << "editing parameter " << index << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
         break;
 
     case audioMasterEndEdit:
-        std::cout << "HOST> '" << pluginID << "': " << "ended editing parameter " << index << std::endl;
+        ss << "ended editing parameter " << index << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
         break;
 
     case audioMasterOpenFileSelector:
-        std::cout << "HOST> '" << pluginID << "': " << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        ss << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
         result = 0;
         break;
 
     case audioMasterCloseFileSelector:
-        std::cout << "HOST> '" << pluginID << "': " << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        ss << "ptr: " << std::hex << ptr << std::dec << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
         result = 0;
         break;
 
     default:
-        std::cout << "HOST> '" << pluginID << "': " << "opcode received: " << opcode << " index: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
+        ss << "opcode received: " << opcode << " index: " << index << " value: " << value << " ptr: " << std::hex << ptr << std::dec << " opt: " << opt << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
         break;
     }
-
     return result;
 }
 
@@ -438,7 +466,7 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                     framesToProcess = kBlockSize;
 
                 // tell all plugins to process their inputs/outputs
-				// this will be done in seperate threads for each plugin
+                // this will be done in seperate threads for each plugin
                 for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
                 {
                     PluginInterface* plugin = processThreads[currentThreadIndex].plugin;
@@ -455,6 +483,6 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
             EventManager::ResetEvent(EventManager::EVENT_DATA_WRITTEN);
         }
     }
-    std::cout << "processing stopped" << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "processing stopped");
     return 0;
 }

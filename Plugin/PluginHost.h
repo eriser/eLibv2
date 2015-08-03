@@ -4,6 +4,7 @@
 #include "aeffectx.h"
 
 #include "PluginInterface.h"
+#include <Util/Defines.h>
 #include <Util/ManagedBuffer.h>
 #include <Util/Threads/EventManager.h>
 #include <MIDI/MidiEvent.h>
@@ -16,6 +17,8 @@
 
 using namespace eLibV2::Util;
 using namespace eLibV2::MIDI;
+
+#define OUTPUT_PLUGIN_PROPERTIES 0
 
 namespace eLibV2
 {

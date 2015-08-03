@@ -6,6 +6,7 @@
 #include <audioeffectx.h>
 
 #include <Connection/InputConnection.h>
+#include <Util/Defines.h>
 #include <Util/Logger.h>
 #include <MIDI/MidiEventHandler.h>
 
@@ -78,24 +79,24 @@ namespace eLibV2
                 virtual VstInt32 getNumMidiOutputChannels();
                 virtual VstInt32 canDo(char* text);
 
-				virtual VstInt32 startProcess() {
-					ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::startProcess");
-					return 0;
-				}
-				virtual VstInt32 stopProcess() {
-					ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::stopProcess");
-					return 0;
-				}
+                virtual VstInt32 startProcess() {
+                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::startProcess");
+                    return 0;
+                }
+                virtual VstInt32 stopProcess() {
+                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::stopProcess");
+                    return 0;
+                }
 
-				virtual void open() {
-					ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::open");
-				}
-				virtual void close() {
-					ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::close");
-				}
-				virtual void suspend() {
-					ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::suspend");
-				}
+                virtual void open() {
+                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::open");
+                }
+                virtual void close() {
+                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::close");
+                }
+                virtual void suspend() {
+                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::suspend");
+                }
 
                 // audio processing
                 virtual void processReplacing(float** inputs, float** outputs, VstInt32 sampleFrames);
@@ -112,8 +113,8 @@ namespace eLibV2
                 virtual void setParameterInvoked(VstInt32 index, float value) = 0;
 
                 // 
-                virtual bool beginEdit(VstInt32 index) { ModuleLogger::print(LOG_CLASS_VST, "beginEdit()"); return true; }
-                virtual bool endEdit(VstInt32 index) { ModuleLogger::print(LOG_CLASS_VST, "endEdit()"); return true; }
+                virtual bool beginEdit(VstInt32 index) { ModuleLogger::print(LOG_CLASS_VSTBASE, "beginEdit()"); return true; }
+                virtual bool endEdit(VstInt32 index) { ModuleLogger::print(LOG_CLASS_VSTBASE, "endEdit()"); return true; }
 
             private:
                 // properties for plugin

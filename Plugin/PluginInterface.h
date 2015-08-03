@@ -3,9 +3,11 @@
 
 #include "aeffectx.h"
 
+#include <Util/Defines.h>
 #include <Util/ManagedBuffer.h>
 
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #if WIN32
@@ -44,30 +46,30 @@ namespace eLibV2
         class PluginInterface
         {
         public:
-			PluginInterface::PluginInterface()
-				: m_pModule(NULL),
-				m_pEffect(NULL),
-				m_pHostCallback(NULL),
-				m_fSamplerate(44100.0),
-				m_uiBlocksize(512),
-				m_uiMidiChannel(0),
-				m_uiAudioChannel(0),
-				m_ePluginType(PluginType::PLUGIN_TYPE_UNSET),
-				m_bCanReceiveMidi(false),
-				m_bHasEditor(false),
-				m_bCanReplacing(false),
-				m_uiVstVersion(0),
-				m_bPluginRunning(false),
-				m_uiNumInputs(0),
-				m_uiNumOutputs(0),
-				m_ppInputs(NULL),
-				m_ppOutputs(NULL)
-			{
-			}
+            PluginInterface::PluginInterface()
+                : m_pModule(NULL),
+                m_pEffect(NULL),
+                m_pHostCallback(NULL),
+                m_fSamplerate(44100.0),
+                m_uiBlocksize(512),
+                m_uiMidiChannel(0),
+                m_uiAudioChannel(0),
+                m_ePluginType(PluginType::PLUGIN_TYPE_UNSET),
+                m_bCanReceiveMidi(false),
+                m_bHasEditor(false),
+                m_bCanReplacing(false),
+                m_uiVstVersion(0),
+                m_bPluginRunning(false),
+                m_uiNumInputs(0),
+                m_uiNumOutputs(0),
+                m_ppInputs(NULL),
+                m_ppOutputs(NULL)
+            {
+            }
 
-			PluginInterface::~PluginInterface()
-			{
-			}
+            PluginInterface::~PluginInterface()
+            {
+            }
 
             /**
             Loads the plugin and connects to the specified callback-function
@@ -183,23 +185,23 @@ namespace eLibV2
             */
             void ProcessReplacing(VstInt32 sampleFrames);
 
-			/**
-			Return number of input channels the plugin is using
-			@return number of input channels
-			*/
+            /**
+            Return number of input channels the plugin is using
+            @return number of input channels
+            */
             VstInt32 GetNumberOfInputs() { return m_uiNumInputs; }
 
-			/**
-			Return number of output channels the plugin is using
-			@return number of output channels
-			*/
-			VstInt32 GetNumberOfOutputs() { return m_uiNumOutputs; }
+            /**
+            Return number of output channels the plugin is using
+            @return number of output channels
+            */
+            VstInt32 GetNumberOfOutputs() { return m_uiNumOutputs; }
 
-			/**
-			Return VST-version the plugin is implementing
-			@return VST-version (e.g. 2400 for 2.4)
-			*/
-			VstInt16 GetVstVersion() { return m_uiVstVersion; }
+            /**
+            Return VST-version the plugin is implementing
+            @return VST-version (e.g. 2400 for 2.4)
+            */
+            VstInt16 GetVstVersion() { return m_uiVstVersion; }
 
             /**
             Sync contents of managed buffer with input to use in processReplacing
@@ -218,12 +220,13 @@ namespace eLibV2
             /**
             Convert the 32-bit-integer used for the plugin-ID to a character array
             @param id the plugin-ID as a 32-bit-integer
-            @param pluginID character array to store readable form of plugin-ID. Must have at least 4 characters of space
+            @param pluginID character array to store readable form of plugin-ID. Must have at least 5 characters of space (including '\0')
             */
             static inline void GetPluginStringFromLong(VstInt32 id, char* pluginID)
             {
                 for (int i = 0; i < 4; i++)
                     pluginID[i] = (char)(id >> ((3 - i) * 8) & 0xff);
+                pluginID[4] = '\0';
             }
 
         private:
@@ -264,10 +267,10 @@ namespace eLibV2
             unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
             PluginType          m_ePluginType;      ///< Type of Plugin
             bool                m_bCanReceiveMidi;  ///< Plugin can receive MIDI events
-			bool				m_bHasEditor;		///< Plugin has editor available
-			bool				m_bCanReplacing;	///< Plugin has processReplacing
-			unsigned int        m_uiVstVersion;		///< VST-Version of plugin
-			bool				m_bPluginRunning;	///< indicates if the plugin is currently running
+            bool                m_bHasEditor;        ///< Plugin has editor available
+            bool                m_bCanReplacing;    ///< Plugin has processReplacing
+            unsigned int        m_uiVstVersion;        ///< VST-Version of plugin
+            bool                m_bPluginRunning;    ///< indicates if the plugin is currently running
 
             float**             m_ppInputs;         ///< Allocated memory for the inputs of the plugin
             float**             m_ppOutputs;        ///< Allocated memory for the outputs of the plugin

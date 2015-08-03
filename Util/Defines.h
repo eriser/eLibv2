@@ -38,7 +38,9 @@
 #define LOG_CLASS_EFFECT        LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_4
 #define LOG_CLASS_GENERATOR     LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_5
 #define LOG_CLASS_LOADER        LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_6
-#define LOG_CLASS_UTIL          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_7
-#define LOG_CLASS_VST           LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_8
+#define LOG_CLASS_MIDI          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_7
+#define LOG_CLASS_PLUGIN        LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_8
+#define LOG_CLASS_UTIL          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_9
+#define LOG_CLASS_VSTBASE       LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_10
 
 #endif

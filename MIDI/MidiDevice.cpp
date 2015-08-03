@@ -15,18 +15,21 @@ MidiDevice::MidiDevice(const PluginHost* hostThread)
 
 void MidiDevice::EnumerateMidiInDevices()
 {
+    std::stringstream ss;
+
     m_uiNumMidiInDevices = midiInGetNumDevs();
-    std::cout << "midiIn devices: " << m_uiNumMidiInDevices << std::endl;
+    ss << "midiIn devices: " << m_uiNumMidiInDevices << std::endl;
 
     for (int deviceIndex = 0; deviceIndex < m_uiNumMidiInDevices; deviceIndex++)
     {
         MIDIINCAPS MidiInCaps;
         MMRESULT mmr = midiInGetDevCaps(deviceIndex, &MidiInCaps, sizeof(MIDIINCAPS));
         if (mmr != MMSYSERR_NOERROR)
-            std::cout << "midiInGetDevCaps failed: mmr = " << std::hex << mmr << std::dec << std::endl;
+            ss << "midiInGetDevCaps failed: mmr = " << std::hex << mmr << std::dec << std::endl;
         else
             m_DeviceNames.push_back(MidiInCaps.szPname);
     }
+    ModuleLogger::print(LOG_CLASS_MIDI, ss.str().c_str());
 }
 
 std::string MidiDevice::GetDeviceName(unsigned int deviceIndex)
@@ -39,12 +42,12 @@ std::string MidiDevice::GetDeviceName(unsigned int deviceIndex)
 
 bool MidiDevice::OpenDevice(int deviceId)
 {
-    std::cout << "opening " << m_DeviceNames[deviceId].c_str() << std::endl;
+    ModuleLogger::print(LOG_CLASS_MIDI, "opening '%s'", m_DeviceNames[deviceId].c_str());
     MMRESULT mmr = midiInOpen(&m_OpenedMidiIn, deviceId, (DWORD_PTR)MidiDevice::CallbackFunction, (DWORD_PTR)m_pHostThread, CALLBACK_FUNCTION | MIDI_IO_STATUS);
     if (mmr != MMSYSERR_NOERROR)
         return false;
 
-    std::cout << "starting recording" << std::endl;
+    ModuleLogger::print(LOG_CLASS_MIDI, "starting recording");
     mmr = midiInStart(m_OpenedMidiIn);
     if (mmr != MMSYSERR_NOERROR)
         return false;
@@ -61,16 +64,17 @@ void MidiDevice::CloseDevice()
 
 void CALLBACK MidiDevice::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
+    std::stringstream ss;
     eLibV2::Host::PluginHost *host = (eLibV2::Host::PluginHost*)dwInstance;
 
     switch (wMsg)
     {
     case MIM_OPEN:
-        std::cout << "MIM_OPEN received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
+        ss << "MIM_OPEN received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
         break;
 
     case MIM_CLOSE:
-        std::cout << "MIM_CLOSE received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
+        ss << "MIM_CLOSE received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
         break;
 
     case MIM_DATA:
@@ -80,30 +84,31 @@ void CALLBACK MidiDevice::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR
         int midiData1 = HIBYTE(LOWORD(dwParam1));
         int midiData2 = LOBYTE(HIWORD(dwParam1));
 
-        std::cout << "MIM_DATA received channel: " << midiChannel << " status: " << midiStatus << " data1: " << midiData1 << " data2: " << midiData2 << std::endl;
+        ss << "MIM_DATA received channel: " << midiChannel << " status: " << midiStatus << " data1: " << midiData1 << " data2: " << midiData2;
         if (midiStatus == 0x90)
         {
-            std::cout << "midi message note: " << midiData1 << " velocity: " << midiData2 << std::endl;
+            ss << "midi message note: " << midiData1 << " velocity: " << midiData2;
             host->InsertMidiEvent(midiChannel, midiStatus, midiData1, midiData2);
         }
         else if (midiStatus == 0xb0)
-            std::cout << "control change event";
+            ss << "control change event";
         else
-            std::cout << "unknown midi event " << midiStatus;
-        std::cout << std::endl;
+            ss << "unknown midi event " << midiStatus;
+        ss << std::endl;
         break;
     }
 
     case MIM_LONGDATA:
-        std::cout << "MIM_LONGDATA received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
+        ss << "MIM_LONGDATA received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
         break;
 
     case MIM_MOREDATA:
-        std::cout << "MIM_MOREDATA received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
+        ss << "MIM_MOREDATA received p1: " << dwParam1 << " p2: " << dwParam2 << std::endl;
         break;
     }
+    ModuleLogger::print(LOG_CLASS_MIDI, ss.str().c_str());
 }
 
 #else
-#error "MidiDevice implemented only on Windows"
+#error "MidiDevice currently implemented only on Windows"
 #endif

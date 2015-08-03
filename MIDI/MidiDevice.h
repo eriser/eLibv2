@@ -6,8 +6,10 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
+#include <Util/Defines.h>
 #include <Plugin/PluginHost.h>
 
 namespace eLibV2

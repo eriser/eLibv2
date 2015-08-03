@@ -28,15 +28,15 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
             Setup();
             return true;
         }
-		// in case of an error free the library
-		Unload();
-	}
+        // in case of an error free the library
+        Unload();
+    }
     return false;
 }
 
 void PluginInterface::Unload()
 {
-    std::cout << "Plugin> " << m_PluginID << " Close requested..." << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...", m_PluginID.c_str());
     if (m_pEffect)
     {
         m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
@@ -62,7 +62,7 @@ bool PluginInterface::CallPluginEntry()
 {
     PluginEntryProc mainProc = NULL;
 
-    std::cout << "Plugin> Searching for entry function..." << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Searching for entry function...");
 #if WIN32
     mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "VSTPluginMain");
     if (!mainProc)
@@ -77,37 +77,37 @@ bool PluginInterface::CallPluginEntry()
     {
         if (mainProc)
         {
-            std::cout << "Plugin> Creating effect instance..." << std::endl;
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Creating effect instance...");
             m_pEffect = mainProc(m_pHostCallback);
 
             if (m_pEffect)
                 return true;
             else
-                std::cout << "Plugin> Failed to create effect instance!" << std::endl;
+                ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Failed to create effect instance!");
         }
         else
-            std::cout << "Plugin> " << m_FileName << ": VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'." << std::endl;
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'.", m_FileName);
     }
     catch (std::bad_alloc)
     {
-        std::cout << "MEMORY ERROR: " << m_FileName << ": std::bad_alloc occured during plugin initialization" << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: MEMORY ERROR: std::bad_alloc occured during plugin initialization", m_FileName);
     }
-	catch (...)
-	{
-		std::cout << "Exception: " << m_FileName << ": " << std::endl;
-	}
+    catch (...)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Exception: %s: ", m_FileName);
+    }
     return false;
 }
 
 void PluginInterface::Setup()
 {
-	VstIntPtr res;
-    std::cout << "Plugin> Setting up plugin..." << std::endl;
-	res = m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
-	res = m_pEffect->dispatcher(m_pEffect, effSetBlockSize, 0, m_uiBlocksize, NULL, 0.0f);
-	res = m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
-	res = m_pEffect->dispatcher(m_pEffect, effOpen, 0, 0, NULL, 0.0f);
-	m_uiVstVersion = (unsigned int)m_pEffect->dispatcher(m_pEffect, effGetVstVersion, 0, 0, NULL, 0.0f);
+    VstIntPtr res;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Setting up plugin...");
+    res = m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
+    res = m_pEffect->dispatcher(m_pEffect, effSetBlockSize, 0, m_uiBlocksize, NULL, 0.0f);
+    res = m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
+    res = m_pEffect->dispatcher(m_pEffect, effOpen, 0, 0, NULL, 0.0f);
+    m_uiVstVersion = (unsigned int)m_pEffect->dispatcher(m_pEffect, effGetVstVersion, 0, 0, NULL, 0.0f);
 
     // get plugin id
     char pluginID[5] = { 0 };
@@ -116,26 +116,26 @@ void PluginInterface::Setup()
 
     if (m_pEffect->flags & effFlagsIsSynth)
     {
-        std::cout << "Plugin> This is an instrument plugin..." << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is an instrument plugin...");
         m_ePluginType = PluginType::PLUGIN_TYPE_INSTRUMENT;
     }
     else
     {
-        std::cout << "Plugin> This is an effect plugin..." << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is an effect plugin...");
         m_ePluginType = PluginType::PLUGIN_TYPE_EFFECT;
     }
 
     if (m_pEffect->dispatcher(m_pEffect, effGetPlugCategory, 0, 0, NULL, 0.0f) == kPlugCategShell)
     {
-        std::cout << "Plugin> This is a shell plugin..." << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is a shell plugin...");
         m_ePluginType = PluginType::PLUGIN_TYPE_SHELL;
     }
 
-	if (m_pEffect->flags & effFlagsHasEditor)
-		m_bHasEditor = true;
+    if (m_pEffect->flags & effFlagsHasEditor)
+        m_bHasEditor = true;
 
-	if (m_pEffect->flags & effFlagsCanReplacing)
-		m_bCanReplacing = true;
+    if (m_pEffect->flags & effFlagsCanReplacing)
+        m_bCanReplacing = true;
 
     const char *canDo = "receiveVstMidiEvent";
     if ((VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDo, 0.0f) == 1)
@@ -175,89 +175,89 @@ void PluginInterface::FreeProcessingMemory()
 {
     if (m_uiNumInputs > 0)
     {
-		if (m_ppInputs)
-		{
-			for (VstInt32 i = 0; i < m_uiNumInputs; i++)
-				delete[] m_ppInputs[i];
-			delete[] m_ppInputs;
-			m_ppInputs = NULL;
-		}
+        if (m_ppInputs)
+        {
+            for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+                delete[] m_ppInputs[i];
+            delete[] m_ppInputs;
+            m_ppInputs = NULL;
+        }
     }
 
     if (m_uiNumOutputs > 0)
     {
-		if (m_ppOutputs)
-		{
-			for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
-				delete[] m_ppOutputs[i];
-			delete[] m_ppOutputs;
-			m_ppOutputs = NULL;
-		}
+        if (m_ppOutputs)
+        {
+            for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
+                delete[] m_ppOutputs[i];
+            delete[] m_ppOutputs;
+            m_ppOutputs = NULL;
+        }
     }
 }
 
 void PluginInterface::Start()
 {
-	try
-	{
-		std::cout << "Plugin> " << m_PluginID << " Start requested..." << std::endl;
-		// call resume
-		m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
-		//    m_pEffect->dispatcher(m_pEffect, effStartProcess, 0, 0, NULL, 0.0f);
-		m_bPluginRunning = true;
-	}
-	catch (...)
-	{
-		std::cout << "exception in Start()" << std::endl;
-	}
+    try
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...", m_PluginID.c_str());
+        // call resume
+        m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
+        //    m_pEffect->dispatcher(m_pEffect, effStartProcess, 0, 0, NULL, 0.0f);
+        m_bPluginRunning = true;
+    }
+    catch (...)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start()");
+    }
 }
 
 void PluginInterface::Stop()
 {
-	try
-	{
-		m_bPluginRunning = false;
-		// call suspend
-		VstIntPtr res = m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
-		//    m_pEffect->dispatcher(m_pEffect, effStopProcess, 0, 0, NULL, 0.0f);
-		std::cout << "Plugin> " << m_PluginID << " Stop requested... (" << (int)res << ")" << std::endl;
-	}
-	catch (...)
-	{
-		std::cout << "exception in Stop()" << std::endl;
-	}
+    try
+    {
+        m_bPluginRunning = false;
+        // call suspend
+        m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
+        //    m_pEffect->dispatcher(m_pEffect, effStopProcess, 0, 0, NULL, 0.0f);
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested... ", m_PluginID.c_str());
+    }
+    catch (...)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop()");
+    }
 }
 
 void PluginInterface::OpenEditor(void* window)
 {
-	if (m_bHasEditor)
-	{
-		std::cout << "Plugin> " << m_PluginID << " Editor Open requested..." << std::endl;
-		m_pEffect->dispatcher(m_pEffect, effEditOpen, 0, 0, window, 0);
-	}
+    if (m_bHasEditor)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...", m_PluginID.c_str());
+        m_pEffect->dispatcher(m_pEffect, effEditOpen, 0, 0, window, 0);
+    }
 }
 
 void PluginInterface::CloseEditor()
 {
-	if (m_bHasEditor)
-	{
-		std::cout << "Plugin> " << m_PluginID << " Editor Close requested..." << std::endl;
-		m_pEffect->dispatcher(m_pEffect, effEditClose, 0, 0, NULL, 0);
-	}
+    if (m_bHasEditor)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...", m_PluginID.c_str());
+        m_pEffect->dispatcher(m_pEffect, effEditClose, 0, 0, NULL, 0);
+    }
 }
 
 void PluginInterface::IdleEditor()
 {
-	if (m_bHasEditor)
-		m_pEffect->dispatcher(m_pEffect, effEditIdle, 0, 0, NULL, 0.0f);
+    if (m_bHasEditor)
+        m_pEffect->dispatcher(m_pEffect, effEditIdle, 0, 0, NULL, 0.0f);
 }
 
 ERect* PluginInterface::GetEditorRect()
 {
-	ERect* eRect = NULL;
-	if (m_bHasEditor)
-		m_pEffect->dispatcher(m_pEffect, effEditGetRect, 0, 0, &eRect, 0);
-	return eRect;
+    ERect* eRect = NULL;
+    if (m_bHasEditor)
+        m_pEffect->dispatcher(m_pEffect, effEditGetRect, 0, 0, &eRect, 0);
+    return eRect;
 }
 
 std::string PluginInterface::GetEffectName()
@@ -269,7 +269,7 @@ std::string PluginInterface::GetEffectName()
 
 void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
 {
-    std::cout << "Plugin> " << m_PluginID << " Receiving Midi message..." << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Receiving Midi message...", m_PluginID.c_str());
 
     if (status == 0x90)
     {
@@ -294,7 +294,9 @@ void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
 
 void PluginInterface::PrintProperties()
 {
-    std::cout << "Plugin> Gathering properties..." << std::endl;
+    std::stringstream ss;
+
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Gathering properties...");
 
     char effectName[256] = { 0 };
     char vendorString[256] = { 0 };
@@ -307,21 +309,22 @@ void PluginInterface::PrintProperties()
     
     m_pEffect->dispatcher(m_pEffect, effGetProductString, 0, 0, productString, 0.0f);
 
-    std::cout << "Name: " << effectName << std::endl;
-    std::cout << "Vendor: " << vendorString << std::endl;
-    std::cout << "Product: " << productString << std::endl;
+    ss << "Name: " << effectName << std::endl;
+    ss << "Vendor: " << vendorString << std::endl;
+    ss << "Product: " << productString << std::endl;
 
-    std::cout << "numPrograms: " << m_pEffect->numPrograms << std::endl;
-    std::cout << "numParams: " << m_pEffect->numParams << std::endl;
-    std::cout << "numInputs: " << m_pEffect->numInputs << std::endl;
-    std::cout << "numOutputs: " << m_pEffect->numOutputs << std::endl;
+    ss << "numPrograms: " << m_pEffect->numPrograms << std::endl;
+    ss << "numParams: " << m_pEffect->numParams << std::endl;
+    ss << "numInputs: " << m_pEffect->numInputs << std::endl;
+    ss << "numOutputs: " << m_pEffect->numOutputs << std::endl;
 
-    std::cout << "InitialDelay: " << m_pEffect->initialDelay << " frames" << std::endl;
+    ss << "InitialDelay: " << m_pEffect->initialDelay << " frames" << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
 
     if (m_ePluginType == PluginType::PLUGIN_TYPE_SHELL)
     {
         char nameBuffer[kVstMaxProductStrLen];
-        std::cout << "Sub-plugins:" << std::endl;
+        ss << "Sub-plugins:" << std::endl;
 
         while (true)
         {
@@ -334,16 +337,17 @@ void PluginInterface::PrintProperties()
             {
                 char pluginID[5] = { 0 };
                 GetPluginStringFromLong(shellPluginId, pluginID);
-                std::cout << " '" << pluginID << "' (" << nameBuffer << ")" << std::endl;
+                ss << " '" << pluginID << "' (" << nameBuffer << ")" << std::endl;
             }
         }
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
     }
 }
 
 void PluginInterface::PrintPrograms()
 {
     // Iterate programs...
-    std::cout << "Plugin> Listing programs..." << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing programs...");
     for (VstInt32 progIndex = 0; progIndex < m_pEffect->numPrograms; progIndex++)
     {
         char progName[256] = { 0 };
@@ -352,14 +356,14 @@ void PluginInterface::PrintPrograms()
             m_pEffect->dispatcher(m_pEffect, effSetProgram, 0, progIndex, NULL, 0.0f); // Note: old program not restored here!
             m_pEffect->dispatcher(m_pEffect, effGetProgramName, 0, 0, progName, 0.0f);
         }
-        std::cout << "Program " << (int)progIndex << ": " << progName << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Program %li: %s", progIndex, progName);
     }
 }
 
 void PluginInterface::PrintParameters()
 {
     // Iterate parameters...
-    std::cout << "Plugin> Listing parameters..." << std::endl;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing parameters...");
     for (VstInt32 paramIndex = 0; paramIndex < m_pEffect->numParams; paramIndex++)
     {
         char paramName[256] = { 0 };
@@ -371,14 +375,15 @@ void PluginInterface::PrintParameters()
         m_pEffect->dispatcher(m_pEffect, effGetParamDisplay, paramIndex, 0, paramDisplay, 0.0f);
         float value = m_pEffect->getParameter(m_pEffect, paramIndex);
 
-        std::cout << "Param " << (int)paramIndex << ": " << paramName << "[" << paramDisplay << " " << paramLabel << "] (default: " << value << ")" << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Param %li: %s ['%s' '%s'] (default: %f)", paramIndex, paramName, paramDisplay, paramLabel, value);
     }
 }
 
 void PluginInterface::PrintCapabilities()
 {
     // Can-do nonsense...
-    std::cout << "Plugin> Listing capabilities..." << std::endl;
+    std::stringstream ss;
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing capabilities...");
     static const char* canDos[] =
     {
         "sendVstEvents",
@@ -393,28 +398,29 @@ void PluginInterface::PrintCapabilities()
 
     for (VstInt32 canDoIndex = 0; canDoIndex < sizeof(canDos) / sizeof(canDos[0]); canDoIndex++)
     {
-        std::cout << "Can do " << canDos[canDoIndex] << "... ";
+        ss << "Can do " << canDos[canDoIndex] << "... ";
         VstInt32 result = (VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDos[canDoIndex], 0.0f);
         switch (result)
         {
         case 0:
-            std::cout << "don't know";
+            ss << "don't know";
             break;
 
         case 1:
-            std::cout << "yes";
+            ss << "yes";
             break;
 
         case -1:
-            std::cout << "definitely not!";
+            ss << "definitely not!";
             break;
 
         default:
-            std::cout << "w00t?";
+            ss << "w00t?";
             break;
         }
-        std::cout << std::endl;
+        ss << std::endl;
     }
+    ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
 }
 
 void PluginInterface::SyncInputBuffers(ManagedBuffer* managedBuffer, VstInt32 dataSize)
@@ -437,6 +443,6 @@ void PluginInterface::SyncOutputBuffers(ManagedBuffer* managedBuffer, VstInt32 d
 
 void PluginInterface::ProcessReplacing(VstInt32 sampleFrames)
 {
-	if (m_bCanReplacing && m_bPluginRunning)
-		m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, sampleFrames);
+    if (m_bCanReplacing && m_bPluginRunning)
+        m_pEffect->processReplacing(m_pEffect, m_ppInputs, m_ppOutputs, sampleFrames);
 }

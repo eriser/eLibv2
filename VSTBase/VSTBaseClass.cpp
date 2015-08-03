@@ -6,8 +6,8 @@ using namespace eLibV2::MIDI;
 
 VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties) : AudioEffectX(audioMaster, properties.getNumPrograms(), properties.getNumParameters())
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::constructor");
-    ModuleLogger::print(LOG_CLASS_VST, "%li programs %li parameters", properties.getNumPrograms(), properties.getNumParameters());
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::constructor");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "%li programs %li parameters", properties.getNumPrograms(), properties.getNumParameters());
 
     mProperties = properties;
     mCurrentProgram = 0;
@@ -33,7 +33,7 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties pro
 //------------------------------------------------------------------------
 void VSTBaseClass::attachPrograms(PluginPrograms programs)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::attachPrograms");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::attachPrograms");
     mPrograms.clear();
     for (PluginPrograms::iterator it = programs.begin(); it != programs.end(); it++)
         mPrograms.push_back(*it);
@@ -53,7 +53,7 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
 //------------------------------------------------------------------------
 void VSTBaseClass::attachParameter(PluginParameter *param, Connection::InputConnection *inputConnection)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::attachParameter");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::attachParameter");
     mParameters.push_back(param);
     mParameterConnections.push_back(inputConnection);
 }
@@ -73,7 +73,7 @@ PluginParameter* VSTBaseClass::getAttachedParameter(VstInt16 index)
 //------------------------------------------------------------------------
 void VSTBaseClass::setProgram(VstInt32 program)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::setProgram: %d", program);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::setProgram: %d", program);
     if ((VstInt32)mPrograms.size() > program)
     {
         for (VstInt16 ParamIndex = 0; ParamIndex < mProperties.getNumParameters(); ParamIndex++)
@@ -86,7 +86,7 @@ void VSTBaseClass::setProgram(VstInt32 program)
 //-----------------------------------------------------------------------------------------
 void VSTBaseClass::setProgramName(char* name)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::setProgramName: %s", name);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::setProgramName: %s", name);
 
     if (mPrograms.size())
         mPrograms[mCurrentProgram].setName(name);
@@ -95,14 +95,14 @@ void VSTBaseClass::setProgramName(char* name)
 //-----------------------------------------------------------------------------------------
 void VSTBaseClass::getProgramName(char* name)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getProgramName: %s", mPrograms[mCurrentProgram].getName());
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getProgramName: %s", mPrograms[mCurrentProgram].getName());
     vst_strncpy(name, mPrograms[mCurrentProgram].getName().c_str(), kVstMaxProgNameLen);
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getProgramNameIndexed(VstInt32 category, VstInt32 index, char* text)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getProgramNameIndexed: %d %d", category, index);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getProgramNameIndexed: %d %d", category, index);
 
     if ((VstInt32)mPrograms.size() > index)
         vst_strncpy (text, mPrograms[index].getName().c_str(), kVstMaxProgNameLen);
@@ -119,7 +119,7 @@ bool VSTBaseClass::getProgramNameIndexed(VstInt32 category, VstInt32 index, char
 //------------------------------------------------------------------------
 void VSTBaseClass::setParameter(VstInt32 index, float value)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "setParameter: %d %f", index, value);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "setParameter: %d %f", index, value);
 
     // set value of internal parameter
     mPrograms[mCurrentProgram].setParameter(index, value);
@@ -127,11 +127,11 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
     // notify subclass of parameter change
     setParameterInvoked(index, value);
 
-    ModuleLogger::print(LOG_CLASS_VST, "%li %li %p", index, mParameterConnections.size(), mParameterConnections[index]);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "%li %li %p", index, mParameterConnections.size(), mParameterConnections[index]);
     // process connected inputs
     if (index < mParameterConnections.size() && mParameterConnections[index])
     {
-        ModuleLogger::print(LOG_CLASS_VST, "setValue");
+        ModuleLogger::print(LOG_CLASS_VSTBASE, "setValue");
         mParameterConnections[index]->setInput(getParameterScaled(index));
     }
 }
@@ -143,7 +143,7 @@ float VSTBaseClass::getParameter(VstInt32 index)
 {
     double res = mPrograms[mCurrentProgram].getParameter(index);
 
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getParameter: %d %f", index, res);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getParameter: %d %f", index, res);
     return res;
 }
 
@@ -160,7 +160,7 @@ float VSTBaseClass::getParameterScaled(VstInt32 index)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterName(VstInt32 index, char *label)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "getParameterName: %d", index);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "getParameterName: %d", index);
 
     if (!label)
         return;
@@ -184,7 +184,7 @@ void VSTBaseClass::getParameterDisplay(VstInt32 index, char *text)
     else
         sprintf(text, "%f", mPrograms[mCurrentProgram].getParameter(index));
 
-    ModuleLogger::print(LOG_CLASS_VST, "getParameterDisplay: %d -> %s", index, text);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "getParameterDisplay: %d -> %s", index, text);
 }
 
 //------------------------------------------------------------------------
@@ -192,7 +192,7 @@ void VSTBaseClass::getParameterDisplay(VstInt32 index, char *text)
 //------------------------------------------------------------------------
 void VSTBaseClass::getParameterLabel(VstInt32 index, char *label)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "getParameterLabel: %d", index);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "getParameterLabel: %d", index);
 
     if (!label)
         return;
@@ -206,14 +206,14 @@ void VSTBaseClass::getParameterLabel(VstInt32 index, char *label)
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::canParameterBeAutomated(VstInt32 index)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::canParameterBeAutomated");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::canParameterBeAutomated");
     return true;
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getParameterProperties(VstInt32 index, VstParameterProperties* p)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getParameterProperties");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getParameterProperties");
     return false;
 }
 
@@ -227,7 +227,7 @@ bool VSTBaseClass::getEffectName(char* name)
 {
     std::stringstream temp;
 
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getEffectName");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getEffectName");
     temp << mProperties.getId() << " " << (int)mProperties.getVersion();
 
     vst_strncpy(name, temp.str().c_str(), kVstMaxEffectNameLen);
@@ -239,7 +239,7 @@ bool VSTBaseClass::getProductString(char* text)
 {
     std::stringstream temp;
 
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getProductString");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getProductString");
     temp << mProperties.getId() << " " << (int)mProperties.getVersion();
 
     vst_strncpy(text, temp.str().c_str(), kVstMaxEffectNameLen);
@@ -249,7 +249,7 @@ bool VSTBaseClass::getProductString(char* text)
 //-----------------------------------------------------------------------------------------
 VstInt32 VSTBaseClass::getVendorVersion()
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getVendorVersion: %d", mProperties.getVersion());
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getVendorVersion: %d", mProperties.getVersion());
     return mProperties.getVersion();
 }
 
@@ -261,20 +261,20 @@ VstInt32 VSTBaseClass::getVendorVersion()
 //-----------------------------------------------------------------------------------------
 void VSTBaseClass::setSampleRate(float sampleRate)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::setSampleRate: %f", sampleRate);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::setSampleRate: %f", sampleRate);
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getInputProperties(VstInt32 index, VstPinProperties* properties)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getInputProperties");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getInputProperties");
     return false;
 }
 
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::getOutputProperties(VstInt32 index, VstPinProperties* properties)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::getOutputProperties");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getOutputProperties");
     if (index < mProperties.getNumOutputs())
     {
         vst_strncpy (properties->label, "O ", 63);
@@ -293,7 +293,7 @@ bool VSTBaseClass::getOutputProperties(VstInt32 index, VstPinProperties* propert
 //-----------------------------------------------------------------------------------------
 bool VSTBaseClass::setProcessPrecision(VstInt32 precision)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::setProcessPrecision: %d", precision);
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::setProcessPrecision: %d", precision);
     return false;
 }
 
@@ -312,7 +312,7 @@ VstInt32 VSTBaseClass::getNumMidiOutputChannels()
 //-----------------------------------------------------------------------------------------
 VstInt32 VSTBaseClass::canDo(char* text)
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::canDo");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::canDo");
     if (!strcmp(text, "receiveVstEvents"))
         return 1;
     if (!strcmp(text, "receiveVstMidiEvent"))
@@ -397,7 +397,7 @@ VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
             if (status == 0x80)
                 velocity = 0;
 
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processEvents: mididata[3] = %d", midiData[3]);
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processEvents: mididata[3] = %d", midiData[3]);
 
             if (!processMidiEvent(channel, status, note, velocity))
                 return 0;
@@ -410,7 +410,7 @@ VstInt32 VSTBaseClass::processEvents(VstEvents* ev)
         }
         else
         {
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processEvents: unknown event type %d", (ev->events[i])->type);
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processEvents: unknown event type %d", (ev->events[i])->type);
         }
     }
     return 1;
@@ -433,43 +433,43 @@ VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstIn
             if (velocity > 0)
             {
                 mMidiEventHandler->insertEvent(channel, MidiEvent(note, velocity));
-                ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: inserting note %d/%d", note, velocity);
+                ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: inserting note %d/%d", note, velocity);
             }
             else
             {
                 bool i = mMidiEventHandler->deleteEvent(channel, MidiEvent(note, 0));
-                ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: deleting note %d %s", note, i ? "success" : "failure");
+                ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: deleting note %d %s", note, i ? "success" : "failure");
             }
             break;
 
         // aftertouch
         case 0xa0:
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: aftertouch");
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: aftertouch");
             break;
 
         // control change
         case 0xb0:
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: control change");
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: control change");
             break;
 
         // program change
         case 0xc0:
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: program change");
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: program change");
             break;
 
         // chanel pressure
         case 0xd0:
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: channel pressure");
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: channel pressure");
             break;
 
         // pitch bend change
         case 0xe0:
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: pitch bend");
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: pitch bend");
             break;
 
         // system exclusive
         case 0xf0:
-            ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::processMidiEvents: sysex");
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: sysex");
             break;
     }
 
@@ -478,7 +478,7 @@ VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstIn
     s.setf(std::ios::showbase);
     s << "channel: " << (int)channel << " Status: " << (int)status << " Byte2: " << (int)note << " Byte3: " << (int)velocity;
 
-    ModuleLogger::print(LOG_CLASS_VST, s.str().c_str());
+    ModuleLogger::print(LOG_CLASS_VSTBASE, s.str().c_str());
     return 1;
 }
 
@@ -493,11 +493,11 @@ VstInt32 VSTBaseClass::processSysexEvent(VstInt32 size, char *data)
     for (VstInt16 i = 0; i < size; i++)
         s << (int)data[i];
 
-    ModuleLogger::print(LOG_CLASS_VST, s.str().c_str());
+    ModuleLogger::print(LOG_CLASS_VSTBASE, s.str().c_str());
     return 1;
 }
 
 void VSTBaseClass::resume()
 {
-    ModuleLogger::print(LOG_CLASS_VST, "VSTBaseClass::resume");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::resume");
 }

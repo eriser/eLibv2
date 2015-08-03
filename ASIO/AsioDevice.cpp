@@ -58,9 +58,6 @@ std::string AsioDevice::GetDeviceName(unsigned int deviceIndex)
 
 bool AsioDevice::OpenDevice(int driverIndex)
 {
-    ModuleLogger::enable();
-    ModuleLogger::setDebugView();
-
     bool bRes = false;
     // load the driver, this will setup all the necessary internal data structures
     // since asio low-level-methods can't handle const char arguments
