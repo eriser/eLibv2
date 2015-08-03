@@ -36,7 +36,7 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
 
 void PluginInterface::Unload()
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...", m_PluginID.c_str());
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...", m_sPluginID.c_str());
     if (m_pEffect)
     {
         m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
@@ -112,7 +112,7 @@ void PluginInterface::Setup()
     // get plugin id
     char pluginID[5] = { 0 };
     GetPluginStringFromLong(m_pEffect->uniqueID, pluginID);
-    m_PluginID.assign(pluginID);
+    m_sPluginID.assign(pluginID);
 
     if (m_pEffect->flags & effFlagsIsSynth)
     {
@@ -140,6 +140,8 @@ void PluginInterface::Setup()
     const char *canDo = "receiveVstMidiEvent";
     if ((VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDo, 0.0f) == 1)
         m_bCanReceiveMidi = true;
+
+    m_uiNumPrograms = m_pEffect->numPrograms;
 
     SetupProcessingMemory();
 }
@@ -200,7 +202,7 @@ void PluginInterface::Start()
 {
     try
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...", m_PluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...", m_sPluginID.c_str());
         // call resume
         m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
         //    m_pEffect->dispatcher(m_pEffect, effStartProcess, 0, 0, NULL, 0.0f);
@@ -220,7 +222,7 @@ void PluginInterface::Stop()
         // call suspend
         m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
         //    m_pEffect->dispatcher(m_pEffect, effStopProcess, 0, 0, NULL, 0.0f);
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested... ", m_PluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested... ", m_sPluginID.c_str());
     }
     catch (...)
     {
@@ -232,7 +234,7 @@ void PluginInterface::OpenEditor(void* window)
 {
     if (m_bHasEditor)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...", m_PluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...", m_sPluginID.c_str());
         m_pEffect->dispatcher(m_pEffect, effEditOpen, 0, 0, window, 0);
     }
 }
@@ -241,7 +243,7 @@ void PluginInterface::CloseEditor()
 {
     if (m_bHasEditor)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...", m_PluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...", m_sPluginID.c_str());
         m_pEffect->dispatcher(m_pEffect, effEditClose, 0, 0, NULL, 0);
     }
 }
@@ -269,7 +271,7 @@ std::string PluginInterface::GetEffectName()
 
 void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Receiving Midi message...", m_PluginID.c_str());
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Receiving Midi message...", m_sPluginID.c_str());
 
     if (status == 0x90)
     {
@@ -351,13 +353,23 @@ void PluginInterface::PrintPrograms()
     for (VstInt32 progIndex = 0; progIndex < m_pEffect->numPrograms; progIndex++)
     {
         char progName[256] = { 0 };
-        if (!m_pEffect->dispatcher(m_pEffect, effGetProgramNameIndexed, progIndex, 0, progName, 0.0f))
-        {
-            m_pEffect->dispatcher(m_pEffect, effSetProgram, 0, progIndex, NULL, 0.0f); // Note: old program not restored here!
-            m_pEffect->dispatcher(m_pEffect, effGetProgramName, 0, 0, progName, 0.0f);
-        }
+        GetProgramName(progIndex, progName);
         ModuleLogger::print(LOG_CLASS_PLUGIN, "Program %li: %s", progIndex, progName);
     }
+}
+
+void PluginInterface::GetProgramName(VstInt32 progIndex, char* progName)
+{
+    if (!m_pEffect->dispatcher(m_pEffect, effGetProgramNameIndexed, progIndex, 0, progName, 0.0f))
+    {
+        SetProgram(progIndex);
+        m_pEffect->dispatcher(m_pEffect, effGetProgramName, 0, 0, progName, 0.0f);
+    }
+}
+
+void PluginInterface::SetProgram(VstInt32 progIndex)
+{
+    m_pEffect->dispatcher(m_pEffect, effSetProgram, 0, progIndex, NULL, 0.0f); // Note: old program not restored here!
 }
 
 void PluginInterface::PrintParameters()

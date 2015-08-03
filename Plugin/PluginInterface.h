@@ -52,6 +52,7 @@ namespace eLibV2
                 m_pHostCallback(NULL),
                 m_fSamplerate(44100.0),
                 m_uiBlocksize(512),
+                m_uiNumPrograms(0),
                 m_uiMidiChannel(0),
                 m_uiAudioChannel(0),
                 m_ePluginType(PluginType::PLUGIN_TYPE_UNSET),
@@ -88,7 +89,7 @@ namespace eLibV2
             Get ID of loaded plugin. This is a unique 4 characters long identification registered at Steinberg
             @return ID of plugin as string
             */
-            std::string GetPluginID() { return m_PluginID; }
+            std::string GetPluginID() { return m_sPluginID; }
 
             /**
             Get type of plugin @see PluginType
@@ -112,13 +113,13 @@ namespace eLibV2
             Returns the MIDI channel the plugin receives data
             @return MIDI channel 0-15
             */
-            unsigned int GetMidiChannel() { return m_uiMidiChannel; }
+            VstInt32 GetMidiChannel() { return m_uiMidiChannel; }
 
             /**
             Returns the audio channel the plugin uses to send data to
             @return audio channel
             */
-            unsigned int GetAudioChannel() { return m_uiAudioChannel; }
+            VstInt32 GetAudioChannel() { return m_uiAudioChannel; }
 
             std::string GetEffectName();
 
@@ -184,6 +185,11 @@ namespace eLibV2
             @param sampleFrames number of frames to process
             */
             void ProcessReplacing(VstInt32 sampleFrames);
+
+            VstInt32 GetNumberOfPrograms() { return m_uiNumPrograms; }
+            void GetProgramName(VstInt32 progIndex, char* progName);
+
+            void SetProgram(VstInt32 progIndex);
 
             /**
             Return number of input channels the plugin is using
@@ -261,16 +267,17 @@ namespace eLibV2
             std::string         m_FileName;         ///< associated filename
             audioMasterCallback m_pHostCallback;    ///< host callback-function
             double              m_fSamplerate;      ///< current samplerate
-            unsigned int        m_uiBlocksize;      ///< current blocksize
-            std::string         m_PluginID;         ///< pluginID
-            unsigned int        m_uiMidiChannel;    ///< Midi channel to receive messages
-            unsigned int        m_uiAudioChannel;   ///< Audio channel to use for output
+            VstInt32            m_uiBlocksize;      ///< current blocksize
+            std::string         m_sPluginID;        ///< pluginID
+            VstInt32            m_uiNumPrograms;    ///< Number of programs
+            VstInt32            m_uiMidiChannel;    ///< Midi channel to receive messages
+            VstInt32            m_uiAudioChannel;   ///< Audio channel to use for output
             PluginType          m_ePluginType;      ///< Type of Plugin
             bool                m_bCanReceiveMidi;  ///< Plugin can receive MIDI events
-            bool                m_bHasEditor;        ///< Plugin has editor available
+            bool                m_bHasEditor;       ///< Plugin has editor available
             bool                m_bCanReplacing;    ///< Plugin has processReplacing
-            unsigned int        m_uiVstVersion;        ///< VST-Version of plugin
-            bool                m_bPluginRunning;    ///< indicates if the plugin is currently running
+            VstInt32            m_uiVstVersion;     ///< VST-Version of plugin
+            bool                m_bPluginRunning;   ///< indicates if the plugin is currently running
 
             float**             m_ppInputs;         ///< Allocated memory for the inputs of the plugin
             float**             m_ppOutputs;        ///< Allocated memory for the outputs of the plugin
