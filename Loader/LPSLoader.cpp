@@ -11,6 +11,7 @@ LPSLoader::~LPSLoader()
 void LPSLoader::Init()
 {
     FileLoaded = false;
+	LPSFile = { 0 };
     for (int i = 0; i < LPS_MAXTRACKS; i++)
     {
         TrackData[i] = 0;

@@ -32,7 +32,7 @@ namespace eLibV2
             };
 
             // internal data storage
-            typedef struct DriverInfo
+            struct DriverInfo
             {
                 // ASIOInit()
                 ASIODriverInfo driverInfo;
