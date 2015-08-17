@@ -55,12 +55,11 @@ bool PluginHost::OpenPlugin(std::string fileName)
             plugin->PrintCapabilities();
 #endif
 
-            // gather all plugins for all midi channels
-            // TODO: insert current plugin to relevant midi-channel
-            for (int midiChannel = MIDI_CHANNEL_1; midiChannel < MIDI_CHANNEL_MAX; midiChannel++)
+            // insert current plugin to relevant midi-channel
+            if (plugin->CanReceiveMidi())
             {
-                PluginInterfaceList list = GetPluginsForMidiChannel(midiChannel);
-                m_PluginsForMIDIChannel[midiChannel] = list;
+                int midiChannel = plugin->GetMidiChannel();
+                m_PluginsForMIDIChannel[midiChannel].push_back(plugin);
             }
             return true;
         }
@@ -244,18 +243,17 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
     case __audioMasterPinConnectedDeprecated:
         // this is called by some plugins prior to vst2.4
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "pin connected");
-
+//        ModuleLogger::print(LOG_CLASS_PLUGIN, "pin connected\n");
         break;
 
     case __audioMasterWantMidiDeprecated:
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "want midi");
+//        ModuleLogger::print(LOG_CLASS_PLUGIN, "want midi\n");
         break;
 
     case audioMasterGetTime:
-        ss << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
-        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
-        ss.clear();
+//        ss << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
+//        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+//        ss.clear();
 
         // These values are always valid
         _VstTimeInfo.samplePos = 0;
@@ -357,7 +355,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
                     VstInt16 note = midiData[1]; // &0x7f;
                     VstInt16 velocity = midiData[2]; // &0x7f;
 
-                    ModuleLogger::print(LOG_CLASS_PLUGIN, "MIDI event received: %i %i %i %i", channel, status, note, velocity);
+                    ModuleLogger::print(LOG_CLASS_PLUGIN, "MIDI event received: %i %i %i %i\n", channel, status, note, velocity);
                 }
                 break;
 

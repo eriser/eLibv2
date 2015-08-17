@@ -261,7 +261,7 @@ namespace eLibV2
             /**
             Set up internal plugin data (e.g. samplerate and blocksize)
             */
-            void Setup();
+            void SetupPlugin();
 
             /**
             Set up processing memory of the plugin for calls to processReplacing
