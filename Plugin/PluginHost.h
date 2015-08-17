@@ -114,7 +114,6 @@ namespace eLibV2
 
         private:
             PluginMap m_LoadedPlugins;
-            unsigned int m_NumLoadedPlugins;
             LARGE_INTEGER m_liStartingTime, m_liEndingTime, m_liFrequency;
             std::map<int, PluginInterfaceList> m_PluginsForMIDIChannel;
         };

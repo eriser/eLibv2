@@ -23,26 +23,20 @@ bool PluginInterface::Load(const std::string fileName, audioMasterCallback callb
 #endif
     if (m_pModule)
     {
-        if (CallPluginEntry())
+        if (AttachHostCallback())
         {
             Setup();
+            SetupProcessingMemory();
+            Open();
             return true;
         }
-        // in case of an error free the library
-        Unload();
     }
     return false;
 }
 
 void PluginInterface::Unload()
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...", m_sPluginID.c_str());
-    if (m_pEffect)
-    {
-        m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
-        m_pEffect = NULL;
-    }
-
+    Close();
     FreeProcessingMemory();
 
     if (m_pModule)
@@ -58,23 +52,27 @@ void PluginInterface::Unload()
     }
 }
 
-bool PluginInterface::CallPluginEntry()
+bool PluginInterface::AttachHostCallback()
 {
     PluginEntryProc mainProc = NULL;
 
     ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Searching for entry function...");
 #if WIN32
-    mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "VSTPluginMain");
-    if (!mainProc)
-        mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "main");
-#elif TARGET_API_MAC_CARBON
-    mainProc = (PluginEntryProc)CFBundleGetFunctionPointerForName((CFBundleRef)m_pModule, CFSTR("VSTPluginMain"));
-    if (!mainProc)
-        mainProc = (PluginEntryProc)CFBundleGetFunctionPointerForName((CFBundleRef)m_pModule, CFSTR("main_macho"));
-#endif
-
     try
     {
+        mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "VSTPluginMain");
+        if (!mainProc)
+        {
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> VSTPluginMain not found. Trying main instead.");
+            mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "main");
+        }
+
+#elif TARGET_API_MAC_CARBON
+        mainProc = (PluginEntryProc)CFBundleGetFunctionPointerForName((CFBundleRef)m_pModule, CFSTR("VSTPluginMain"));
+        if (!mainProc)
+            mainProc = (PluginEntryProc)CFBundleGetFunctionPointerForName((CFBundleRef)m_pModule, CFSTR("main_macho"));
+#endif
+
         if (mainProc)
         {
             ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Creating effect instance...");
@@ -86,27 +84,25 @@ bool PluginInterface::CallPluginEntry()
                 ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Failed to create effect instance!");
         }
         else
-            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'.", m_FileName);
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'.", m_FileName.c_str());
     }
     catch (std::bad_alloc)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: MEMORY ERROR: std::bad_alloc occured during plugin initialization", m_FileName);
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: MEMORY ERROR: std::bad_alloc occured during plugin initialization", m_FileName.c_str());
     }
     catch (...)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Exception: %s: ", m_FileName);
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Exception: %s: ", m_FileName.c_str());
     }
     return false;
 }
 
 void PluginInterface::Setup()
 {
-    VstIntPtr res;
     ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Setting up plugin...");
-    res = m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
-    res = m_pEffect->dispatcher(m_pEffect, effSetBlockSize, 0, m_uiBlocksize, NULL, 0.0f);
-    res = m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
-    res = m_pEffect->dispatcher(m_pEffect, effOpen, 0, 0, NULL, 0.0f);
+    m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
+    SetBlocksize(m_uiBlocksize);
+    m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
     m_uiVstVersion = (unsigned int)m_pEffect->dispatcher(m_pEffect, effGetVstVersion, 0, 0, NULL, 0.0f);
 
     // get plugin id
@@ -137,19 +133,13 @@ void PluginInterface::Setup()
     if (m_pEffect->flags & effFlagsCanReplacing)
         m_bCanReplacing = true;
 
-    const char *canDo = "receiveVstMidiEvent";
-    if ((VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDo, 0.0f) == 1)
-        m_bCanReceiveMidi = true;
-
     m_uiNumPrograms = m_pEffect->numPrograms;
-
-    SetupProcessingMemory();
 }
 
 void PluginInterface::SetupProcessingMemory()
 {
     // get number of inputs/outputs -> hopefully these will NOT change during lifetime
-    m_uiNumInputs = m_pEffect->numInputs;
+    m_uiNumInputs = m_pEffect->numInputs; // > 0 ? m_pEffect->numInputs : 2;
     m_uiNumOutputs = m_pEffect->numOutputs;
 
     if (m_uiNumInputs > 0)
@@ -198,15 +188,56 @@ void PluginInterface::FreeProcessingMemory()
     }
 }
 
+void PluginInterface::SetBlocksize(VstInt32 blocksize)
+{
+    m_uiBlocksize = blocksize;
+    m_pEffect->dispatcher(m_pEffect, effSetBlockSize, 0, m_uiBlocksize, NULL, 0.0f);
+}
+
+void PluginInterface::Open()
+{
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Open requested...\n", m_sPluginID.c_str());
+    if (m_pEffect)
+    {
+        // call open -> empty implementation?
+        m_pEffect->dispatcher(m_pEffect, effOpen, 0, 0, NULL, 0.0f);
+    }
+}
+
+void PluginInterface::Close()
+{
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...\n", m_sPluginID.c_str());
+    if (m_pEffect)
+    {
+        // call close -> empty implementation?
+        m_pEffect->dispatcher(m_pEffect, effClose, 0, 0, NULL, 0.0f);
+//        m_pEffect = NULL;
+    }
+}
+
 void PluginInterface::Start()
 {
     try
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...\n", m_sPluginID.c_str());
         // call resume
         m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
         //    m_pEffect->dispatcher(m_pEffect, effStartProcess, 0, 0, NULL, 0.0f);
+
+        // emulate behaviour of FLStudio after calling resume. this takes some time
+        const char *canDo = "receiveVstMidiEvent";
+        if ((VstInt32)m_pEffect->dispatcher(m_pEffect, effCanDo, 0, 0, (void*)canDo, 0.0f) == 1)
+            m_bCanReceiveMidi = true;
+
         m_bPluginRunning = true;
+    }
+    catch (const std::exception& e)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start(): %s", e.what());
+    }
+    catch (const std::string& s)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start(): %s", s.c_str());
     }
     catch (...)
     {
@@ -218,15 +249,15 @@ void PluginInterface::Stop()
 {
     try
     {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested... \n", m_sPluginID.c_str());
         m_bPluginRunning = false;
         // call suspend
         m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
         //    m_pEffect->dispatcher(m_pEffect, effStopProcess, 0, 0, NULL, 0.0f);
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested... ", m_sPluginID.c_str());
     }
-    catch (...)
+    catch (std::exception e)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop()");
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop(): %s", e.what());
     }
 }
 
@@ -234,7 +265,7 @@ void PluginInterface::OpenEditor(void* window)
 {
     if (m_bHasEditor)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...\n", m_sPluginID.c_str());
         m_pEffect->dispatcher(m_pEffect, effEditOpen, 0, 0, window, 0);
     }
 }
@@ -243,7 +274,7 @@ void PluginInterface::CloseEditor()
 {
     if (m_bHasEditor)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...\n", m_sPluginID.c_str());
         m_pEffect->dispatcher(m_pEffect, effEditClose, 0, 0, NULL, 0);
     }
 }
@@ -333,7 +364,7 @@ void PluginInterface::PrintProperties()
             memset(nameBuffer, 0, sizeof(nameBuffer));
             VstInt32 shellPluginId = (VstInt32)m_pEffect->dispatcher(m_pEffect, effShellGetNextPlugin, 0, 0, nameBuffer, 0.0f);
 
-            if (shellPluginId == 0 || nameBuffer[0] == '0')
+            if (shellPluginId == 0 || nameBuffer[0] == '\0')
                 break;
             else
             {

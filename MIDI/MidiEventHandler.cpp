@@ -34,6 +34,7 @@ MidiEventVector MidiEventHandler::getEvents(const int channel) const
     MidiEventVector events;
     if (channelInRange(channel))
     {
+        // BEWARE: race condition
         if (mMidiEvents[channel].size())
         {
             for (ConstMidiEventIterator it = mMidiEvents[channel].begin(); it != mMidiEvents[channel].end(); it++)

@@ -17,7 +17,7 @@ ManagedBuffer* PluginHost::ms_outputBuffer = NULL;
 int PluginHost::ms_iBufferRequestedSize = 0;
 long PluginHost::ms_SamplesProcessed = 0;
 
-PluginHost::PluginHost() : m_NumLoadedPlugins(0)
+PluginHost::PluginHost()
 {
     EventManager::RegisterEvent(EventManager::EVENT_PROCESSING_DONE);
 }
@@ -30,29 +30,50 @@ PluginHost::~PluginHost()
 bool PluginHost::OpenPlugin(std::string fileName)
 {
     ModuleLogger::print(LOG_CLASS_PLUGIN, "HOST> Load VST plugin '%s'", fileName.c_str());
-    PluginInterface *plugin = new PluginInterface();
 
-    if (plugin->Load(fileName, PluginHost::HostCallback))
+    try
     {
-        m_LoadedPlugins[plugin->GetPluginID()] = plugin;
+        PluginInterface *plugin = new PluginInterface();
+
+        if (plugin->Load(fileName, PluginHost::HostCallback))
+        {
+            std::string pluginID = plugin->GetPluginID();
+            pluginID.append(1, (char)('0' + m_LoadedPlugins.size()));
+            if (m_LoadedPlugins.count(pluginID) == 0)
+                m_LoadedPlugins[pluginID] = plugin;
+            else
+            {
+                ModuleLogger::print(LOG_CLASS_PLUGIN, "WARNING: duplicate plugin codes detected '%s'.", pluginID.c_str());
+                plugin->Unload();
+                return false;
+            }
 
 #if OUTPUT_PLUGIN_PROPERTIES == 1
-        plugin->PrintProperties();
-        plugin->PrintPrograms();
-        plugin->PrintParameters();
-        plugin->PrintCapabilities();
+            plugin->PrintProperties();
+            plugin->PrintPrograms();
+            plugin->PrintParameters();
+            plugin->PrintCapabilities();
 #endif
 
-        // gather all plugins for all midi channels
-        for (int midiChannel = MIDI_CHANNEL_1; midiChannel < MIDI_CHANNEL_MAX; midiChannel++)
-        {
-            PluginInterfaceList list = GetPluginsForMidiChannel(midiChannel);
-            m_PluginsForMIDIChannel[midiChannel] = list;
+            // gather all plugins for all midi channels
+            // TODO: insert current plugin to relevant midi-channel
+            for (int midiChannel = MIDI_CHANNEL_1; midiChannel < MIDI_CHANNEL_MAX; midiChannel++)
+            {
+                PluginInterfaceList list = GetPluginsForMidiChannel(midiChannel);
+                m_PluginsForMIDIChannel[midiChannel] = list;
+            }
+            return true;
         }
-        return true;
+        else
+        {
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Failed to load VST Plugin library '%s'!", fileName.c_str());
+            plugin->Unload();
+        }
     }
-    else
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Failed to load VST Plugin library '%s'!", fileName.c_str());
+    catch (std::bad_alloc)
+    {
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "bad_alloc occured during plugin '%s' initialisation.", fileName.c_str());
+    }
     return false;
 }
 
@@ -75,17 +96,15 @@ void PluginHost::UnloadAll()
 
 void PluginHost::StartAll()
 {
+    StartTimer();
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
         (*it).second->Start();
-    ms_bTransportPlaying = true;
-    StartTimer();
 }
 
 void PluginHost::StopAll()
 {
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
         (*it).second->Stop();
-    ms_bTransportPlaying = false;
     StopTimer();
 }
 
@@ -93,10 +112,12 @@ void PluginHost::StartTimer()
 {
     QueryPerformanceFrequency(&m_liFrequency);
     QueryPerformanceCounter(&m_liStartingTime);
+    ms_bTransportPlaying = true;
 }
 
 void PluginHost::StopTimer()
 {
+    ms_bTransportPlaying = false;
     QueryPerformanceCounter(&m_liEndingTime);
     ms_liElapsedMicroseconds.QuadPart = m_liEndingTime.QuadPart - m_liStartingTime.QuadPart;
     ms_liElapsedMicroseconds.QuadPart *= 1000000;
@@ -223,10 +244,18 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
     case __audioMasterPinConnectedDeprecated:
         // this is called by some plugins prior to vst2.4
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "pin connected");
+
+        break;
+
+    case __audioMasterWantMidiDeprecated:
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "want midi");
         break;
 
     case audioMasterGetTime:
-//        std::cout << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
+        ss << "requesting VstTimeInfo: " << std::hex << value << std::dec << std::endl;
+        ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
+        ss.clear();
 
         // These values are always valid
         _VstTimeInfo.samplePos = 0;
@@ -310,9 +339,35 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         break;
 
     case audioMasterProcessEvents:
+    {
         ss << "events from plugin received " << std::hex << ptr << std::dec << std::endl;
         ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
-        break;
+
+        VstEvents* events = static_cast<VstEvents*>(ptr);
+        for (VstInt32 eventIndex = 0; eventIndex < events->numEvents; eventIndex++)
+        {
+            switch ((events->events[eventIndex])->type)
+            {
+                case kVstMidiType:
+                {
+                    VstMidiEvent* event = (VstMidiEvent*)events->events[eventIndex];
+                    char* midiData = event->midiData;
+                    VstInt16 channel = midiData[0] & 0x0f;
+                    VstInt16 status = midiData[0] & 0xf0;
+                    VstInt16 note = midiData[1]; // &0x7f;
+                    VstInt16 velocity = midiData[2]; // &0x7f;
+
+                    ModuleLogger::print(LOG_CLASS_PLUGIN, "MIDI event received: %i %i %i %i", channel, status, note, velocity);
+                }
+                break;
+
+                case kVstSysExType:
+                    ModuleLogger::print(LOG_CLASS_PLUGIN, "Sysex event received:");
+                    break;
+            }
+        }
+    }
+    break;
 
     case audioMasterIOChanged:
         // see AudioEffectX::ioChanged()
@@ -331,6 +386,10 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         }
 #endif
         result = 0;
+        break;
+
+    case __audioMasterNeedIdleDeprecated:
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "need idle");
         break;
 
     case audioMasterSizeWindow:
@@ -439,6 +498,9 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
 {
     extern bool stopProcessing;
+    static int lastPreferredSize = 0;
+    bool resetBufferSize = false;
+
     PluginInterfaceList *pList = reinterpret_cast<PluginInterfaceList*>(lpParam);
 
     std::vector<ProcessThreadParameters> processThreads;
@@ -458,8 +520,15 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
     {
         while (!stopProcessing)
         {
+            resetBufferSize = false;
             if (ms_iBufferRequestedSize > 0)
             {
+                if (ms_iBufferRequestedSize != lastPreferredSize)
+                {
+                    lastPreferredSize = ms_iBufferRequestedSize;
+                    resetBufferSize = true;
+                }
+
                 // samples from all plugins need to be taken and mixed together
                 int framesToProcess = ms_iBufferRequestedSize;
                 if (ms_iBufferRequestedSize > kBlockSize)
@@ -470,6 +539,12 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                 for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
                 {
                     PluginInterface* plugin = processThreads[currentThreadIndex].plugin;
+
+                    if (resetBufferSize)
+                    {
+//                        plugin->Stop();
+//                        plugin->Start();
+                    }
                     plugin->SyncInputBuffers(processThreads[currentThreadIndex].inputBuffer, framesToProcess);
                     plugin->ProcessReplacing(framesToProcess);
                     plugin->SyncOutputBuffers(processThreads[currentThreadIndex].outputBuffer, framesToProcess);

@@ -51,7 +51,7 @@ namespace eLibV2
                 m_pEffect(NULL),
                 m_pHostCallback(NULL),
                 m_fSamplerate(44100.0),
-                m_uiBlocksize(512),
+                m_uiBlocksize(440),
                 m_uiNumPrograms(0),
                 m_uiMidiChannel(0),
                 m_uiAudioChannel(0),
@@ -124,6 +124,18 @@ namespace eLibV2
             std::string GetEffectName();
 
             ERect* GetEditorRect();
+
+            void SetBlocksize(VstInt32 blocksize);
+
+            /**
+            Open plugin.
+            */
+            void Open();
+
+            /**
+            Close plugin
+            */
+            void Close();
 
             /**
             Start plugin. This just calls the resume-method. It does not process any audio data.
@@ -242,9 +254,9 @@ namespace eLibV2
 //            PluginEntryProc GetMainEntry();
 
             /**
-            This function calls the main entry function of the plugin
+            This function attaches the main entry function of the plugin to the host's callback
             */
-            bool CallPluginEntry();
+            bool AttachHostCallback();
 
             /**
             Set up internal plugin data (e.g. samplerate and blocksize)
