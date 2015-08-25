@@ -6,7 +6,7 @@
 
 using namespace eLibV2::Loader;
 
-int PresetLoader::Load(std::string filename)
+int PresetLoader::Load(const std::string& filename)
 {
     size_t found;
     std::string Filetype;
@@ -34,7 +34,7 @@ int PresetLoader::Load(std::string filename)
     return ret;
 }
 
-int PresetLoader::Save(std::string filename)
+int PresetLoader::Save(const std::string& filename)
 {
     char tempstr[12];
 
@@ -90,7 +90,7 @@ int PresetLoader::Save(std::string filename)
     return ERR_PRESET_NO_ERROR;
 }
 
-int PresetLoader::LoadTxtFile(std::string Filename)
+int PresetLoader::LoadTxtFile(const std::string& Filename)
 {
     InFile.open(Filename.c_str(), std::ifstream::in);
     if (!InFile.good())
@@ -172,6 +172,7 @@ int PresetLoader::ReadProgram(void)
     OutputProgram Program;
     VstInt32 tempval;
     flint tempdata;
+    std::stringstream ss;
 
     InFile.read((char*)&fxpProgram.chunkMagic, sizeof(fxpProgram.chunkMagic));
     if (strncmp((char*)&fxpProgram.chunkMagic, MAGIC_CHUNK, 4))
@@ -191,7 +192,10 @@ int PresetLoader::ReadProgram(void)
     InFile.read((char*)&fxpProgram.fxID, sizeof(fxpProgram.fxID));
     InFile.read((char*)&tempval, sizeof(tempval));
     fxpProgram.fxVersion = SwapBytes(tempval);
-    std::cout << getModuleName() << ": converting for Plugin: [ID: " << fxpProgram.fxID[0] << fxpProgram.fxID[1] << fxpProgram.fxID[2] << fxpProgram.fxID[3] << " Version: " << fxpProgram.fxVersion << "]" << std::endl;
+
+    ss << getModuleName() << ": converting for Plugin: [ID: " << fxpProgram.fxID[0] << fxpProgram.fxID[1] << fxpProgram.fxID[2] << fxpProgram.fxID[3];
+    ss << " Version: " << fxpProgram.fxVersion << "]" << std::endl;
+    ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
 
     InFile.read((char*)&tempval, sizeof(tempval));
     fxpProgram.numParams = SwapBytes(tempval);
@@ -199,13 +203,18 @@ int PresetLoader::ReadProgram(void)
 
     if ((fxpProgram.byteSize) && (fxpProgram.byteSize != (fxpProgram.numParams * 4 + 48)))
     {
-        std::cout << "expected " << fxpProgram.numParams * 4 + 48 << " bytes, got " << fxpProgram.byteSize << std::endl;
+        ss.clear();
+        ss << "expected " << fxpProgram.numParams * 4 + 48 << " bytes, got " << fxpProgram.byteSize << std::endl;
+        ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
+
         return ERR_PRESET_FXP_CORRUPTED;
     }
 
     // begin output format
     Program.ProgramName.assign(fxpProgram.prgName);
-    std::cout << getModuleName() << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << std::endl;
+    ss.clear();
+    ss << getModuleName() << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << std::endl;
+    ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
 
     for (int ii = 0; ii < fxpProgram.numParams; ii++)
     {
@@ -217,7 +226,7 @@ int PresetLoader::ReadProgram(void)
     return ERR_PRESET_NO_ERROR;
 }
 
-int PresetLoader::LoadFxpFile(std::string Filename)
+int PresetLoader::LoadFxpFile(const std::string& Filename)
 {
     int ret = 0;
 
@@ -232,11 +241,12 @@ int PresetLoader::LoadFxpFile(std::string Filename)
     return ret;
 }
 
-int PresetLoader::LoadFxbFile(std::string Filename)
+int PresetLoader::LoadFxbFile(const std::string& Filename)
 {
     int ret = 0;
     VstInt32 tempval;
     fxBank fxbBank;
+    std::stringstream ss;
 
     InFile.open(Filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!InFile.good())
@@ -259,18 +269,23 @@ int PresetLoader::LoadFxbFile(std::string Filename)
     InFile.read((char*)&fxbBank.fxID, sizeof(fxbBank.fxID));
     InFile.read((char*)&tempval, sizeof(tempval));
     fxbBank.fxVersion = SwapBytes(tempval);
-    std::cout << getModuleName() << ": converting for Plugin: [ID: " << fxbBank.fxID[0] << fxbBank.fxID[1] << fxbBank.fxID[2] << fxbBank.fxID[3] << " Version: " << fxbBank.fxVersion << "]" << std::endl;
+
+    ss << getModuleName() << ": converting for Plugin: [ID: " << fxbBank.fxID[0] << fxbBank.fxID[1] << fxbBank.fxID[2] << fxbBank.fxID[3] << " Version: " << fxbBank.fxVersion << "]" << std::endl;
+    ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
 
     InFile.read((char*)&tempval, sizeof(tempval));
     fxbBank.numPrograms = SwapBytes(tempval);
     InFile.read((char*)&fxbBank.future, sizeof(char) * 64);
     InFile.read((char*)&fxbBank.future, sizeof(char) * 64);
 
-    std::cout << getModuleName() << ": Reading " << fxbBank.numPrograms <<  " programs" << std::endl;
+    ss.clear();
+    ss << getModuleName() << ": Reading " << fxbBank.numPrograms <<  " programs" << std::endl;
+    ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
+
     for (VstInt32 ProgramIndex = 0; ProgramIndex < fxbBank.numPrograms; ProgramIndex++)
     {
         ret = ReadProgram();
-        if (ret)
+        if (ret != ERR_PRESET_NO_ERROR)
             break;
     }
     InFile.close();

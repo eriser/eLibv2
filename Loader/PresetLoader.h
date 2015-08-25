@@ -100,8 +100,8 @@ namespace eLibV2
 
             void Init(void) {}
 
-            int Load(std::string filename);
-            int Save(std::string filename);
+            int Load(const std::string& filename);
+            int Save(const std::string& filename);
 
         private:
             VstInt32 SwapBytes(VstInt32 input)
@@ -112,9 +112,9 @@ namespace eLibV2
                 return temp;
             }
 
-            int LoadTxtFile(std::string Filename);
-            int LoadFxpFile(std::string Filename);
-            int LoadFxbFile(std::string Filename);
+            int LoadTxtFile(const std::string& Filename);
+            int LoadFxpFile(const std::string& Filename);
+            int LoadFxbFile(const std::string& Filename);
             int ReadProgram(void);
 
         private:

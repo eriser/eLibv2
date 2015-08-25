@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<plugin id="TestPlugin" version="4136" inputs="2" outputs="2" parameters="7" programs="8" synth="true" editor="true" resolution="double">
+  <!-- parameters -->
+  <parameters>
+    <parameter name="coarse"   label="tune"   type="integer" min="-24.0" max="24.0"/>
+    <parameter name="waveform" label="shape"  type="integer" min="1"     max="8"/>
+    <parameter name="LFO"      label="coarse" type="double"  min="-12.0" max="0.0"/>
+    <parameter name="int"      label="intl2"  type="integer" min="-100"  max="100"/>
+    <parameter name="LFO"      label="coarse" type="double"  min="-12.0" max="0.0"/>
+    <parameter name="waveform" label="shape"  type="integer" min="1"     max="8"/>
+    <parameter name="coarse"   label="tune"   type="integer" min="0.0"   max="48.0"/>
+    <parameter name="int"      label="itl2"   type="integer" min="-100"  max="100"/>
+  </parameters>
+  <!-- controls of editor -->
+  <controls>
+    <control id="1"/>
+  </controls>
+</plugin>
