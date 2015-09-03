@@ -6,11 +6,17 @@ using namespace eLibV2::VSTBase;
 
 VSTBaseBitmapManager::~VSTBaseBitmapManager()
 {
+    clearAll();
+}
+
+void VSTBaseBitmapManager::clearAll()
+{
     if (mBitmaps.size())
     {
         for (std::map<VstInt32, CBitmap *>::iterator it = mBitmaps.begin(); it != mBitmaps.end(); it++)
         {
             it->second->forget();
+            it->second = NULL;
         }
     }
     mBitmaps.clear();

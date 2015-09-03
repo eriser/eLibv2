@@ -64,11 +64,14 @@ XmlParser::XmlParser(std::string filename)
         parser->setErrorHandler(errReporter);
         parser->parse(filename.c_str());
 
-        XERCES_CPP_NAMESPACE::DOMDocument *doc = parser->getDocument();
-        XERCES_CPP_NAMESPACE::DOMNode *node = (DOMNode*)doc->getDocumentElement();
-
         nodes = new std::vector<GenericNode*>();
-        parseNodes(nodes, node);
+
+        XERCES_CPP_NAMESPACE::DOMDocument *doc = parser->getDocument();
+        if (doc != NULL)
+        {
+            XERCES_CPP_NAMESPACE::DOMNode *node = (DOMNode*)doc->getDocumentElement();
+            parseNodes(nodes, node);
+        }
 
         delete errReporter;
         delete parser;

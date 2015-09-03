@@ -98,17 +98,15 @@ void VSTBaseEditor::idle()
 
 CView* VSTBaseEditor::addControl(ControlType type, CControlListener *listener, CPoint size, CPoint offset, VstInt32 tag, VstInt32 bitmapId, CPoint handle)
 {
-    VstInt32 newId = 0;
     CRect tempSize;
     CPoint bitmapSize(getBitmap(bitmapId)->getWidth(), getBitmap(bitmapId)->getHeight() / 2);
 
     switch (type)
     {
         case kKickButton:
-            newId = mKickButtons.size();
             tempSize(offset.x, offset.y, bitmapSize.x + offset.x, bitmapSize.y + offset.y);
             mKickButtons.push_back(new CKickButton(tempSize, listener, tag, CCoord(bitmapSize.y), getBitmap(bitmapId), handle));
-            return mKickButtons[newId - 1];
+            return mKickButtons[mKickButtons.size() - 1];
     }
 
     return 0;
@@ -116,7 +114,7 @@ CView* VSTBaseEditor::addControl(ControlType type, CControlListener *listener, C
 
 void VSTBaseEditor::attachToPage(VstInt32 pageIndex, CView* control)
 {
-    if (mEditorPage.size() < pageIndex)
+    if (pageIndex < mEditorPage.size())
         mEditorPage[pageIndex]->addView(control);
 }
 
