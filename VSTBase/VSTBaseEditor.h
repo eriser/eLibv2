@@ -8,6 +8,7 @@
 
 #include <Util/Logger.h>
 #include <Data/EditorProperties.h>
+#include <Data/EditorParameter.h>
 
 #include <VSTBase/VSTBaseBitmapManager.h>
 #include <VSTBase/VSTBaseClass.h>
@@ -16,20 +17,12 @@
 #include <audioeffectx.h>
 #include <vstcontrols.h>
 
+using namespace eLibV2::Data;
+
 namespace eLibV2
 {
     namespace VSTBase
     {
-        enum ControlType
-        {
-            kOnOffButton = 1,
-            kKickButton,
-            kTextLabel,
-            kOptionMenu,
-            kAnimKnob,
-            kNumControls
-        };
-
         class VSTBaseEditor : public AEffGUIEditor
         {
         public:
@@ -48,10 +41,38 @@ namespace eLibV2
             virtual void idle();
 
             CBitmap* getBitmap(const VstInt32 id);
-            CView* addControl(ControlType type, CControlListener *listener, CPoint size, CPoint offset, VstInt32 tag, VstInt32 bitmapId, CPoint handle);
-            void attachToPage(VstInt32 pageIndex, CView * control);
+
+            /**
+            add a gui-control to internal manager
+            @param type the type control @see ControlType
+            @param listener the listener for control-events. usually the editor itself
+            @param position desired position of control
+            @param tag internal id used within valueChanged or setParameter
+            @param numBitmaps number of sub-bitmaps present in bitmap for control (has to be loaded into BitmapManager)
+            @param bitmapId id which was used to load bitmap into BitmapManager
+            @param handle ???
+            */
+            CView* addControl(EditorParameter::ControlType type, CControlListener* listener, CPoint position, VstInt32 tag, VstInt32 numBitmaps, VstInt32 bitmapId, CPoint handle);
+
+            /**
+            set value of specified control
+            @param type type of control @see ControlType
+            @param tag internal id used to specify the gui-control
+            @param value value the control should be set to
+            */
+            void setControlValue(EditorParameter::ControlType type, VstInt32 tag, double value);
+
+            /**
+            attach gui-control to the ViewContainer with the given index
+            @param pageIndex index of ViewContainer
+            @param control gui-control to attach
+            */
+            void attachToPage(VstInt32 pageIndex, CView* control);
 
         protected:
+            /**
+            abstract method which is called when editor is opened
+            */
             virtual bool openInvoked() = 0;
 
         private:
@@ -60,7 +81,12 @@ namespace eLibV2
             VSTBaseBitmapManager bitmapManager;
 
             // controls
-            std::vector<CKickButton *> mKickButtons;
+            std::map<VstInt32, COnOffButton*> mOnOffButtons;
+            std::map<VstInt32, CKickButton*> mKickButtons;
+            std::map<VstInt32, CTextLabel*> mTextLabels;
+            std::map<VstInt32, COptionMenu*> mOptionMenus;
+            std::map<VstInt32, CAnimKnob*> mAnimKnobs;
+            std::map<VstInt32, CMovieBitmap*> mMovieBitmap;
 
         protected:
             VstInt16 mActivePage;

@@ -15,6 +15,9 @@ void ModuleLogger::print(unsigned int loggingClass, const char* format, ...)
 
     va_start(args, format);
     vsnprintf(debugBuffer, sizeof(debugBuffer), format, args);
+
+    // append \n at the end
+    snprintf(debugBuffer, sizeof(debugBuffer), "%s\n", debugBuffer);
     if (outputType == ModuleLogger::OUTPUT_TYPE_DBGVIEW)
         OutputDebugString(debugBuffer);
     else if (outputType == ModuleLogger::OUTPUT_TYPE_CONSOLE)

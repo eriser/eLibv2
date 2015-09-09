@@ -46,7 +46,7 @@ int ManagedBuffer::Read(int bufferIndex, int readSize, int* output)
                 if (m_readingPosition[bufferIndex] > m_writingPosition[bufferIndex])
                     ReadAhead = true;
 
-//                ModuleLogger::print("read (%li) from %i [%li]\n", readSize, m_readingPosition[bufferIndex], bufferIndex);
+//                ModuleLogger::print("read (%li) from %i [%li]", readSize, m_readingPosition[bufferIndex], bufferIndex);
                 if (m_readingPosition[bufferIndex] + readSize > m_bufferSize)
                 {
                     int byteCountSecondRead = (m_readingPosition[bufferIndex] + readSize) % m_bufferSize;
@@ -105,7 +105,7 @@ int ManagedBuffer::Write(int bufferIndex, int writeSize, int* input)
                 if (m_writingPosition[bufferIndex] > m_readingPosition[bufferIndex])
                     WriteAhead = true;
 
-//                ModuleLogger::print("write (%li) to %i [%li]\n", writeSize, m_writingPosition[bufferIndex], bufferIndex);
+//                ModuleLogger::print("write (%li) to %i [%li]", writeSize, m_writingPosition[bufferIndex], bufferIndex);
                 if (m_writingPosition[bufferIndex] + writeSize > m_bufferSize)
                 {
                     int byteCountSecondRead = (m_writingPosition[bufferIndex] + writeSize) % m_bufferSize;

@@ -243,11 +243,11 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
     case __audioMasterPinConnectedDeprecated:
         // this is called by some plugins prior to vst2.4
-//        ModuleLogger::print(LOG_CLASS_PLUGIN, "pin connected\n");
+//        ModuleLogger::print(LOG_CLASS_PLUGIN, "pin connected");
         break;
 
     case __audioMasterWantMidiDeprecated:
-//        ModuleLogger::print(LOG_CLASS_PLUGIN, "want midi\n");
+//        ModuleLogger::print(LOG_CLASS_PLUGIN, "want midi");
         break;
 
     case audioMasterGetTime:
@@ -355,7 +355,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
                     VstInt16 note = midiData[1]; // &0x7f;
                     VstInt16 velocity = midiData[2]; // &0x7f;
 
-                    ModuleLogger::print(LOG_CLASS_PLUGIN, "MIDI event received: %i %i %i %i\n", channel, status, note, velocity);
+                    ModuleLogger::print(LOG_CLASS_PLUGIN, "MIDI event received: %i %i %i %i", channel, status, note, velocity);
                 }
                 break;
 

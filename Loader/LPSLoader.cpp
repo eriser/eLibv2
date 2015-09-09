@@ -50,7 +50,7 @@ int LPSLoader::Load(std::string filename)
     lpsfile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!lpsfile.good())
     {
-        ModuleLogger::print(LOG_CLASS_LOADER, "file '%s' not found\nplease reload manually", filename.c_str());
+        ModuleLogger::print(LOG_CLASS_LOADER, "file '%s' not found.\nplease reload manually", filename.c_str());
         return LPS_ERROR_FILENOTFOUND;
     }
     tracknum = 0;

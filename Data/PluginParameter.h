@@ -48,7 +48,7 @@ namespace eLibV2
         };
 
         typedef std::vector<PluginParameter> PluginParameters;
-        typedef PluginParameters::iterator ParameterIterator;
+        typedef PluginParameters::iterator PluginParameterIterator;
     }
 }
 

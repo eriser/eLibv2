@@ -91,25 +91,49 @@ void VSTBaseEditor::close()
 
 void VSTBaseEditor::idle()
 {
-    ModuleLogger::print(LOG_CLASS_VSTBASE, "idle");
+    //ModuleLogger::print(LOG_CLASS_VSTBASE, "idle");
 
     AEffGUIEditor::idle();
 }
 
-CView* VSTBaseEditor::addControl(ControlType type, CControlListener *listener, CPoint size, CPoint offset, VstInt32 tag, VstInt32 bitmapId, CPoint handle)
+CView* VSTBaseEditor::addControl(EditorParameter::ControlType type, CControlListener *listener, CPoint position, VstInt32 tag, VstInt32 numBitmaps, VstInt32 bitmapId, CPoint handle)
 {
-    CRect tempSize;
-    CPoint bitmapSize(getBitmap(bitmapId)->getWidth(), getBitmap(bitmapId)->getHeight() / 2);
+    CPoint bitmapSize(getBitmap(bitmapId)->getWidth(), getBitmap(bitmapId)->getHeight() / numBitmaps);
+    CRect tempSize(position.x, position.y, bitmapSize.x + position.x, bitmapSize.y + position.y);
 
     switch (type)
     {
-        case kKickButton:
-            tempSize(offset.x, offset.y, bitmapSize.x + offset.x, bitmapSize.y + offset.y);
-            mKickButtons.push_back(new CKickButton(tempSize, listener, tag, CCoord(bitmapSize.y), getBitmap(bitmapId), handle));
-            return mKickButtons[mKickButtons.size() - 1];
+        case EditorParameter::OnOffButton:
+            mOnOffButtons[tag] = new COnOffButton(tempSize, listener, tag, getBitmap(bitmapId));
+            return mOnOffButtons[tag];
+
+        case EditorParameter::KickButton:
+            mKickButtons[tag] = new CKickButton(tempSize, listener, tag, CCoord(bitmapSize.y), getBitmap(bitmapId), handle);
+            return mKickButtons[tag];
+
+        case EditorParameter::AnimKnob:
+            mAnimKnobs[tag] = new CAnimKnob(tempSize, listener, tag, numBitmaps, getBitmap(bitmapId)->getHeight() / numBitmaps, getBitmap(bitmapId), handle);
+            return mAnimKnobs[tag];
+
+        case EditorParameter::MovieBitmap:
+            mMovieBitmap[tag] = new CMovieBitmap(tempSize, listener, tag, numBitmaps, getBitmap(bitmapId)->getHeight() / numBitmaps, getBitmap(bitmapId), handle);
+            return mMovieBitmap[tag];
     }
 
     return 0;
+}
+
+void VSTBaseEditor::setControlValue(EditorParameter::ControlType type, VstInt32 tag, double value)
+{
+    switch (type)
+    {
+        case EditorParameter::MovieBitmap:
+            if (mMovieBitmap.count(tag) != 0)
+            {
+                mMovieBitmap[tag]->setValue(value);
+            }
+            break;
+    }
 }
 
 void VSTBaseEditor::attachToPage(VstInt32 pageIndex, CView* control)

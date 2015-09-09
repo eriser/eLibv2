@@ -56,14 +56,14 @@ bool PluginInterface::AttachHostCallback()
 {
     PluginEntryProc mainProc = NULL;
 
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Searching for entry function...\n");
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Searching for entry function...");
 #if WIN32
     try
     {
         mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "VSTPluginMain");
         if (!mainProc)
         {
-            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> VSTPluginMain not found. Trying main instead.\n");
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> VSTPluginMain not found. Trying main instead.");
             mainProc = (PluginEntryProc)GetProcAddress((HMODULE)m_pModule, "main");
         }
 
@@ -75,31 +75,31 @@ bool PluginInterface::AttachHostCallback()
 
         if (mainProc)
         {
-            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Creating effect instance...\n");
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Creating effect instance...");
             m_pEffect = mainProc(m_pHostCallback);
 
             if (m_pEffect)
                 return true;
             else
-                ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Failed to create effect instance!\n");
+                ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Failed to create effect instance!");
         }
         else
-            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'.\n", m_FileName.c_str());
+            ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: VST Plugin entry function not found! Tried 'VSTPluginMain' and 'main'.", m_FileName.c_str());
     }
     catch (std::bad_alloc)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: MEMORY ERROR: std::bad_alloc occured during plugin initialization\n", m_FileName.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: MEMORY ERROR: std::bad_alloc occured during plugin initialization", m_FileName.c_str());
     }
     catch (...)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Exception: %s: \n", m_FileName.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Exception: %s: ", m_FileName.c_str());
     }
     return false;
 }
 
 void PluginInterface::SetupPlugin()
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Setting up plugin...\n");
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Setting up plugin...");
     m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
     SetBlocksize(m_uiBlocksize);
     m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
@@ -112,18 +112,18 @@ void PluginInterface::SetupPlugin()
 
     if (m_pEffect->flags & effFlagsIsSynth)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is an instrument plugin...\n");
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is an instrument plugin...");
         m_ePluginType = PluginType::PLUGIN_TYPE_INSTRUMENT;
     }
     else
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is an effect plugin...\n");
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is an effect plugin...");
         m_ePluginType = PluginType::PLUGIN_TYPE_EFFECT;
     }
 
     if (m_pEffect->dispatcher(m_pEffect, effGetPlugCategory, 0, 0, NULL, 0.0f) == kPlugCategShell)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is a shell plugin...\n");
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> This is a shell plugin...");
         m_ePluginType = PluginType::PLUGIN_TYPE_SHELL;
     }
 
@@ -200,7 +200,7 @@ void PluginInterface::SetBlocksize(VstInt32 blocksize)
 
 void PluginInterface::Open()
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Open requested...\n", m_sPluginID.c_str());
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Open requested...", m_sPluginID.c_str());
     if (m_pEffect)
     {
         // call open -> empty implementation by default?
@@ -210,7 +210,7 @@ void PluginInterface::Open()
 
 void PluginInterface::Close()
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...\n", m_sPluginID.c_str());
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Close requested...", m_sPluginID.c_str());
     if (m_pEffect)
     {
         // call close -> empty implementation by default?
@@ -223,7 +223,7 @@ void PluginInterface::Start()
 {
     try
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...\n", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Start requested...", m_sPluginID.c_str());
         // call resume
         m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 1, NULL, 0.0f);
         //    m_pEffect->dispatcher(m_pEffect, effStartProcess, 0, 0, NULL, 0.0f);
@@ -237,15 +237,15 @@ void PluginInterface::Start()
     }
     catch (const std::exception& e)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start(): %s\n", e.what());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start(): %s", e.what());
     }
     catch (const std::string& s)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start(): %s\n", s.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start(): %s", s.c_str());
     }
     catch (...)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start()\n");
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Start()");
     }
 }
 
@@ -253,7 +253,7 @@ void PluginInterface::Stop()
 {
     try
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested...\n", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Stop requested...", m_sPluginID.c_str());
         m_bPluginRunning = false;
         // call suspend
         m_pEffect->dispatcher(m_pEffect, effMainsChanged, 0, 0, NULL, 0.0f);
@@ -261,15 +261,15 @@ void PluginInterface::Stop()
     }
     catch (std::exception e)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop(): %s\n", e.what());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop(): %s", e.what());
     }
     catch (const std::string& s)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop(): %s\n", s.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop(): %s", s.c_str());
     }
     catch (...)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop()\n");
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> exception in Stop()");
     }
 }
 
@@ -277,7 +277,7 @@ void PluginInterface::OpenEditor(void* window)
 {
     if (m_bHasEditor)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...\n", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Open requested...", m_sPluginID.c_str());
         m_pEffect->dispatcher(m_pEffect, effEditOpen, 0, 0, window, 0);
     }
 }
@@ -286,7 +286,7 @@ void PluginInterface::CloseEditor()
 {
     if (m_bHasEditor)
     {
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...\n", m_sPluginID.c_str());
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Editor Close requested...", m_sPluginID.c_str());
         m_pEffect->dispatcher(m_pEffect, effEditClose, 0, 0, NULL, 0);
     }
 }
@@ -314,7 +314,7 @@ std::string PluginInterface::GetEffectName()
 
 void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
 {
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Receiving Midi message...\n", m_sPluginID.c_str());
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Receiving Midi message...", m_sPluginID.c_str());
 
     if (status == 0x90)
     {
@@ -341,7 +341,7 @@ void PluginInterface::PrintProperties()
 {
     std::stringstream ss;
 
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Gathering properties...\n");
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Gathering properties...");
 
     char effectName[256] = { 0 };
     char vendorString[256] = { 0 };
@@ -392,12 +392,12 @@ void PluginInterface::PrintProperties()
 void PluginInterface::PrintPrograms()
 {
     // Iterate programs...
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing programs...\n");
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing programs...");
     for (VstInt32 progIndex = 0; progIndex < m_pEffect->numPrograms; progIndex++)
     {
         char progName[256] = { 0 };
         GetProgramName(progIndex, progName);
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Program %li: %s\n", progIndex, progName);
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Program %li: %s", progIndex, progName);
     }
 }
 
@@ -418,7 +418,7 @@ void PluginInterface::SetProgram(VstInt32 progIndex)
 void PluginInterface::PrintParameters()
 {
     // Iterate parameters...
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing parameters...\n");
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing parameters...");
     for (VstInt32 paramIndex = 0; paramIndex < m_pEffect->numParams; paramIndex++)
     {
         char paramName[256] = { 0 };
@@ -430,7 +430,7 @@ void PluginInterface::PrintParameters()
         m_pEffect->dispatcher(m_pEffect, effGetParamDisplay, paramIndex, 0, paramDisplay, 0.0f);
         float value = m_pEffect->getParameter(m_pEffect, paramIndex);
 
-        ModuleLogger::print(LOG_CLASS_PLUGIN, "Param %li: %s ['%s' '%s'] (default: %f)\n", paramIndex, paramName, paramDisplay, paramLabel, value);
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "Param %li: %s ['%s' '%s'] (default: %f)", paramIndex, paramName, paramDisplay, paramLabel, value);
     }
 }
 
@@ -438,7 +438,7 @@ void PluginInterface::PrintCapabilities()
 {
     // Can-do nonsense...
     std::stringstream ss;
-    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing capabilities...\n");
+    ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> Listing capabilities...");
     static const char* canDos[] =
     {
         "sendVstEvents",
