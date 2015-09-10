@@ -13,6 +13,7 @@
 #include <Data/PluginProgram.h>
 
 // loader modules
+#include <Loader/EditorParameterLoader.h>
 #include <Loader/LPSLoader.h>
 #include <Loader/PluginParameterLoader.h>
 #include <Loader/PresetLoader.h>

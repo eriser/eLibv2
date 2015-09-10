@@ -5,9 +5,11 @@
 
 #include <Data/PluginParameter.h>
 #include <Util/Xml/XmlParser.h>
+#include <Util/Logger.h>
 
 using namespace eLibV2::Data;
 using namespace eLibV2::XML;
+using namespace eLibV2::Util;
 
 namespace eLibV2
 {

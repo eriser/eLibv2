@@ -119,8 +119,7 @@ CView* VSTBaseEditor::addControl(EditorParameter::ControlType type, CControlList
             mMovieBitmap[tag] = new CMovieBitmap(tempSize, listener, tag, numBitmaps, getBitmap(bitmapId)->getHeight() / numBitmaps, getBitmap(bitmapId), handle);
             return mMovieBitmap[tag];
     }
-
-    return 0;
+    return NULL;
 }
 
 void VSTBaseEditor::setControlValue(EditorParameter::ControlType type, VstInt32 tag, double value)
