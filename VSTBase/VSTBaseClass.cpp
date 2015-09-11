@@ -23,7 +23,7 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties pro
             canProcessReplacing();
         if (mProperties.canDoubleReplacing())
             canDoubleReplacing();
-        setUniqueID(properties.getIdAsLong());
+        setUniqueID(mProperties.getIdAsLong());
     }
     suspend();
 }
@@ -228,7 +228,7 @@ bool VSTBaseClass::getEffectName(char* name)
     std::stringstream temp;
 
     ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getEffectName");
-    temp << mProperties.getId() << " " << (int)mProperties.getVersion();
+    temp << mProperties.getName() << " " << (int)mProperties.getVersion();
 
     vst_strncpy(name, temp.str().c_str(), kVstMaxEffectNameLen);
     return true;
@@ -253,6 +253,14 @@ VstInt32 VSTBaseClass::getVendorVersion()
     return mProperties.getVersion();
 }
 
+//-----------------------------------------------------------------------------------------
+bool VSTBaseClass::getVendorString(char* text)
+{
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::getVendorString: %s", mProperties.getVendor().c_str());
+    vst_strncpy(text, mProperties.getVendor().c_str(), kVstMaxVendorStrLen);
+
+    return true;
+}
 
 //-----------------------------------------------------------------------------------------
 // general processing setup

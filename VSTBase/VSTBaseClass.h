@@ -66,7 +66,7 @@ namespace eLibV2
 
                 // vendor and product identifications
                 virtual bool getEffectName(char* name);
-                virtual bool getVendorString(char* text) { vst_strncpy (text, "SYS AudioResearch", kVstMaxVendorStrLen); return true; }
+                virtual bool getVendorString(char* text);
                 virtual bool getProductString(char* text);
                 virtual VstInt32 getVendorVersion();
 

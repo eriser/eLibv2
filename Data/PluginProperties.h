@@ -17,7 +17,18 @@ namespace eLibV2
         class PluginProperties
         {
         public:
-            PluginProperties() { mSynth = false; mEditor = false; mId = "NoId"; mVersion = 0x0815; mNumInputs = 2; mNumOutputs = 2; mNumParameters = 0; mNumPrograms = 0; }
+            PluginProperties() :
+                mSynth(false),
+                mEditor(false),
+                mId("NoId"),
+                mName("NoName"),
+                mVendor("NoVendor"),
+                mVersion(0x0815),
+                mNumInputs(2),
+                mNumOutputs(2),
+                mNumParameters(0),
+                mNumPrograms(0)
+            {}
 
             static PluginProperties loadFromXml(std::string filename)
             {
@@ -39,6 +50,10 @@ namespace eLibV2
 
                                 if (attributeName == "id")
                                     props.setId(attributeValue);
+                                else if (attributeName == "name")
+                                    props.setName(attributeValue);
+                                else if (attributeName == "vendor")
+                                    props.setVendor(attributeValue);
                                 else if (attributeName == "version")
                                     props.setVersion(atol(attributeValue.c_str()));
                                 else if (attributeName == "inputs")
@@ -71,6 +86,8 @@ namespace eLibV2
             int getNumInputs() { return mNumInputs; }
             int getNumOutputs() { return mNumOutputs; }
             std::string getId() { return mId; }
+            std::string getName() { return mName; }
+            std::string getVendor() { return mVendor; }
             long getIdAsLong()
             {
                 const char *s = mId.c_str();
@@ -88,6 +105,8 @@ namespace eLibV2
             void setNumInputs(int numInputs) { mNumInputs = numInputs; }
             void setNumOutputs(int numOutputs) { mNumOutputs = numOutputs; }
             void setId(std::string id) { mId = id; }
+            void setName(std::string name) { mName = name; }
+            void setVendor(std::string vendor) { mVendor = vendor; }
             void setVersion(int version) { mVersion = version; }
             void setSynth(bool synth) { mSynth = synth; }
             void setEditor(bool active) { mEditor = active; }
@@ -99,6 +118,8 @@ namespace eLibV2
             bool mCanProcessReplacing, mCanDoubleReplacing;
             bool mEditor;
             std::string mId;
+            std::string mName;
+            std::string mVendor;
             int mVersion;
             int mNumInputs, mNumOutputs;
             int mNumPrograms, mNumParameters;
