@@ -4,11 +4,12 @@
 #include <map>
 
 #include <Util/Defines.h>
+#include <Util/Logger.h>
 
 XERCES_CPP_NAMESPACE_USE;
 
-using namespace eLibV2::Util;
 using namespace eLibV2::XML;
+using namespace eLibV2::Util;
 
 void parseNodes(std::vector<GenericNode*> *nodes, XERCES_CPP_NAMESPACE::DOMNode *node)
 {

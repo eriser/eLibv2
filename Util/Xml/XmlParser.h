@@ -1,7 +1,6 @@
 #ifndef MODXMLPARSER_H_
 #define MODXMLPARSER_H_
 
-#include <Util/Logger.h>
 #include <Util/Xml/GenericNode.h>
 
 #include <string>

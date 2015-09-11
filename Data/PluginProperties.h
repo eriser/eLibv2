@@ -17,7 +17,7 @@ namespace eLibV2
         class PluginProperties
         {
         public:
-            PluginProperties() { mSynth = false; mEditor = false; mId = "NoId"; mVersion = 0x0815; mNumInputs = 2; mNumOutputs = 2; mNumParameters = 2; mNumPrograms = 16; }
+            PluginProperties() { mSynth = false; mEditor = false; mId = "NoId"; mVersion = 0x0815; mNumInputs = 2; mNumOutputs = 2; mNumParameters = 0; mNumPrograms = 0; }
 
             static PluginProperties loadFromXml(std::string filename)
             {

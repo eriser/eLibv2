@@ -38,7 +38,7 @@ namespace eLibV2
                                 std::string attributeValue = (*attributeIt).second;
 
                                 if (attributeName == "index")
-                                    currentPageIndex = atoi(attributeValue.c_str());
+                                    currentPageIndex = atoi(attributeValue.c_str()) - 1;
                             }
                         }
                         else if ((*nodeIt)->getName() == "control")
