@@ -2,6 +2,7 @@
 #define __ELBI2_H__
 
 // block modules
+#include <Connection/ConnectionPool.h>
 #include <Connection/ConstantConnection.h>
 #include <Connection/InputConnection.h>
 #include <Connection/OutputConnection.h>
