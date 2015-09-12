@@ -15,7 +15,8 @@ namespace eLibV2
         public:
             enum ParameterType
             {
-                ParameterTypeBoolean = 1,
+                ParameterTypeUndefined = 0,
+                ParameterTypeBoolean,
                 ParameterTypeInteger,
                 ParameterTypeDouble,
             };

@@ -10,7 +10,6 @@
 #include <Util/Defines.h>
 
 // vst headers
-#include <audioeffectx.h>
 #include <vstcontrols.h>
 
 namespace eLibV2
@@ -23,13 +22,18 @@ namespace eLibV2
             VSTBaseBitmapManager() {}
             ~VSTBaseBitmapManager();
 
-            void addBitmap(const VstInt32 id, CBitmap *bitmap);
-            CBitmap *getBitmap(const VstInt32 bitmapId) { return mBitmaps[bitmapId]; }
-            void forgetBitmap(const VstInt32 id);
+            void addBitmap(const std::string id, CBitmap *bitmap);
+            void addBackgroundBitmap(const unsigned int pageIndex, CBitmap *bitmap);
+
+            CBitmap* getBitmap(const std::string bitmapId) { return mBitmaps[bitmapId]; }
+            CBitmap* getBackgroundBitmap(const unsigned int pageIndex) { return mBackgroundBitmaps[pageIndex]; }
+
+            void forgetBitmap(const std::string id);
             void clearAll();
 
         private:
-            std::map<VstInt32, CBitmap*> mBitmaps;
+            std::map<std::string, CBitmap*> mBitmaps;
+            std::map<unsigned int, CBitmap*> mBackgroundBitmaps;
         };
     }
 }

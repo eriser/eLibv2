@@ -18,8 +18,11 @@ void VSTBaseEditor::setupEditor(const EditorProperties properties)
     mProperties = properties;
 
     // load the page background bitmaps
-    for (std::vector<VstInt32>::iterator it = mProperties.mBackgroundBitmaps.begin(); it != mProperties.mBackgroundBitmaps.end(); it++)
-        bitmapManager.addBitmap(*it, new CBitmap(*it));
+    for (std::map<unsigned int, unsigned int>::iterator it = properties.mBackgroundBitmaps.begin(); it != properties.mBackgroundBitmaps.end(); ++it)
+    {
+        if (it->second != 0)
+            bitmapManager.addBackgroundBitmap(it->first, new CBitmap(it->second));
+    }
 
     // init the size of the plugin
     mActivePage = 0;
@@ -30,8 +33,8 @@ void VSTBaseEditor::setupEditor(const EditorProperties properties)
     rect.right  = (short)bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getWidth();
     rect.bottom = (short)bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getHeight();
 #else
-    rect.right  = (VstInt16)bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getWidth();
-    rect.bottom = (VstInt16)bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getHeight();
+    rect.right  = (VstInt16)bitmapManager.getBackgroundBitmap(mActivePage)->getWidth();
+    rect.bottom = (VstInt16)bitmapManager.getBackgroundBitmap(mActivePage)->getHeight();
 #endif
 }
 
@@ -48,18 +51,21 @@ bool VSTBaseEditor::open(void *ptr)
     //--init background frame-----------------------------------------------
     // We use a local CFrame object so that calls to setParameter won't call into objects which may not exist yet. 
     // If all GUI objects are created we assign our class member to this one. See bottom of this method.
-    CRect size(0, 0, bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getWidth(), bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getHeight());
+    CRect size(0, 0, bitmapManager.getBackgroundBitmap(mActivePage)->getWidth(), bitmapManager.getBackgroundBitmap(mActivePage)->getHeight());
     CFrame* lFrame = new CFrame(size, ptr, this);
 
     // setup editor pages
-    for (std::vector<VstInt32>::iterator it = mProperties.mBackgroundBitmaps.begin(); it != mProperties.mBackgroundBitmaps.end(); it++)
-        mEditorPage.push_back(new CViewContainer(size, lFrame, bitmapManager.getBitmap(*it)));
+    for (std::map<unsigned int, unsigned int>::iterator it = mProperties.mBackgroundBitmaps.begin(); it != mProperties.mBackgroundBitmaps.end(); it++)
+        mEditorPage.push_back(new CViewContainer(size, lFrame, bitmapManager.getBackgroundBitmap(it->first)));
 
     lFrame->addView(mEditorPage[mActivePage]);
 
     // load all control bitmaps
-    for (std::vector<VstInt32>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
-        bitmapManager.addBitmap(*it, new CBitmap(*it));
+    for (std::map<std::string, unsigned int>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
+    {
+        if ((it->first != "") && (it->second != 0))
+            bitmapManager.addBitmap(it->first, new CBitmap(it->second));
+    }
 
     // init things in open method of derived class (design pattern "template method" ;-) )
     openInvoked();
@@ -81,8 +87,8 @@ void VSTBaseEditor::close()
     mKickButtons.clear();
 
     // forget all control bitmaps
-    for (std::vector<VstInt32>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
-        bitmapManager.forgetBitmap(*it);
+    for (std::map<std::string, unsigned int>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
+        bitmapManager.forgetBitmap(it->first);
 
     if (frame)
         delete frame;
@@ -96,7 +102,7 @@ void VSTBaseEditor::idle()
     AEffGUIEditor::idle();
 }
 
-CView* VSTBaseEditor::addControl(EditorParameter::ControlType type, CControlListener *listener, CPoint position, VstInt32 tag, VstInt32 numBitmaps, VstInt32 bitmapId, CPoint handle)
+CView* VSTBaseEditor::addControl(const EditorParameter::ControlType type, CControlListener *listener, const CPoint position, const VstInt32 tag, const VstInt32 numBitmaps, const std::string bitmapId, CPoint handle)
 {
     CPoint bitmapSize(getBitmap(bitmapId)->getWidth(), getBitmap(bitmapId)->getHeight() / numBitmaps);
     CRect tempSize(position.x, position.y, bitmapSize.x + position.x, bitmapSize.y + position.y);
@@ -122,7 +128,7 @@ CView* VSTBaseEditor::addControl(EditorParameter::ControlType type, CControlList
     return NULL;
 }
 
-void VSTBaseEditor::setControlValue(EditorParameter::ControlType type, VstInt32 tag, double value)
+void VSTBaseEditor::setControlValue(const EditorParameter::ControlType type, const VstInt32 tag, const double value)
 {
     switch (type)
     {
@@ -135,13 +141,13 @@ void VSTBaseEditor::setControlValue(EditorParameter::ControlType type, VstInt32 
     }
 }
 
-void VSTBaseEditor::attachToPage(VstInt32 pageIndex, CView* control)
+void VSTBaseEditor::attachToPage(const VstInt32 pageIndex, CView* control)
 {
     if (pageIndex < mEditorPage.size())
         mEditorPage[pageIndex]->addView(control);
 }
 
-CBitmap* VSTBaseEditor::getBitmap(const VstInt32 bitmapId)
+CBitmap* VSTBaseEditor::getBitmap(const std::string bitmapId)
 {
     return bitmapManager.getBitmap(bitmapId);
 }

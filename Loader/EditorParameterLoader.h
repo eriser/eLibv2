@@ -43,7 +43,8 @@ namespace eLibV2
                         }
                         else if ((*nodeIt)->getName() == "control")
                         {
-                            unsigned int pageIndex, posX, posY, tag, bitmapId, subpix;
+                            unsigned int pageIndex, posX, posY, tag, subpix;
+                            std::string bitmapId;
                             EditorParameter::ControlType type = EditorParameter::ControlType::Undefined;
 
                             StringMap attributes = (*nodeIt)->getAttributes();
@@ -72,7 +73,7 @@ namespace eLibV2
                                 else if (attributeName == "tag")
                                     tag = atoi(attributeValue.c_str());
                                 else if (attributeName == "bitmapid")
-                                    bitmapId = atoi(attributeValue.c_str());
+                                    bitmapId = attributeValue;
                                 else if (attributeName == "subpix")
                                     subpix = atoi(attributeValue.c_str());
                             }

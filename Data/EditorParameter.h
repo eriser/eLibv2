@@ -26,7 +26,7 @@ namespace eLibV2
             };
 
         public:
-            EditorParameter(const ControlType type, const unsigned int pageIndex, const unsigned int posX, const unsigned int posY, const unsigned int tag, const unsigned int bitmapId, const unsigned int subpix)
+            EditorParameter(const ControlType type, const unsigned int pageIndex, const unsigned int posX, const unsigned int posY, const unsigned int tag, const std::string bitmapId, const unsigned int subpix)
                 : mType(type),
                 mPageIndex(pageIndex),
                 mPosX(posX),
@@ -41,7 +41,7 @@ namespace eLibV2
             unsigned int getPosX() { return mPosX; }
             unsigned int getPosY() { return mPosY; }
             unsigned int getTag() { return mTag; }
-            unsigned int getBitmapId() { return mBitmapId; }
+            std::string getBitmapId() { return mBitmapId; }
             unsigned int getSubpix() { return mSubpix; }
 
         private:
@@ -50,7 +50,7 @@ namespace eLibV2
             unsigned int mPosX;
             unsigned int mPosY;
             unsigned int mTag;
-            unsigned int mBitmapId;
+            std::string mBitmapId;
             unsigned int mSubpix;
         };
 

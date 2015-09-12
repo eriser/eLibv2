@@ -40,7 +40,7 @@ namespace eLibV2
 
             virtual void idle();
 
-            CBitmap* getBitmap(const VstInt32 id);
+            CBitmap* getBitmap(const std::string id);
 
             /**
             add a gui-control to internal manager
@@ -52,7 +52,7 @@ namespace eLibV2
             @param bitmapId id which was used to load bitmap into BitmapManager
             @param handle ???
             */
-            CView* addControl(EditorParameter::ControlType type, CControlListener* listener, CPoint position, VstInt32 tag, VstInt32 numBitmaps, VstInt32 bitmapId, CPoint handle);
+            CView* addControl(const EditorParameter::ControlType type, CControlListener* listener, const CPoint position, const VstInt32 tag, const VstInt32 numBitmaps, const std::string bitmapId, CPoint handle);
 
             /**
             set value of specified control
@@ -60,14 +60,14 @@ namespace eLibV2
             @param tag internal id used to specify the gui-control
             @param value value the control should be set to
             */
-            void setControlValue(EditorParameter::ControlType type, VstInt32 tag, double value);
+            void setControlValue(const EditorParameter::ControlType type, const VstInt32 tag, const double value);
 
             /**
             attach gui-control to the ViewContainer with the given index
             @param pageIndex index of ViewContainer
             @param control gui-control to attach
             */
-            void attachToPage(VstInt32 pageIndex, CView* control);
+            void attachToPage(const VstInt32 pageIndex, CView* control);
 
         protected:
             /**
@@ -89,7 +89,7 @@ namespace eLibV2
             std::map<VstInt32, CMovieBitmap*> mMovieBitmap;
 
         protected:
-            VstInt16 mActivePage;
+            unsigned int mActivePage;
             std::vector<CViewContainer*> mEditorPage;
         };
     }

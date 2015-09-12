@@ -13,7 +13,13 @@ void VSTBaseBitmapManager::clearAll()
 {
     if (mBitmaps.size())
     {
-        for (std::map<VstInt32, CBitmap *>::iterator it = mBitmaps.begin(); it != mBitmaps.end(); it++)
+        for (std::map<std::string, CBitmap *>::iterator it = mBitmaps.begin(); it != mBitmaps.end(); it++)
+        {
+            it->second->forget();
+            it->second = NULL;
+        }
+
+        for (std::map<unsigned int, CBitmap *>::iterator it = mBackgroundBitmaps.begin(); it != mBackgroundBitmaps.end(); it++)
         {
             it->second->forget();
             it->second = NULL;
@@ -22,14 +28,21 @@ void VSTBaseBitmapManager::clearAll()
     mBitmaps.clear();
 }
 
-void VSTBaseBitmapManager::addBitmap(const VstInt32 bitmapId, CBitmap *bitmap)
+void VSTBaseBitmapManager::addBackgroundBitmap(const unsigned int pageIndex, CBitmap *bitmap)
+{
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseBitmapManager::addBitmap: add id: %d", pageIndex);
+    mBackgroundBitmaps[pageIndex] = bitmap;
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseBitmapManager::addBitmap: size: %d", mBitmaps.size());
+}
+
+void VSTBaseBitmapManager::addBitmap(const std::string bitmapId, CBitmap *bitmap)
 {
     ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseBitmapManager::addBitmap: add id: %d", bitmapId);
     mBitmaps[bitmapId] = bitmap;
     ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseBitmapManager::addBitmap: size: %d", mBitmaps.size());
 }
 
-void VSTBaseBitmapManager::forgetBitmap(const VstInt32 bitmapId)
+void VSTBaseBitmapManager::forgetBitmap(const std::string bitmapId)
 {
     ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseBitmapManager::forgetBitmap: erase id: %d", bitmapId);
     if (mBitmaps[bitmapId])
