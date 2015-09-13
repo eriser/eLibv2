@@ -31,6 +31,14 @@
 #define sgn(x) x < 0.0 ? -1.0 : 1.0
 #endif
 
+#ifndef FLT_MIN_PLUS
+#define FLT_MIN_PLUS    1.175494351e-38
+#endif
+
+#ifndef FLT_MIN_MINUS
+#define FLT_MIN_MINUS  -1.175494351e-38
+#endif
+
 #define LOG_CLASS_ELIB          0x10000000
 #define LOG_CLASS_ASIO          LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_1
 #define LOG_CLASS_CONNECTION    LOG_CLASS_ELIB | ModuleLogger::LOGGING_CLASS_2

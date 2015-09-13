@@ -13,7 +13,11 @@ namespace eLibV2
         class BaseEffect : public BaseModule
         {
         public:
-            BaseEffect(std::string name = "BaseEffect") : BaseName(name), BaseConnection(1, 1) {}
+            BaseEffect(std::string name = "BaseEffect") : BaseName(name), BaseConnection(1, 1)
+            {
+                vsa = (1.0 / 4294967295.0);   // Very small amount (Denormal Fix)
+                filterOffset = 1.192092896e-07;
+            }
 
             /**
             reset internal module state to initialization
@@ -29,6 +33,8 @@ namespace eLibV2
 
         protected:
             double *pBuffer; ///< internal memory buffer used in subclasses
+            double vsa;
+            double filterOffset;
         };
     }
 }

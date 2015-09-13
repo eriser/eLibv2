@@ -33,16 +33,16 @@ namespace eLibV2
             get currently set samplerate
             @return samplerate in Hz
             */
-            virtual double getSamplerate(void) { return samplerate; }
+            virtual double getSamplerate(void) { return mSamplerate; }
 
             /**
             set samplerate for module
             @param Samplerate samplerate in Hz
             */
-            virtual void setSamplerate(double Samplerate) { samplerate = Samplerate; }
+            virtual void setSamplerate(double Samplerate) { mSamplerate = Samplerate; }
 
         protected:
-            double samplerate; ///< internally used samplerate
+            double mSamplerate; ///< internally used samplerate
         };
     }
 }

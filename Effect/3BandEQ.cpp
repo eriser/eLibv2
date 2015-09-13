@@ -22,7 +22,7 @@ void Fx3BandEQ::Reset(void)
 
 void Fx3BandEQ::setSamplerate(double Samplerate)
 {
-    samplerate = Samplerate;
+    mSamplerate = Samplerate;
 
     for (VstInt16 FreqIndex = 0; FreqIndex < (EQ_NUM_BANDS - 1); FreqIndex++)
         setFrequency(FreqIndex, dFrequency[FreqIndex]);
@@ -32,7 +32,7 @@ void Fx3BandEQ::setFrequency(VstInt16 Index, double Frequency)
 {
     memset(&Bands[Index], 0, sizeof(Bands[Index]));
     dFrequency[Index] = Frequency;
-    Bands[Index].Frequency = 2 * sin(PI * (dFrequency[Index] / samplerate));
+    Bands[Index].Frequency = 2 * sin(PI * (dFrequency[Index] / mSamplerate));
 }
 
 double Fx3BandEQ::CalcBand(VstInt16 BandIndex, double Input)

@@ -10,8 +10,6 @@ namespace eLibV2
 {
     namespace Effect
     {
-        static const double vsa = (1.0 / 4294967295.0);   // Very small amount (Denormal Fix)
-
         class Fx3BandEQ : public Base::BaseEffect
         {
         private:

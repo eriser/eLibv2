@@ -58,9 +58,9 @@ double BaseSequencer::Process(void)
 
     lCurrentSamplePosition++;
     if (bSync)
-        lNeededSamplePosition = (long)ModuleHelper::quarter2samples(dSpeed, dBpm, samplerate);
+        lNeededSamplePosition = (long)ModuleHelper::quarter2samples(dSpeed, dBpm, mSamplerate);
     else
-        lNeededSamplePosition = (long)ModuleHelper::ms2samples(dSpeed * 1000, samplerate);
+        lNeededSamplePosition = (long)ModuleHelper::ms2samples(dSpeed * 1000, mSamplerate);
 
     if (lCurrentSamplePosition >= lNeededSamplePosition)
     {

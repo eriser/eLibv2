@@ -42,6 +42,12 @@
 #include <Effect/VCF.h>
 #include <Effect/WaveWrap.h>
 
+// filter modules
+#include <Filter/ResonantBPF.h>
+#include <Filter/ResonantBSF.h>
+#include <Filter/ResonantHPF.h>
+#include <Filter/ResonantLPF.h>
+
 // midi event handling
 #include <MIDI/MidiEvent.h>
 #include <MIDI/MidiEventHandler.h>
