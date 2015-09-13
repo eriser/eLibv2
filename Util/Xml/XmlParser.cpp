@@ -44,6 +44,47 @@ void parseNodes(std::vector<GenericNode*> *nodes, XERCES_CPP_NAMESPACE::DOMNode 
     }
 }
 
+XmlParser::XmlParser(void *memory, const unsigned int size)
+{
+    bool retval = true;
+
+    try
+    {
+        XMLPlatformUtils::Initialize();
+        DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();
+        XercesDOMParser *parser = new XercesDOMParser;
+
+        parser->setValidationScheme(XercesDOMParser::Val_Auto);
+        parser->setDoNamespaces(false);
+        parser->setDoSchema(false);
+        parser->setHandleMultipleImports(true);
+        parser->setValidationSchemaFullChecking(false);
+        parser->setCreateEntityReferenceNodes(false);
+
+        parser->setErrorHandler(errReporter);
+
+        MemBufInputSource* memBufIS = new MemBufInputSource((const XMLByte*)memory, size, "xml-file", false);
+        parser->parse(*memBufIS);
+
+        nodes = new std::vector<GenericNode*>();
+
+        XERCES_CPP_NAMESPACE::DOMDocument *doc = parser->getDocument();
+        if (doc != NULL)
+        {
+            XERCES_CPP_NAMESPACE::DOMNode *node = (DOMNode*)doc->getDocumentElement();
+            parseNodes(nodes, node);
+        }
+
+        delete errReporter;
+        delete parser;
+        XMLPlatformUtils::Terminate();
+    }
+    catch (...)
+    {
+        ModuleLogger::print(LOG_CLASS_UTIL, "An error occurred during parsing");
+    }
+}
+
 // TODO: const for reading stream
 XmlParser::XmlParser(std::string filename)
 {

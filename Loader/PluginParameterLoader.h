@@ -18,11 +18,35 @@ namespace eLibV2
         class PluginParameterLoader
         {
         public:
+#if defined(WIN32)
+            static PluginParameters loadFromResource(HINSTANCE instance, unsigned int resourceId)
+            {
+                HRSRC hResource = NULL;
+                HGLOBAL hRData = NULL;
+                void *pRData;
+
+                hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
+                unsigned int bufferSize = SizeofResource(instance, hResource);
+                hRData = LoadResource(instance, hResource);
+                pRData = LockResource(hRData);
+                XmlParser parser(pRData, bufferSize);
+                nodeVector *nodes = parser.getNodes();
+
+                return load(nodes);
+            }
+#endif
+
             static PluginParameters loadFromXml(std::string filename)
             {
-                PluginParameters parameters;
                 XmlParser parser(filename);
                 nodeVector *nodes = parser.getNodes();
+
+                return load(nodes);
+            }
+
+            static PluginParameters load(nodeVector* nodes)
+            {
+                PluginParameters parameters;
                 if (nodes)
                 {
                     for (NodeVector::iterator nodeIt = nodes->begin(); nodeIt != nodes->end(); nodeIt++)

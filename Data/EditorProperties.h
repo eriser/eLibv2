@@ -29,12 +29,38 @@ namespace eLibV2
         public:
             EditorProperties() {}
 
-            static void loadFromXml(std::string filename)
+#if defined(WIN32)
+            static bool loadFromResource(HINSTANCE instance, unsigned int resourceId)
+            {
+                HRSRC hResource = NULL;
+                HGLOBAL hRData = NULL;
+                void *pRData;
+
+                hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
+                unsigned int bufferSize = SizeofResource(instance, hResource);
+                hRData = LoadResource(instance, hResource);
+                pRData = LockResource(hRData);
+                XmlParser parser(pRData, bufferSize);
+                nodeVector *nodes = parser.getNodes();
+
+                return load(nodes);
+            }
+#endif
+
+            static bool loadFromXml(std::string filename)
             {
                 XmlParser parser(filename);
                 nodeVector *nodes = parser.getNodes();
+
+                return load(nodes);
+            }
+
+            static bool load(nodeVector* nodes)
+            {
+                bool res = false;
                 if (nodes)
                 {
+                    res = true;
                     for (NodeVector::iterator nodeIt = nodes->begin(); nodeIt != nodes->end(); nodeIt++)
                     {
                         BitmapType type = BitmapTypeUndefined;
@@ -83,6 +109,7 @@ namespace eLibV2
                         }
                     }
                 }
+                return res;
             }
 
         private:

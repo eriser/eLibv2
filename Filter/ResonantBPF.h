@@ -37,7 +37,7 @@ namespace eLibV2
             {
                 mInternalBiquad = new BiQuad();
                 setCutoff(22050.0);
-                setQ(10.0);
+                setBW(10.0);
             }
 
             void setCutoff(const double cutoff)
@@ -46,9 +46,9 @@ namespace eLibV2
                 calcCoefficients();
             }
 
-            void setQ(const double q)
+            void setBW(const double bw)
             {
-                mQ = q;
+                mBW = bw;
                 calcCoefficients();
             }
 
@@ -61,9 +61,10 @@ namespace eLibV2
             void calcCoefficients(void)
             {
                 double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
+                double Q = 1.0 / mBW;
 
-                double BetaNumerator = 1.0 - tan(ThetaC / (2.0 * mQ));
-                double BetaDenominator = 1.0 + tan(ThetaC / (2.0 * mQ));
+                double BetaNumerator = 1.0 - tan(ThetaC / (2.0 * Q));
+                double BetaDenominator = 1.0 + tan(ThetaC / (2.0 * Q));
                 double Beta = 0.5 * (BetaNumerator / BetaDenominator);
 
                 double Gamma = (0.5 + Beta) * (cos(ThetaC));
@@ -111,7 +112,7 @@ namespace eLibV2
             BiQuad *mInternalBiquad;
 
             double mCutoff;
-            double mQ;
+            double mBW;
         };
     }
 }

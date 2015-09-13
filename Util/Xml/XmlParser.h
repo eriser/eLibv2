@@ -15,6 +15,7 @@ namespace eLibV2
         class XmlParser
         {
         public:
+            XmlParser(void *memory, const unsigned int size);
             XmlParser(std::string filename);
             nodeVector* getNodes() { return nodes; }
 
