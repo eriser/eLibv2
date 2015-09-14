@@ -15,8 +15,9 @@ namespace eLibV2
         public:
             BaseEffect(std::string name = "BaseEffect") : BaseName(name), BaseConnection(1, 1)
             {
-                vsa = (1.0 / 4294967295.0);   // Very small amount (Denormal Fix)
-                filterOffset = 1.192092896e-07;
+                mVSA = (1.0 / 4294967295.0);   // Very small amount (Denormal Fix)
+                mFilterOffset = 1.192092896e-07;
+                mMinimumThetaC = 0.0005;
             }
 
             /**
@@ -33,8 +34,9 @@ namespace eLibV2
 
         protected:
             double *pBuffer; ///< internal memory buffer used in subclasses
-            double vsa;
-            double filterOffset;
+            double mVSA;
+            double mFilterOffset;
+            double mMinimumThetaC;
         };
     }
 }

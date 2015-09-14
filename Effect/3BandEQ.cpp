@@ -39,7 +39,7 @@ double Fx3BandEQ::CalcBand(VstInt16 BandIndex, double Input)
 {
     double Freq = Bands[BandIndex].Frequency;
 
-    Bands[BandIndex].Poles[0] += (Freq * (Input - Bands[BandIndex].Poles[0])) + vsa;
+    Bands[BandIndex].Poles[0] += (Freq * (Input - Bands[BandIndex].Poles[0])) + mVSA;
     Bands[BandIndex].Poles[1] += (Freq * (Bands[BandIndex].Poles[0] - Bands[BandIndex].Poles[1]));
     Bands[BandIndex].Poles[2] += (Freq * (Bands[BandIndex].Poles[1] - Bands[BandIndex].Poles[2]));
     Bands[BandIndex].Poles[3] += (Freq * (Bands[BandIndex].Poles[2] - Bands[BandIndex].Poles[3]));

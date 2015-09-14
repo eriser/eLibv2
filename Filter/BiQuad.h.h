@@ -61,6 +61,7 @@ namespace eLibV2
                 mXz_2 = mXz_1;
                 mXz_1 = input;
 
+                yn = ModuleHelper::clamp(yn, -1.0, 1.0);
                 return yn;
             }
 

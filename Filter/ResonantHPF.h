@@ -42,7 +42,7 @@ namespace eLibV2
 
             void setCutoff(const double cutoff)
             {
-                mCutoff = cutoff + filterOffset;
+                mCutoff = cutoff;
                 calcCoefficients();
             }
 
@@ -61,6 +61,8 @@ namespace eLibV2
             void calcCoefficients(void)
             {
                 double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
+                ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
+
                 double d = 1.0 / mQ;
 
                 double BetaNumerator = 1.0 - ((d / 2.0) * (sin(ThetaC)));
