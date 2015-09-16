@@ -39,10 +39,10 @@ namespace eLibV2
             void setResonance(double Resonance) { dResonance = Resonance; }
             void setQ(double Q) { dQ = Q; }
 
-            double Process(double Input);
-            double MoogFilter(double Input);
-            double MoogFilter2(double Input);
-            double SimpleFilter(double Input);
+            double Process(const double Input);
+            double MoogFilter(const double Input);
+            double MoogFilter2(const double Input);
+            double SimpleFilter(const double Input);
 
         private:
             FilterType eFilterType;

@@ -32,7 +32,7 @@ namespace eLibV2
             double getRelease(void) { return dRelease; }
             double getOutput(void) { return dOutput; }
 
-            double Process(double Input);
+            double Process(const double Input);
 
         private:
             double dThreshold;

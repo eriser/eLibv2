@@ -18,10 +18,10 @@ namespace eLibV2
             void Init(void) {}
             void Reset(void) {}
 
-            double Process(double Input1, double Input2);
+            double Process2(const double Input1, const double Input2);
 
         private:
-            double Process(double Input) { return Input; }
+            double Process(const double Input) { return Input; }
         };
     }
 }

@@ -8,7 +8,7 @@ void FxClip::Init()
     setClipMode(CLIP_MODE_POSITIVE);
 }
 
-double FxClip::Process(double Input)
+double FxClip::Process(const double Input)
 {
     double res = 0.0;
 

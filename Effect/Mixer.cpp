@@ -13,7 +13,7 @@ void FxMixer::Reset(void)
     Init();
 }
 
-double FxMixer::Process2(double Input1, double Input2)
+double FxMixer::Process2(const double Input1, const double Input2)
 {
     double res = 0.0;
 

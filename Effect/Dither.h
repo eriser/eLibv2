@@ -28,7 +28,7 @@ namespace eLibV2
 
             virtual void Init(void);
             virtual void Reset(void);
-            virtual double Process(double Input);
+            virtual double Process(const double Input);
             virtual double processConnection();
 
         public:

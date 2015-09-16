@@ -12,7 +12,7 @@ void FxDither::Reset(void)
     Init();
 }
 
-double FxDither::Process(double Input)
+double FxDither::Process(const double Input)
 {
     double Scaler;
 

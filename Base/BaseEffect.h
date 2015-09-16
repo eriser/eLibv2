@@ -30,7 +30,7 @@ namespace eLibV2
             @param Input input signal
             @return the processed input signal
             */
-            virtual double Process(double Input) = 0;
+            virtual double Process(const double Input) = 0;
 
         protected:
             double *pBuffer; ///< internal memory buffer used in subclasses

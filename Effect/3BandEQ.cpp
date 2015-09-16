@@ -46,7 +46,7 @@ double Fx3BandEQ::CalcBand(VstInt16 BandIndex, double Input)
     return Bands[BandIndex].Poles[3];
 }
 
-double Fx3BandEQ::Process(double Input)
+double Fx3BandEQ::Process(const double Input)
 {
     double low, mid1, mid2, high;
 

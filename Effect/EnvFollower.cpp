@@ -18,8 +18,9 @@ void FxEnvFollower::Reset(void)
     dLastInput = 0.0;
 }
 
-double FxEnvFollower::Process(double input)
+double FxEnvFollower::Process(const double input)
 {
+    double i = input;
     double res = 0.0;
     long tATime, tRTime;
 
@@ -30,8 +31,8 @@ double FxEnvFollower::Process(double input)
     tRTime = (tRTime == 0) ? 1 : tRTime;
 
     // absolute value
-    if (input < 0.0)
-        input = -input;
+    if (i < 0.0)
+        i = -i;
 
     // increasing
     if (input < dLastInput)

@@ -18,7 +18,7 @@ namespace eLibV2
 
             void Init(void);
             void Reset(void);
-            double Process(double Input);
+            double Process(const double Input);
 
             double getAttack(void) { return dAttack; }
             double getRelease(void) { return dRelease; }

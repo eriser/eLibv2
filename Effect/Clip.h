@@ -30,7 +30,7 @@ namespace eLibV2
             /* inherited */
             void Init(void);
             void Reset(void) {}
-            double Process(double Input);
+            double Process(const double Input);
 
             /* setter, getter */
             void setClipLevel(double ClipLevel) { dClipLevel = Util::ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX); }

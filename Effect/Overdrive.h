@@ -25,7 +25,7 @@ namespace eLibV2
 
             void Init() { setLevel(50.0); }
             void Reset() {}
-            double Process(double input);
+            double Process(const double input);
             virtual double processConnection();
 
         public:

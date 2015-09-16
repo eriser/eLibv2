@@ -32,10 +32,10 @@ namespace eLibV2
             void setMode(MixerMode Mode) { eMode = Mode; }
             MixerMode getMode(void) { return eMode; }
 
-            double Process2(double Input1, double Input2);
+            double Process2(const double Input1, const double Input2);
 
         private:
-            double Process(double Input) { return Input; }
+            double Process(const double Input) { return Input; }
 
         private:
             double dVolume;

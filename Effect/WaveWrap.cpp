@@ -26,7 +26,7 @@ void FxWaveWrap::Init()
     setWrapLevel(1.0);
 }
 
-double FxWaveWrap::Process(double Input)
+double FxWaveWrap::Process(const double Input)
 {
     double res = 0.0;
     double temp;

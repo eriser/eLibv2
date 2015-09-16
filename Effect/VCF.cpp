@@ -13,7 +13,7 @@ void FxVCF::Init()
     in1 = in2 = in3 = in4 = 0;
 }
 
-double FxVCF::Process(double Input)
+double FxVCF::Process(const double Input)
 {
     switch (eFilterType)
     {
@@ -35,7 +35,7 @@ double FxVCF::Process(double Input)
     }
 }
 
-double FxVCF::SimpleFilter(double Input)
+double FxVCF::SimpleFilter(const double Input)
 {
     double c = pow(0.5, (128 - (dFrequency * 128)) / 16.0);
     double r = pow(0.5, ((dResonance) + 24) / 16.0);
@@ -47,13 +47,14 @@ double FxVCF::SimpleFilter(double Input)
     return out1;
 }
 
-double FxVCF::MoogFilter(double Input)
+double FxVCF::MoogFilter(const double Input)
 {
+    double i = Input;
     double f = dFrequency * 1.16;
     double fb = dResonance * (1.0 - 0.15 * f * f);
 
-    Input -= out4 * fb;
-    Input *= 0.35013 * (f*f)*(f*f);
+    i -= out4 * fb;
+    i *= 0.35013 * (f*f)*(f*f);
     out1 = Input + 0.3 * in1 + (1 - f) * out1; // Pole 1
     in1  = Input;
     out2 = out1 + 0.3 * in2 + (1 - f) * out2;  // Pole 2
@@ -65,7 +66,7 @@ double FxVCF::MoogFilter(double Input)
     return out4;
 }
 
-double FxVCF::MoogFilter2(double Input)
+double FxVCF::MoogFilter2(const double Input)
 {
     //Init
     double cutoff = dFrequency * 22050.0;

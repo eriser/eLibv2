@@ -54,7 +54,7 @@ void FxSimpleComp::setOutput(double Output)
     dTransferB = dOutput * pow(dThreshold,-dTransferA);
 }
 
-double FxSimpleComp::Process(double Input)
+double FxSimpleComp::Process(const double Input)
 {
     double det, transfer_gain, res = 0.0;
 

@@ -3,7 +3,7 @@
 using namespace eLibV2::Effect;
 using namespace eLibV2::Util;
 
-double FxOverdrive::Process(double input)
+double FxOverdrive::Process(const double input)
 {
     double ret = input * dLevel;
     ret = ModuleHelper::clamp(ret, -1.0, 1.0);

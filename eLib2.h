@@ -37,6 +37,7 @@
 #include <Effect/EnvFollower.h>
 #include <Effect/Mixer.h>
 #include <Effect/Overdrive.h>
+#include <Effect/RMSCalc.h>
 #include <Effect/SignalAdd.h>
 #include <Effect/SimpleComp.h>
 #include <Effect/VCF.h>
