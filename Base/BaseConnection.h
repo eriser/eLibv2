@@ -27,8 +27,11 @@ namespace eLibV2
             };
 
         public:
-            BaseConnection(int numInputs = 0, int numOutputs = 0)
-                : numberOfInputs(numInputs), numberOfOutputs(numOutputs) {}
+            BaseConnection(int numInputs = 0, int numOutputs = 0) :
+                numberOfInputs(numInputs),
+                numberOfOutputs(numOutputs)
+            {}
+            virtual ~BaseConnection() {}
 
             /**
             process signal flow for all connected module

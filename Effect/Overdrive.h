@@ -21,11 +21,17 @@ namespace eLibV2
             };
 
         public:
-            FxOverdrive(std::string name = "FxOverdrive") : Base::BaseName(name) { Init(); }
+            FxOverdrive(std::string name = "FxOverdrive") :
+                Base::BaseName(name)
+            {
+                Init();
+            }
+            virtual ~FxOverdrive() {}
 
-            void Init() { setLevel(50.0); }
-            void Reset() {}
-            double Process(const double input);
+            /* inherited */
+            virtual void Init() { setLevel(50.0); }
+            virtual void Reset() {}
+            virtual double Process(const double input);
             virtual double processConnection();
 
         public:

@@ -17,7 +17,7 @@ namespace eLibV2
     namespace Base
     {
         /**
-        this module provides basic methods used in its subclasses
+        this module provides basic methods used in most of all classes in the framework
         */
         class BaseModule : virtual public BaseConnection
         {

@@ -21,14 +21,19 @@ namespace eLibV2
             };
 
         public:
-            FxVCF(std::string name = "FxVCF")
-                : Base::BaseName(name) {
+            FxVCF(std::string name = "FxVCF") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~FxVCF() {}
 
-            void Init(void);
-            void Reset(void) {}
+            /* inherited */
+            virtual void Init(void);
+            virtual void Reset(void) {}
+            virtual double Process(const double Input);
 
+            /* getter/setter */
             FilterType getFiltertype(void) { return eFilterType; }
             double getFrequency(void) { return dFrequency; }
             double getResonance(void) { return dResonance; }
@@ -39,7 +44,7 @@ namespace eLibV2
             void setResonance(double Resonance) { dResonance = Resonance; }
             void setQ(double Q) { dQ = Q; }
 
-            double Process(const double Input);
+        private:
             double MoogFilter(const double Input);
             double MoogFilter2(const double Input);
             double SimpleFilter(const double Input);

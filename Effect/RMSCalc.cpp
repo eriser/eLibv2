@@ -4,7 +4,6 @@ using namespace eLibV2::Effect;
 
 void RMSCalculator::Init(void)
 {
-    setMode(RMS_MODE_UNDEF);
     mRms = 0.0;
     mGain = 1.0;
     mAlpha = 0.9;

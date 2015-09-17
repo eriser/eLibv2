@@ -24,8 +24,14 @@ namespace eLibV2
             };
 
         public:
-            FxDither(std::string name = "FxDither") : Base::BaseName(name) { Init(); }
+            FxDither(std::string name = "FxDither") :
+                Base::BaseName(name)
+            {
+                Init();
+            }
+            virtual ~FxDither() {}
 
+            /* inherited */
             virtual void Init(void);
             virtual void Reset(void);
             virtual double Process(const double Input);

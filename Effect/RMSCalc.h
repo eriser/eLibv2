@@ -7,30 +7,39 @@ namespace eLibV2
 {
     namespace Effect
     {
-        enum RMSMode
-        {
-            RMS_MODE_UNDEF = 0
-        };
-
+        /**
+        RMSCalculator is used to calculate the root-mean-squared of a stream of signals
+        */
         class RMSCalculator : public Base::BaseEffect
         {
         public:
-            RMSCalculator(std::string name = "RMSCalculator")
-                : Base::BaseName(name) {
+            RMSCalculator(std::string name = "RMSCalculator") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~RMSCalculator() {}
 
-            void Init(void);
-            void Reset(void);
+        public:
+            /* inherited */
+            virtual void Init(void);
+            virtual void Reset(void);
 
-            void setMode(RMSMode Mode) { eMode = Mode; }
-            RMSMode getMode(void) { return eMode; }
+            /**
+            processing method of the effect
+            @param Input this parameter is not used
+            @return the smoothed rms-value of the input signals
+            */
+            virtual double Process(const double Input);
 
+        public:
+            /**
+            input new signal to the processed input stream
+            @param Input signal input
+            */
             void InputSample(const double Input);
-            double Process(const double Input);
 
         private:
-            RMSMode eMode;
             unsigned int mSamples;
             double mRms;
             double mAlpha, mGain;

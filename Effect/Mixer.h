@@ -18,13 +18,16 @@ namespace eLibV2
         class FxMixer : public Base::BaseEffect
         {
         public:
-            FxMixer(std::string name = "FxMixer")
-                : Base::BaseName(name) {
+            FxMixer(std::string name = "FxMixer") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~FxMixer() {}
 
-            void Init(void);
-            void Reset(void);
+            /* inherited */
+            virtual void Init(void);
+            virtual void Reset(void);
 
             void setVolume(double Volume) { dVolume = Volume; }
             double getVolume(void) { return dVolume; }
@@ -35,7 +38,7 @@ namespace eLibV2
             double Process2(const double Input1, const double Input2);
 
         private:
-            double Process(const double Input) { return Input; }
+            virtual double Process(const double Input) { return Input; }
 
         private:
             double dVolume;

@@ -13,7 +13,10 @@ namespace eLibV2
         class OutputConnection : public Base::BaseConnection
         {
         public:
-            OutputConnection(std::string name = "InputConnection") : Base::BaseName(name) {}
+            OutputConnection(std::string name = "OutputConnection") :
+                Base::BaseName(name)
+            {}
+            virtual ~OutputConnection() {}
 
         protected:
             double mValue;

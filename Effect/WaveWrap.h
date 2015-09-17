@@ -22,12 +22,15 @@ namespace eLibV2
             };
 
         public:
-            FxWaveWrap(std::string name = "FxWaveWrap")
-                : Base::BaseName(name) {
+            FxWaveWrap(std::string name = "FxWaveWrap") :
+                Base::BaseName(name)
+            {
                 Init();
             }
-            ~FxWaveWrap() { if (triangle) delete[] triangle; }
+            virtual ~FxWaveWrap() { if (triangle) delete[] triangle; }
 
+        public:
+            /* inherited */
             virtual void Init(void);
             virtual void Reset(void) {}
             virtual double Process(const double Input);
@@ -38,9 +41,8 @@ namespace eLibV2
             void setWrapLevel(double WrapLevel) { dWrapLevel = Util::ModuleHelper::clamp(WrapLevel, WAVEWRAP_LEVEL_MIN, WAVEWRAP_LEVEL_MAX); }
 
         public:
-            void attachInput(Base::BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
-            void attachLevel(Base::BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
-
+            virtual void attachInput(Base::BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
+            virtual void attachLevel(Base::BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
 
         private:
             double dWrapLevel;

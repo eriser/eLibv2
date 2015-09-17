@@ -28,18 +28,20 @@ namespace eLibV2
             {
                 double input = 0.0;
 
-                for (connectionIterator it = connections.begin(); it != connections.end(); it++)
+                // get factor and offset
+                if (isConnected(SCALING_FACTOR))
+                    mFactor = connections[SCALING_FACTOR]->processConnection();
+                if (isConnected(SCALING_OFFSET))
+                    mOffset = connections[SCALING_FACTOR]->processConnection();
+
+                // sum up all inputs
+                for (unsigned int inputIndex = 0; inputIndex < numInputs; inputIndex++)
                 {
-                    double value = it->second->processConnection();
-                    if (it->first == SCALING_FACTOR)
-                        mFactor = value;
-                    else if (it->first == SCALING_OFFSET)
-                        mOffset = value;
-                    else
-                        input += value;
+                    if (isConnected(inputIndex))
+                        input += connections[inputIndex]->processConnection();
                 }
 
-                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIOs value: %lf %lf %lf -> %lf", getModuleName().c_str(), input, mFactor, mOffset, input * mFactor + mOffset);
+//                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIOs value: %lf %lf %lf -> %lf", getModuleName().c_str(), input, mFactor, mOffset, input * mFactor + mOffset);
                 return input * mFactor + mOffset;
             }
 

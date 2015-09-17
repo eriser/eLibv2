@@ -11,14 +11,17 @@ namespace eLibV2
         class FxEnvFollower : public Base::BaseEffect
         {
         public:
-            FxEnvFollower(std::string name = "FxEnvFollower")
-                : Base::BaseName(name) {
+            FxEnvFollower(std::string name = "FxEnvFollower") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~FxEnvFollower() {}
 
-            void Init(void);
-            void Reset(void);
-            double Process(const double Input);
+            /* inherited */
+            virtual void Init(void);
+            virtual void Reset(void);
+            virtual double Process(const double Input);
 
             double getAttack(void) { return dAttack; }
             double getRelease(void) { return dRelease; }

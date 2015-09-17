@@ -22,15 +22,17 @@ namespace eLibV2
         class FxClip : public Base::BaseEffect
         {
         public:
-            FxClip(std::string name = "FxClip")
-                : Base::BaseName(name) {
+            FxClip(std::string name = "FxClip") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~FxClip() {}
 
             /* inherited */
-            void Init(void);
-            void Reset(void) {}
-            double Process(const double Input);
+            virtual void Init(void);
+            virtual void Reset(void) {}
+            virtual double Process(const double Input);
 
             /* setter, getter */
             void setClipLevel(double ClipLevel) { dClipLevel = Util::ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX); }

@@ -27,7 +27,13 @@ namespace eLibV2
             } EQBand;
 
         public:
-            Fx3BandEQ(std::string name = "Fx3BandEQ") : Base::BaseName(name), Base::BaseConnection(1, 1) { Init(); }
+            Fx3BandEQ(std::string name = "Fx3BandEQ") :
+                Base::BaseName(name),
+                Base::BaseConnection(1, 1)
+            {
+                Init();
+            }
+            virtual ~Fx3BandEQ() {}
 
             /* inherited */
             virtual void Init(void);

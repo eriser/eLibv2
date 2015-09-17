@@ -12,16 +12,21 @@ namespace eLibV2
         class FxSignalAdd : public Base::BaseEffect
         {
         public:
-            FxSignalAdd(std::string name = "FxSignalAdd")
-                : Base::BaseName(name) {}
+            FxSignalAdd(std::string name = "FxSignalAdd") :
+                Base::BaseName(name)
+            {
+                Init();
+            }
+            virtual ~FxSignalAdd() {}
 
-            void Init(void) {}
-            void Reset(void) {}
+            /* inherited */
+            virtual void Init(void) {}
+            virtual void Reset(void) {}
 
             double Process2(const double Input1, const double Input2);
 
         private:
-            double Process(const double Input) { return Input; }
+            virtual double Process(const double Input) { return Input; }
         };
     }
 }

@@ -12,14 +12,21 @@ namespace eLibV2
         class FxSimpleComp : public Base::BaseEffect
         {
         public:
-            FxSimpleComp(std::string name = "FxSimpleComp")
-                : Base::BaseName(name) {
+            FxSimpleComp(std::string name = "FxSimpleComp") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~FxSimpleComp() {}
 
-            void Init(void);
-            void Reset(void);
+        public:
+            /* inherited */
+            virtual void Init(void);
+            virtual void Reset(void);
+            virtual double Process(const double Input);
 
+        public:
+            /* getter/setter */
             void setThreshold(double Threshold);
             void setRatio(double Ratio);
             void setAttack(double Attack);
@@ -31,8 +38,6 @@ namespace eLibV2
             double getAttack(void) { return dAttack; }
             double getRelease(void) { return dRelease; }
             double getOutput(void) { return dOutput; }
-
-            double Process(const double Input);
 
         private:
             double dThreshold;
