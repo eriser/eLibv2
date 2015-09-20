@@ -17,7 +17,11 @@ namespace eLibV2
         class MidiEventAdapter : public Base::BaseConnection
         {
         public:
-            MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) : Base::BaseName("MidiEventAdapter"), mHandler(handler), mChannel(channel) {}
+            MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) :
+                Base::BaseName("MidiEventAdapter"),
+                mHandler(handler),
+                mChannel(channel)
+            {}
 
             /**
             process first existing note on selected channel

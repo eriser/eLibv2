@@ -11,8 +11,7 @@ double MidiEventAdapter::processConnection()
     {
         if (mHandler->hasEventsOnChannel(mChannel))
         {
-            events = mHandler->getEvents(mChannel);
-            if (events.size())
+            if (mHandler->getEvents(mChannel, events))
                 res = events[0].getNote();
         }
     }

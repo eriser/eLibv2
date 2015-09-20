@@ -5,6 +5,7 @@ using namespace eLibV2::Effect;
 void FxDither::Init(void)
 {
     setBitsize(12);
+    setBypass(false);
 }
 
 void FxDither::Reset(void)
@@ -36,7 +37,9 @@ double FxDither::processConnection()
         setBitsize((unsigned int)connections[CONNECTION_DITHER_BITSIZE]->processConnection());
     if (isConnected(CONNECTION_DITHER_INPUT))
         input = connections[CONNECTION_DITHER_INPUT]->processConnection();
-    ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
-
-    return Process(input);
+    // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
+    if (!bBypass)
+        return Process(input);
+    else
+        return input;
 }

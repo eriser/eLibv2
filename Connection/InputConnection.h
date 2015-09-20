@@ -18,20 +18,30 @@ namespace eLibV2
         class InputConnection : public Base::BaseConnection
         {
         public:
-            InputConnection(std::string name = "InputConnection") : Base::BaseName(name) {}
+            InputConnection(std::string name = "InputConnection") :
+                Base::BaseName(name)
+            {}
 
             /**
             set input value
             @param value value to use during processing
             */
-            virtual void setInput(double value) { ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::setValue: %lf", getModuleName().c_str(), value); mValue = value; }
+            virtual void setInput(double value)
+            {
+                // ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::setValue: %lf", getModuleName().c_str(), value);
+                mValue = value;
+            }
 
             /**
             process connected inputs
             @return result of procession
             */
             virtual double processConnection() { return processInputs(); }
-            virtual double processInputs() { ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processInputs value: %lf", getModuleName().c_str(), mValue); return mValue; }
+            virtual double processInputs()
+            {
+                // ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processInputs value: %lf", getModuleName().c_str(), mValue);
+                return mValue;
+            }
 
         protected:
             double mValue; ///< internal value used for processing

@@ -7,6 +7,7 @@ ModuleLogger::OutputType ModuleLogger::outputType = ModuleLogger::OUTPUT_TYPE_DB
 
 void ModuleLogger::print(unsigned int loggingClass, const char* format, ...)
 {
+#ifdef _DEBUG
     if (!LoggingClassesEnabled(loggingClass))
         return;
 
@@ -24,4 +25,5 @@ void ModuleLogger::print(unsigned int loggingClass, const char* format, ...)
         std::cout << debugBuffer << std::endl;
 
     va_end(args);
+#endif
 }

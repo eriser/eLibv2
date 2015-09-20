@@ -15,7 +15,11 @@ namespace eLibV2
         class MidiEventHandler : public Base::BaseModule
         {
         public:
-            MidiEventHandler() : Base::BaseName("MidiEventHandler") { Init(); }
+            MidiEventHandler() :
+                Base::BaseName("MidiEventHandler")
+            {
+                Init();
+            }
 
             /**
             insert event for given channel
@@ -35,9 +39,10 @@ namespace eLibV2
             /**
             get all events currently bound to given channel
             @param channel the channel to process
-            @return vector of all events for given channel
+            @param events a vector filled with all found events
+            @return true if events were found on given channel
             */
-            MidiEventVector getEvents(const int channel) const;
+            bool getEvents(const int channel, MidiEventVector& events) const;
 
             /**
             check if channel has currently any events

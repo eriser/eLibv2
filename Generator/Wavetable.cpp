@@ -8,7 +8,7 @@ BaseWavetable* BaseWavetable::instance = 0;
 
 BaseWavetable::~BaseWavetable()
 {
-    for (VstInt16 WaveformIndex = 0; WaveformIndex < Waveforms.size(); WaveformIndex++)
+    for (unsigned int WaveformIndex = 0; WaveformIndex < Waveforms.size(); WaveformIndex++)
         DeleteWaveform(WaveformIndex);
 }
 
@@ -21,6 +21,7 @@ BaseWavetable* BaseWavetable::getInstance()
 
 void BaseWavetable::Init()
 {
+    // prepare random coefficients
     double random = 0.0, sh_random = 0.0;
     const static int q = 15;
     const static double c1 = (1 << q) - 1;
@@ -34,9 +35,18 @@ void BaseWavetable::Init()
     // builtin waveforms
     double *sine;
     double *enis;
+    double *triangle_bl;
+    double triangle_bl_max = 0.0;
+    double *sawup_bl;
+    double sawup_bl_max = 0.0;
+    double *sawdn_bl;
+    double sawdn_bl_max = 0.0;
+    double *pulse_bl;
+    double pulse_bl_max = 0.0;
+
     double *triangle;
-    double *sawtooth1;
-    double *sawtooth2;
+    double *sawup;
+    double *sawdn;
     double *pulse;
     double *noise;
     double *smplhold;
@@ -45,49 +55,93 @@ void BaseWavetable::Init()
 
     try
     {
-        // setup memory
-        sine = new double[kWavesize];
-        enis = new double[kWavesize];
-        triangle = new double[kWavesize];
-        sawtooth1 = new double[kWavesize];
-        sawtooth2 = new double[kWavesize];
-        pulse = new double[kWavesize];
-        noise = new double[kWavesize];
-        smplhold = new double[kWavesize];
+        // bandlimited
+        sine = new double[WAVETABLE_SAMPLE_SIZE];
+        enis = new double[WAVETABLE_SAMPLE_SIZE];
+        triangle_bl = new double[WAVETABLE_SAMPLE_SIZE];
+        sawup_bl = new double[WAVETABLE_SAMPLE_SIZE];
+        sawdn_bl = new double[WAVETABLE_SAMPLE_SIZE];
+        pulse_bl = new double[WAVETABLE_SAMPLE_SIZE];
+        pulse_bl[0] = 0.0;
+
+        // digital
+        triangle = new double[WAVETABLE_SAMPLE_SIZE];
+        sawup = new double[WAVETABLE_SAMPLE_SIZE];
+        sawdn = new double[WAVETABLE_SAMPLE_SIZE];
+        pulse = new double[WAVETABLE_SAMPLE_SIZE];
+        noise = new double[WAVETABLE_SAMPLE_SIZE];
+        smplhold = new double[WAVETABLE_SAMPLE_SIZE];
 
         // create waveforms
-        for (VstInt32 SampleIndex = 0; SampleIndex < kWavesize; SampleIndex++)
+        for (unsigned int SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
         {
-            sine[SampleIndex] = sin((2.0 * PI * (SampleIndex / (double)kWavesize)));
+            // bandlimited waveforms
+            sine[SampleIndex] = sin((2.0 * PI * (SampleIndex / (double)WAVETABLE_SAMPLE_SIZE)));
             enis[SampleIndex] = -sine[SampleIndex];
 
-            if (SampleIndex <= kWavesize / 4)
-                triangle[SampleIndex] = 1.0 / (kWavesize / 4) * SampleIndex;
-            if ((SampleIndex <= 3 * kWavesize / 4) && (SampleIndex > kWavesize / 4))
-                triangle[SampleIndex] = -2.0 / (kWavesize / 2) * (SampleIndex - kWavesize / 4) + 1.0;
-            if (SampleIndex > 3 * kWavesize / 4)
-                triangle[SampleIndex] = 1.0 / (kWavesize / 4) * (SampleIndex - 3 * kWavesize / 4) - 1.0;
-
-            if (SampleIndex < kWavesize / 2)
-                sawtooth1[SampleIndex] = 1.0 / (kWavesize / 2) * SampleIndex;
-            else
-                sawtooth1[SampleIndex] = 1.0 / (kWavesize / 2) * (SampleIndex - kWavesize / 2) - 1.0;
-
-            if (SampleIndex < kWavesize / 2)
-                sawtooth2[SampleIndex] = -1.0 / (kWavesize / 2) * SampleIndex;
-            else
-                sawtooth2[SampleIndex] = -1.0 / (kWavesize / 2) * (SampleIndex - kWavesize / 2) + 1.0;
-
-            if (SampleIndex == kWavesize / 2)
+            /* generate triangle waveform (0.0 -> 1.0, 1.0 -> -1.0, -1.0 -> 0.0 */
+            triangle_bl[SampleIndex] = 0.0;
+            for (unsigned char WaveIndex = 0; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1) / 2; ++WaveIndex)
             {
-                sawtooth1[SampleIndex] = 0.0;
-                sawtooth2[SampleIndex] = 0.0;
+                triangle_bl[SampleIndex] += pow(-1.0, WaveIndex) * (1.0 / pow((2 * WaveIndex + 1), 2.0)) * sin(2.0 * PI * (2.0 * WaveIndex + 1) * (SampleIndex / (double)WAVETABLE_SAMPLE_SIZE));
+                if (triangle_bl[SampleIndex] > triangle_bl_max)
+                    triangle_bl_max = triangle_bl[SampleIndex];
             }
 
-            if ((SampleIndex == 0) || (SampleIndex == kWavesize / 2))
+            sawup_bl[SampleIndex] = 0.0;
+            for (unsigned char WaveIndex = 1; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1); ++WaveIndex)
+            {
+                sawup_bl[SampleIndex] += pow(-1.0, (double)(WaveIndex + 1)) * (1.0 / (double)WaveIndex) * sin(2.0 * PI * (double)SampleIndex * (double)WaveIndex / (double)WAVETABLE_SAMPLE_SIZE);
+                if (sawup_bl[SampleIndex] > sawup_bl_max)
+                    sawup_bl_max = sawup_bl[SampleIndex];
+            }
+
+            sawdn_bl[SampleIndex] = 0.0;
+            for (unsigned char WaveIndex = 1; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1); ++WaveIndex)
+            {
+                sawdn_bl[SampleIndex] += (1.0 / (double)WaveIndex) * sin(2.0 * PI * (double)SampleIndex * (double)WaveIndex / (double)WAVETABLE_SAMPLE_SIZE);
+                if (sawdn_bl[SampleIndex] > sawdn_bl_max)
+                    sawdn_bl_max = sawdn_bl[SampleIndex];
+            }
+
+            pulse_bl[SampleIndex] = 0.0;
+            for (unsigned char WaveIndex = 1; WaveIndex <= WAVETABLE_SAMPLE_BANDLIMIT; WaveIndex += 2)
+            {
+                pulse_bl[SampleIndex] += (1.0 / (double)WaveIndex) * sin(2.0 * PI * (double)SampleIndex * (double)WaveIndex / (double)WAVETABLE_SAMPLE_SIZE);
+                if (pulse_bl[SampleIndex] > pulse_bl_max)
+                    pulse_bl_max = pulse_bl[SampleIndex];
+            }
+
+            // digital waveforms (including aliasing)
+            /* generate triangle waveform (0.0 -> 1.0, 1.0 -> -1.0, -1.0 -> 0.0 */
+            if (SampleIndex <= WAVETABLE_SAMPLE_SIZE / 4)
+                triangle[SampleIndex] = 1.0 / (WAVETABLE_SAMPLE_SIZE / 4) * SampleIndex;
+            if ((SampleIndex <= 3 * WAVETABLE_SAMPLE_SIZE / 4) && (SampleIndex > WAVETABLE_SAMPLE_SIZE / 4))
+                triangle[SampleIndex] = -2.0 / (WAVETABLE_SAMPLE_SIZE / 2) * (SampleIndex - WAVETABLE_SAMPLE_SIZE / 4) + 1.0;
+            if (SampleIndex > 3 * WAVETABLE_SAMPLE_SIZE / 4)
+                triangle[SampleIndex] = 1.0 / (WAVETABLE_SAMPLE_SIZE / 4) * (SampleIndex - 3 * WAVETABLE_SAMPLE_SIZE / 4) - 1.0;
+
+            /* generate rising sawtooth waveform (0.0 -> 1.0, -1.0 -> 0.0) */
+            if (SampleIndex < WAVETABLE_SAMPLE_SIZE / 2)
+                sawup[SampleIndex] = 1.0 / (WAVETABLE_SAMPLE_SIZE / 2) * SampleIndex;
+            else if (SampleIndex == WAVETABLE_SAMPLE_SIZE / 2)
+                sawup[SampleIndex] = 0.0;
+            else
+                sawup[SampleIndex] = 1.0 / (WAVETABLE_SAMPLE_SIZE / 2) * (SampleIndex - WAVETABLE_SAMPLE_SIZE / 2) - 1.0;
+
+            /* generate falling sawtooth waveform (0.0 -> -1.0, 1.0 -> 0.0) */
+            if (SampleIndex < WAVETABLE_SAMPLE_SIZE / 2)
+                sawdn[SampleIndex] = -1.0 / (WAVETABLE_SAMPLE_SIZE / 2) * SampleIndex;
+            else if (SampleIndex == WAVETABLE_SAMPLE_SIZE / 2)
+                sawdn[SampleIndex] = 0.0;
+            else
+                sawdn[SampleIndex] = -1.0 / (WAVETABLE_SAMPLE_SIZE / 2) * (SampleIndex - WAVETABLE_SAMPLE_SIZE / 2) + 1.0;
+
+            /* generate pulse waveform */
+            if ((SampleIndex == 0) || (SampleIndex == WAVETABLE_SAMPLE_SIZE / 2))
                 pulse[SampleIndex] = 0.0f;
             else
-                pulse[SampleIndex] = (SampleIndex < (kWavesize / 2)) ? 1.0 : -1.0;
+                pulse[SampleIndex] = (SampleIndex < (WAVETABLE_SAMPLE_SIZE / 2)) ? 1.0 : -1.0;
 
             random = ((float)rand() / (float)(RAND_MAX + 1));
             if (SampleIndex == 0)
@@ -102,35 +156,60 @@ void BaseWavetable::Init()
             }
         }
 
-        AddWaveform(sine, kWavesize, "sine", 1);
+        // normalize bandlimited waveforms
+        for (unsigned int SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
+        {
+            triangle_bl[SampleIndex] /= triangle_bl_max;
+            sawup_bl[SampleIndex] /= sawup_bl_max;
+            sawdn_bl[SampleIndex] /= sawdn_bl_max;
+            pulse_bl[SampleIndex] /= pulse_bl_max;
+        }
+
+        AddWaveform(sine, WAVETABLE_SAMPLE_SIZE, "sine");
         if (sine)
             delete sine;
 
-        AddWaveform(enis, kWavesize, "enis", 1);
+        AddWaveform(enis, WAVETABLE_SAMPLE_SIZE, "enis");
         if (enis)
             delete enis;
 
-        AddWaveform(triangle, kWavesize, "tri", 1);
+        AddWaveform(triangle_bl, WAVETABLE_SAMPLE_SIZE, "tribl");
+        if (triangle_bl)
+            delete triangle_bl;
+
+        AddWaveform(sawup_bl, WAVETABLE_SAMPLE_SIZE, "sawupbl");
+        if (sawup_bl)
+            delete sawup_bl;
+
+        AddWaveform(sawdn_bl, WAVETABLE_SAMPLE_SIZE, "sawdnbl");
+        if (sawdn_bl)
+            delete sawdn_bl;
+
+        AddWaveform(pulse_bl, WAVETABLE_SAMPLE_SIZE, "pulsebl");
+        if (pulse_bl)
+            delete pulse_bl;
+
+        AddWaveform(triangle, WAVETABLE_SAMPLE_SIZE, "tri");
         if (triangle)
             delete triangle;
 
-        AddWaveform(sawtooth1, kWavesize, "sawup", 1);
-        if (sawtooth1)
-            delete sawtooth1;
+        AddWaveform(sawup, WAVETABLE_SAMPLE_SIZE, "sawup");
+        if (sawup)
+            delete sawup;
 
-        AddWaveform(sawtooth2, kWavesize, "sawdn", 1);
-        if (sawtooth2)
-            delete sawtooth2;
+        AddWaveform(sawdn, WAVETABLE_SAMPLE_SIZE, "sawdn");
+        if (sawdn)
+            delete sawdn;
 
-        AddWaveform(pulse, kWavesize, "pulse", 1);
+        AddWaveform(pulse, WAVETABLE_SAMPLE_SIZE, "pulse");
         if (pulse)
             delete pulse;
 
-        AddWaveform(noise, kWavesize, "noise", 1);
+        AddWaveform(noise, WAVETABLE_SAMPLE_SIZE, "noise");
         if (noise)
             delete noise;
 
-        AddWaveform(smplhold, kWavesize, "smhld", 1);
+        AddWaveform(smplhold, WAVETABLE_SAMPLE_SIZE, "smhld");
         if (smplhold)
             delete smplhold;
     }
@@ -141,20 +220,20 @@ void BaseWavetable::Init()
     }
     catch (...)
     {
-        ModuleLogger::print(LOG_CLASS_GENERATOR, "unknown exception");
+        ModuleLogger::print(LOG_CLASS_GENERATOR, "Init: unknown exception");
     }
 }
 
-void BaseWavetable::DeleteWaveform(VstInt32 Index)
+void BaseWavetable::DeleteWaveform(unsigned int Index)
 {
     if (Waveforms[Index].WaveData)
     {
         delete Waveforms[Index].WaveData;
-        Waveforms[Index].WaveData = 0;
+        Waveforms[Index].WaveData = NULL;
     }
 }
 
-bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
+bool BaseWavetable::AddWaveform(const std::string Filename, const std::string WaveName)
 {
     WaveLoader waveLoader;
     WaveLoader::WaveFormat waveFormat;
@@ -199,7 +278,7 @@ bool BaseWavetable::AddWaveform(std::string Filename, std::string WaveName)
     return true;
 }
 
-bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string WaveName, VstInt16 ChannelNum)
+bool BaseWavetable::AddWaveform(const double *Wavedata, const unsigned int WaveSize, const std::string WaveName, const unsigned char ChannelNum)
 {
     Waveform waveform;
 
@@ -236,7 +315,7 @@ bool BaseWavetable::AddWaveform(double *Wavedata, VstInt32 WaveSize, std::string
 }
 
 #if defined(WIN32)
-bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::string WaveName, VstInt16 ByteSize, VstInt16 ChannelNum)
+bool BaseWavetable::AddWaveform(const HINSTANCE hInstance, const unsigned int ResourceID, const std::string WaveName, const unsigned char ByteSize, const unsigned char ChannelNum)
 {
     HGLOBAL hRData = NULL;
     HRSRC hResource = NULL;
@@ -287,9 +366,38 @@ bool BaseWavetable::AddWaveform(HINSTANCE hInstance, VstInt32 ResourceID, std::s
     }
     return true;
 }
+
+double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const unsigned int resID, double *data, const unsigned char ByteSize, const unsigned char ChannelNum)
+{
+    HGLOBAL hResourceData = NULL;
+    HRSRC hResource = NULL;
+    short *pResourceData;
+    long bufferSize;
+
+    // Load Resource //
+    hResource = FindResource(hInstance, MAKEINTRESOURCE(resID), "RAW");
+    if (hResource)
+    {
+        if (((long)SizeofResource(hInstance, hResource) / (ByteSize * ChannelNum)) > WAVETABLE_SAMPLE_SIZE)
+            bufferSize = WAVETABLE_SAMPLE_SIZE;
+        else
+            bufferSize = SizeofResource(hInstance, hResource) / (ByteSize * ChannelNum);
+
+        hResourceData = LoadResource(hInstance, hResource);
+        pResourceData = (short *)LockResource(hResourceData);
+        UnlockResource(hResourceData);
+        FreeResource(hResourceData);
+
+        for (long i = 0; i < bufferSize; i++)
+        {
+            data[i] = ((double)(pResourceData[i])) / 0x10000;
+        }
+    }
+    return 0;
+}
 #endif
 
-double BaseWavetable::getWaveData(VstInt32 WaveIndex, double dPhase)
+double BaseWavetable::getWaveData(const unsigned int WaveIndex, const double dPhase)
 {
     double data = 0.0;
 
@@ -301,7 +409,7 @@ double BaseWavetable::getWaveData(VstInt32 WaveIndex, double dPhase)
     return data;
 }
 
-bool BaseWavetable::getWaveName(VstInt32 WaveIndex, char* name)
+bool BaseWavetable::getWaveName(const unsigned int WaveIndex, char* name)
 {
     if (!name)
         return false;
@@ -310,12 +418,12 @@ bool BaseWavetable::getWaveName(VstInt32 WaveIndex, char* name)
     return true;
 }
 
-long BaseWavetable::getWaveSize(VstInt16 WaveIndex)
+long BaseWavetable::getWaveSize(const unsigned int WaveIndex)
 {
     return Waveforms[WaveIndex].WaveSize;
 }
 
-double BaseWavetable::adjustPhase(VstInt16 WaveIndex, double phase)
+double BaseWavetable::adjustPhase(const unsigned int WaveIndex, const double phase)
 {
     double dCorrect = (double)(getWaveSize(WaveIndex));
     if (phase >= dCorrect)

@@ -32,7 +32,8 @@ TEST(TestMidiHandler, insertEvent)
     MidiEventHandler handler;
     handler.insertEvent(0, MidiEvent(65, 100));
 
-    MidiEventVector events = handler.getEvents(0);
+    MidiEventVector events;
+    ASSERT_EQ(true, handler.getEvents(0, events));
     ASSERT_EQ(1, events.size());
     ASSERT_EQ(65, events[0].getNote());
     ASSERT_EQ(100, events[0].getVelocity());

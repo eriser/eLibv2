@@ -29,19 +29,24 @@ bool MidiEventHandler::deleteEvent(const int channel, const MidiEvent& event)
     return deleted;
 }
 
-MidiEventVector MidiEventHandler::getEvents(const int channel) const
+bool MidiEventHandler::getEvents(const int channel, MidiEventVector& events) const
 {
-    MidiEventVector events;
+    bool res = false;
     if (channelInRange(channel))
     {
+        events = mMidiEvents[channel];
+        if (events.size() > 0)
+            res = true;
+#if 0
         // BEWARE: race condition
         if (mMidiEvents[channel].size())
         {
             for (ConstMidiEventIterator it = mMidiEvents[channel].begin(); it != mMidiEvents[channel].end(); it++)
                 events.push_back(*it);
         }
+#endif
     }
-    return events;
+    return res;
 }
 
 bool MidiEventHandler::hasEventsOnChannel(const int channel) const

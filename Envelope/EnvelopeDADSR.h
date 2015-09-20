@@ -22,10 +22,12 @@ namespace eLibV2
             };
 
         public:
-            EnvelopeDADSR(std::string name = "EnvelopeDADSR")
-                : Base::BaseName(name) {
+            EnvelopeDADSR(std::string name = "EnvelopeDADSR") :
+                Base::BaseName(name)
+            {
                 Init();
             }
+            virtual ~EnvelopeDADSR() {}
 
             virtual void Init(void);
             virtual void Reset(void);
