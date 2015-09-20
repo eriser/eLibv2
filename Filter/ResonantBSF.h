@@ -21,7 +21,8 @@ namespace eLibV2
             };
 
         public:
-            ResonantBSF(void)
+            ResonantBSF(std::string name = "ResonantBSF") :
+                Base::BaseName(name)
             {
                 Init();
             }
@@ -37,12 +38,12 @@ namespace eLibV2
             {
                 mInternalBiquad = new BiQuad();
                 setCutoff(22050.0);
-                setBW(500.0);
+                setBW(1500.0);
             }
 
             void setCutoff(const double cutoff)
             {
-                mCutoff = cutoff + vsa;
+                mCutoff = cutoff;
                 calcCoefficients();
             }
 
@@ -61,10 +62,11 @@ namespace eLibV2
             void calcCoefficients(void)
             {
                 double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
-                double Q = 1.0 / mBW;
+                ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double BetaNumerator = 1.0 - tan(ThetaC / (2.0 * Q));
-                double BetaDenominator = 1.0 + tan(ThetaC / (2.0 * Q));
+                double tanarg = ThetaC * (mBW / 2.0);
+                double BetaNumerator = 1.0 - tan(tanarg);
+                double BetaDenominator = 1.0 + tan(tanarg);
                 double Beta = 0.5 * (BetaNumerator / BetaDenominator);
 
                 double Gamma = (0.5 + Beta) * (cos(ThetaC));
@@ -90,7 +92,7 @@ namespace eLibV2
 
                 if (isConnected(CONNECTION_FILTER_INPUT))
                     input = connections[CONNECTION_FILTER_INPUT]->processConnection();
-                ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
+                // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 
                 return Process(input);
             }

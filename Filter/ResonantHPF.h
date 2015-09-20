@@ -21,7 +21,8 @@ namespace eLibV2
             };
 
         public:
-            ResonantHPF(void)
+            ResonantHPF(std::string name = "ResonantHPF") :
+                Base::BaseName(name)
             {
                 Init();
             }
@@ -92,7 +93,7 @@ namespace eLibV2
 
                 if (isConnected(CONNECTION_FILTER_INPUT))
                     input = connections[CONNECTION_FILTER_INPUT]->processConnection();
-                ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
+                // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 
                 return Process(input);
             }

@@ -9,6 +9,10 @@
 #define PI 3.1415926535
 #endif
 
+#ifndef PI_DIV_2
+#define PI_DIV_2 1.570796
+#endif
+
 #ifndef MIDISCALER
 #define MIDISCALER 1.0 / 127.0
 #endif
