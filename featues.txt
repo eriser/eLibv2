@@ -1,0 +1,28 @@
+features:
+
+filters:
+
+resonant filters (BPF, BSF, HPF and LPF)
+-> working (cutoff and q/bw matched)
+
+shelving filters
+-> in progress
+
+butterworth filters (BPF, BSF, HPF and LPF)
+-> working (cutoff and bw matched)
+
+linkwitz-riley filters
+-> working (cutoff matched)
+
+peaking filters constant-q
+-> working (cutoff, q and gain matched)
+
+cascaded graphic eq constant-q
+
+
+effects:
+
+delay-line
+phaser
+flanger
+dynamics processor

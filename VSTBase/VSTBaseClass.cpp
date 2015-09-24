@@ -166,7 +166,7 @@ void VSTBaseClass::getParameterName(VstInt32 index, char *label)
         return;
 
     if ((VstInt32)mParameters.size() > index)
-        sprintf(label, "%s", mParameters[index]->getName().c_str());
+        sprintf(label, "%s", mParameters[index]->getId().c_str());
     else
         sprintf(label, "P%li", index);
 }

@@ -2,6 +2,7 @@
 #define MODBIQUAD_H_
 
 #include <Base/BaseEffect.h>
+#include <Util/Helper.h>
 
 #define FLT_MIN_PLUS    1.175494351e-38 /* min positive value */
 #define FLT_MIN_MINUS  -1.175494351e-38 /* min negative value */
@@ -31,7 +32,7 @@ namespace eLibV2
             {
                 // just do the difference equation: y(n) = a0x(n) + a1x(n-1) + a2x(n-2) - b1y(n-1) - b2y(n-2)
                 double yn = (mA0 * input) + (mA1 * mXz_1) + (mA2 * mXz_2) - (mB1 * mYz_1) - (mB2 * mYz_2);
-                yn = ModuleHelper::clamp(yn, -1.0, 1.0);
+                yn = Util::ModuleHelper::clamp(yn, -1.0, 1.0);
 
                 // underflow check
                 if (

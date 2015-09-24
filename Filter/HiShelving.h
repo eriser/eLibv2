@@ -1,7 +1,7 @@
-#ifndef MODRESONANTBSF_H_
-#define MODRESONANTBSF_H_
+#ifndef MODHISHELVING_H_
+#define MODHISHELVING_H_
 
-#include <Filter/BiQuad.h.h>
+#include <Filter/EnhancedBiQuad.h.h>
 #include <Util/Defines.h>
 #include <cmath>
 
@@ -10,9 +10,9 @@ namespace eLibV2
     namespace Effect
     {
         /**
-        Implements a single Bi-Quad Structure
+        Implements a hi-shelving filter
         */
-        class ResonantBSF : public Base::BaseEffect
+        class HiShelving : public Base::BaseEffect
         {
         public:
             enum
@@ -21,13 +21,12 @@ namespace eLibV2
             };
 
         public:
-            ResonantBSF(std::string name = "ResonantBSF") :
+            HiShelving(std::string name = "HiShelving") :
                 Base::BaseName(name)
             {
                 Init();
             }
-
-            virtual ~ResonantBSF(void)
+            virtual ~HiShelving(void)
             {
                 if (mInternalBiquad)
                     delete mInternalBiquad;
@@ -36,9 +35,9 @@ namespace eLibV2
 
             void Init()
             {
-                mInternalBiquad = new BiQuad();
+                mInternalBiquad = new EnhancedBiQuad();
                 mCutoff = 22050.0;
-                mBW = 0.5;
+                mGain = 0.0;
                 calcCoefficients();
             }
 
@@ -48,9 +47,9 @@ namespace eLibV2
                 calcCoefficients();
             }
 
-            void setBW(const double bw)
+            void setGain(const double gain)
             {
-                mBW = bw;
+                mGain = gain;
                 calcCoefficients();
             }
 
@@ -65,20 +64,26 @@ namespace eLibV2
                 double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
                 ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double argtan = ThetaC * (mBW / 2.0);
-                double BetaNumerator = 1.0 - tan(argtan);
-                double BetaDenominator = 1.0 + tan(argtan);
-                double Beta = 0.5 * (BetaNumerator / BetaDenominator);
+                double Mu = pow(10, (mGain / 40.0));
+                double Beta = (1.0 + Mu) / 4.0;
 
-                double Gamma = (0.5 + Beta) * (cos(ThetaC));
-                double a0 = 0.5 + Beta;
-                double a1 = -2.0 * Gamma;
-                double a2 = 0.5 + Beta;
-                double b1 = -2.0 * Gamma;
-                double b2 = 2.0 * Beta;
+                double argtan = ModuleHelper::clamp((ThetaC / 2.0), -PI_DIV_2, PI_DIV_2);
+                double Delta = Beta * tan(argtan);
+                double Gamma = (1.0 - Delta) / (1.0 + Delta);
+
+                double a0 = (1.0 + Delta) / 2.0;
+                double a1 = (1.0 + Gamma) / -2.0;
+                double a2 = 0.0;
+                double b1 = -Gamma;
+                double b2 = 0.0;
+                double c0 = Mu - 1.0;
+                double d0 = 1.0;
 
                 if (mInternalBiquad)
+                {
                     mInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
+                    mInternalBiquad->setWetDryLevel(c0, d0);
+                }
             }
 
             void Reset()
@@ -112,10 +117,10 @@ namespace eLibV2
             void attachInput(BaseConnection *controller) { connect(CONNECTION_FILTER_INPUT, controller); }
 
         private:
-            BiQuad *mInternalBiquad;
+            EnhancedBiQuad *mInternalBiquad;
 
             double mCutoff;
-            double mBW;
+            double mGain;
         };
     }
 }

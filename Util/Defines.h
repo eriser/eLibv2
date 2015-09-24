@@ -13,6 +13,10 @@
 #define PI_DIV_2 1.570796
 #endif
 
+#ifndef SQRT_2
+#define SQRT_2 1.414214
+#endif
+
 #ifndef MIDISCALER
 #define MIDISCALER 1.0 / 127.0
 #endif

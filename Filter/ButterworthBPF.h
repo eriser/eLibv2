@@ -1,5 +1,5 @@
-#ifndef MODRESONANTBSF_H_
-#define MODRESONANTBSF_H_
+#ifndef MODBUTTERWORTHBPF_H_
+#define MODBUTTERWORTHBPF_H_
 
 #include <Filter/BiQuad.h.h>
 #include <Util/Defines.h>
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         Implements a single Bi-Quad Structure
         */
-        class ResonantBSF : public Base::BaseEffect
+        class ButterworthBPF : public Base::BaseEffect
         {
         public:
             enum
@@ -21,13 +21,13 @@ namespace eLibV2
             };
 
         public:
-            ResonantBSF(std::string name = "ResonantBSF") :
+            ButterworthBPF(std::string name = "ButterworthBPF") :
                 Base::BaseName(name)
             {
                 Init();
             }
 
-            virtual ~ResonantBSF(void)
+            virtual ~ButterworthBPF(void)
             {
                 if (mInternalBiquad)
                     delete mInternalBiquad;
@@ -62,20 +62,15 @@ namespace eLibV2
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
-                ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
+                double argtan = ModuleHelper::clamp(((PI * mCutoff * mBW) / mSamplerate), 0.000001, PI_DIV_2);
+                double C = 1.0 / tan(argtan);
+                double D = 2.0 * cos((2.0 * PI * mCutoff) / mSamplerate);
 
-                double argtan = ThetaC * (mBW / 2.0);
-                double BetaNumerator = 1.0 - tan(argtan);
-                double BetaDenominator = 1.0 + tan(argtan);
-                double Beta = 0.5 * (BetaNumerator / BetaDenominator);
-
-                double Gamma = (0.5 + Beta) * (cos(ThetaC));
-                double a0 = 0.5 + Beta;
-                double a1 = -2.0 * Gamma;
-                double a2 = 0.5 + Beta;
-                double b1 = -2.0 * Gamma;
-                double b2 = 2.0 * Beta;
+                double a0 = 1.0 / (1.0 + C);
+                double a1 = 0.0;
+                double a2 = -a0;
+                double b1 = -a0 * (C * D);
+                double b2 = a0 * (C - 1.0);
 
                 if (mInternalBiquad)
                     mInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);

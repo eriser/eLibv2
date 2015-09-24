@@ -37,8 +37,9 @@ namespace eLibV2
             void Init()
             {
                 mInternalBiquad = new BiQuad();
-                setCutoff(22050.0);
-                setQ(10.0);
+                mCutoff = 22050.0;
+                mQ = 5.0;
+                calcCoefficients();
             }
 
             void setCutoff(const double cutoff)

@@ -53,7 +53,7 @@ namespace eLibV2
                     {
                         if ((*nodeIt)->getName() == "parameter")
                         {
-                            std::string name, label;
+                            std::string id, label;
                             PluginParameter::ParameterType type;
                             double min, max;
 
@@ -64,8 +64,8 @@ namespace eLibV2
                                 std::string attributeName = (*attributeIt).first;
                                 std::string attributeValue = (*attributeIt).second;
 
-                                if (attributeName == "name")
-                                    name = attributeValue;
+                                if (attributeName == "id")
+                                    id = attributeValue;
                                 else if (attributeName == "label")
                                     label = attributeValue;
                                 else if (attributeName == "type")
@@ -82,7 +82,7 @@ namespace eLibV2
                                 else if (attributeName == "max")
                                     max = atof(attributeValue.c_str());
                             }
-                            PluginParameter parameter(name, label, type, min, max);
+                            PluginParameter parameter(id, label, type, min, max);
                             parameters.push_back(parameter);
                         }
                     }

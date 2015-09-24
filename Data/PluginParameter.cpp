@@ -2,8 +2,8 @@
 
 using namespace eLibV2::Data;
 
-PluginParameter::PluginParameter(const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue)
-    : mParameterName(name)
+PluginParameter::PluginParameter(const std::string id, const std::string label, ParameterType type, double minValue, double maxValue, double initValue)
+    : mParameterId(id)
     , mUnitLabel(label)
     , mType(type)
     , mMinValue(minValue)

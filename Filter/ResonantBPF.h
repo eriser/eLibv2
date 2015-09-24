@@ -37,8 +37,9 @@ namespace eLibV2
             void Init()
             {
                 mInternalBiquad = new BiQuad();
-                setCutoff(22050.0);
-                setBW(500.0);
+                mCutoff = 22050.0;
+                mBW = 0.5;
+                calcCoefficients();
             }
 
             void setCutoff(const double cutoff)
@@ -64,9 +65,9 @@ namespace eLibV2
                 double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
                 ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double tanarg = ThetaC * (mBW / 2.0);
-                double BetaNumerator = 1.0 - tan(tanarg);
-                double BetaDenominator = 1.0 + tan(tanarg);
+                double argtan = ThetaC * (mBW / 2.0);
+                double BetaNumerator = 1.0 - tan(argtan);
+                double BetaDenominator = 1.0 + tan(argtan);
                 double Beta = 0.5 * (BetaNumerator / BetaDenominator);
 
                 double Gamma = (0.5 + Beta) * (cos(ThetaC));

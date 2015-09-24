@@ -22,9 +22,9 @@ namespace eLibV2
             };
 
         public:
-            PluginParameter(const std::string name, const std::string label, ParameterType type, double minValue, double maxValue, double initValue = 0.0);
+            PluginParameter(const std::string id, const std::string label, ParameterType type, double minValue, double maxValue, double initValue = 0.0);
 
-            std::string getName() const { return mParameterName; }
+            std::string getId() const { return mParameterId; }
             std::string getLabel() const { return mUnitLabel; }
             double getValue(const double in) const;
             double getInitialValue() const { return mInitialValue; }
@@ -40,7 +40,7 @@ namespace eLibV2
             bool isDoubleType() const { return (mType == ParameterTypeDouble); }
 
         private:
-            std::string mParameterName;
+            std::string mParameterId;
             std::string mUnitLabel;
             ParameterType mType;
             double mMinValue;

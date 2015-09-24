@@ -1,5 +1,5 @@
-#ifndef MODRESONANTBSF_H_
-#define MODRESONANTBSF_H_
+#ifndef MODBUTTERWORTHHPF_H_
+#define MODBUTTERWORTHHPF_H_
 
 #include <Filter/BiQuad.h.h>
 #include <Util/Defines.h>
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         Implements a single Bi-Quad Structure
         */
-        class ResonantBSF : public Base::BaseEffect
+        class ButterworthHPF : public Base::BaseEffect
         {
         public:
             enum
@@ -21,13 +21,13 @@ namespace eLibV2
             };
 
         public:
-            ResonantBSF(std::string name = "ResonantBSF") :
+            ButterworthHPF(std::string name = "ButterworthHPF") :
                 Base::BaseName(name)
             {
                 Init();
             }
 
-            virtual ~ResonantBSF(void)
+            virtual ~ButterworthHPF(void)
             {
                 if (mInternalBiquad)
                     delete mInternalBiquad;
@@ -38,19 +38,12 @@ namespace eLibV2
             {
                 mInternalBiquad = new BiQuad();
                 mCutoff = 22050.0;
-                mBW = 0.5;
                 calcCoefficients();
             }
 
             void setCutoff(const double cutoff)
             {
                 mCutoff = cutoff;
-                calcCoefficients();
-            }
-
-            void setBW(const double bw)
-            {
-                mBW = bw;
                 calcCoefficients();
             }
 
@@ -62,20 +55,15 @@ namespace eLibV2
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
-                ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
+                double argtan = ModuleHelper::clamp(((PI * mCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                double C = tan(argtan);
+                double C2 = C * C;
 
-                double argtan = ThetaC * (mBW / 2.0);
-                double BetaNumerator = 1.0 - tan(argtan);
-                double BetaDenominator = 1.0 + tan(argtan);
-                double Beta = 0.5 * (BetaNumerator / BetaDenominator);
-
-                double Gamma = (0.5 + Beta) * (cos(ThetaC));
-                double a0 = 0.5 + Beta;
-                double a1 = -2.0 * Gamma;
-                double a2 = 0.5 + Beta;
-                double b1 = -2.0 * Gamma;
-                double b2 = 2.0 * Beta;
+                double a0 = 1.0 / (1.0 + SQRT_2 * C + C2);
+                double a1 = -2.0 * a0;
+                double a2 = a0;
+                double b1 = 2.0 * a0 * (C2 - 1.0);
+                double b2 = a0 * (1.0 - SQRT_2 * C + C2);
 
                 if (mInternalBiquad)
                     mInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
@@ -115,7 +103,6 @@ namespace eLibV2
             BiQuad *mInternalBiquad;
 
             double mCutoff;
-            double mBW;
         };
     }
 }

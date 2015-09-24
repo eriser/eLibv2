@@ -45,6 +45,15 @@
 #include <Effect/WaveWrap.h>
 
 // filter modules
+#include <Filter/ButterworthBPF.h>
+#include <Filter/ButterworthBSF.h>
+#include <Filter/ButterworthHPF.h>
+#include <Filter/ButterworthLPF.h>
+#include <Filter/HiShelving.h>
+#include <Filter/LoShelving.h>
+#include <Filter/LinkwirtRileyHPF.h>
+#include <Filter/LinkwirtRileyLPF.h>
+#include <Filter/ParametricConstantQ.h>
 #include <Filter/ResonantBPF.h>
 #include <Filter/ResonantBSF.h>
 #include <Filter/ResonantHPF.h>
