@@ -17,7 +17,7 @@ namespace eLibV2
 {
     namespace Loader
     {
-        class LPSLoader : public Base::BaseModule
+        class LPSLoader : public Base::BaseName
         {
         public:
             enum

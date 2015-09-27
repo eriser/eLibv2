@@ -20,14 +20,20 @@ namespace eLibV2
         protected:
             enum
             {
-                CONNECTION_OSC_INPUT_NOTE,
-                CONNECTION_OSC_INPUT_WAVEFORM,
-                CONNECTION_OSC_INPUT_COARSE,
-                CONNECTION_OSC_INPUT_FINETUNE
+                OSC_CONNECTION_NOTE = 0,
+                OSC_CONNECTION_WAVEFORM,
+                OSC_CONNECTION_COARSE,
+                OSC_CONNECTION_FINETUNE,
+                OSC_CONNECTION_NUM
             };
 
         public:
-            BaseOscillator(std::string name = "BaseOscillator") : Base::BaseName(name) { Init(); }
+            BaseOscillator(std::string name = "BaseOscillator") :
+                Base::BaseName(name),
+                BaseConnection(OSC_CONNECTION_NUM)
+            {
+                Init();
+            }
 
         public:
             virtual void Init(void);
@@ -50,18 +56,14 @@ namespace eLibV2
 
         public:
             /* attach methods */
-            void attachNote(Base::BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_NOTE, controller); }
-            void attachWaveform(Base::BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_WAVEFORM, controller); }
-            void attachCoarse(Base::BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_COARSE, controller); }
-            void attachFinetune(Base::BaseConnection *controller) { connect(CONNECTION_OSC_INPUT_FINETUNE, controller); }
+            void attachNote(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_NOTE] = connection; }
+            void attachWaveform(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_WAVEFORM] = connection; }
+            void attachCoarse(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_COARSE] = connection; }
+            void attachFinetune(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_FINETUNE] = connection; }
 
         protected:
             VstInt32 lWaveform;
-            double dCoarse;
-            double dFinetune;
-            double dPhase;
-            double dSamplerate;
-            double dScaler;
+            double dCoarse, dFinetune, dPhase, dSamplerate, dScaler;
         };
     }
 }

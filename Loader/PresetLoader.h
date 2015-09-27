@@ -17,7 +17,7 @@ namespace eLibV2
 {
     namespace Loader
     {
-        class PresetLoader : public Base::BaseModule
+        class PresetLoader : public Base::BaseName
         {
         public:
             enum

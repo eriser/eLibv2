@@ -10,7 +10,7 @@ namespace eLibV2
         /**
         RMSCalculator is used to calculate the root-mean-squared of a stream of signals
         */
-        class RMSCalculator : public Base::BaseEffect
+        class RMSCalculator : public Base::BaseName
         {
         public:
             RMSCalculator(std::string name = "RMSCalculator") :

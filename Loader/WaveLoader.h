@@ -39,7 +39,7 @@ namespace eLibV2
         - 64 bits integer/float
 
         */
-        class WaveLoader : public Base::BaseModule
+        class WaveLoader : public Base::BaseName
         {
         public:
             enum { MAX_WAVE_BUFFER = 0x10000, MAX_CHANNEL_NUM = 6 };

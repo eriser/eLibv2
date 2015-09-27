@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         handle incoming MIDI-Events
         */
-        class MidiEventHandler : public Base::BaseModule
+        class MidiEventHandler : public Base::BaseName
         {
         public:
             MidiEventHandler() :

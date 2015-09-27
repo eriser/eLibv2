@@ -27,24 +27,21 @@ namespace eLibV2
             };
 
         public:
-            BaseConnection(int numInputs = 0, int numOutputs = 0) :
+            BaseConnection(int numInputs = 1, int numOutputs = 1) :
                 numberOfInputs(numInputs),
                 numberOfOutputs(numOutputs)
-            {}
+            {
+                inputConnections = new BaseConnection*[numberOfInputs];
+                memset(inputConnections, 0, sizeof(inputConnections) * numberOfInputs);
+                outputConnections = new BaseConnection*[numberOfOutputs];
+                memset(outputConnections, 0, sizeof(outputConnections) * numberOfOutputs);
+            }
             virtual ~BaseConnection() {}
 
             /**
             process signal flow for all connected module
             */
-            virtual double processConnection()
-            {
-                double res = 0.0;
-
-                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIO (inputs: %i)", getModuleName().c_str(), connections.size());
-                for (connectionIterator it = connections.begin(); it != connections.end(); it++)
-                    res = it->second->processConnection();
-                return res;
-            }
+            virtual double processConnection() = 0;
 
             /**
             print signal flow of modules
@@ -57,13 +54,16 @@ namespace eLibV2
                 depth++;
                 for (int i = 1; i < depth; i++)
                     oss << ' ';
-                oss << getModuleName().c_str() << " " << (int)getNumberOfInputs() << "/" << (int)getNumberOfOutputs();
+                oss << getModuleName().c_str() << " (" << (int)getNumberOfInputs() << "/" << (int)getNumberOfOutputs() << ")";
                 ModuleLogger::print(LOG_CLASS_CONNECTION, oss.str().c_str());
 
-                if (connections.size() > 0)
+                if (inputConnections != NULL)
                 {
-                    for (connectionIterator it = connections.begin(); it != connections.end(); it++)
-                        it->second->printConnection(depth);
+                    for (unsigned char inputIndex = 0; inputIndex < numberOfInputs; ++inputIndex)
+                    {
+                        if (inputConnections[inputIndex] != NULL)
+                            inputConnections[inputIndex]->printConnection(depth);
+                    }
                 }
             }
 
@@ -79,34 +79,12 @@ namespace eLibV2
             */
             virtual int getNumberOfOutputs() { return numberOfOutputs; }
 
-            /**
-            create connection between modules
-            @param connectionId id for the created connection
-            @param input the connection pin of the other module
-            */
-            virtual void connect(const int connectionId, BaseConnection* input) { connections[connectionId] = input; }
-
-            /**
-            delete connection between modules
-            @param connectionId id of the connection to be deleted
-            @return true if connection was present and deleted, false if not
-            */
-            virtual bool disconnect(const int connectionId) { return (connections.erase(connectionId) > 1); }
-
-            /**
-            test if connection with given id is present
-            @param connectionId id of the connection to be tested
-            @return true if connection is present, false if not
-            */
-            virtual bool isConnected(const int connectionId) { return(connections.count(connectionId) > 0); }
-
         protected:
-            typedef std::map<const int, BaseConnection*> connectionMap; ///< typedef for internal connection-map
-            typedef connectionMap::iterator connectionIterator; ///< typedef for iterator of internal connection-map
-
             const int numberOfInputs; ///< number of inputs available
             const int numberOfOutputs; ///< number of outputs available
-            connectionMap connections; ///< map with all currently set up connections
+
+            BaseConnection** inputConnections;
+            BaseConnection** outputConnections;
         };
     }
 }

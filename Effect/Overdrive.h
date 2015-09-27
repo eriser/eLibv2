@@ -16,13 +16,15 @@ namespace eLibV2
         public:
             enum
             {
-                CONNECTION_OVERDRIVE_INPUT,
-                CONNECTION_OVERDRIVE_LEVEL
+                OVERDRIVE_CONNECTION_INPUT = 0,
+                OVERDRIVE_CONNECTION_LEVEL,
+                OVERDRIVE_CONNECTION_NUM
             };
 
         public:
             FxOverdrive(std::string name = "FxOverdrive") :
-                Base::BaseName(name)
+                Base::BaseName(name),
+                BaseConnection(OVERDRIVE_CONNECTION_NUM)
             {
                 Init();
             }
@@ -39,8 +41,8 @@ namespace eLibV2
             double getLevel(void) { return dLevel; }
 
         public:
-            void attachInput(BaseConnection *controller) { connect(CONNECTION_OVERDRIVE_INPUT, controller); }
-            void attachLevel(BaseConnection *controller) { connect(CONNECTION_OVERDRIVE_LEVEL, controller); }
+            void attachInput(BaseConnection *connection) { inputConnections[OVERDRIVE_CONNECTION_INPUT] = connection; }
+            void attachLevel(BaseConnection *connection) { inputConnections[OVERDRIVE_CONNECTION_LEVEL] = connection; }
 
         protected:
             double dLevel;

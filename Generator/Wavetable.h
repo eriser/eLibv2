@@ -16,7 +16,7 @@ namespace eLibV2
 {
     namespace Generator
     {
-        class BaseWavetable : public Base::BaseModule
+        class BaseWavetable : public Base::BaseName
         {
         protected:
             enum

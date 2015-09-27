@@ -2,12 +2,13 @@
 #define __ELBI2_H__
 
 // block modules
+#include <Connection/AdderConnection.h>
 #include <Connection/ConnectionPool.h>
 #include <Connection/ConstantConnection.h>
 #include <Connection/InputConnection.h>
 #include <Connection/OutputConnection.h>
 #include <Connection/MultiplierConection.h>
-#include <Connection/ScalingConnection.h>
+#include <Connection/ScalerConnection.h>
 
 // data types
 #include <Data/PluginParameter.h>
@@ -38,7 +39,7 @@
 #include <Effect/Mixer.h>
 #include <Effect/Overdrive.h>
 #include <Effect/RMSCalc.h>
-#include <Effect/Selector.h>
+#include <Effect/SelectorBlock.h>
 #include <Effect/SignalAdd.h>
 #include <Effect/SimpleComp.h>
 #include <Effect/VCF.h>

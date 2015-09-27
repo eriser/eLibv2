@@ -17,13 +17,15 @@ namespace eLibV2
             enum { WRAP_WAVESIZE = 32768 };
             enum
             {
-                WAVEWRAP_INPUT,
-                WAVEWRAP_LEVEL
+                WAVEWRAP_CONNECTION_INPUT = 0,
+                WAVEWRAP_CONNECTION_LEVEL,
+                WAVEWRAP_CONNECTION_NUM
             };
 
         public:
             FxWaveWrap(std::string name = "FxWaveWrap") :
-                Base::BaseName(name)
+                Base::BaseName(name),
+                BaseConnection(WAVEWRAP_CONNECTION_NUM)
             {
                 Init();
             }
@@ -41,8 +43,8 @@ namespace eLibV2
             void setWrapLevel(double WrapLevel) { dWrapLevel = Util::ModuleHelper::clamp(WrapLevel, WAVEWRAP_LEVEL_MIN, WAVEWRAP_LEVEL_MAX); }
 
         public:
-            virtual void attachInput(Base::BaseConnection *controller) { connect(WAVEWRAP_INPUT, controller); }
-            virtual void attachLevel(Base::BaseConnection *controller) { connect(WAVEWRAP_LEVEL, controller); }
+            virtual void attachInput(Base::BaseConnection *connection) { inputConnections[WAVEWRAP_CONNECTION_NUM] = connection; }
+            virtual void attachLevel(Base::BaseConnection *connection) { inputConnections[WAVEWRAP_CONNECTION_LEVEL] = connection; }
 
         private:
             double dWrapLevel;

@@ -46,6 +46,8 @@ namespace eLibV2
             virtual void setDecayScale(double DecayScale) { dDecayScale = DecayScale; }
             virtual void setReleaseScale(double ReleaseScale) { dReleaseScale = ReleaseScale; }
 
+            virtual double processConnection() { return(0.0); }
+
         protected:
             EnvelopeState eEnvelopeState;
             VstInt32 tDelay, tAttack, tDecay, tRelease;

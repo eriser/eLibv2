@@ -16,31 +16,40 @@ namespace eLibV2
         public:
             enum
             {
-                MULTIPLIER_INPUT
+                MULTIPLIER_INPUT_NUM = 4
             };
 
         public:
-            MultiplierConnection(std::string name = "MultiplierConnection")
-                : Base::BaseName(name), numInputs(0) {}
+            MultiplierConnection(std::string name = "MultiplierConnection") :
+                Base::BaseName(name),
+                BaseConnection(MULTIPLIER_INPUT_NUM),
+                numInputs(0)
+            {
+            }
+            virtual ~MultiplierConnection() {}
 
             virtual double processConnection()
             {
                 double input = 1.0;
 
-                for (connectionIterator it = connections.begin(); it != connections.end(); it++)
+                for (unsigned char inputIndex = 0; inputIndex < MULTIPLIER_INPUT_NUM; ++inputIndex)
                 {
-                    double value = it->second->processConnection();
-                    input *= value;
+                    if (inputConnections[inputIndex] != NULL)
+                        input *= inputConnections[inputIndex]->processConnection();
                 }
 
-                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIOs value: %lf", getModuleName().c_str(), input);
+                // ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIOs value: %lf", getModuleName().c_str(), input);
                 return input;
             }
 
-            virtual void attachInput(BaseConnection *controller) { connect(MULTIPLIER_INPUT + numInputs, controller); numInputs++; }
+            virtual void attachInput(BaseConnection *connection)
+            {
+                if (numInputs < MULTIPLIER_INPUT_NUM)
+                    inputConnections[numInputs++] = connection;
+            }
 
         protected:
-            int numInputs;
+            unsigned char numInputs;
         };
     }
 }

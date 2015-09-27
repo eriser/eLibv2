@@ -1,5 +1,5 @@
-#ifndef MODSELECTOR_H_
-#define MODSELECTOR_H_
+#ifndef MODSELECTORBLOCK_H_
+#define MODSELECTORBLOCK_H_
 
 #include <Base/BaseEffect.h>
 
@@ -7,28 +7,29 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class Selector : public Base::BaseEffect
+        class SelectorBlock : public Base::BaseEffect
         {
         public:
             enum
             {
-                CONNECTION_SELECTOR_INPUT1,
-                CONNECTION_SELECTOR_INPUT2,
-                CONNECTION_SELECTOR_INPUT3,
-                CONNECTION_SELECTOR_INPUT4,
-                CONNECTION_SELECTOR_MAXINPUT
+                CONNECTION_SELECTOR_MAXINPUT = 16
             };
 
         public:
-            Selector(std::string name = "Selector") :
-                Base::BaseName(name)
+            SelectorBlock(std::string name = "SelectorBlock") :
+                Base::BaseName(name),
+                BaseConnection(CONNECTION_SELECTOR_MAXINPUT, 1)
             {
                 Init();
             }
-            virtual ~Selector() {}
+            virtual ~SelectorBlock() {}
 
             /* inherited */
-            virtual void Init(void);
+            virtual void Init(void)
+            {
+                uiInputSwitch = 0;
+            }
+
             virtual void Reset(void);
 
             void setInputSwitch(unsigned int InputSwitch) { uiInputSwitch = InputSwitch; }
@@ -37,10 +38,10 @@ namespace eLibV2
             virtual double processConnection();
 
         public:
-            void attachInput(unsigned int InputIndex, BaseConnection *controller)
+            void attachInput(unsigned int InputIndex, BaseConnection *connection)
             {
                 if (InputIndex < CONNECTION_SELECTOR_MAXINPUT)
-                    connect(InputIndex, controller);
+                    inputConnections[InputIndex] = connection;
             }
 
         private:

@@ -33,10 +33,12 @@ double FxDither::processConnection()
 {
     double input = 0.0;
 
-    if (isConnected(CONNECTION_DITHER_BITSIZE))
-        setBitsize((unsigned int)connections[CONNECTION_DITHER_BITSIZE]->processConnection());
-    if (isConnected(CONNECTION_DITHER_INPUT))
-        input = connections[CONNECTION_DITHER_INPUT]->processConnection();
+    //if (inputConnections[DITHER_CONNECTION_BYPASS] != NULL)
+    //   inputConnections[DITHER_CONNECTION_BYPASS]->processConnection();
+    if (inputConnections[DITHER_CONNECTION_BITSIZE] != NULL)
+        setBitsize((unsigned int)inputConnections[DITHER_CONNECTION_BITSIZE]->processConnection());
+    if (inputConnections[DITHER_CONNECTION_INPUT])
+        input = inputConnections[DITHER_CONNECTION_INPUT]->processConnection();
     // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
     if (!bBypass)
         return Process(input);

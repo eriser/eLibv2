@@ -62,7 +62,6 @@ void BaseWavetable::Init()
         sawup_bl = new double[WAVETABLE_SAMPLE_SIZE];
         sawdn_bl = new double[WAVETABLE_SAMPLE_SIZE];
         pulse_bl = new double[WAVETABLE_SAMPLE_SIZE];
-        pulse_bl[0] = 0.0;
 
         // digital
         triangle = new double[WAVETABLE_SAMPLE_SIZE];

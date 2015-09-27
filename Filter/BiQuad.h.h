@@ -14,7 +14,7 @@ namespace eLibV2
         /**
         Implements a single Bi-Quad Structure
         */
-        class BiQuad : public Base::BaseEffect
+        class BiQuad : public Base::BaseName
         {
         public:
             BiQuad(void) {}

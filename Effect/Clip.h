@@ -19,7 +19,7 @@ namespace eLibV2
             CLIP_MODE_BOTH
         };
 
-        class FxClip : public Base::BaseEffect
+        class FxClip : public Base::BaseName
         {
         public:
             FxClip(std::string name = "FxClip") :

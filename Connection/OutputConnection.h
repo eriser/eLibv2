@@ -15,8 +15,23 @@ namespace eLibV2
         public:
             OutputConnection(std::string name = "OutputConnection") :
                 Base::BaseName(name)
-            {}
+            {
+            }
             virtual ~OutputConnection() {}
+
+            virtual double processConnection()
+            {
+                double input = 0.0;
+
+                if (inputConnections[0] != NULL)
+                    input = inputConnections[0]->processConnection();
+                // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
+
+                return input;
+            }
+
+        public:
+            void attachInput(BaseConnection *controller) { inputConnections[0] = controller; }
 
         protected:
             double mValue;

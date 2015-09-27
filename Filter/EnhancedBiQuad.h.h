@@ -11,7 +11,7 @@ namespace eLibV2
         /**
         Implements an enhanced Bi-Quad Structure with dry/wet input
         */
-        class EnhancedBiQuad : public Base::BaseEffect
+        class EnhancedBiQuad : public Base::BaseName
         {
         public:
             EnhancedBiQuad(void)

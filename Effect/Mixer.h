@@ -15,7 +15,7 @@ namespace eLibV2
             MIXER_MODE_INVSUBTRACT
         };
 
-        class FxMixer : public Base::BaseEffect
+        class FxMixer : public Base::BaseName
         {
         public:
             FxMixer(std::string name = "FxMixer") :

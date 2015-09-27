@@ -18,7 +18,7 @@
 using namespace eLibV2::Util;
 using namespace eLibV2::MIDI;
 
-#define OUTPUT_PLUGIN_PROPERTIES 0
+#define OUTPUT_PLUGIN_PROPERTIES 1
 
 namespace eLibV2
 {

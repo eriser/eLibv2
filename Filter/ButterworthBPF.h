@@ -15,12 +15,6 @@ namespace eLibV2
         class ButterworthBPF : public Base::BaseEffect
         {
         public:
-            enum
-            {
-                CONNECTION_FILTER_INPUT
-            };
-
-        public:
             ButterworthBPF(std::string name = "ButterworthBPF") :
                 Base::BaseName(name)
             {
@@ -86,8 +80,8 @@ namespace eLibV2
             {
                 double input = 0.0;
 
-                if (isConnected(CONNECTION_FILTER_INPUT))
-                    input = connections[CONNECTION_FILTER_INPUT]->processConnection();
+                if (inputConnections[0] != NULL)
+                    input = inputConnections[0]->processConnection();
                 // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 
                 return Process(input);
@@ -104,7 +98,7 @@ namespace eLibV2
             }
 
         public:
-            void attachInput(BaseConnection *controller) { connect(CONNECTION_FILTER_INPUT, controller); }
+            void attachInput(BaseConnection *connection) { inputConnections[0] = connection; }
 
         private:
             BiQuad *mInternalBiquad;

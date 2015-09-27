@@ -19,14 +19,16 @@ namespace eLibV2
         public:
             enum
             {
-                CONNECTION_DITHER_BYPASS,
-                CONNECTION_DITHER_INPUT,
-                CONNECTION_DITHER_BITSIZE
+                DITHER_CONNECTION_BYPASS = 0,
+                DITHER_CONNECTION_INPUT,
+                DITHER_CONNECTION_BITSIZE,
+                DITHER_CONNECTION_NUM
             };
 
         public:
             FxDither(std::string name = "FxDither") :
-                Base::BaseName(name)
+                Base::BaseName(name),
+                BaseConnection(DITHER_CONNECTION_NUM)
             {
                 Init();
             }
@@ -45,9 +47,9 @@ namespace eLibV2
             void setBitsize(VstInt16 Bitsize) { mBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:
-            void attachBypass(BaseConnection *controller) { connect(CONNECTION_DITHER_BYPASS, controller); }
-            void attachInput(BaseConnection *controller) { connect(CONNECTION_DITHER_INPUT, controller); }
-            void attachBitsize(BaseConnection *controller) { connect(CONNECTION_DITHER_BITSIZE, controller); }
+            void attachBypass(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BYPASS] = connection; }
+            void attachInput(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_INPUT] = connection; }
+            void attachBitsize(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BITSIZE] = connection; }
 
         private:
             VstInt16 mBitsize;

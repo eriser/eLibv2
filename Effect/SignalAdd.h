@@ -9,7 +9,7 @@ namespace eLibV2
     namespace Effect
     {
         /// @todo the process-method does not really do what it supposed to do
-        class FxSignalAdd : public Base::BaseEffect
+        class FxSignalAdd : public Base::BaseName
         {
         public:
             FxSignalAdd(std::string name = "FxSignalAdd") :
