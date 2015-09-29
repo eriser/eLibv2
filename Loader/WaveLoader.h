@@ -147,8 +147,12 @@ namespace eLibV2
 
         public:
             /// default constuctor
-            WaveLoader() : Base::BaseName("WaveLoader") { Init(); }
-            ~WaveLoader();
+            WaveLoader() :
+                Base::BaseName("WaveLoader")
+            {
+                Init();
+            }
+            virtual ~WaveLoader();
 
         public:
             /**

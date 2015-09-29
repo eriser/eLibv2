@@ -14,7 +14,10 @@ namespace eLibV2
         class BaseName
         {
         public:
-            BaseName(std::string name = "not initialized") : mModuleName(name) {}
+            BaseName(std::string name = "not initialized") :
+                mModuleName(name)
+            {}
+            virtual ~BaseName() {}
 
             /**
             get name for module

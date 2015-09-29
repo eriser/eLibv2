@@ -56,11 +56,14 @@ namespace eLibV2
             };
 
         public:
-            LPSLoader() : Base::BaseName("LPSLoader") { Init(); }
-            ~LPSLoader();
+            LPSLoader() :
+                Base::BaseName("LPSLoader")
+            {
+                Init();
+            }
+            virtual ~LPSLoader();
 
             void Init(void);
-            void Reset(void);
 
             int Load(std::string filename);
             void Unload(void);

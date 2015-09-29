@@ -96,9 +96,10 @@ namespace eLibV2
             } OutputBank;
 
         public:
-            PresetLoader() : Base::BaseName("PresetLoader") {}
-
-            void Init(void) {}
+            PresetLoader() :
+                Base::BaseName("PresetLoader")
+            {
+            }
 
             int Load(const std::string& filename);
             int Save(const std::string& filename);

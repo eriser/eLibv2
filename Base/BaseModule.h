@@ -22,7 +22,10 @@ namespace eLibV2
         class BaseModule : virtual public BaseConnection
         {
         public:
-            BaseModule() : BaseName("BaseModule") {}
+            BaseModule() :
+                BaseName("BaseModule")
+            {}
+            virtual ~BaseModule() {}
 
             /**
             initialization method for subclasses
