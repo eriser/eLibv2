@@ -41,32 +41,10 @@ double EnvelopeDADSR::Process(void)
         {
             case ENVELOPE_DADSR_STATE_INIT:
                 tDelay = tAttack = tDecay = tRelease = 0;
-
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (bTrigger)
-                    {
-                        eEnvelopeState = ENVELOPE_DADSR_STATE_DELAY;
-                        break;
-                    }
-                }
                 break;
 
             case ENVELOPE_DADSR_STATE_DELAY:
                 tDelayEnd = (VstInt32)(dDelay * dDelayScale * mSamplerate);
-
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
 
                 // normal processing
                 if (tDelay < tDelayEnd)
@@ -77,17 +55,6 @@ double EnvelopeDADSR::Process(void)
 
             case ENVELOPE_DADSR_STATE_ATTACK:
                 tAttackEnd = (VstInt32)(dAttack * dAttackScale * mSamplerate);
-
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
 
                 // normal processing
                 if (dAttack > LOWEST)
@@ -105,17 +72,6 @@ double EnvelopeDADSR::Process(void)
             case ENVELOPE_DADSR_STATE_DECAY:
                 tDecayEnd = (VstInt32)(dDecay * dDecayScale * mSamplerate);
 
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
-
                 // normal processing
                 if (dDecay > LOWEST)
                     div = dDecay * dDecayScale * mSamplerate;
@@ -130,17 +86,6 @@ double EnvelopeDADSR::Process(void)
                 break;
 
             case ENVELOPE_DADSR_STATE_SUSTAIN:
-                // trigger changed
-                if (bOldTrigger != bTrigger)
-                {
-                    bOldTrigger = bTrigger;
-                    if (!bTrigger)
-                    {
-                        eEnvelopeState = ENVELOPE_DADSR_STATE_RELEASE;
-                        break;
-                    }
-                }
-
                 res = dSustain;
                 dLastLevel = res;
                 break;
@@ -161,6 +106,16 @@ double EnvelopeDADSR::Process(void)
                     eEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
                 break;
         }
+
+        // trigger changed
+        if (bOldTrigger != bTrigger)
+        {
+            bOldTrigger = bTrigger;
+            if (bTrigger)
+            {
+                eEnvelopeState = ENVELOPE_DADSR_STATE_DELAY;
+            }
+        }
     }
     else
     {
@@ -169,33 +124,3 @@ double EnvelopeDADSR::Process(void)
     dLastLevel = res;
     return res;
 }
-
-#if 0
-bool EnvelopeDADSR::Test(void)
-{
-    double Value;
-    long oldstate = 0;
-
-//    TestBeginMsg();
-    ModuleLogger::print(LOG_CLASS_EFFECT, "using delay: %lf", dDelay);
-    ModuleLogger::print(LOG_CLASS_EFFECT, "using attack: %lf", dAttack);
-    ModuleLogger::print(LOG_CLASS_EFFECT, "using decay: %lf", dDecay);
-    ModuleLogger::print(LOG_CLASS_EFFECT, "using sustain: %lf", dSustain);
-    ModuleLogger::print(LOG_CLASS_EFFECT, "using release: %lf", dRelease);
-    setTrigger(true);
-    for (long EnvTime = 0; EnvTime < 200000; EnvTime++)
-    {
-        Value = Process();
-        if (oldstate != lEnvelopeState)
-        {
-            ModuleLogger::print(LOG_CLASS_EFFECT, "time: %li state: %li value: %lf", EnvTime, lEnvelopeState, Value);
-            oldstate = lEnvelopeState;
-        }
-        if (EnvTime > 60000)
-            setTrigger(false);
-    }
-//    TestEndMsg();
-
-    return true;
-}
-#endif

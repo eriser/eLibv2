@@ -34,6 +34,7 @@
 // effect modules
 #include <Effect/3BandEQ.h>
 #include <Effect/Clip.h>
+#include <Effect/Delay.h>
 #include <Effect/Dither.h>
 #include <Effect/EnvFollower.h>
 #include <Effect/Mixer.h>
