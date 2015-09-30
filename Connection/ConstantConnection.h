@@ -16,7 +16,10 @@ namespace eLibV2
         class ConstantConnection : public InputConnection
         {
         public:
-            ConstantConnection(double value) : BaseName("ConstantConnection"), mValue(value) {}
+            ConstantConnection(double value) :
+                BaseName("ConstantConnection"),
+                mValue(value)
+            {}
 
             /**
             process connected inputs

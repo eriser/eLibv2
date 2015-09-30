@@ -14,8 +14,7 @@ namespace eLibV2
         {
         public:
             BaseEffect(std::string name = "BaseEffect") :
-                BaseName(name),
-                BaseConnection(1, 1)
+                BaseName(name)
             {
                 Init();
             }

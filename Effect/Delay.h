@@ -16,9 +16,9 @@ namespace eLibV2
         public:
             enum
             {
-                DELAY_BUFFER_SIZE = 22050,
+                DELAY_BUFFER_SIZE = 44100,
                 DELAY_CONNECTION_INPUT = 0,
-                DELAY_CONNECTION_INDEX,
+                DELAY_CONNECTION_LENGTH,
                 DELAY_CONNECTION_NUM
             };
 
@@ -29,6 +29,9 @@ namespace eLibV2
             {
                 buffer = new double[DELAY_BUFFER_SIZE];
                 memset(buffer, 0, sizeof(buffer) * DELAY_BUFFER_SIZE);
+                mixLevel = 0.5;
+                delayLength = 1000;
+
                 Init();
             }
             virtual ~Delay() {}
@@ -40,6 +43,9 @@ namespace eLibV2
             virtual double processConnection();
 
         public:
+            void setDelayLength(unsigned int length);
+
+            void attachDelayLength(BaseConnection *connection) { inputConnections[DELAY_CONNECTION_LENGTH] = connection; }
             void attachInput(BaseConnection *connection) { inputConnections[DELAY_CONNECTION_INPUT] = connection; }
 
         private:
@@ -48,8 +54,9 @@ namespace eLibV2
         private:
             double *buffer;
             double mixLevel;
+            unsigned int delayLength;
             bool bBypass;
-            unsigned int readIndex, writeIndex;
+            int readIndex, writeIndex;
         };
     }
 }
