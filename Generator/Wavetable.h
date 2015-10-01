@@ -18,7 +18,25 @@ namespace eLibV2
     {
         class BaseWavetable : public Base::BaseName
         {
-        protected:
+        public:
+            enum
+            {
+                WAVETABLE_WAVEFORM_NONE = 0,
+                WAVETABLE_WAVEFORM_SINE,
+                WAVETABLE_WAVEFORM_ENIS,
+                WAVETABLE_WAVEFORM_TRIANGLE_BL,
+                WAVETABLE_WAVEFORM_SAWUP_BL,
+                WAVETABLE_WAVEFORM_SAWDN_BL,
+                WAVETABLE_WAVEFORM_PULSE_BL,
+                WAVETABLE_WAVEFORM_TRIANGLE,
+                WAVETABLE_WAVEFORM_SAWUP,
+                WAVETABLE_WAVEFORM_SAWDN,
+                WAVETABLE_WAVEFORM_PULSE,
+                WAVETABLE_WAVEFORM_NOISE,
+                WAVETABLE_WAVEFORM_SH
+            };
+
+        private:
             enum
             {
                 WAVETABLE_SAMPLE_BANDLIMIT = 63, // needs to be odd value

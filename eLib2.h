@@ -39,6 +39,7 @@
 #include <Effect/EnvFollower.h>
 #include <Effect/Mixer.h>
 #include <Effect/Overdrive.h>
+#include <Effect/Phaser.h>
 #include <Effect/RMSCalc.h>
 #include <Effect/SelectorBlock.h>
 #include <Effect/SignalAdd.h>

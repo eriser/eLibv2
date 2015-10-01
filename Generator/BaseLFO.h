@@ -3,11 +3,6 @@
 
 #include <Generator/BaseOsc.h>
 
-// TODO: initiailization of inputs needed
-// is only one, but 4 should be inherited
-
-// frequencies should be 100 times lower
-// a -> 440.0 -> 4.4
 namespace eLibV2
 {
     namespace Generator
@@ -15,12 +10,41 @@ namespace eLibV2
         class BaseLFO : public BaseOscillator
         {
         public:
+            enum
+            {
+                LFO_CONNECTION_FREQ = 0,
+                LFO_CONNECTION_WAVEFORM,
+                LFO_CONNECTION_NUM
+            };
+
+        public:
             BaseLFO(std::string name = "BaseLFO") :
                 BaseName(name),
-                BaseOscillator()
-            {}
+                BaseConnection(LFO_CONNECTION_NUM)
+            {
+                Init();
+            }
+            virtual ~BaseLFO() {}
 
-            virtual double Process(void);
+        public:
+            /* inherited methods */
+            virtual void Init(void);
+            virtual void Reset(void);
+            virtual double Process();
+            virtual double processConnection();
+
+        public:
+            /* set and get methods */
+            void setFreq(double Freq) { m_dFreq = ModuleHelper::clamp(Freq, 0.005, 100.0); }
+            double getFreq() { return m_dFreq; }
+
+        public:
+            /* attach methods */
+            void attachFreq(Base::BaseConnection *connection) { inputConnections[LFO_CONNECTION_FREQ] = connection; }
+            void attachWaveform(Base::BaseConnection *connection) { inputConnections[LFO_CONNECTION_WAVEFORM] = connection; }
+
+        private:
+            double m_dFreq;
         };
     }
 }
