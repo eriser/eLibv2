@@ -11,9 +11,20 @@ namespace eLibV2
 {
     namespace Effect
     {
-        static const VstInt16 DITHER_BITSIZE_MIN = 1;
-        static const VstInt16 DITHER_BITSIZE_MAX = 32;
+        static const unsigned int DITHER_BITSIZE_MIN = 1;
+        static const unsigned int DITHER_BITSIZE_MAX = 32;
+        static const unsigned int DITHER_BITSIZE_DEFAULT = 12;
 
+        /**
+        this effect is used to dither incoming audio-samples to fit a given bitsize.
+        the minimum bitsize is 1 and maximum is 32
+
+        example:
+
+        when setting bitsize to 4 there are only 2^4=16 possible values.
+        so the value range between -1.0 and 1.0 gets divided into 16 parts
+        and the output sample is the one which is nearest to the input sample.
+        */
         class FxDither : public Base::BaseEffect
         {
         public:
@@ -43,8 +54,8 @@ namespace eLibV2
         public:
             bool getBypass(void) { return bBypass; }
             void setBypass(bool Bypass) { bBypass = Bypass; }
-            VstInt16 getBitsize(void) { return mBitsize; }
-            void setBitsize(VstInt16 Bitsize) { mBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
+            unsigned char getBitsize(void) { return mBitsize; }
+            void setBitsize(unsigned char Bitsize) { mBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BYPASS] = connection; }
@@ -52,7 +63,7 @@ namespace eLibV2
             void attachBitsize(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BITSIZE] = connection; }
 
         private:
-            VstInt16 mBitsize;
+            unsigned char mBitsize;
             bool bBypass;
         };
     }

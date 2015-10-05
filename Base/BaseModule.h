@@ -9,8 +9,7 @@
 #include <string>
 #include <cstdarg>
 
-// vst headers
-#include <audioeffectx.h>
+#include <aeffect.h>
 
 namespace eLibV2
 {

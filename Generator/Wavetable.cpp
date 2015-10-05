@@ -403,7 +403,14 @@ double BaseWavetable::getWaveData(const unsigned int WaveIndex, const double dPh
     if ((Waveforms.size() == 0) || (Waveforms[WaveIndex].WaveData == 0) || (WaveIndex >= Waveforms.size()))
         return data;
 
-    data = Waveforms[WaveIndex].WaveData[(VstInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
+    // prepare for linear interpolation
+    int firstIndex = (int)(dPhase * 2);
+    double dFrac = (dPhase * 2) - firstIndex;
+    int nextIndex = (firstIndex + 1) % Waveforms[WaveIndex].WaveSize;
+    firstIndex %= Waveforms[WaveIndex].WaveSize;
+
+    // data = Waveforms[WaveIndex].WaveData[(VstInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
+    data = ModuleHelper::interpolate(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[firstIndex], dFrac);
     data = ModuleHelper::clamp(data, -1.0, 1.0);
     return data;
 }

@@ -1,5 +1,5 @@
-#ifndef MODPHASER_H_
-#define MODPHASER_H_
+#ifndef MODFLANGER_H_
+#define MODFLANGER_H_
 
 #include <Base/BaseEffect.h>
 #include <Util/Helper.h>
@@ -12,26 +12,26 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class Phaser : public Base::BaseEffect
+        class Flanger : public Base::BaseEffect
         {
         public:
             enum
             {
-                PHASER_CONNECTION_INPUT = 0,
-                PHASER_CONNECTION_LFOFREQ,
-                PHASER_CONNECTION_NUM
+                FLANGER_CONNECTION_INPUT = 0,
+                FLANGER_CONNECTION_LFOFREQ,
+                FLANGER_CONNECTION_NUM
             };
 
         public:
-            Phaser(std::string name = "Phaser") :
+            Flanger(std::string name = "Flanger") :
                 Base::BaseName(name),
-                BaseConnection(PHASER_CONNECTION_NUM)
+                BaseConnection(FLANGER_CONNECTION_NUM)
             {
                 m_pLFO = new Generator::BaseLFO();
                 m_pLFO->setFreq(0.01);
                 m_pLFO->setWaveform(Generator::BaseWavetable::WAVETABLE_WAVEFORM_TRIANGLE_BL);
 
-                m_pScaler = new Connection::ScalerConnection("phase.lfo.scaler", 250.0, 500.0);
+                m_pScaler = new Connection::ScalerConnection("phaser.lfo.scaler", 500.0, 500.0);
                 m_pScaler->attachInput(m_pLFO);
 
                 m_pDelay = new Effect::Delay();
@@ -40,7 +40,7 @@ namespace eLibV2
                 Init();
             }
 
-            virtual ~Phaser()
+            virtual ~Flanger()
             {
                 delete m_pLFO;
                 delete m_pDelay;
@@ -60,8 +60,8 @@ namespace eLibV2
 
         public:
             /* attach methods */
-            void attachLFOFreq(Base::BaseConnection *connection) { inputConnections[PHASER_CONNECTION_LFOFREQ] = connection; }
-            void attachInput(Base::BaseConnection *connection) { inputConnections[PHASER_CONNECTION_INPUT] = connection; m_pDelay->attachInput(connection); }
+            void attachLFOFreq(Base::BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_LFOFREQ] = connection; }
+            void attachInput(Base::BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_INPUT] = connection; m_pDelay->attachInput(connection); }
 
         private:
             Generator::BaseLFO *m_pLFO;

@@ -11,22 +11,40 @@ namespace eLibV2
         {
         public:
             // helper functions for truncating given value at minimum / maximum
-            static double minval(double value, double minvalue) { return ((value < minvalue) ? minvalue : value); }
-            static double maxval(double value, double maxvalue) { return ((value > maxvalue) ? maxvalue : value); }
-            static double clamp(double value, double minvalue, double maxvalue) { value = minval(value, minvalue); value = maxval(value, maxvalue); return value; }
-            static double wrap(double value, double range)
+            static int minval(const int value, const int minvalue) { return ((value < minvalue) ? minvalue : value); }
+            static double minval(const double value, const double minvalue) { return ((value < minvalue) ? minvalue : value); }
+
+            static int maxval(const int value, const int maxvalue) { return ((value > maxvalue) ? maxvalue : value); }
+            static double maxval(const double value, const double maxvalue) { return ((value > maxvalue) ? maxvalue : value); }
+
+            static int clamp(const int value, const int minvalue, const int maxvalue) { int res = value; res = minval(res, minvalue); res = maxval(res, maxvalue); return res; }
+            static double clamp(const double value, const double minvalue, const double maxvalue) { double res = value; res = minval(res, minvalue); res = maxval(res, maxvalue); return res; }
+
+            static double wrap(const double value, const double range)
             {
-                if (value < 0.0)
+                double res = value;
+                if (res < 0.0)
                 {
-                    while (value < range)
-                        value += range;
+                    while (res < range)
+                        res += range;
                 }
                 else
                 {
-                    while (value > range)
-                        value -= range;
+                    while (res > range)
+                        res -= range;
                 }
-                return value;
+                return res;
+            }
+
+            // performs linear interpolation with two values and a fractional position between them
+            static double interpolate(const double value1, const double value2, const double fractional)
+            {
+                double res = value1;
+
+                // use weighted sum method of interpolating
+                res = fractional * value2 + (1.0 - fractional) * value1;
+
+                return res;
             }
 
             // helper functions for conversion between time / frequency / quarter and samples

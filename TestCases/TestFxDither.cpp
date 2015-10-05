@@ -7,8 +7,8 @@ TEST(TestFxDither, BitSize)
 {
     FxDither dither;
 
-    dither.setBitsize(12);
-    ASSERT_EQ(12, dither.getBitsize());
+    dither.setBitsize(DITHER_BITSIZE_DEFAULT);
+    ASSERT_EQ(DITHER_BITSIZE_DEFAULT, dither.getBitsize());
 }
 
 TEST(TestFxDither, Process2Bits)

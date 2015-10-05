@@ -23,6 +23,26 @@ cascaded graphic eq constant-q
 effects:
 
 delay-line
+-> working
+
 phaser
+
 flanger
+-> working
+
 dynamics processor
+compressor
+expander
+limiter
+gate
+
+envelope follower
+
+oversampling:
+- add n-1 zeros between each sample (n is oversampling-factor)
+- kill all freqs above the regular nyquist-freq
+. do processing
+- kill all freqs above the regular nyquist-freq again
+- drop every added sample
+
+
