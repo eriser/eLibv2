@@ -5,9 +5,9 @@ using namespace eLibV2::Effect;
 
 /// @todo create testcase for process
 
-TEST(TestFxWaveWrap, WrapLevel)
+TEST(TestEffectWaveWrap, WrapLevel)
 {
-    FxWaveWrap wavewrap;
+    WaveWrap wavewrap;
 
     wavewrap.setWrapLevel(1.0);
     ASSERT_EQ(1.0, wavewrap.getWrapLevel());

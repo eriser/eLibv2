@@ -2,7 +2,7 @@
 
 using namespace eLibV2::Effect;
 
-void FxEnvFollower::Init(void)
+void EnvFollower::Init(void)
 {
     setAttack(5.0);
     setRelease(50.0);
@@ -11,14 +11,14 @@ void FxEnvFollower::Init(void)
     Reset();
 }
 
-void FxEnvFollower::Reset(void)
+void EnvFollower::Reset(void)
 {
     tAttack = 0;
     tRelease = 0;
     dLastInput = 0.0;
 }
 
-double FxEnvFollower::Process(const double input)
+double EnvFollower::Process(const double input)
 {
     double i = input;
     double res = 0.0;

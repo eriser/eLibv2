@@ -69,7 +69,6 @@ namespace eLibV2
                         if ((*nodeIt)->getName() == "editor")
                         {
                             StringMap attributes = (*nodeIt)->getAttributes();
-                            ModuleLogger::print(LOG_CLASS_DATA, "%li attributes", attributes.size());
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
                             {
                                 std::string attributeName = (*attributeIt).first;
@@ -82,7 +81,6 @@ namespace eLibV2
                         if ((*nodeIt)->getName() == "bitmap")
                         {
                             StringMap attributes = (*nodeIt)->getAttributes();
-                            ModuleLogger::print(LOG_CLASS_DATA, "%li attributes", attributes.size());
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
                             {
                                 std::string attributeName = (*attributeIt).first;

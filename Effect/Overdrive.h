@@ -11,7 +11,7 @@ namespace eLibV2
         static const double OVERDRIVE_LEVEL_MIN = 0.0;
         static const double OVERDRIVE_LEVEL_MAX = 100.0;
 
-        class FxOverdrive : public Base::BaseEffect
+        class Overdrive : public Base::BaseEffect
         {
         public:
             enum
@@ -22,13 +22,13 @@ namespace eLibV2
             };
 
         public:
-            FxOverdrive(std::string name = "FxOverdrive") :
-                Base::BaseName(name),
+            Overdrive(std::string name = "Overdrive") :
+                BaseName(name),
                 BaseConnection(OVERDRIVE_CONNECTION_NUM)
             {
                 Init();
             }
-            virtual ~FxOverdrive() {}
+            virtual ~Overdrive() {}
 
             /* inherited */
             virtual void Init() { setLevel(50.0); }

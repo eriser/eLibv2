@@ -56,7 +56,6 @@ namespace eLibV2
                         if ((*nodeIt)->getName() == "page")
                         {
                             StringMap attributes = (*nodeIt)->getAttributes();
-                            ModuleLogger::print(LOG_CLASS_LOADER, "%li attributes", attributes.size());
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
                             {
                                 std::string attributeName = (*attributeIt).first;
@@ -73,7 +72,6 @@ namespace eLibV2
                             EditorParameter::ControlType type = EditorParameter::ControlType::Undefined;
 
                             StringMap attributes = (*nodeIt)->getAttributes();
-                            ModuleLogger::print(LOG_CLASS_LOADER, "%li attributes", attributes.size());
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
                             {
                                 std::string attributeName = (*attributeIt).first;

@@ -1,8 +1,8 @@
-#include <Effect/3BandEQ.h>
+#include <Effect/EQ3Band.h>
 
 using namespace eLibV2::Effect;
 
-void Fx3BandEQ::Init()
+void EQ3Band::Init()
 {
     setGain(0, 0.0);
     setGain(1, 0.0);
@@ -16,11 +16,11 @@ void Fx3BandEQ::Init()
     memset(buffer, 0, sizeof(buffer));
 }
 
-void Fx3BandEQ::Reset(void)
+void EQ3Band::Reset(void)
 {
 }
 
-void Fx3BandEQ::setSamplerate(double Samplerate)
+void EQ3Band::setSamplerate(double Samplerate)
 {
     mSamplerate = Samplerate;
 
@@ -28,14 +28,14 @@ void Fx3BandEQ::setSamplerate(double Samplerate)
         setFrequency(FreqIndex, dFrequency[FreqIndex]);
 }
 
-void Fx3BandEQ::setFrequency(VstInt16 Index, double Frequency)
+void EQ3Band::setFrequency(VstInt16 Index, double Frequency)
 {
     memset(&Bands[Index], 0, sizeof(Bands[Index]));
     dFrequency[Index] = Frequency;
     Bands[Index].Frequency = 2 * sin(PI * (dFrequency[Index] / mSamplerate));
 }
 
-double Fx3BandEQ::CalcBand(VstInt16 BandIndex, double Input)
+double EQ3Band::CalcBand(VstInt16 BandIndex, double Input)
 {
     double Freq = Bands[BandIndex].Frequency;
 
@@ -46,7 +46,7 @@ double Fx3BandEQ::CalcBand(VstInt16 BandIndex, double Input)
     return Bands[BandIndex].Poles[3];
 }
 
-double Fx3BandEQ::Process(const double Input)
+double EQ3Band::Process(const double Input)
 {
     double low, mid1, mid2, high;
 
@@ -66,7 +66,7 @@ double Fx3BandEQ::Process(const double Input)
     return(mid1 + mid2 + high);
 }
 
-double Fx3BandEQ::processConnection()
+double EQ3Band::processConnection()
 {
     double input = 0.0;
 

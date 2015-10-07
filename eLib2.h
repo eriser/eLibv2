@@ -32,11 +32,12 @@
 #include <Envelope/EnvelopeDADSR.h>
 
 // effect modules
-#include <Effect/3BandEQ.h>
 #include <Effect/Clip.h>
 #include <Effect/Delay.h>
 #include <Effect/Dither.h>
+#include <Effect/EnvelopeDetector.h>
 #include <Effect/EnvFollower.h>
+#include <Effect/EQ3Band.h>
 #include <Effect/Flanger.h>
 #include <Effect/Mixer.h>
 #include <Effect/Overdrive.h>
@@ -69,6 +70,7 @@
 #include <MIDI/MidiEventAdapter.h>
 
 // helper modules
+#include <Util/DataSampler.h>
 #include <Util/Logger.h>
 #include <Util/ParamRandom.h>
 #include <Util/Types.h>

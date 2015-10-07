@@ -2,13 +2,13 @@
 
 using namespace eLibV2::Effect;
 
-void FxClip::Init()
+void Clip::Init()
 {
     setClipLevel(1.0);
     setClipMode(CLIP_MODE_POSITIVE);
 }
 
-double FxClip::Process(const double Input)
+double Clip::Process(const double Input)
 {
     double res = 0.0;
 

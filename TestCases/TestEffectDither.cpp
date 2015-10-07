@@ -3,17 +3,17 @@
 
 using namespace eLibV2::Effect;
 
-TEST(TestFxDither, BitSize)
+TEST(TestEffectDither, BitSize)
 {
-    FxDither dither;
+    Dither dither;
 
     dither.setBitsize(DITHER_BITSIZE_DEFAULT);
     ASSERT_EQ(DITHER_BITSIZE_DEFAULT, dither.getBitsize());
 }
 
-TEST(TestFxDither, Process2Bits)
+TEST(TestEffectDither, Process2Bits)
 {
-    FxDither dither;
+    Dither dither;
 
     dither.setBitsize(2);
     ASSERT_EQ(1.0, dither.Process(1.0));
@@ -26,9 +26,9 @@ TEST(TestFxDither, Process2Bits)
     ASSERT_NEAR(-0.75, dither.Process(-0.885), 0.01);
 }
 
-TEST(TestFxDither, Process4Bits)
+TEST(TestEffectDither, Process4Bits)
 {
-    FxDither dither;
+    Dither dither;
 
     dither.setBitsize(4);
     ASSERT_EQ(1.0, dither.Process(1.0));
@@ -41,9 +41,9 @@ TEST(TestFxDither, Process4Bits)
     ASSERT_NEAR(-0.875, dither.Process(-0.885), 0.01);
 }
 
-TEST(TestFxDither, Process8Bits)
+TEST(TestEffectDither, Process8Bits)
 {
-    FxDither dither;
+    Dither dither;
 
     dither.setBitsize(8);
     ASSERT_EQ(1.0, dither.Process(1.0));

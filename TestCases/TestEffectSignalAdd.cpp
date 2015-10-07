@@ -3,9 +3,9 @@
 
 using namespace eLibV2::Effect;
 
-TEST(TestFxSignalAdd, Process)
+TEST(TestEffectSignalAdd, Process)
 {
-    FxSignalAdd adder;
+    SignalAdd adder;
 
     ASSERT_NEAR(-0.5, adder.Process2(-0.25, -0.25), 0.01);
     ASSERT_NEAR(0.5, adder.Process2(0.25, 0.25), 0.01);

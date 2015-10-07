@@ -1,5 +1,5 @@
-#ifndef MOD3BANDEQ_H_
-#define MOD3BANDEQ_H_
+#ifndef MODEQ3BAND_H_
+#define MODEQ3BAND_H_
 
 #include <Base/BaseEffect.h>
 
@@ -10,7 +10,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class Fx3BandEQ : public Base::BaseEffect
+        class EQ3Band : public Base::BaseEffect
         {
         private:
             enum
@@ -27,13 +27,13 @@ namespace eLibV2
             } EQBand;
 
         public:
-            Fx3BandEQ(std::string name = "Fx3BandEQ") :
-                Base::BaseName(name),
-                Base::BaseConnection(1, 1)
+            EQ3Band(std::string name = "EQ3Band") :
+                BaseName(name),
+                BaseConnection(1, 1)
             {
                 Init();
             }
-            virtual ~Fx3BandEQ() {}
+            virtual ~EQ3Band() {}
 
             /* inherited */
             virtual void Init(void);

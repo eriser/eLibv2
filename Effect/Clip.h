@@ -11,23 +11,24 @@ namespace eLibV2
         static const double CLIP_LEVEL_MIN = 0.0;
         static const double CLIP_LEVEL_MAX = 1.0;
 
-        enum ClipMode
-        {
-            CLIP_MODE_UNDEF = 0,
-            CLIP_MODE_POSITIVE = 0,
-            CLIP_MODE_NEGATIVE,
-            CLIP_MODE_BOTH
-        };
-
-        class FxClip : public Base::BaseName
+        class Clip : public Base::BaseName
         {
         public:
-            FxClip(std::string name = "FxClip") :
-                Base::BaseName(name)
+            enum ClipMode
+            {
+                CLIP_MODE_UNDEF = 0,
+                CLIP_MODE_POSITIVE = 0,
+                CLIP_MODE_NEGATIVE,
+                CLIP_MODE_BOTH
+            };
+
+        public:
+            Clip(std::string name = "Clip") :
+                BaseName(name)
             {
                 Init();
             }
-            virtual ~FxClip() {}
+            virtual ~Clip() {}
 
             /* inherited */
             virtual void Init(void);

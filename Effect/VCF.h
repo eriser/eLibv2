@@ -9,7 +9,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class FxVCF : public Base::BaseEffect
+        class VCF : public Base::BaseEffect
         {
         public:
             enum FilterType
@@ -21,12 +21,12 @@ namespace eLibV2
             };
 
         public:
-            FxVCF(std::string name = "FxVCF") :
-                Base::BaseName(name)
+            VCF(std::string name = "VCF") :
+                BaseName(name)
             {
                 Init();
             }
-            virtual ~FxVCF() {}
+            virtual ~VCF() {}
 
             /* inherited */
             virtual void Init(void);

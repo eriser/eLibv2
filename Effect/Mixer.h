@@ -7,23 +7,24 @@ namespace eLibV2
 {
     namespace Effect
     {
-        enum MixerMode
-        {
-            MIXER_MODE_UNDEF = 0,
-            MIXER_MODE_ADD,
-            MIXER_MODE_SUBTRACT,
-            MIXER_MODE_INVSUBTRACT
-        };
-
-        class FxMixer : public Base::BaseName
+        class Mixer : public Base::BaseName
         {
         public:
-            FxMixer(std::string name = "FxMixer") :
-                Base::BaseName(name)
+            enum MixerMode
+            {
+                MIXER_MODE_UNDEF = 0,
+                MIXER_MODE_ADD,
+                MIXER_MODE_SUBTRACT,
+                MIXER_MODE_INVSUBTRACT
+            };
+
+        public:
+            Mixer(std::string name = "Mixer") :
+                BaseName(name)
             {
                 Init();
             }
-            virtual ~FxMixer() {}
+            virtual ~Mixer() {}
 
             /* inherited */
             virtual void Init(void);

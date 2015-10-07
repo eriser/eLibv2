@@ -2,7 +2,7 @@
 
 using namespace eLibV2::Effect;
 
-double FxSignalAdd::Process2(const double Input1, const double Input2)
+double SignalAdd::Process2(const double Input1, const double Input2)
 {
     double res = (Input1 + Input2);
 

@@ -17,7 +17,7 @@ using namespace eLibV2::Effect;
   temp = Input * triangle[((long)((Input + 1.0) * 32 * WRAP_WAVESIZE * dWrapLevel)) & (WRAP_WAVESIZE - 1)];
 
 */
-void FxWaveWrap::Init()
+void WaveWrap::Init()
 {
     // Positive Triangle
     triangle = new double[WRAP_WAVESIZE];
@@ -26,7 +26,7 @@ void FxWaveWrap::Init()
     setWrapLevel(1.0);
 }
 
-double FxWaveWrap::Process(const double Input)
+double WaveWrap::Process(const double Input)
 {
     double res = 0.0;
     double temp;
@@ -43,7 +43,7 @@ double FxWaveWrap::Process(const double Input)
     return res;
 }
 
-double FxWaveWrap::processConnection()
+double WaveWrap::processConnection()
 {
     double input = 0.0;
 

@@ -24,7 +24,7 @@ namespace eLibV2
 
         public:
             Delay(std::string name = "Delay") :
-                Base::BaseName(name),
+                BaseName(name),
                 BaseConnection(DELAY_CONNECTION_NUM)
             {
                 buffer = new double[DELAY_BUFFER_SIZE];

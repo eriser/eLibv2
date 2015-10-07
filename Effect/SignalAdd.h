@@ -9,15 +9,15 @@ namespace eLibV2
     namespace Effect
     {
         /// @todo the process-method does not really do what it supposed to do
-        class FxSignalAdd : public Base::BaseName
+        class SignalAdd : public Base::BaseName
         {
         public:
-            FxSignalAdd(std::string name = "FxSignalAdd") :
-                Base::BaseName(name)
+            SignalAdd(std::string name = "SignalAdd") :
+                BaseName(name)
             {
                 Init();
             }
-            virtual ~FxSignalAdd() {}
+            virtual ~SignalAdd() {}
 
             /* inherited */
             virtual void Init(void) {}

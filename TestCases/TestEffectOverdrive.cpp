@@ -3,9 +3,9 @@
 
 using namespace eLibV2::Effect;
 
-TEST(TestFxOverdrive, ClipLevel)
+TEST(TestEffectOverdrive, ClipLevel)
 {
-    FxOverdrive overdrive;
+    Overdrive overdrive;
 
     overdrive.setLevel(-10.0);
     ASSERT_EQ(0.0, overdrive.getLevel());

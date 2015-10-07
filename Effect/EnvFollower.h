@@ -8,15 +8,15 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class FxEnvFollower : public Base::BaseEffect
+        class EnvFollower : public Base::BaseEffect
         {
         public:
-            FxEnvFollower(std::string name = "FxEnvFollower") :
-                Base::BaseName(name)
+            EnvFollower(std::string name = "EnvFollower") :
+                BaseName(name)
             {
                 Init();
             }
-            virtual ~FxEnvFollower() {}
+            virtual ~EnvFollower() {}
 
             /* inherited */
             virtual void Init(void);

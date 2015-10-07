@@ -36,6 +36,9 @@ expander
 limiter
 gate
 
+envelope detector
+-> working (parameters need matching)
+
 envelope follower
 
 oversampling:

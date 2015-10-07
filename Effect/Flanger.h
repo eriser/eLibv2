@@ -24,7 +24,7 @@ namespace eLibV2
 
         public:
             Flanger(std::string name = "Flanger") :
-                Base::BaseName(name),
+                BaseName(name),
                 BaseConnection(FLANGER_CONNECTION_NUM)
             {
                 m_pLFO = new Generator::BaseLFO();

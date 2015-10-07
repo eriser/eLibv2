@@ -2,18 +2,18 @@
 
 using namespace eLibV2::Effect;
 
-void FxDither::Init(void)
+void Dither::Init(void)
 {
     setBitsize(12);
     setBypass(false);
 }
 
-void FxDither::Reset(void)
+void Dither::Reset(void)
 {
     Init();
 }
 
-double FxDither::Process(const double Input)
+double Dither::Process(const double Input)
 {
     double Scaler;
 
@@ -29,7 +29,7 @@ double FxDither::Process(const double Input)
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
-double FxDither::processConnection()
+double Dither::processConnection()
 {
     double input = 0.0;
 

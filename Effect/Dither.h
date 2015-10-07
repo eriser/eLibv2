@@ -25,7 +25,7 @@ namespace eLibV2
         so the value range between -1.0 and 1.0 gets divided into 16 parts
         and the output sample is the one which is nearest to the input sample.
         */
-        class FxDither : public Base::BaseEffect
+        class Dither : public Base::BaseEffect
         {
         public:
             enum
@@ -37,13 +37,13 @@ namespace eLibV2
             };
 
         public:
-            FxDither(std::string name = "FxDither") :
-                Base::BaseName(name),
+            Dither(std::string name = "Dither") :
+                BaseName(name),
                 BaseConnection(DITHER_CONNECTION_NUM)
             {
                 Init();
             }
-            virtual ~FxDither() {}
+            virtual ~Dither() {}
 
             /* inherited */
             virtual void Init(void);

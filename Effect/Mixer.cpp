@@ -2,18 +2,18 @@
 
 using namespace eLibV2::Effect;
 
-void FxMixer::Init(void)
+void Mixer::Init(void)
 {
     setVolume(0.0);
     setMode(MIXER_MODE_ADD);
 }
 
-void FxMixer::Reset(void)
+void Mixer::Reset(void)
 {
     Init();
 }
 
-double FxMixer::Process2(const double Input1, const double Input2)
+double Mixer::Process2(const double Input1, const double Input2)
 {
     double res = 0.0;
 
