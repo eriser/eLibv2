@@ -54,6 +54,7 @@
 #include <Filter/ButterworthBSF.h>
 #include <Filter/ButterworthHPF.h>
 #include <Filter/ButterworthLPF.h>
+#include <Filter/CascadedEQConstantQ.h>
 #include <Filter/HiShelving.h>
 #include <Filter/LoShelving.h>
 #include <Filter/LinkwirtRileyHPF.h>
