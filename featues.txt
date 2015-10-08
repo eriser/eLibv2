@@ -1,5 +1,9 @@
 features:
 
+midi:
+
+voice allocation
+
 filters:
 
 resonant filters (BPF, BSF, HPF and LPF)
@@ -25,12 +29,17 @@ effects:
 delay-line
 -> working
 
-phaser
-
 flanger
 -> working
 
-dynamics processor
+phaser
+
+
+reverb
+
+
+dynamics processor:
+
 compressor
 expander
 limiter
@@ -40,6 +49,8 @@ envelope detector
 -> working (parameters need matching)
 
 envelope follower
+
+second input line
 
 oversampling:
 - add n-1 zeros between each sample (n is oversampling-factor)

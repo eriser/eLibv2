@@ -14,21 +14,26 @@ double Flanger::Process(const double Input)
 
 double Flanger::processConnection()
 {
-    double input = 0.0, res;
+    double dInput = 0.0, dOutput = 0.0;
 
+    if (inputConnections[FLANGER_CONNECTION_BYPASS] != NULL)
+        m_bBypass = ModuleHelper::double2bool(inputConnections[FLANGER_CONNECTION_BYPASS]->processConnection(), 0.5);
+    if (inputConnections[FLANGER_CONNECTION_INPUT] != NULL)
+        dInput = inputConnections[FLANGER_CONNECTION_INPUT]->processConnection();
     if (inputConnections[FLANGER_CONNECTION_LFOFREQ] != NULL)
     {
         if (m_pLFO)
             m_pLFO->setFreq(inputConnections[FLANGER_CONNECTION_LFOFREQ]->processConnection());
     }
-    if (inputConnections[FLANGER_CONNECTION_INPUT] != NULL)
-        input = inputConnections[FLANGER_CONNECTION_INPUT]->processConnection();
 
-    res = Process(input);
-    return res;
+    if (!m_bBypass)
+        dOutput = Process(dInput);
+    else
+        dOutput = dInput;
+    return dOutput;
 }
 
-void Flanger::setSamplerate(double Samplerate)
+void Flanger::setSamplerate(const double Samplerate)
 {
     BaseModule::setSamplerate(Samplerate);
     if (m_pLFO)
@@ -37,7 +42,7 @@ void Flanger::setSamplerate(double Samplerate)
         m_pDelay->setSamplerate(Samplerate);
 }
 
-void Flanger::setLFOFreq(double Freq)
+void Flanger::setLFOFreq(const double Freq)
 {
     if (m_pLFO)
         m_pLFO->setFreq(Freq);

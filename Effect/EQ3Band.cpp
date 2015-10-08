@@ -20,7 +20,7 @@ void EQ3Band::Reset(void)
 {
 }
 
-void EQ3Band::setSamplerate(double Samplerate)
+void EQ3Band::setSamplerate(const double Samplerate)
 {
     mSamplerate = Samplerate;
 

@@ -15,6 +15,8 @@ void SimpleComp::Init()
     m_dTransferA = 0.0;
     m_dTransferB = 1.0;
 
+    m_bBypass = false;
+
     Reset();
 }
 
@@ -72,8 +74,8 @@ double SimpleComp::processConnection()
 {
     double input = 0.0;
 
-    //if (inputConnections[SIMPLECOMP_CONNECTION_BYPASS] != NULL)
-    //    m_dAttack = inputConnections[SIMPLECOMP_CONNECTION_BYPASS]->processConnection();
+    if (inputConnections[SIMPLECOMP_CONNECTION_BYPASS] != NULL)
+        m_bBypass = ModuleHelper::double2bool(inputConnections[SIMPLECOMP_CONNECTION_BYPASS]->processConnection(), 0.5);
     if (inputConnections[SIMPLECOMP_CONNECTION_INPUT] != NULL)
         input = inputConnections[SIMPLECOMP_CONNECTION_INPUT]->processConnection();
     if (inputConnections[SIMPLECOMP_CONNECTION_ATTACK] != NULL)

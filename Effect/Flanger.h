@@ -17,7 +17,8 @@ namespace eLibV2
         public:
             enum
             {
-                FLANGER_CONNECTION_INPUT = 0,
+                FLANGER_CONNECTION_BYPASS = 0,
+                FLANGER_CONNECTION_INPUT,
                 FLANGER_CONNECTION_LFOFREQ,
                 FLANGER_CONNECTION_NUM
             };
@@ -37,6 +38,8 @@ namespace eLibV2
                 m_pDelay = new Effect::Delay();
                 m_pDelay->attachDelayLength(m_pScaler);
 
+                m_bBypass = false;
+
                 Init();
             }
 
@@ -53,17 +56,22 @@ namespace eLibV2
             virtual void Reset(void) {}
             virtual double Process(const double Input);
             virtual double processConnection();
-            virtual void setSamplerate(double Samplerate);
+            virtual void setSamplerate(const double Samplerate);
 
         public:
-            void setLFOFreq(double Freq);
+            /* getter/setter */
+            bool getBypass() { return m_bBypass; }
+
+            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
+            void setLFOFreq(const double Freq);
 
         public:
             /* attach methods */
-            void attachLFOFreq(Base::BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_LFOFREQ] = connection; }
-            void attachInput(Base::BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_INPUT] = connection; m_pDelay->attachInput(connection); }
+            void attachLFOFreq(BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_LFOFREQ] = connection; }
+            void attachInput(BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_INPUT] = connection; m_pDelay->attachInput(connection); }
 
         private:
+            bool m_bBypass;
             Generator::BaseLFO *m_pLFO;
             Effect::Delay *m_pDelay;
             Connection::ScalerConnection *m_pScaler;

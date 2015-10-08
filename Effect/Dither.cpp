@@ -4,7 +4,7 @@ using namespace eLibV2::Effect;
 
 void Dither::Init(void)
 {
-    setBitsize(12);
+    setBitsize(DITHER_BITSIZE_DEFAULT);
     setBypass(false);
 }
 
@@ -25,23 +25,26 @@ double Dither::Process(const double Input)
     // resulting in -(2 ^ Bitsize) to (2 ^ Bitsize)
     // after that, the value is cast back to a double and
     // divided by the same dithering factor
-    Scaler = pow(2.0, (int)mBitsize);
+    Scaler = pow(2.0, (int)m_uiBitsize);
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
 double Dither::processConnection()
 {
-    double input = 0.0;
+    double dInput = 0.0, dOutput = 0.0;
 
-    //if (inputConnections[DITHER_CONNECTION_BYPASS] != NULL)
-    //   inputConnections[DITHER_CONNECTION_BYPASS]->processConnection();
+    if (inputConnections[DITHER_CONNECTION_BYPASS] != NULL)
+        m_bBypass = ModuleHelper::double2bool(inputConnections[DITHER_CONNECTION_BYPASS]->processConnection(), 0.5);
     if (inputConnections[DITHER_CONNECTION_BITSIZE] != NULL)
         setBitsize((unsigned int)inputConnections[DITHER_CONNECTION_BITSIZE]->processConnection());
     if (inputConnections[DITHER_CONNECTION_INPUT])
-        input = inputConnections[DITHER_CONNECTION_INPUT]->processConnection();
-    // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
-    if (!bBypass)
-        return Process(input);
+        dInput = inputConnections[DITHER_CONNECTION_INPUT]->processConnection();
+
+    if (!m_bBypass)
+        dOutput = Process(dInput);
     else
-        return input;
+        dOutput = dInput;
+
+    // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf -> %lf", getModuleName().c_str(), dInput, dOutput);
+    return dOutput;
 }

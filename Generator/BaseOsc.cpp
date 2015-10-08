@@ -28,7 +28,7 @@ void BaseOscillator::setWaveform(VstInt32 Waveform)
     }
 }
 
-void BaseOscillator::setSamplerate(double Samplerate)
+void BaseOscillator::setSamplerate(const double Samplerate)
 {
     BaseModule::setSamplerate(Samplerate);
     adjustScaler();

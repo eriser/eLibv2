@@ -61,7 +61,7 @@ namespace eLibV2
             virtual void Reset(void);
             virtual double Process(const double Input);
             virtual double processConnection();
-            virtual void setSamplerate(double Samplerate);
+            virtual void setSamplerate(const double Samplerate);
 
         public:
             /* getter/setter */

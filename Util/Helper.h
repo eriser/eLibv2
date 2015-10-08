@@ -54,6 +54,8 @@ namespace eLibV2
             static double samples2freq(double samples, double samplerate) { return (samplerate / samples); }
             static double quarter2samples(double quarter, double bpm, double samplerate) { return (quarter * 60 * samplerate) / bpm; }
 
+            static bool double2bool(const double value, const double threshold) { return (value < threshold) ? false : true; }
+
             static double GenerateTestSignal(void) { return ((((double)rand()) / RAND_MAX) * 2) - 1.0; }
         };
     }

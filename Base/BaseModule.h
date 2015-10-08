@@ -41,7 +41,7 @@ namespace eLibV2
             set samplerate for module
             @param Samplerate samplerate in Hz
             */
-            virtual void setSamplerate(double Samplerate) { mSamplerate = Samplerate; }
+            virtual void setSamplerate(const double Samplerate) { mSamplerate = Samplerate; }
 
         protected:
             double mSamplerate; ///< internally used samplerate

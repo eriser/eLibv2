@@ -44,15 +44,15 @@ namespace eLibV2
             virtual void Reset(void);
             virtual double Process(const double Input);
             virtual double processConnection();
-            virtual void setSamplerate(double Samplerate);
+            virtual void setSamplerate(const double Samplerate);
 
         public:
             /* getter/setter */
             bool getBypass(void) { return m_bBypass; }
             double getRate(void) { return m_dRate; }
 
-            void setBypass(bool Bypass) { m_bBypass = Bypass; }
-            void setRate(double samplerate);
+            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
+            void setRate(const double Rate);
 
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[RESAMPLE_CONNECTION_BYPASS] = connection; }

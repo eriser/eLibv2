@@ -43,12 +43,12 @@ namespace eLibV2
             virtual double processConnection();
 
             /* setter */
-            void setGain(VstInt16 Index, double Gain) { dGain[Index] = Gain; }
-            void setFrequency(VstInt16 Index, double Frequency);
-            void setSamplerate(double Samplerate);
+            void setGain(const VstInt16 Index, const double Gain) { dGain[Index] = Gain; }
+            void setFrequency(const VstInt16 Index, const double Frequency);
+            void setSamplerate(const double Samplerate);
 
         private:
-            double CalcBand(VstInt16 BandIndex, double Input);
+            double CalcBand(const VstInt16 BandIndex, const double Input);
 
         private:
             EQBand Bands[EQ_NUM_BANDS - 1];

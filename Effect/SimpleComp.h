@@ -2,6 +2,7 @@
 #define MODSIMPLECOMP_H_
 
 #include <Base/BaseEffect.h>
+#include <Util/Helper.h>
 
 #include <math.h>
 
@@ -42,12 +43,14 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            void setThreshold(double Threshold);
-            void setRatio(double Ratio);
-            void setAttack(double Attack);
-            void setRelease(double Release);
-            void setOutput(double Output);
+            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
+            void setThreshold(const double Threshold);
+            void setRatio(const double Ratio);
+            void setAttack(const double Attack);
+            void setRelease(const double Release);
+            void setOutput(const double Output);
 
+            bool getBypass() { return m_bBypass; }
             double getThreshold(void) { return m_dThreshold; }
             double getRatio(void) { return m_dRatio; }
             double getAttack(void) { return m_dAttack; }
@@ -64,6 +67,7 @@ namespace eLibV2
             void attachGain(BaseConnection *connection) { inputConnections[SIMPLECOMP_CONNECTION_GAIN] = connection; }
 
         private:
+            bool m_bBypass;
             double m_dThreshold;
             double m_dAttack, m_dRelease, m_dEnvDecay;
             double m_dOutput;

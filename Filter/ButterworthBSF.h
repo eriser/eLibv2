@@ -48,9 +48,9 @@ namespace eLibV2
                 calcCoefficients();
             }
 
-            virtual void setSamplerate(double samplerate)
+            virtual void setSamplerate(const double Samplerate)
             {
-                BaseModule::setSamplerate(samplerate);
+                BaseModule::setSamplerate(Samplerate);
                 calcCoefficients();
             }
 

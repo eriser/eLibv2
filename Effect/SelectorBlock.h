@@ -32,20 +32,20 @@ namespace eLibV2
 
             virtual void Reset(void);
 
-            void setInputSwitch(unsigned int InputSwitch) { uiInputSwitch = InputSwitch; }
+            void setInputSwitch(const unsigned int InputSwitch) { uiInputSwitch = InputSwitch; }
             unsigned int getInputSwitch(void) { return uiInputSwitch; }
 
             virtual double processConnection();
 
         public:
-            void attachInput(unsigned int InputIndex, BaseConnection *connection)
+            void attachInput(const unsigned int InputIndex, BaseConnection *connection)
             {
                 if (InputIndex < CONNECTION_SELECTOR_MAXINPUT)
                     inputConnections[InputIndex] = connection;
             }
 
         private:
-            virtual double Process(double input) { return 0.0; }
+            virtual double Process(const double input) { return 0.0; }
 
         private:
             unsigned int uiInputSwitch;

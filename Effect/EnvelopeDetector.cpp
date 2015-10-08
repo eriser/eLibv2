@@ -72,7 +72,7 @@ double EnvelopeDetector::processConnection()
     return Process(input);
 }
 
-void eLibV2::Effect::EnvelopeDetector::setSamplerate(double Samplerate)
+void EnvelopeDetector::setSamplerate(const double Samplerate)
 {
     BaseModule::setSamplerate(Samplerate);
     setAttack(m_dAttack);

@@ -2,7 +2,6 @@
 #define MODDITHER_H_
 
 #include <Base/BaseEffect.h>
-#include <Util/Logger.h>
 #include <Util/Helper.h>
 
 #include <math.h>
@@ -52,10 +51,12 @@ namespace eLibV2
             virtual double processConnection();
 
         public:
-            bool getBypass(void) { return bBypass; }
-            void setBypass(bool Bypass) { bBypass = Bypass; }
-            unsigned char getBitsize(void) { return mBitsize; }
-            void setBitsize(unsigned char Bitsize) { mBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
+            /* getter/setter */
+            bool getBypass(void) { return m_bBypass; }
+            unsigned char getBitsize(void) { return m_uiBitsize; }
+
+            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
+            void setBitsize(const unsigned char Bitsize) { m_uiBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BYPASS] = connection; }
@@ -63,8 +64,8 @@ namespace eLibV2
             void attachBitsize(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BITSIZE] = connection; }
 
         private:
-            unsigned char mBitsize;
-            bool bBypass;
+            unsigned char m_uiBitsize;
+            bool m_bBypass;
         };
     }
 }

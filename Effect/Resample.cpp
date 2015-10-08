@@ -4,7 +4,7 @@ using namespace eLibV2::Effect;
 
 void Resample::Init(void)
 {
-    setRate(44100.0);
+    setRate(RESAMPLE_RATE_MAX);
     setBypass(false);
     m_dCurrentValue = 0.0;
     m_dCurrentSampleIndex = 0.0;
@@ -34,29 +34,32 @@ double Resample::Process(const double Input)
 
 double Resample::processConnection()
 {
-    double input = 0.0;
+    double dInput = 0.0, dOutput = 0.0;
 
-    //if (inputConnections[DITHER_CONNECTION_BYPASS] != NULL)
-    //   inputConnections[DITHER_CONNECTION_BYPASS]->processConnection();
+    if (inputConnections[RESAMPLE_CONNECTION_BYPASS] != NULL)
+        m_bBypass = ModuleHelper::double2bool(inputConnections[RESAMPLE_CONNECTION_BYPASS]->processConnection(), 0.5);
     if (inputConnections[RESAMPLE_CONNECTION_RATE] != NULL)
         setRate((unsigned int)inputConnections[RESAMPLE_CONNECTION_RATE]->processConnection());
     if (inputConnections[RESAMPLE_CONNECTION_INPUT])
-        input = inputConnections[RESAMPLE_CONNECTION_INPUT]->processConnection();
-    // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
+        dInput = inputConnections[RESAMPLE_CONNECTION_INPUT]->processConnection();
+
     if (!m_bBypass)
-        return Process(input);
+        dOutput = Process(dInput);
     else
-        return input;
+        dOutput = dInput;
+
+    // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf -> %lf", getModuleName().c_str(), dInput, dOutput);
+    return dOutput;
 }
 
-void eLibV2::Effect::Resample::setSamplerate(double Samplerate)
+void Resample::setSamplerate(const double Samplerate)
 {
     BaseModule::setSamplerate(Samplerate);
     adjustSamplePeriod();
 }
 
-void eLibV2::Effect::Resample::setRate(double samplerate)
+void Resample::setRate(const double Rate)
 {
-    m_dRate = Util::ModuleHelper::clamp(samplerate, RESAMPLE_RATE_MIN, RESAMPLE_RATE_MAX);
+    m_dRate = Util::ModuleHelper::clamp(Rate, RESAMPLE_RATE_MIN, RESAMPLE_RATE_MAX);
     adjustSamplePeriod();
 }

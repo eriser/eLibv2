@@ -29,7 +29,7 @@ namespace eLibV2
 
         public:
             BaseOscillator(std::string name = "BaseOscillator") :
-                Base::BaseName(name),
+                BaseName(name),
                 BaseConnection(OSC_CONNECTION_NUM)
             {
                 Init();
@@ -40,15 +40,15 @@ namespace eLibV2
             /* inherited methods */
             virtual void Init(void);
             virtual void Reset(void);
-            virtual double Process(VstInt16 Note);
+            virtual double Process(const VstInt16 Note);
             virtual double processConnection();
-            virtual void setSamplerate(double Samplerate);
+            virtual void setSamplerate(const double Samplerate);
 
         public:
             /* set and get methods */
             void setWaveform(VstInt32 Waveform);
-            void setCoarse(double Coarse);
-            void setFinetune(double Finetune);
+            void setCoarse(const double Coarse);
+            void setFinetune(const double Finetune);
             void adjustScaler();
 
             VstInt32 getWaveform(void) { return m_lWaveform; }
