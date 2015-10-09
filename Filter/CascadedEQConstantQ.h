@@ -21,24 +21,22 @@ namespace eLibV2
             };
 
         public:
-            CascadedEQConstantQ(std::string name = "CascadedEQConstantQ", unsigned char NumberOfStages = 10) :
+            CascadedEQConstantQ(std::string name = "CascadedEQConstantQ") :
+                BaseName(name)
+            {
+                m_uiNumberOfStages = 10;
+
+                Init();
+            }
+
+            CascadedEQConstantQ(unsigned char NumberOfStages, std::string name = "CascadedEQConstantQ") :
                 BaseName(name)
             {
                 m_uiNumberOfStages = ModuleHelper::clamp(NumberOfStages, 1, 31);
 
-                m_pInput = new Connection::InputConnection("eq.input");
-                m_pStages = new ParametricConstantQ*[m_uiNumberOfStages];
-                for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
-                {
-                    m_pStages[stageIndex] = new ParametricConstantQ();
-                    if (stageIndex == 0)
-                        m_pStages[stageIndex]->attachInput(m_pInput);
-                    else
-                        m_pStages[stageIndex]->attachInput(m_pStages[stageIndex - 1]);
-                }
-
                 Init();
             }
+
             virtual ~CascadedEQConstantQ(void)
             {
                 if (m_pStages)
@@ -56,20 +54,26 @@ namespace eLibV2
 
             void Init()
             {
-                double N = m_uiNumberOfStages / 10;
+                double N = 10.0 / m_uiNumberOfStages;
                 double Q = sqrt(pow(2.0, N)) / (pow(2.0, N) - 1.0);
+                double q = m_uiNumberOfStages / 10.0;
                 double Cutoff = 0.0;
                 m_dGain = 0.0;
 
-                if (m_pStages)
+                m_pInput = new Connection::InputConnection("eq.input");
+                m_pStages = new ParametricConstantQ*[m_uiNumberOfStages];
+                for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
                 {
-                    for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
-                    {
-                        Cutoff = (32.0 * pow(2.0, stageIndex / N));
-                        m_pStages[stageIndex]->setCutoff(Cutoff);
-                        m_pStages[stageIndex]->setQ(Q);
-                        m_pStages[stageIndex]->setGain(m_dGain);
-                    }
+                    m_pStages[stageIndex] = new ParametricConstantQ();
+                    if (stageIndex == 0)
+                        m_pStages[stageIndex]->attachInput(m_pInput);
+                    else
+                        m_pStages[stageIndex]->attachInput(m_pStages[stageIndex - 1]);
+
+                    Cutoff = (1000.0 * pow(2.0, (stageIndex - (m_uiNumberOfStages / 2)) / q));
+                    m_pStages[stageIndex]->setCutoff(Cutoff);
+                    m_pStages[stageIndex]->setQ(Q);
+                    m_pStages[stageIndex]->setGain(m_dGain);
                 }
             }
 
