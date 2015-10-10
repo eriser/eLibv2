@@ -63,7 +63,6 @@ namespace eLibV2
             }
 
         private:
-            bool m_bBypass;
             double m_dRate;
             double m_dCurrentValue;
             double m_dCurrentSampleIndex;

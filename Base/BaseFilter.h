@@ -33,7 +33,12 @@ namespace eLibV2
                 m_pInternalBiquad = new Filter::EnhancedBiQuad();
                 mMinimumThetaC = 0.0005;
             }
-            virtual ~BaseFilter() {}
+            virtual ~BaseFilter()
+            {
+                if (m_pInternalBiquad)
+                    delete m_pInternalBiquad;
+                m_pInternalBiquad = NULL;
+            }
 
             virtual void Init() = 0;
 
@@ -130,8 +135,11 @@ namespace eLibV2
 
         protected:
             Filter::EnhancedBiQuad *m_pInternalBiquad;
-            bool m_bBypass;
-            double m_dCutoff, m_dQ, m_dBW, m_dGain;
+            bool m_bBypass;     ///< bypass processing of filter
+            double m_dCutoff;   ///< cutoff frequency
+            double m_dQ;        ///< q-factor
+            double m_dBW;       ///< filter-bandwidth
+            double m_dGain;     ///< filter-gain
             double mMinimumThetaC;  ///< minimum value of theta_c used in filter-modules
         };
     }

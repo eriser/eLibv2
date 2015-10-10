@@ -62,7 +62,6 @@ namespace eLibV2
 
         private:
             unsigned char m_uiBitsize;
-            bool m_bBypass;
         };
     }
 }

@@ -68,7 +68,6 @@ namespace eLibV2
             void attachInput(BaseConnection *connection) { inputConnections[FLANGER_CONNECTION_INPUT] = connection; m_pDelay->attachInput(connection); }
 
         private:
-            bool m_bBypass;
             Generator::BaseLFO *m_pLFO;
             Effect::Delay *m_pDelay;
             Connection::ScalerConnection *m_pScaler;

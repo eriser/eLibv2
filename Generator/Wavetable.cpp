@@ -166,51 +166,51 @@ void BaseWavetable::Init()
 
         AddWaveform(sine, WAVETABLE_SAMPLE_SIZE, "sine");
         if (sine)
-            delete sine;
+            delete[] sine;
 
         AddWaveform(enis, WAVETABLE_SAMPLE_SIZE, "enis");
         if (enis)
-            delete enis;
+            delete[] enis;
 
         AddWaveform(triangle_bl, WAVETABLE_SAMPLE_SIZE, "tribl");
         if (triangle_bl)
-            delete triangle_bl;
+            delete[] triangle_bl;
 
         AddWaveform(sawup_bl, WAVETABLE_SAMPLE_SIZE, "sawupbl");
         if (sawup_bl)
-            delete sawup_bl;
+            delete[] sawup_bl;
 
         AddWaveform(sawdn_bl, WAVETABLE_SAMPLE_SIZE, "sawdnbl");
         if (sawdn_bl)
-            delete sawdn_bl;
+            delete[] sawdn_bl;
 
         AddWaveform(pulse_bl, WAVETABLE_SAMPLE_SIZE, "pulsebl");
         if (pulse_bl)
-            delete pulse_bl;
+            delete[] pulse_bl;
 
         AddWaveform(triangle, WAVETABLE_SAMPLE_SIZE, "tri");
         if (triangle)
-            delete triangle;
+            delete[] triangle;
 
         AddWaveform(sawup, WAVETABLE_SAMPLE_SIZE, "sawup");
         if (sawup)
-            delete sawup;
+            delete[] sawup;
 
         AddWaveform(sawdn, WAVETABLE_SAMPLE_SIZE, "sawdn");
         if (sawdn)
-            delete sawdn;
+            delete[] sawdn;
 
         AddWaveform(pulse, WAVETABLE_SAMPLE_SIZE, "pulse");
         if (pulse)
-            delete pulse;
+            delete[] pulse;
 
         AddWaveform(noise, WAVETABLE_SAMPLE_SIZE, "noise");
         if (noise)
-            delete noise;
+            delete[] noise;
 
         AddWaveform(smplhold, WAVETABLE_SAMPLE_SIZE, "smhld");
         if (smplhold)
-            delete smplhold;
+            delete[] smplhold;
     }
     catch (std::bad_alloc& alloc)
     {
@@ -328,29 +328,32 @@ bool BaseWavetable::AddWaveform(const HINSTANCE hInstance, const unsigned int Re
     {
         // Load Resource
         hResource = FindResource(hInstance, MAKEINTRESOURCE(ResourceID), "RAW");
-        bufferSize = SizeofResource(hInstance, hResource) / ByteSize;
-        waveform.ChannelNum = ChannelNum;
-        waveform.WaveSize = bufferSize;
-        waveform.WaveName.assign(WaveName);
-        waveform.WaveData = new double[waveform.WaveSize];
+        if (hResource)
+        {
+            bufferSize = SizeofResource(hInstance, hResource) / ByteSize;
+            waveform.ChannelNum = ChannelNum;
+            waveform.WaveSize = bufferSize;
+            waveform.WaveName.assign(WaveName);
+            waveform.WaveData = new double[waveform.WaveSize];
 
-        data = waveform.WaveData;
-        hRData = LoadResource(hInstance, hResource);
+            data = waveform.WaveData;
+            hRData = LoadResource(hInstance, hResource);
 
-        if ((!data) || (!hRData))
-            return false;
+            if ((!data) || (!hRData))
+                return false;
 
-        pRData = (VstInt16 *)LockResource(hRData);
-        UnlockResource(hRData);
-        FreeResource(hRData);
+            pRData = (VstInt16 *)LockResource(hRData);
+            UnlockResource(hRData);
+            FreeResource(hRData);
 
-        buf = pRData;
-        Divisor = 1 << (ByteSize * 8);
+            buf = pRData;
+            Divisor = 1 << (ByteSize * 8);
 
-        for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
-            data[SampleIndex] = ((double)(buf[SampleIndex])) / Divisor;
+            for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
+                data[SampleIndex] = ((double)(buf[SampleIndex])) / Divisor;
 
-        Waveforms.push_back(waveform);
+            Waveforms.push_back(waveform);
+        }
     }
 
     catch (std::bad_alloc& alloc)
@@ -383,13 +386,16 @@ double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const unsigned in
             bufferSize = SizeofResource(hInstance, hResource) / (ByteSize * ChannelNum);
 
         hResourceData = LoadResource(hInstance, hResource);
-        pResourceData = (short *)LockResource(hResourceData);
-        UnlockResource(hResourceData);
-        FreeResource(hResourceData);
-
-        for (long i = 0; i < bufferSize; i++)
+        if (hResourceData)
         {
-            data[i] = ((double)(pResourceData[i])) / 0x10000;
+            pResourceData = (short *)LockResource(hResourceData);
+            UnlockResource(hResourceData);
+            FreeResource(hResourceData);
+
+            for (long i = 0; i < bufferSize; i++)
+            {
+                data[i] = ((double)(pResourceData[i])) / 0x10000;
+            }
         }
     }
     return 0;

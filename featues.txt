@@ -4,10 +4,24 @@ midi:
 
 voice allocation
 
+generators:
+
+wavetable:
+
+band-limited waveforms
+digital waveforms
+
+sound-generators:
+
+grain synth
+
 filters:
 
 resonant filters (BPF, BSF, HPF and LPF)
 -> working (cutoff and q/bw matched)
+
+allpass filter
+->working
 
 shelving filters
 -> in progress
@@ -33,7 +47,7 @@ flanger
 -> working
 
 phaser
-
+-> working
 
 reverb
 

@@ -42,7 +42,7 @@ int LPSLoader::Load(std::string filename)
 {
     std::ifstream lpsfile;
     unsigned long numread, tracknum, NumRemain, NumPages;
-    BYTE helper[LPS_MAXREADBUF];
+    BYTE* helper = new BYTE[LPS_MAXREADBUF];
     
     // cleanup previously used memory
     Unload();
@@ -139,12 +139,15 @@ int LPSLoader::Load(std::string filename)
         }
 
         /* cleanup buffers */
+        if (helper)
+            delete[] helper;
+        helper = NULL;
         if (TrackCompressed)
             delete TrackCompressed;
-        TrackCompressed = 0;
+        TrackCompressed = NULL;
         if (TempBuffer)
             delete TempBuffer;
-        TempBuffer = 0;
+        TempBuffer = NULL;
     }
     lpsfile.close();
     ModuleLogger::print(LOG_CLASS_LOADER, "File '%s' successfully loaded", filename.c_str());

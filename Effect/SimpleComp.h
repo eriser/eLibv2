@@ -65,7 +65,6 @@ namespace eLibV2
             void attachGain(BaseConnection *connection) { inputConnections[SIMPLECOMP_CONNECTION_GAIN] = connection; }
 
         private:
-            bool m_bBypass;
             double m_dThreshold;
             double m_dAttack, m_dRelease, m_dEnvDecay;
             double m_dOutput;

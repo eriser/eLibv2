@@ -33,18 +33,26 @@ namespace eLibV2
 #if defined(WIN32)
             static PluginProperties loadFromResource(HINSTANCE instance, unsigned int resourceId)
             {
+                PluginProperties res;
                 HRSRC hResource = NULL;
                 HGLOBAL hRData = NULL;
                 void *pRData;
 
                 hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
-                unsigned int bufferSize = SizeofResource(instance, hResource);
-                hRData = LoadResource(instance, hResource);
-                pRData = LockResource(hRData);
-                XmlParser parser(pRData, bufferSize);
-                nodeVector *nodes = parser.getNodes();
+                if (hResource)
+                {
+                    unsigned int bufferSize = SizeofResource(instance, hResource);
+                    hRData = LoadResource(instance, hResource);
+                    if (hRData)
+                    {
+                        pRData = LockResource(hRData);
+                        XmlParser parser(pRData, bufferSize);
+                        nodeVector *nodes = parser.getNodes();
 
-                return load(nodes);
+                        res = load(nodes);
+                    }
+                }
+                return res;
             }
 #endif
 
