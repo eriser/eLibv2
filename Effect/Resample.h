@@ -48,10 +48,7 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            bool getBypass(void) { return m_bBypass; }
             double getRate(void) { return m_dRate; }
-
-            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
             void setRate(const double Rate);
 
         public:

@@ -13,13 +13,18 @@ double Overdrive::Process(const double input)
 
 double Overdrive::processConnection()
 {
-    double input = 0.0;
+    double dInput = 0.0, dOutput = 0.0;
 
-    if (inputConnections[OVERDRIVE_CONNECTION_INPUT] != NULL)
-        input = inputConnections[OVERDRIVE_CONNECTION_INPUT]->processConnection();
-    if (inputConnections[OVERDRIVE_CONNECTION_LEVEL] != NULL)
+    if (isInputConnected(OVERDRIVE_CONNECTION_BYPASS))
+        setBypass(ModuleHelper::double2bool(inputConnections[OVERDRIVE_CONNECTION_BYPASS]->processConnection(), 0.5));
+    if (isInputConnected(OVERDRIVE_CONNECTION_INPUT))
+        dInput = inputConnections[OVERDRIVE_CONNECTION_INPUT]->processConnection();
+    if (isInputConnected(OVERDRIVE_CONNECTION_LEVEL))
         setLevel(inputConnections[OVERDRIVE_CONNECTION_LEVEL]->processConnection());
-    ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 
-    return Process(input);
+    if (!m_bBypass)
+        dOutput = Process(dInput);
+    else
+        dOutput = dInput;
+    return dOutput;
 }

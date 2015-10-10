@@ -1,28 +1,25 @@
 #ifndef MODCASCADEDEQCONSTANTQ_H_
 #define MODCASCADEDEQCONSTANTQ_H_
 
+#include <Base/BaseFilter.h>
 #include <Connection/InputConnection.h>
 #include <Filter/ParametricConstantQ.h>
 #include <Util/Defines.h>
 
 namespace eLibV2
 {
-    namespace Effect
+    namespace Filter
     {
         /**
         Implements a hi-shelving filter
         */
-        class CascadedEQConstantQ : public Base::BaseEffect
+        class CascadedEQConstantQ : public Base::BaseFilter
         {
         public:
-            enum
-            {
-                CONNECTION_FILTER_INPUT
-            };
-
-        public:
             CascadedEQConstantQ(std::string name = "CascadedEQConstantQ") :
-                BaseName(name)
+                BaseName(name),
+                BaseFilter(),
+                BaseConnection(FILTER_CONNECTION_NUM)
             {
                 m_uiNumberOfStages = 10;
 
@@ -36,6 +33,8 @@ namespace eLibV2
 
                 Init();
             }
+
+            virtual void calcCoefficients() {}
 
             virtual ~CascadedEQConstantQ(void)
             {

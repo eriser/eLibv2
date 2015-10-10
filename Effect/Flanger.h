@@ -60,9 +60,6 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            bool getBypass() { return m_bBypass; }
-
-            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
             void setLFOFreq(const double Freq);
 
         public:

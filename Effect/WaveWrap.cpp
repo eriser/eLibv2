@@ -47,9 +47,9 @@ double WaveWrap::processConnection()
 {
     double input = 0.0;
 
-    if (inputConnections[WAVEWRAP_CONNECTION_INPUT] != NULL)
+    if (isInputConnected(WAVEWRAP_CONNECTION_INPUT))
         input = inputConnections[WAVEWRAP_CONNECTION_INPUT]->processConnection();
-    if (inputConnections[WAVEWRAP_CONNECTION_LEVEL] != NULL)
+    if (isInputConnected(WAVEWRAP_CONNECTION_LEVEL))
         setWrapLevel(inputConnections[WAVEWRAP_CONNECTION_LEVEL]->processConnection());
     ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 

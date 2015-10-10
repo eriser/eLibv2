@@ -36,11 +36,11 @@ namespace eLibV2
                 double input = 0.0;
 
                 // get factor and offset
-                if (inputConnections[SCALER_CONNECTION_FACTOR] != NULL)
+                if (isInputConnected(SCALER_CONNECTION_FACTOR))
                     mFactor = inputConnections[SCALER_CONNECTION_FACTOR]->processConnection();
-                if (inputConnections[SCALER_CONNECTION_OFFSET] != NULL)
+                if (isInputConnected(SCALER_CONNECTION_OFFSET))
                     mOffset = inputConnections[SCALER_CONNECTION_OFFSET]->processConnection();
-                if (inputConnections[SCALER_CONNECTION_INPUT] != NULL)
+                if (isInputConnected(SCALER_CONNECTION_INPUT))
                     input = inputConnections[SCALER_CONNECTION_INPUT]->processConnection();
 
 //                ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processIOs value: %lf %lf %lf -> %lf", getModuleName().c_str(), input, mFactor, mOffset, input * mFactor + mOffset);

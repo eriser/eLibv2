@@ -1,5 +1,5 @@
-#ifndef MODBUTTERWORTHLPF_H_
-#define MODBUTTERWORTHLPF_H_
+#ifndef MODLINKWITZRILEYLPF_H_
+#define MODLINKWITZRILEYLPF_H_
 
 #include <Base/BaseFilter.h>
 #include <Util/Defines.h>
@@ -12,10 +12,10 @@ namespace eLibV2
         /**
         Implements a single Bi-Quad Structure
         */
-        class ButterworthLPF : public Base::BaseFilter
+        class LinkwitzRileyLPF : public Base::BaseFilter
         {
         public:
-            ButterworthLPF(std::string name = "ButterworthLPF") :
+            LinkwitzRileyLPF(std::string name = "LinkwitzRileyLPF") :
                 BaseName(name),
                 BaseFilter(),
                 BaseConnection(FILTER_CONNECTION_NUM)
@@ -44,15 +44,19 @@ namespace eLibV2
 
             void calcCoefficients(void)
             {
-                double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
-                double C = 1.0 / tan(argtan);
-                double C2 = C * C;
+                double OmegaC = PI * m_dCutoff;
+                double OmegaC2 = OmegaC * OmegaC;
+                double ThetaC = ModuleHelper::clamp((OmegaC / mSamplerate), -PI_DIV_2, PI_DIV_2);
 
-                double a0 = 1.0 / (1.0 + SQRT_2 * C + C2);
+                double Kappa = OmegaC / tan(ThetaC);
+                double Kappa2 = Kappa * Kappa;
+                double Delta = Kappa2 + 2.0 * Kappa * OmegaC + OmegaC2;
+
+                double a0 = OmegaC2 / Delta;
                 double a1 = 2.0 * a0;
                 double a2 = a0;
-                double b1 = 2.0 * a0 * (1.0 - C2);
-                double b2 = a0 * (1.0 - SQRT_2 * C + C2);
+                double b1 = (2.0 * OmegaC2 - 2.0 * Kappa2) / Delta;
+                double b2 = (Kappa2 - 2.0 * Kappa * OmegaC + OmegaC2) / Delta;
 
                 if (m_pInternalBiquad)
                 {

@@ -11,9 +11,7 @@ double SelectorBlock::processConnection()
 {
     double input = 0.0;
 
-    if ((uiInputSwitch < CONNECTION_SELECTOR_MAXINPUT) && (inputConnections[uiInputSwitch] != NULL))
+    if ((uiInputSwitch < CONNECTION_SELECTOR_MAXINPUT) && (isInputConnected(uiInputSwitch)))
         input = inputConnections[uiInputSwitch]->processConnection();
-    // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
-
     return input;
 }

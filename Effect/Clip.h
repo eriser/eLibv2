@@ -11,8 +11,16 @@ namespace eLibV2
         static const double CLIP_LEVEL_MIN = 0.0;
         static const double CLIP_LEVEL_MAX = 1.0;
 
-        class Clip : public Base::BaseName
+        class Clip : public Base::BaseEffect
         {
+        public:
+            enum
+            {
+                CLIP_CONNECTION_BYPASS = 0,
+                CLIP_CONNECTION_INPUT,
+                CLIP_CONNECTION_NUM
+            };
+
         public:
             enum ClipMode
             {
@@ -34,13 +42,19 @@ namespace eLibV2
             virtual void Init(void);
             virtual void Reset(void) {}
             virtual double Process(const double Input);
+            virtual double processConnection();
 
-            /* setter, getter */
+        public:
+            /* getter/setter */
             void setClipLevel(double ClipLevel) { dClipLevel = Util::ModuleHelper::clamp(ClipLevel, CLIP_LEVEL_MIN, CLIP_LEVEL_MAX); }
             double getClipLevel(void) { return dClipLevel; }
 
             void setClipMode(ClipMode Mode) { eClipMode = Mode; }
             ClipMode getClipMode(void) { return eClipMode; }
+
+        public:
+            void attachBypass(BaseConnection *connection) { inputConnections[CLIP_CONNECTION_BYPASS] = connection; }
+            void attachInput(BaseConnection *connection) { inputConnections[CLIP_CONNECTION_INPUT] = connection; }
 
         private:
             double dClipLevel;

@@ -63,11 +63,11 @@ double EnvelopeDetector::processConnection()
 {
     double input = 0.0;
 
-    if (inputConnections[ENVELOPEDETECTOR_CONNECTION_ATTACK] != NULL)
+    if (isInputConnected(ENVELOPEDETECTOR_CONNECTION_ATTACK))
         setAttack(inputConnections[ENVELOPEDETECTOR_CONNECTION_ATTACK]->processConnection());
-    if (inputConnections[ENVELOPEDETECTOR_CONNECTION_RELEASE] != NULL)
+    if (isInputConnected(ENVELOPEDETECTOR_CONNECTION_RELEASE))
         setRelease(inputConnections[ENVELOPEDETECTOR_CONNECTION_RELEASE]->processConnection());
-    if (inputConnections[ENVELOPEDETECTOR_CONNECTION_INPUT] != NULL)
+    if (isInputConnected(ENVELOPEDETECTOR_CONNECTION_INPUT))
         input = inputConnections[ENVELOPEDETECTOR_CONNECTION_INPUT]->processConnection();
     return Process(input);
 }

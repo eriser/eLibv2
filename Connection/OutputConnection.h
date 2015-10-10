@@ -23,7 +23,7 @@ namespace eLibV2
             {
                 double input = 0.0;
 
-                if (inputConnections[0] != NULL)
+                if (isInputConnected(0))
                     input = inputConnections[0]->processConnection();
                 // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
 

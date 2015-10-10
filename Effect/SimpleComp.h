@@ -43,14 +43,12 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
             void setThreshold(const double Threshold);
             void setRatio(const double Ratio);
             void setAttack(const double Attack);
             void setRelease(const double Release);
             void setOutput(const double Output);
 
-            bool getBypass() { return m_bBypass; }
             double getThreshold(void) { return m_dThreshold; }
             double getRatio(void) { return m_dRatio; }
             double getAttack(void) { return m_dAttack; }

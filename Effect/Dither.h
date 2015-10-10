@@ -52,10 +52,7 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            bool getBypass(void) { return m_bBypass; }
             unsigned char getBitsize(void) { return m_uiBitsize; }
-
-            void setBypass(const bool Bypass) { m_bBypass = Bypass; }
             void setBitsize(const unsigned char Bitsize) { m_uiBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:

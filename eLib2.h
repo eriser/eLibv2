@@ -57,13 +57,14 @@
 #include <Filter/CascadedEQConstantQ.h>
 #include <Filter/HiShelving.h>
 #include <Filter/LoShelving.h>
-#include <Filter/LinkwirtRileyHPF.h>
-#include <Filter/LinkwirtRileyLPF.h>
+#include <Filter/LinkwitzRileyHPF.h>
+#include <Filter/LinkwitzRileyLPF.h>
 #include <Filter/ParametricConstantQ.h>
 #include <Filter/ResonantBPF.h>
 #include <Filter/ResonantBSF.h>
 #include <Filter/ResonantHPF.h>
 #include <Filter/ResonantLPF.h>
+#include <Filter/SwitchableAPF.h>
 
 // midi event handling
 #include <MIDI/MidiEvent.h>

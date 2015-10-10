@@ -1,70 +1,43 @@
 #ifndef MODHISHELVING_H_
 #define MODHISHELVING_H_
 
-#include <Filter/EnhancedBiQuad.h.h>
+#include <Base/BaseFilter.h>
+#include <Filter/EnhancedBiQuad.h>
 #include <Util/Defines.h>
 #include <cmath>
 
 namespace eLibV2
 {
-    namespace Effect
+    namespace Filter
     {
         /**
         Implements a hi-shelving filter
         */
-        class HiShelving : public Base::BaseEffect
+        class HiShelving : public Base::BaseFilter
         {
         public:
-            enum
-            {
-                CONNECTION_FILTER_INPUT
-            };
-
-        public:
             HiShelving(std::string name = "HiShelving") :
-                Base::BaseName(name)
+                BaseName(name),
+                BaseFilter(),
+                BaseConnection(FILTER_CONNECTION_NUM)
             {
                 Init();
-            }
-            virtual ~HiShelving(void)
-            {
-                if (mInternalBiquad)
-                    delete mInternalBiquad;
-                mInternalBiquad = NULL;
             }
 
             void Init()
             {
-                mInternalBiquad = new EnhancedBiQuad();
-                mCutoff = 22050.0;
-                mGain = 0.0;
-                calcCoefficients();
-            }
-
-            void setCutoff(const double cutoff)
-            {
-                mCutoff = cutoff;
-                calcCoefficients();
-            }
-
-            void setGain(const double gain)
-            {
-                mGain = gain;
-                calcCoefficients();
-            }
-
-            virtual void setSamplerate(const double Samplerate)
-            {
-                BaseModule::setSamplerate(Samplerate);
+                m_bBypass = false;
+                m_dCutoff = 22050.0;
+                m_dGain = 0.0;
                 calcCoefficients();
             }
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
+                double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
                 ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double Mu = pow(10, (mGain / 40.0));
+                double Mu = pow(10, (m_dGain / 40.0));
                 double Beta = (1.0 + Mu) / 4.0;
 
                 double argtan = ModuleHelper::clamp((ThetaC / 2.0), -PI_DIV_2, PI_DIV_2);
@@ -79,48 +52,12 @@ namespace eLibV2
                 double c0 = Mu - 1.0;
                 double d0 = 1.0;
 
-                if (mInternalBiquad)
+                if (m_pInternalBiquad)
                 {
-                    mInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
-                    mInternalBiquad->setWetDryLevel(c0, d0);
+                    m_pInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
+                    m_pInternalBiquad->setWetDryLevel(c0, d0);
                 }
             }
-
-            void Reset()
-            {
-                if (mInternalBiquad)
-                    mInternalBiquad->Reset();
-            }
-
-            virtual double processConnection()
-            {
-                double input = 0.0;
-
-                if (inputConnections[0] != NULL)
-                    input = inputConnections[0]->processConnection();
-                // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
-
-                return Process(input);
-            }
-
-            // Do the filter: given input xn, calculate output yn and return it
-            double Process(double input)
-            {
-                double output = 0.0;
-
-                if (mInternalBiquad)
-                    output = mInternalBiquad->Process(input);
-                return output;
-            }
-
-        public:
-            void attachInput(BaseConnection *connection) { inputConnections[0] = connection; }
-
-        private:
-            EnhancedBiQuad *mInternalBiquad;
-
-            double mCutoff;
-            double mGain;
         };
     }
 }

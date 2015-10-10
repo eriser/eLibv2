@@ -80,19 +80,19 @@ double BaseOscillator::Process(VstInt16 Note)
 
 double BaseOscillator::processConnection(void)
 {
-    double input = 0.0, res;
+    double dInput = 0.0, res;
 
-    if (inputConnections[OSC_CONNECTION_NOTE] != NULL)
-        input = inputConnections[OSC_CONNECTION_NOTE]->processConnection();
-    if (inputConnections[OSC_CONNECTION_WAVEFORM] != NULL)
+    if (isInputConnected(OSC_CONNECTION_NOTE))
+        dInput = inputConnections[OSC_CONNECTION_NOTE]->processConnection();
+    if (isInputConnected(OSC_CONNECTION_WAVEFORM))
         setWaveform((VstInt16)inputConnections[OSC_CONNECTION_WAVEFORM]->processConnection());
-    if (inputConnections[OSC_CONNECTION_COARSE] != NULL)
+    if (isInputConnected(OSC_CONNECTION_COARSE))
         setCoarse(inputConnections[OSC_CONNECTION_COARSE]->processConnection());
-    if (inputConnections[OSC_CONNECTION_FINETUNE] != NULL)
+    if (isInputConnected(OSC_CONNECTION_FINETUNE))
         setFinetune(inputConnections[OSC_CONNECTION_FINETUNE]->processConnection());
 
     // ModuleLogger::print(LOG_CLASS_GENERATOR, "%s::processIOs C:%lf/F:%lf/W:%ld/I:%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
-    res = Process((VstInt16)input);
+    res = Process((VstInt16)dInput);
     // ModuleLogger::print(LOG_CLASS_GENERATOR, "osc output: %lf", res);
 
     return res;

@@ -33,11 +33,11 @@ double Dither::processConnection()
 {
     double dInput = 0.0, dOutput = 0.0;
 
-    if (inputConnections[DITHER_CONNECTION_BYPASS] != NULL)
+    if (isInputConnected(DITHER_CONNECTION_BYPASS))
         m_bBypass = ModuleHelper::double2bool(inputConnections[DITHER_CONNECTION_BYPASS]->processConnection(), 0.5);
-    if (inputConnections[DITHER_CONNECTION_BITSIZE] != NULL)
+    if (isInputConnected(DITHER_CONNECTION_BITSIZE))
         setBitsize((unsigned int)inputConnections[DITHER_CONNECTION_BITSIZE]->processConnection());
-    if (inputConnections[DITHER_CONNECTION_INPUT])
+    if (isInputConnected(DITHER_CONNECTION_INPUT))
         dInput = inputConnections[DITHER_CONNECTION_INPUT]->processConnection();
 
     if (!m_bBypass)

@@ -36,11 +36,11 @@ double Resample::processConnection()
 {
     double dInput = 0.0, dOutput = 0.0;
 
-    if (inputConnections[RESAMPLE_CONNECTION_BYPASS] != NULL)
+    if (isInputConnected(RESAMPLE_CONNECTION_BYPASS))
         m_bBypass = ModuleHelper::double2bool(inputConnections[RESAMPLE_CONNECTION_BYPASS]->processConnection(), 0.5);
-    if (inputConnections[RESAMPLE_CONNECTION_RATE] != NULL)
+    if (isInputConnected(RESAMPLE_CONNECTION_RATE))
         setRate((unsigned int)inputConnections[RESAMPLE_CONNECTION_RATE]->processConnection());
-    if (inputConnections[RESAMPLE_CONNECTION_INPUT])
+    if (isInputConnected(RESAMPLE_CONNECTION_INPUT))
         dInput = inputConnections[RESAMPLE_CONNECTION_INPUT]->processConnection();
 
     if (!m_bBypass)

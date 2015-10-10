@@ -36,7 +36,14 @@ namespace eLibV2
                 outputConnections = new BaseConnection*[numberOfOutputs];
                 memset(outputConnections, 0, sizeof(outputConnections) * numberOfOutputs);
             }
-            virtual ~BaseConnection() {}
+
+            virtual ~BaseConnection()
+            {
+                if (inputConnections != NULL)
+                    delete[] inputConnections;
+                if (outputConnections != NULL)
+                    delete[] outputConnections;
+            }
 
             /**
             process signal flow for all connected module
@@ -61,12 +68,13 @@ namespace eLibV2
                 {
                     for (unsigned char inputIndex = 0; inputIndex < numberOfInputs; ++inputIndex)
                     {
-                        if (inputConnections[inputIndex] != NULL)
+                        if (isInputConnected(inputIndex))
                             inputConnections[inputIndex]->printConnection(depth);
                     }
                 }
             }
 
+        protected:
             /**
             get number of available inputs for module
             @return number of inputs
@@ -79,12 +87,50 @@ namespace eLibV2
             */
             virtual int getNumberOfOutputs() { return numberOfOutputs; }
 
+            /**
+            check if input with given index is connected
+            outputs an error message if something is wrong
+            @param connectionIndex index of input
+            @return true if connected
+            */
+            virtual bool isInputConnected(unsigned int connectionIndex)
+            {
+                bool bRes = false;
+                if (connectionIndex < getNumberOfInputs())
+                {
+                    if (inputConnections[connectionIndex])
+                        bRes = true;
+                }
+                else
+                    ModuleLogger::print(0, "Warning: Number of Inputs not correctly set!");
+                return bRes;
+            }
+
+            /**
+            check if output with given index is connected
+            outputs an error message if something is wrong
+            @param connectionIndex index of output
+            @return true if connected
+            */
+            virtual bool isOutputConnected(unsigned int connectionIndex)
+            {
+                bool bRes = false;
+                if (connectionIndex < getNumberOfOutputs())
+                {
+                    if (outputConnections[connectionIndex])
+                        bRes = true;
+                }
+                else
+                    ModuleLogger::print(0, "Warning: Number of Outputs not correctly set!");
+                return bRes;
+            }
+
         protected:
             const int numberOfInputs; ///< number of inputs available
             const int numberOfOutputs; ///< number of outputs available
 
-            BaseConnection** inputConnections;
-            BaseConnection** outputConnections;
+            BaseConnection** inputConnections;  ///< all input-connections
+            BaseConnection** outputConnections; ///< all output-connections
         };
     }
 }

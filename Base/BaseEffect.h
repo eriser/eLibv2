@@ -24,8 +24,12 @@ namespace eLibV2
             {
                 mVSA = (1.0 / 4294967295.0);
                 mFilterOffset = 1.192092896e-07;
-                mMinimumThetaC = 0.0005;
+                m_bBypass = false;
             }
+
+            /* getter/setter */
+            virtual bool getBypass(void) { return m_bBypass; }
+            virtual void setBypass(const bool Bypass) { m_bBypass = Bypass; }
 
             /**
             reset internal module state to initialization
@@ -43,7 +47,7 @@ namespace eLibV2
             double *pBuffer;        ///< internal memory buffer used in subclasses
             double mVSA;            ///< Very small amount (Denormal Fix)
             double mFilterOffset;
-            double mMinimumThetaC;  ///< minimum value of theta_c used in filter-modules
+            bool m_bBypass;         ///< bypass processing of effect
         };
     }
 }

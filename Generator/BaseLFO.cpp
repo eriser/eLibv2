@@ -32,9 +32,9 @@ double BaseLFO::processConnection()
 {
     double input = 0.0, res;
 
-    if (inputConnections[LFO_CONNECTION_FREQ] != NULL)
+    if (isInputConnected(LFO_CONNECTION_FREQ))
         setFreq(inputConnections[LFO_CONNECTION_FREQ]->processConnection());
-    if (inputConnections[LFO_CONNECTION_WAVEFORM] != NULL)
+    if (isInputConnected(LFO_CONNECTION_WAVEFORM))
         setWaveform((VstInt16)inputConnections[LFO_CONNECTION_WAVEFORM]->processConnection());
 
     res = Process();

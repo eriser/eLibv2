@@ -16,7 +16,8 @@ namespace eLibV2
         public:
             enum
             {
-                OVERDRIVE_CONNECTION_INPUT = 0,
+                OVERDRIVE_CONNECTION_BYPASS = 0,
+                OVERDRIVE_CONNECTION_INPUT,
                 OVERDRIVE_CONNECTION_LEVEL,
                 OVERDRIVE_CONNECTION_NUM
             };
@@ -41,6 +42,7 @@ namespace eLibV2
             double getLevel(void) { return dLevel; }
 
         public:
+            void attachBypass(BaseConnection *connection) { inputConnections[OVERDRIVE_CONNECTION_BYPASS] = connection; }
             void attachInput(BaseConnection *connection) { inputConnections[OVERDRIVE_CONNECTION_INPUT] = connection; }
             void attachLevel(BaseConnection *connection) { inputConnections[OVERDRIVE_CONNECTION_LEVEL] = connection; }
 

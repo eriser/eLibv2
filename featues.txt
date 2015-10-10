@@ -22,7 +22,7 @@ peaking filters constant-q
 -> working (cutoff, q and gain matched)
 
 cascaded graphic eq constant-q
-
+-> working (cutoff, q and gain matched)
 
 effects:
 

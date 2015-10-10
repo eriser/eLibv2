@@ -1,71 +1,42 @@
 #ifndef MODRESONANTLPF_H_
 #define MODRESONANTLPF_H_
 
-#include <Filter/BiQuad.h.h>
+#include <Base/BaseFilter.h>
 #include <Util/Defines.h>
 #include <cmath>
 
 namespace eLibV2
 {
-    namespace Effect
+    namespace Filter
     {
         /**
         Implements a single Bi-Quad Structure
         */
-        class ResonantLPF : public Base::BaseEffect
+        class ResonantLPF : public Base::BaseFilter
         {
         public:
-            enum
-            {
-                CONNECTION_FILTER_INPUT
-            };
-
-        public:
             ResonantLPF(std::string name = "ResonantLPF") :
-                Base::BaseName(name)
+                BaseName(name),
+                BaseFilter(),
+                BaseConnection(FILTER_CONNECTION_NUM)
             {
                 Init();
             }
 
-            virtual ~ResonantLPF(void)
-            {
-                if (mInternalBiquad)
-                    delete mInternalBiquad;
-                mInternalBiquad = NULL;
-            }
-
             void Init()
             {
-                mInternalBiquad = new BiQuad();
-                mCutoff = 22050.0;
-                mQ = 5.0;
-                calcCoefficients();
-            }
-
-            void setCutoff(const double cutoff)
-            {
-                mCutoff = cutoff;
-                calcCoefficients();
-            }
-
-            void setQ(const double q)
-            {
-                mQ = q;
-                calcCoefficients();
-            }
-
-            virtual void setSamplerate(const double Samplerate)
-            {
-                BaseModule::setSamplerate(Samplerate);
+                m_bBypass = false;
+                m_dCutoff = 22050.0;
+                m_dQ = 5.0;
                 calcCoefficients();
             }
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * mCutoff) / mSamplerate;
+                double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
                 ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double d = 1.0 / mQ;
+                double d = 1.0 / m_dQ;
 
                 double BetaNumerator = 1.0 - ((d / 2.0) * (sin(ThetaC)));
                 double BetaDenominator = 1.0 + ((d / 2.0) * (sin(ThetaC)));
@@ -78,45 +49,12 @@ namespace eLibV2
                 double b1 = -2.0 * Gamma;
                 double b2 = 2.0 * Beta;
 
-                if (mInternalBiquad)
-                    mInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
+                if (m_pInternalBiquad)
+                {
+                    m_pInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
+                    m_pInternalBiquad->setWetDryLevel(1.0, 0.0);
+                }
             }
-
-            void Reset()
-            {
-                if (mInternalBiquad)
-                    mInternalBiquad->Reset();
-            }
-
-            virtual double processConnection()
-            {
-                double input = 0.0;
-
-                if (inputConnections[0] != NULL)
-                    input = inputConnections[0]->processConnection();
-                // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
-
-                return Process(input);
-            }
-
-            // Do the filter: given input xn, calculate output yn and return it
-            double Process(double input)
-            {
-                double output = 0.0;
-
-                if (mInternalBiquad)
-                    output = mInternalBiquad->Process(input);
-                return output;
-            }
-
-        public:
-            void attachInput(BaseConnection *connection) { inputConnections[0] = connection; }
-
-        private:
-            BiQuad *mInternalBiquad;
-
-            double mCutoff;
-            double mQ;
         };
     }
 }

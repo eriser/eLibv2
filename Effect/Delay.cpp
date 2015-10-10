@@ -44,11 +44,18 @@ double Delay::Process(const double Input)
 
 double Delay::processConnection()
 {
-    double input = 0.0;
+    double dInput = 0.0, dOutput = 0.0;
 
-    if (inputConnections[DELAY_CONNECTION_LENGTH] != NULL)
+    if (isInputConnected(DELAY_CONNECTION_BYPASS))
+        setBypass(ModuleHelper::double2bool(inputConnections[DELAY_CONNECTION_BYPASS]->processConnection(), 0.5));
+    if (isInputConnected(DELAY_CONNECTION_INPUT))
+        dInput = inputConnections[DELAY_CONNECTION_INPUT]->processConnection();
+    if (isInputConnected(DELAY_CONNECTION_LENGTH))
         setDelayLength(inputConnections[DELAY_CONNECTION_LENGTH]->processConnection());
-    if (inputConnections[DELAY_CONNECTION_INPUT] != NULL)
-        input = inputConnections[DELAY_CONNECTION_INPUT]->processConnection();
-    return Process(input);
+
+    if (!m_bBypass)
+        dOutput = Process(dInput);
+    else
+        dOutput = dInput;
+    return dOutput;
 }

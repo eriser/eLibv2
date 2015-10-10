@@ -16,11 +16,11 @@ double Flanger::processConnection()
 {
     double dInput = 0.0, dOutput = 0.0;
 
-    if (inputConnections[FLANGER_CONNECTION_BYPASS] != NULL)
+    if (isInputConnected(FLANGER_CONNECTION_BYPASS))
         m_bBypass = ModuleHelper::double2bool(inputConnections[FLANGER_CONNECTION_BYPASS]->processConnection(), 0.5);
-    if (inputConnections[FLANGER_CONNECTION_INPUT] != NULL)
+    if (isInputConnected(FLANGER_CONNECTION_INPUT))
         dInput = inputConnections[FLANGER_CONNECTION_INPUT]->processConnection();
-    if (inputConnections[FLANGER_CONNECTION_LFOFREQ] != NULL)
+    if (isInputConnected(FLANGER_CONNECTION_LFOFREQ))
     {
         if (m_pLFO)
             m_pLFO->setFreq(inputConnections[FLANGER_CONNECTION_LFOFREQ]->processConnection());

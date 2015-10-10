@@ -1,64 +1,42 @@
 #ifndef MODBUTTERWORTHBPF_H_
 #define MODBUTTERWORTHBPF_H_
 
-#include <Filter/BiQuad.h.h>
+#include <Base/BaseFilter.h>
 #include <Util/Defines.h>
 #include <cmath>
 
 namespace eLibV2
 {
-    namespace Effect
+    namespace Filter
     {
         /**
-        Implements a single Bi-Quad Structure
+        Implements a second-order Butterworth Bandpass-Filter
         */
-        class ButterworthBPF : public Base::BaseEffect
+        class ButterworthBPF : public Base::BaseFilter
         {
         public:
             ButterworthBPF(std::string name = "ButterworthBPF") :
-                Base::BaseName(name)
+                BaseName(name),
+                BaseFilter(),
+                BaseConnection(FILTER_CONNECTION_NUM)
             {
                 Init();
             }
 
-            virtual ~ButterworthBPF(void)
-            {
-                if (mInternalBiquad)
-                    delete mInternalBiquad;
-                mInternalBiquad = NULL;
-            }
-
             void Init()
             {
-                mInternalBiquad = new BiQuad();
-                mCutoff = 22050.0;
-                mBW = 0.5;
+                m_bBypass = false;
+                m_dCutoff = 22050.0;
+                m_dBW = 0.5;
                 calcCoefficients();
             }
 
-            void setCutoff(const double cutoff)
-            {
-                mCutoff = cutoff;
-                calcCoefficients();
-            }
-
-            void setBW(const double bw)
-            {
-                mBW = bw;
-                calcCoefficients();
-            }
-
-            virtual void setSamplerate(const double Samplerate)
-            {
-                BaseModule::setSamplerate(Samplerate);
-                calcCoefficients();
-            }
-
+        public:
             void calcCoefficients(void)
             {
-                double argtan = ModuleHelper::clamp(((PI * mCutoff * mBW) / mSamplerate), 0.000001, PI_DIV_2);
+                double argtan = ModuleHelper::clamp(((PI * m_dCutoff * m_dBW) / mSamplerate), 0.000001, PI_DIV_2);
                 double C = 1.0 / tan(argtan);
-                double D = 2.0 * cos((2.0 * PI * mCutoff) / mSamplerate);
+                double D = 2.0 * cos((2.0 * PI * m_dCutoff) / mSamplerate);
 
                 double a0 = 1.0 / (1.0 + C);
                 double a1 = 0.0;
@@ -66,45 +44,12 @@ namespace eLibV2
                 double b1 = -a0 * (C * D);
                 double b2 = a0 * (C - 1.0);
 
-                if (mInternalBiquad)
-                    mInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
+                if (m_pInternalBiquad)
+                {
+                    m_pInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
+                    m_pInternalBiquad->setWetDryLevel(1.0, 0.0);
+                }
             }
-
-            void Reset()
-            {
-                if (mInternalBiquad)
-                    mInternalBiquad->Reset();
-            }
-
-            virtual double processConnection()
-            {
-                double input = 0.0;
-
-                if (inputConnections[0] != NULL)
-                    input = inputConnections[0]->processConnection();
-                // ModuleLogger::print(LOG_CLASS_EFFECT, "%s::process %lf", getModuleName().c_str(), input);
-
-                return Process(input);
-            }
-
-            // Do the filter: given input xn, calculate output yn and return it
-            double Process(double input)
-            {
-                double output = 0.0;
-
-                if (mInternalBiquad)
-                    output = mInternalBiquad->Process(input);
-                return output;
-            }
-
-        public:
-            void attachInput(BaseConnection *connection) { inputConnections[0] = connection; }
-
-        private:
-            BiQuad *mInternalBiquad;
-
-            double mCutoff;
-            double mBW;
         };
     }
 }

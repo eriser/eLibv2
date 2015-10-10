@@ -17,7 +17,8 @@ namespace eLibV2
             enum
             {
                 DELAY_BUFFER_SIZE = 44100,
-                DELAY_CONNECTION_INPUT = 0,
+                DELAY_CONNECTION_BYPASS = 0,
+                DELAY_CONNECTION_INPUT,
                 DELAY_CONNECTION_LENGTH,
                 DELAY_CONNECTION_NUM
             };
@@ -45,8 +46,10 @@ namespace eLibV2
         public:
             void setDelayLength(unsigned int length);
 
-            void attachDelayLength(BaseConnection *connection) { inputConnections[DELAY_CONNECTION_LENGTH] = connection; }
+        public:
+            void attachBypass(BaseConnection *connection) { inputConnections[DELAY_CONNECTION_BYPASS] = connection; }
             void attachInput(BaseConnection *connection) { inputConnections[DELAY_CONNECTION_INPUT] = connection; }
+            void attachDelayLength(BaseConnection *connection) { inputConnections[DELAY_CONNECTION_LENGTH] = connection; }
 
         private:
             void adjustIndices();
@@ -55,7 +58,6 @@ namespace eLibV2
             double *buffer;
             double mixLevel;
             unsigned int delayLength;
-            bool bBypass;
             int readIndex, writeIndex;
         };
     }

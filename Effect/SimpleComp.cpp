@@ -74,19 +74,19 @@ double SimpleComp::processConnection()
 {
     double input = 0.0;
 
-    if (inputConnections[SIMPLECOMP_CONNECTION_BYPASS] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_BYPASS))
         m_bBypass = ModuleHelper::double2bool(inputConnections[SIMPLECOMP_CONNECTION_BYPASS]->processConnection(), 0.5);
-    if (inputConnections[SIMPLECOMP_CONNECTION_INPUT] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_INPUT))
         input = inputConnections[SIMPLECOMP_CONNECTION_INPUT]->processConnection();
-    if (inputConnections[SIMPLECOMP_CONNECTION_ATTACK] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_ATTACK))
         m_dAttack = inputConnections[SIMPLECOMP_CONNECTION_ATTACK]->processConnection();
-    if (inputConnections[SIMPLECOMP_CONNECTION_RELEASE] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_RELEASE))
         m_dRelease = inputConnections[SIMPLECOMP_CONNECTION_RELEASE]->processConnection();
-    if (inputConnections[SIMPLECOMP_CONNECTION_THRESHOLD] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_THRESHOLD))
         m_dThreshold = inputConnections[SIMPLECOMP_CONNECTION_THRESHOLD]->processConnection();
-    if (inputConnections[SIMPLECOMP_CONNECTION_RATIO] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_RATIO))
         m_dRatio = inputConnections[SIMPLECOMP_CONNECTION_RATIO]->processConnection();
-    if (inputConnections[SIMPLECOMP_CONNECTION_GAIN] != NULL)
+    if (isInputConnected(SIMPLECOMP_CONNECTION_GAIN))
         m_dGain = inputConnections[SIMPLECOMP_CONNECTION_GAIN]->processConnection();
 
     return Process(input);

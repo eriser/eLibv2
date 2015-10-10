@@ -39,3 +39,19 @@ double Clip::Process(const double Input)
     }
     return res;
 }
+
+double Clip::processConnection()
+{
+    double dInput = 0.0, dOutput = 0.0;
+
+    if (isInputConnected(CLIP_CONNECTION_BYPASS))
+        setBypass(ModuleHelper::double2bool(inputConnections[CLIP_CONNECTION_BYPASS]->processConnection(), 0.5));
+    if (isInputConnected(CLIP_CONNECTION_INPUT))
+        dInput = inputConnections[CLIP_CONNECTION_INPUT]->processConnection();
+
+    if (!m_bBypass)
+        dOutput = Process(dInput);
+    else
+        dOutput = dInput;
+    return dOutput;
+}

@@ -34,7 +34,7 @@ namespace eLibV2
 
                 for (unsigned char inputIndex = 0; inputIndex < MULTIPLIER_INPUT_NUM; ++inputIndex)
                 {
-                    if (inputConnections[inputIndex] != NULL)
+                    if (isInputConnected(inputIndex))
                         input *= inputConnections[inputIndex]->processConnection();
                 }
 

@@ -9,7 +9,7 @@
 
 namespace eLibV2
 {
-    namespace Effect
+    namespace Filter
     {
         /**
         Implements a single Bi-Quad Structure
