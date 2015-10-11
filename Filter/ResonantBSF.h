@@ -26,6 +26,7 @@ namespace eLibV2
             void Init()
             {
                 m_bBypass = false;
+                m_iOrder = 2;
                 m_dCutoff = 22050.0;
                 m_dBW = 0.5;
                 calcCoefficients();
@@ -33,20 +34,25 @@ namespace eLibV2
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
-                ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
+                double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
 
-                double argtan = ThetaC * (m_dBW / 2.0);
-                double BetaNumerator = 1.0 - tan(argtan);
-                double BetaDenominator = 1.0 + tan(argtan);
-                double Beta = 0.5 * (BetaNumerator / BetaDenominator);
+                if (m_iOrder == 2)
+                {
+                    double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
+                    ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double Gamma = (0.5 + Beta) * (cos(ThetaC));
-                double a0 = 0.5 + Beta;
-                double a1 = -2.0 * Gamma;
-                double a2 = 0.5 + Beta;
-                double b1 = -2.0 * Gamma;
-                double b2 = 2.0 * Beta;
+                    double argtan = ThetaC * (m_dBW / 2.0);
+                    double BetaNumerator = 1.0 - tan(argtan);
+                    double BetaDenominator = 1.0 + tan(argtan);
+                    double Beta = 0.5 * (BetaNumerator / BetaDenominator);
+
+                    double Gamma = (0.5 + Beta) * (cos(ThetaC));
+                    a0 = 0.5 + Beta;
+                    a1 = -2.0 * Gamma;
+                    a2 = 0.5 + Beta;
+                    b1 = -2.0 * Gamma;
+                    b2 = 2.0 * Beta;
+                }
 
                 if (m_pInternalBiquad)
                 {

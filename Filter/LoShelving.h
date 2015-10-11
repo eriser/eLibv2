@@ -27,6 +27,7 @@ namespace eLibV2
             void Init()
             {
                 m_bBypass = false;
+                m_iOrder = 1;
                 m_dCutoff = 22050.0;
                 m_dGain = 0.0;
                 calcCoefficients();
@@ -34,23 +35,29 @@ namespace eLibV2
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
-                ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
+                double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
+                double c0 = 0.0, d0 = 0.0;
 
-                double Mu = pow(10, (m_dGain / 40.0));
-                double Beta = 4.0 / (1.0 + Mu);
+                if (m_iOrder == 1)
+                {
+                    double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
+                    ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double argtan = ModuleHelper::clamp((ThetaC / 2.0), -PI_DIV_2, PI_DIV_2);
-                double Delta = Beta * tan(argtan);
-                double Gamma = (1.0 - Delta) / (1.0 + Delta);
+                    double Mu = pow(10, (m_dGain / 20.0));
+                    double Beta = 4.0 / (1.0 + Mu);
 
-                double a0 = (1.0 - Delta) / 2.0;
-                double a1 = (1.0 - Delta) / 2.0;
-                double a2 = 0.0;
-                double b1 = -Gamma;
-                double b2 = 0.0;
-                double c0 = Mu - 1.0;
-                double d0 = 1.0;
+                    double argtan = ModuleHelper::clamp((ThetaC / 2.0), -PI_DIV_2, PI_DIV_2);
+                    double Delta = Beta * tan(argtan);
+                    double Gamma = (1.0 - Delta) / (1.0 + Delta);
+
+                    a0 = (1.0 - Gamma) * 0.5;
+                    a1 = (1.0 - Gamma) * 0.5;
+                    a2 = 0.0;
+                    b1 = -Gamma;
+                    b2 = 0.0;
+                    c0 = Mu - 1.0;
+                    d0 = 1.0;
+                }
 
                 if (m_pInternalBiquad)
                 {

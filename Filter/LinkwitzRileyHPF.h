@@ -26,24 +26,31 @@ namespace eLibV2
             void Init()
             {
                 m_bBypass = false;
+                m_iOrder = 2;
                 m_dCutoff = 22050.0;
+                calcCoefficients();
             }
 
             void calcCoefficients(void)
             {
-                double OmegaC = PI * m_dCutoff;
-                double OmegaC2 = OmegaC * OmegaC;
-                double ThetaC = ModuleHelper::clamp((OmegaC / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
 
-                double Kappa = OmegaC / tan(ThetaC);
-                double Kappa2 = Kappa * Kappa;
-                double Delta = Kappa2 + 2.0 * Kappa * OmegaC + OmegaC2;
+                if (m_iOrder == 2)
+                {
+                    double OmegaC = PI * m_dCutoff;
+                    double OmegaC2 = OmegaC * OmegaC;
+                    double ThetaC = ModuleHelper::clamp((OmegaC / mSamplerate), -PI_DIV_2, PI_DIV_2);
 
-                double a0 = Kappa2 / Delta;
-                double a1 = -2.0 * a0;
-                double a2 = a0;
-                double b1 = (2.0 * OmegaC2 - 2.0 * Kappa2) / Delta;
-                double b2 = (Kappa2 - 2.0 * Kappa * OmegaC + OmegaC2) / Delta;
+                    double Kappa = OmegaC / tan(ThetaC);
+                    double Kappa2 = Kappa * Kappa;
+                    double Delta = Kappa2 + 2.0 * Kappa * OmegaC + OmegaC2;
+
+                    a0 = Kappa2 / Delta;
+                    a1 = -2.0 * a0;
+                    a2 = a0;
+                    b1 = (2.0 * OmegaC2 - 2.0 * Kappa2) / Delta;
+                    b2 = (Kappa2 - 2.0 * Kappa * OmegaC + OmegaC2) / Delta;
+                }
 
                 if (m_pInternalBiquad)
                 {

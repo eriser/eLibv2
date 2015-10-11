@@ -28,7 +28,7 @@ namespace eLibV2
                 m_bBypass = false;
                 m_dCutoff = 22050.0;
                 m_dQ = 0.707;
-                m_bSecondOrder = true;
+                m_iOrder = 2;
                 calcCoefficients();
             }
 
@@ -45,7 +45,18 @@ namespace eLibV2
             {
                 double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
 
-                if (m_bSecondOrder)
+                if (m_iOrder == 1)
+                {
+                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double Alpha = (tan(argtan) - 1.0) / (tan(argtan) + 1.0);
+
+                    a0 = Alpha;
+                    a1 = 1.0;
+                    a2 = 0.0;
+                    b1 = Alpha;
+                    b2 = 0.0;
+                }
+                else if (m_iOrder == 2)
                 {
                     double argtan = ModuleHelper::clamp(((PI * m_dQ) / mSamplerate), -PI_DIV_2, PI_DIV_2);
                     double Alpha = (tan(argtan) - 1.0) / (tan(argtan) + 1.0);
@@ -57,17 +68,6 @@ namespace eLibV2
                     a2 = 1.0;
                     b1 = Beta * (1.0 - Alpha);
                     b2 = -Alpha;
-                }
-                else
-                {
-                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
-                    double Alpha = (tan(argtan) - 1.0) / (tan(argtan) + 1.0);
-
-                    a0 = Alpha;
-                    a1 = 1.0;
-                    a2 = 0.0;
-                    b1 = Alpha;
-                    b2 = 0.0;
                 }
 
                 if (m_pInternalBiquad)

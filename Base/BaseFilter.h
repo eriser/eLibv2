@@ -56,6 +56,13 @@ namespace eLibV2
             virtual bool getBypass(void) { return m_bBypass; }
             virtual void setBypass(const bool Bypass) { m_bBypass = Bypass; }
 
+            virtual unsigned char getOrder(void) { return m_iOrder; }
+            virtual void setOrder(const unsigned char Order)
+            {
+                m_iOrder = Order;
+                calcCoefficients();
+            }
+
             virtual double getCutoff() { return m_dCutoff; }
             virtual void setCutoff(const double Cutoff)
             {
@@ -135,11 +142,12 @@ namespace eLibV2
 
         protected:
             Filter::EnhancedBiQuad *m_pInternalBiquad;
-            bool m_bBypass;     ///< bypass processing of filter
-            double m_dCutoff;   ///< cutoff frequency
-            double m_dQ;        ///< q-factor
-            double m_dBW;       ///< filter-bandwidth
-            double m_dGain;     ///< filter-gain
+            unsigned char m_iOrder; ///< order of the filter
+            bool m_bBypass;         ///< bypass processing of filter
+            double m_dCutoff;       ///< cutoff frequency
+            double m_dQ;            ///< q-factor
+            double m_dBW;           ///< filter-bandwidth
+            double m_dGain;         ///< filter-gain
             double mMinimumThetaC;  ///< minimum value of theta_c used in filter-modules
         };
     }

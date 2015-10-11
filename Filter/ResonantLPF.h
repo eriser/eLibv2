@@ -26,6 +26,7 @@ namespace eLibV2
             void Init()
             {
                 m_bBypass = false;
+                m_iOrder = 2;
                 m_dCutoff = 22050.0;
                 m_dQ = 5.0;
                 calcCoefficients();
@@ -36,18 +37,33 @@ namespace eLibV2
                 double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
                 ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
-                double d = 1.0 / m_dQ;
+                double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
 
-                double BetaNumerator = 1.0 - ((d / 2.0) * (sin(ThetaC)));
-                double BetaDenominator = 1.0 + ((d / 2.0) * (sin(ThetaC)));
-                double Beta = 0.5 * (BetaNumerator / BetaDenominator);
+                if (m_iOrder == 1)
+                {
+                    double Gamma = cos(ThetaC) / (1.0 + sin(ThetaC));
 
-                double Gamma = (0.5 + Beta) * (cos(ThetaC));
-                double a0 = (0.5 + Beta - Gamma) / 2.0;
-                double a1 = (0.5 + Beta - Gamma);
-                double a2 = (0.5 + Beta - Gamma) / 2.0;
-                double b1 = -2.0 * Gamma;
-                double b2 = 2.0 * Beta;
+                    a0 = (1.0 - Gamma) * 0.5;
+                    a1 = a0;
+                    a2 = 0.0;
+                    b1 = -Gamma;
+                    b2 = 0.0;
+                }
+                else if (m_iOrder == 2)
+                {
+                    double d = 1.0 / m_dQ;
+
+                    double BetaNumerator = 1.0 - ((d / 2.0) * (sin(ThetaC)));
+                    double BetaDenominator = 1.0 + ((d / 2.0) * (sin(ThetaC)));
+                    double Beta = 0.5 * (BetaNumerator / BetaDenominator);
+
+                    double Gamma = (0.5 + Beta) * (cos(ThetaC));
+                    a0 = (0.5 + Beta - Gamma) / 2.0;
+                    a1 = (0.5 + Beta - Gamma);
+                    a2 = (0.5 + Beta - Gamma) / 2.0;
+                    b1 = -2.0 * Gamma;
+                    b2 = 2.0 * Beta;
+                }
 
                 if (m_pInternalBiquad)
                 {
