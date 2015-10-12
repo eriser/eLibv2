@@ -45,15 +45,15 @@ namespace eLibV2
 
                     double K = tan(argtan);
                     double K2 = K * K;
-                    double Mu = pow(10.0, (m_dGain / 20.0));
+                    double V0 = pow(10.0, (m_dGain / 20.0));
                     double D0 = 1.0 + (1.0 / m_dQ) * K + K2;
-                    double E0 = 1.0 + (1.0 / (Mu * m_dQ)) * K + K2;
+                    double E0 = 1.0 + (1.0 / (V0 * m_dQ)) * K + K2;
 
-                    double Alpha = 1.0 + (Mu / m_dQ) * K + K2;
+                    double Alpha = 1.0 + (V0 / m_dQ) * K + K2;
                     double Beta = 2.0 * (K2 - 1.0);
-                    double Gamma = 1.0 - (Mu / m_dQ) * K + K2;
+                    double Gamma = 1.0 - (V0 / m_dQ) * K + K2;
                     double Delta = 1.0 - (1.0 / m_dQ) * K + K2;
-                    double Eta = 1.0 - (1.0 / (Mu * m_dQ)) * K + K2;
+                    double Eta = 1.0 - (1.0 / (V0 * m_dQ)) * K + K2;
 
                     if (m_dGain > 0.0)
                     {

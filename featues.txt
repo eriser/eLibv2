@@ -24,7 +24,7 @@ allpass filter
 ->working
 
 shelving filters
--> in progress
+-> working as second-order (cutoff matched)
 
 butterworth filters (BPF, BSF, HPF and LPF)
 -> working (cutoff and bw matched)

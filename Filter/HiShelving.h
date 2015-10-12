@@ -38,7 +38,7 @@ namespace eLibV2
                 double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
                 double c0 = 0.0, d0 = 0.0;
 
-                if (m_iOrder == 2)
+                if (m_iOrder == 1)
                 {
                     double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
                     ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
@@ -58,7 +58,44 @@ namespace eLibV2
                     c0 = Mu - 1.0;
                     d0 = 1.0;
                 }
+                else if (m_iOrder == 2)
+                {
+                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
 
+                    double K = tan(argtan);
+                    double K2 = K * K;
+                    double V0 = pow(10.0, (m_dGain / 20.0));
+                    double D0 = 1.0 + SQRT_2 * K + K2;
+                    double E0 = 1.0 / V0 + SQRT_2 / sqrt(V0) * K + K2;
+                    double E1 = 1.0 + SQRT_2 * sqrt(V0) * K + K2 * V0;
+
+                    double Alpha = V0 + SQRT_2 * sqrt(V0) * K + K2;
+                    double Beta = 2.0 * (K2 - V0);
+                    double Gamma = V0 - SQRT_2 * sqrt(V0) * K + K2;
+                    double Delta = 2.0 * (K2 - 1.0);
+                    double Eta = 1.0 - SQRT_2 * K + K2;
+                    double Zeta = 2.0 * (K2 * V0 - 1.0);
+                    double Iota = 1.0 - SQRT_2 * sqrt(V0) * K + K2 * V0;
+
+                    if (m_dGain > 0.0)
+                    {
+                        a0 = Alpha / D0;
+                        a1 = Beta / D0;
+                        a2 = Gamma / D0;
+                        b1 = Delta / D0;
+                        b2 = Eta / D0;
+                    }
+                    else
+                    {
+                        a0 = D0 / E0;
+                        a1 = Delta / E0;
+                        a2 = Eta / E0;
+                        b1 = Zeta / E1;
+                        b2 = Iota / E1;
+                    }
+                    c0 = 1.0;
+                    d0 = 0.0;
+                }
                 if (m_pInternalBiquad)
                 {
                     m_pInternalBiquad->setCoefficients(a0, a1, a2, b1, b2);
