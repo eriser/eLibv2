@@ -40,13 +40,6 @@ namespace eLibV2
                 ENVELOPEDETECTOR_DETECTMODE_RMS
             };
 
-            enum OutputMode
-            {
-                ENVELOPEDETECTOR_OUTPUTMODE_UNDEF = 0,
-                ENVELOPEDETECTOR_OUTPUTMODE_NORMAL,
-                ENVELOPEDETECTOR_OUTPUTMODE_LOG
-            };
-
         public:
             EnvelopeDetector(std::string name = "EnvelopeDetector") :
                 BaseName(name),
@@ -69,13 +62,11 @@ namespace eLibV2
             double getRelease() { return m_dRelease; }
             TCMode getTCMode() { return m_eTCMode; }
             DetectMode getDetectMode() { return m_eDetectMode; }
-            OutputMode getOutputMode() { return m_eOutputMode; }
 
             void setAttack(const double Attack);
             void setRelease(const double Release);
             void setTCMode(const TCMode TCMode);
             void setDetectMode(const DetectMode DetectMode);
-            void setOutputMode(const OutputMode OutputMode);
 
         public:
             void attachInput(BaseConnection *connection) { inputConnections[ENVELOPEDETECTOR_CONNECTION_INPUT] = connection; }
@@ -89,7 +80,6 @@ namespace eLibV2
             TCMode m_eTCMode;
             DetectMode m_eDetectMode;
             double m_dCurrentLevel;
-            OutputMode m_eOutputMode;
         };
     }
 }

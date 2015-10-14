@@ -17,11 +17,14 @@ grain synth
 
 filters:
 
-resonant filters (BPF, BSF, HPF and LPF)
--> working (cutoff and q/bw matched)
+resonant filters (HPF and LPF)
+-> working as first- and second-order (cutoff and q matched)
+
+resonant filters (BPF and BSF)
+-> working as second-order (cutoff and q/bw matched)
 
 allpass filter
-->working
+->working as first- and second-order
 
 shelving filters
 -> working as second-order (cutoff matched)
@@ -55,6 +58,8 @@ reverb
 dynamics processor:
 
 compressor
+-> in progress
+
 expander
 limiter
 gate

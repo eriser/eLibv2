@@ -10,7 +10,6 @@ void EnvelopeDetector::Init(void)
     setRelease(0.0);
     setTCMode(ENVELOPEDETECTOR_TCMODE_ANALOG);
     setDetectMode(ENVELOPEDETECTOR_DETECTMODE_PEAK);
-    setOutputMode(ENVELOPEDETECTOR_OUTPUTMODE_NORMAL);
     m_dCurrentLevel = 0.0;
 }
 
@@ -47,14 +46,6 @@ double EnvelopeDetector::Process(const double Input)
     if (m_dCurrentLevel < 0.0 && m_dCurrentLevel > FLT_MIN_MINUS) m_dCurrentLevel = 0.0;
 
     m_dCurrentLevel = ModuleHelper::clamp(m_dCurrentLevel, 0.0, 1.0);
-
-    if (m_eOutputMode == ENVELOPEDETECTOR_OUTPUTMODE_LOG)
-    {
-        if (m_dCurrentLevel <= 0.0)
-            return -96.0;
-
-        return 20.0 * log10(m_dCurrentLevel);
-    }
 
     return m_dCurrentLevel;
 }
@@ -109,9 +100,4 @@ void EnvelopeDetector::setTCMode(const TCMode TCMode)
 void EnvelopeDetector::setDetectMode(const DetectMode DetectMode)
 {
     m_eDetectMode = DetectMode;
-}
-
-void EnvelopeDetector::setOutputMode(const OutputMode OutputMode)
-{
-    m_eOutputMode = OutputMode;
 }

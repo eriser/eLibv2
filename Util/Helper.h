@@ -37,7 +37,7 @@ namespace eLibV2
             }
 
             // performs linear interpolation with two values and a fractional position between them
-            static double interpolate(const double value1, const double value2, const double fractional)
+            static double LinearInterpolation(const double value1, const double value2, const double fractional)
             {
                 double res = value1;
 
@@ -47,13 +47,42 @@ namespace eLibV2
                 return res;
             }
 
-            // helper functions for conversion between time / frequency / quarter and samples
-            static double ms2samples(double ms, double samplerate) { return (ms / 1000.0) * samplerate; }
-            static double samples2ms(double samples, double samplerate) { return (samples / samplerate) * 1000.0; }
-            static double freq2samples(double freq, double samplerate) { return (samplerate / freq); }
-            static double samples2freq(double samples, double samplerate) { return (samplerate / samples); }
-            static double quarter2samples(double quarter, double bpm, double samplerate) { return (quarter * 60 * samplerate) / bpm; }
+            // performs lagrange interpolation with two value-arrays and a fractional position between them
+            static double LagrangeInterpolation(const double *xInput, const double *yInput, unsigned char order, const double value)
+            {
+                double fx = 0.0;
+                double l = 1.0;
+                for (unsigned char i = 0; i < order; i++)
+                {
+                    l = 1.0;
+                    for (unsigned char j = 0; j < order; j++)
+                    {
+                        if (j != i)
+                            l *= (value - xInput[j]) / (xInput[i] - xInput[j]);
+                    }
+                    fx += l * yInput[i];
+                }
+                return (fx);
+            }
 
+            // helper functions for conversion between time / frequency / quarter and samples
+            static double ms2samples(const double ms, const double samplerate) { return (ms / 1000.0) * samplerate; }
+            static double samples2ms(const double samples, const double samplerate) { return (samples / samplerate) * 1000.0; }
+            static double freq2samples(const double freq, const double samplerate) { return (samplerate / freq); }
+            static double samples2freq(const double samples, const double samplerate) { return (samplerate / samples); }
+            static double quarter2samples(const double quarter, const double bpm, const double samplerate) { return (quarter * 60 * samplerate) / bpm; }
+
+            // helper functions to convert from linear to logarithmic and vice versa
+            static double dB2value(const double dB) { return pow(10.0, dB / 20.0); }
+            static double value2dB(const double value)
+            {
+                if (value <= 0.0)
+                    return -96.0;
+                else
+                    return 20.0 * log10(value);
+            }
+
+            // helper function to convert a value to a bool regarding a threshold
             static bool double2bool(const double value, const double threshold) { return (value < threshold) ? false : true; }
 
             static double GenerateTestSignal(void) { return ((((double)rand()) / RAND_MAX) * 2) - 1.0; }

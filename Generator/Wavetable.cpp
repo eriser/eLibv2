@@ -416,7 +416,7 @@ double BaseWavetable::getWaveData(const unsigned int WaveIndex, const double dPh
     firstIndex %= Waveforms[WaveIndex].WaveSize;
 
     // data = Waveforms[WaveIndex].WaveData[(VstInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
-    data = ModuleHelper::interpolate(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[firstIndex], dFrac);
+    data = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[firstIndex], dFrac);
     data = ModuleHelper::clamp(data, -1.0, 1.0);
     return data;
 }
