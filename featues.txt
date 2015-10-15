@@ -57,12 +57,11 @@ reverb
 
 dynamics processor:
 
-compressor
--> in progress
+compressor/limiter
+-> working
 
-expander
-limiter
-gate
+expander/gate
+
 
 envelope detector
 -> working (parameters need matching)

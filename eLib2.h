@@ -33,9 +33,9 @@
 
 // effect modules
 #include <Effect/Clip.h>
-#include <Effect/Compressor.h>
 #include <Effect/Delay.h>
 #include <Effect/Dither.h>
+#include <Effect/DynamicsProcessor.h>
 #include <Effect/EnvelopeDetector.h>
 #include <Effect/EnvFollower.h>
 #include <Effect/EQ3Band.h>

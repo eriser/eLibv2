@@ -1,5 +1,5 @@
-#ifndef MODCOMPRESSOR_H_
-#define MODCOMPRESSOR_H_
+#ifndef MODDYNAMICS_H_
+#define MODDYNAMICS_H_
 
 #include <Base/BaseEffect.h>
 #include <Effect/EnvelopeDetector.h>
@@ -10,35 +10,44 @@ namespace eLibV2
     namespace Effect
     {
         /**
-        this class implements a simple compressor
+        this class implements a simple dynamics processor
         */
-        class Compressor : public Base::BaseEffect
+        class DynamicsProcessor : public Base::BaseEffect
         {
         public:
             enum
             {
-                COMPRESSOR_CONNECTION_BYPASS = 0,
-                COMPRESSOR_CONNECTION_INPUT,
-                COMPRESSOR_CONNECTION_ATTACK,
-                COMPRESSOR_CONNECTION_RELEASE,
-                COMPRESSOR_CONNECTION_THRESHOLD,
-                COMPRESSOR_CONNECTION_RATIO,
-                COMPRESSOR_CONNECTION_KNEEWIDTH,
-                COMPRESSOR_CONNECTION_INPUTGAIN,
-                COMPRESSOR_CONNECTION_OUTPUTGAIN,
-                COMPRESSOR_CONNECTION_NUM
+                DYNAMICS_CONNECTION_BYPASS = 0,
+                DYNAMICS_CONNECTION_INPUT,
+                DYNAMICS_CONNECTION_ATTACK,
+                DYNAMICS_CONNECTION_RELEASE,
+                DYNAMICS_CONNECTION_THRESHOLD,
+                DYNAMICS_CONNECTION_RATIO,
+                DYNAMICS_CONNECTION_KNEEWIDTH,
+                DYNAMICS_CONNECTION_INPUTGAIN,
+                DYNAMICS_CONNECTION_OUTPUTGAIN,
+                DYNAMICS_CONNECTION_NUM
+            };
+
+            enum DynamicsMode
+            {
+                DYNAMICS_MODE_UNDEF = 0,
+                DYNAMICS_MODE_COMPRESSOR,
+                DYNAMICS_MODE_LIMITER,
+                DYNAMICS_MODE_EXPANDER,
+                DYNAMICS_MODE_GATE
             };
 
         public:
-            Compressor(std::string name = "Compressor") :
+            DynamicsProcessor(std::string name = "DynamicsProcessor") :
                 BaseName(name),
-                BaseConnection(COMPRESSOR_CONNECTION_NUM)
+                BaseConnection(DYNAMICS_CONNECTION_NUM)
             {
                 m_pEnvelopeDetector = new EnvelopeDetector();
                 Init();
             }
 
-            virtual ~Compressor()
+            virtual ~DynamicsProcessor()
             {
                 if (m_pEnvelopeDetector)
                     delete m_pEnvelopeDetector;
@@ -98,28 +107,32 @@ namespace eLibV2
             void setKneeWidth(const double KneeWidth) { m_dKneeWidth = KneeWidth; }
             double getKneeWidth(void) { return m_dKneeWidth; }
 
-            void setInputGain(const double InputGain) { m_dInputGain = InputGain; }
-            double getInputGain(void) { return m_dInputGain; }
+            void setInputGain(const double InputGain) { m_dInputGainIndB = InputGain; }
+            double getInputGain(void) { return m_dInputGainIndB; }
 
-            void setOutputGain(const double OutputGain) { m_dOutputGain = OutputGain; }
-            double getOutputGain(void) { return m_dOutputGain; }
+            void setOutputGain(const double OutputGain) { m_dOutputGainIndB = OutputGain; }
+            double getOutputGain(void) { return m_dOutputGainIndB; }
+
+            void setMode(const DynamicsMode Mode) { m_eMode = Mode; }
+            DynamicsMode getMode(void) { return m_eMode; }
 
         public:
-            void attachBypass(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_BYPASS] = connection; }
-            void attachInput(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_INPUT] = connection; }
-            void attachAttack(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_ATTACK] = connection; }
-            void attachRelease(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_RELEASE] = connection; }
-            void attachThreshold(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_THRESHOLD] = connection; }
-            void attachRatio(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_RATIO] = connection; }
-            void attachKneeWidth(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_KNEEWIDTH] = connection; }
-            void attachInputGain(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_INPUTGAIN] = connection; }
-            void attachOutputGain(BaseConnection *connection) { inputConnections[COMPRESSOR_CONNECTION_OUTPUTGAIN] = connection; }
+            void attachBypass(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_BYPASS] = connection; }
+            void attachInput(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_INPUT] = connection; }
+            void attachAttack(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_ATTACK] = connection; }
+            void attachRelease(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_RELEASE] = connection; }
+            void attachThreshold(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_THRESHOLD] = connection; }
+            void attachRatio(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_RATIO] = connection; }
+            void attachKneeWidth(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_KNEEWIDTH] = connection; }
+            void attachInputGain(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_INPUTGAIN] = connection; }
+            void attachOutputGain(BaseConnection *connection) { inputConnections[DYNAMICS_CONNECTION_OUTPUTGAIN] = connection; }
 
         private:
             EnvelopeDetector *m_pEnvelopeDetector;
             double m_dThreshold, m_dRatio;
             double m_dKneeWidth;
-            double m_dInputGain, m_dOutputGain;
+            double m_dInputGainIndB, m_dOutputGainIndB;
+            DynamicsMode m_eMode;
         };
     }
 }

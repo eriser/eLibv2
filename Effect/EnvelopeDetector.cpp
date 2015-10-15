@@ -6,8 +6,8 @@ void EnvelopeDetector::Init(void)
 {
     bBypass = false;
     setSamplerate(44100.0);
-    setAttack(0.0);
-    setRelease(0.0);
+    setAttack(10.0);
+    setRelease(50.0);
     setTCMode(ENVELOPEDETECTOR_TCMODE_ANALOG);
     setDetectMode(ENVELOPEDETECTOR_DETECTMODE_PEAK);
     m_dCurrentLevel = 0.0;
