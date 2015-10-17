@@ -29,9 +29,9 @@ namespace eLibV2
         public:
             /* inherited methods */
             virtual void Init(void);
-            virtual void Reset(void);
-            virtual double Process();
             virtual double processConnection();
+
+            virtual void adjustPhases(VstInt16 Note);
 
         public:
             /* set and get methods */

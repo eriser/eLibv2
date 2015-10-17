@@ -14,7 +14,11 @@ namespace eLibV2
     {
         static const double BASEOSC_COARSE_RANGE = 24.0;
         static const double BASEOSC_FINE_RANGE = 100.0;
+        static const double QUADPHASE_DIVIDER = 8.0;
 
+        /**
+        this class implements a basic oscillator module using a wavetable
+        */
         class BaseOscillator : public Base::BaseGenerator
         {
         protected:
@@ -44,6 +48,8 @@ namespace eLibV2
             virtual double processConnection();
             virtual void setSamplerate(const double Samplerate);
 
+            virtual void adjustPhases(VstInt16 Note);
+
         public:
             /* set and get methods */
             void setWaveform(VstInt32 Waveform);
@@ -56,6 +62,8 @@ namespace eLibV2
             double getFinetune(void) { return m_dFinetune; }
             VstInt32 getNumWaveforms(void);
 
+            double getQuadOutput(void) { return m_dQuadOutput; }
+
         public:
             /* attach methods */
             void attachNote(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_NOTE] = connection; }
@@ -65,7 +73,9 @@ namespace eLibV2
 
         protected:
             VstInt32 m_lWaveform;
-            double m_dCoarse, m_dFinetune, m_dPhase, m_dScaler;
+            double m_dCoarse, m_dFinetune;
+            double m_dPhase, m_dQuadPhase, m_dScaler;
+            double m_dQuadOutput;
         };
     }
 }

@@ -6,37 +6,25 @@ void BaseLFO::Init(void)
 {
     m_dFreq = 1.0;
     m_lWaveform = 1;
-    adjustScaler();
 }
 
-void BaseLFO::Reset(void)
+void BaseLFO::adjustPhases(VstInt16 Note)
 {
-    Init();
-}
-
-double BaseLFO::Process(void)
-{
-    // modulation in simetones
-    double data, dBase, dTune, dFreq;
-
-    data = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dPhase);
-
-    dFreq = m_dFreq * m_dScaler;
+    double dFreq = m_dFreq * m_dScaler;
     m_dPhase += dFreq;
     m_dPhase = BaseWavetable::getInstance()->adjustPhase(m_lWaveform, m_dPhase);
-
-    return data;
+    m_dQuadPhase = m_dPhase + BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / QUADPHASE_DIVIDER;
 }
 
 double BaseLFO::processConnection()
 {
-    double input = 0.0, res;
+    double dOutput = 0.0;
 
     if (isInputConnected(LFO_CONNECTION_FREQ))
         setFreq(inputConnections[LFO_CONNECTION_FREQ]->processConnection());
     if (isInputConnected(LFO_CONNECTION_WAVEFORM))
         setWaveform((VstInt16)inputConnections[LFO_CONNECTION_WAVEFORM]->processConnection());
 
-    res = Process();
-    return res;
+    dOutput = Process(0);
+    return dOutput;
 }

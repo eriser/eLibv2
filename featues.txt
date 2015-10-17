@@ -6,6 +6,9 @@ voice allocation
 
 generators:
 
+oscillator with quad-phase output
+-> working
+
 wavetable:
 
 band-limited waveforms
@@ -46,14 +49,30 @@ effects:
 delay-line
 -> working
 
+stereo crossed-feedbck delay
+
+multi-tap delay
+
+ping-pong delay
+
+lcr delay
+
 flanger
 -> working
+
+chorus
+
 
 phaser
 -> working
 
 reverb
 
+tremolo/panning
+
+ring modulator
+
+waveshaper
 
 dynamics processor:
 

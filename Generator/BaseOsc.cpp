@@ -8,7 +8,7 @@ void BaseOscillator::Init(void)
     setWaveform(1);
     setCoarse(0.0);
     setFinetune(0.0);
-    m_dPhase = 0.0;
+    Reset();
 
     FrequencyTable::SetupFreqs();
 }
@@ -17,6 +17,8 @@ void BaseOscillator::Reset(void)
 {
     // reset phase to begin at start of waveform
     m_dPhase = 0.0;
+    // division by 8 due to the multiplication of phase with 2 within wavetable (do not know why)
+    m_dQuadPhase = m_dPhase + BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / QUADPHASE_DIVIDER;
 }
 
 void BaseOscillator::setWaveform(VstInt32 Waveform)
@@ -25,6 +27,7 @@ void BaseOscillator::setWaveform(VstInt32 Waveform)
     {
         m_lWaveform = Waveform;
         adjustScaler();
+        Reset();
     }
 }
 
@@ -56,10 +59,20 @@ VstInt32 BaseOscillator::getNumWaveforms(void)
 
 double BaseOscillator::Process(VstInt16 Note)
 {
-    // modulation in simetones
-    double wavedata, dCoarseFreq, dFineFreq, dFreq;
+    double dOutput;
 
-    wavedata = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dPhase);
+    // get data and adjust phases
+    dOutput = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dPhase);
+    m_dQuadOutput = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dQuadPhase);
+    adjustPhases(Note);
+
+    return dOutput;
+}
+
+void BaseOscillator::adjustPhases(VstInt16 Note)
+{
+    // modulation in simetones
+    double dCoarseFreq, dFineFreq, dFreq;
 
     dCoarseFreq = FrequencyTable::ForNote((Note + (VstInt16)(m_dCoarse)) & 0x7f);
     if (m_dFinetune >= 0.0)
@@ -74,16 +87,16 @@ double BaseOscillator::Process(VstInt16 Note)
     }
     m_dPhase += dFreq;
     m_dPhase = BaseWavetable::getInstance()->adjustPhase(m_lWaveform, m_dPhase);
-
-    return wavedata;
+    m_dQuadPhase = m_dPhase + BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / QUADPHASE_DIVIDER;
 }
 
 double BaseOscillator::processConnection(void)
 {
-    double dInput = 0.0, res;
+    VstInt16 iNote;
+    double dOutput;
 
     if (isInputConnected(OSC_CONNECTION_NOTE))
-        dInput = inputConnections[OSC_CONNECTION_NOTE]->processConnection();
+        iNote = (VstInt16)inputConnections[OSC_CONNECTION_NOTE]->processConnection();
     if (isInputConnected(OSC_CONNECTION_WAVEFORM))
         setWaveform((VstInt16)inputConnections[OSC_CONNECTION_WAVEFORM]->processConnection());
     if (isInputConnected(OSC_CONNECTION_COARSE))
@@ -92,8 +105,8 @@ double BaseOscillator::processConnection(void)
         setFinetune(inputConnections[OSC_CONNECTION_FINETUNE]->processConnection());
 
     // ModuleLogger::print(LOG_CLASS_GENERATOR, "%s::processIOs C:%lf/F:%lf/W:%ld/I:%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
-    res = Process((VstInt16)dInput);
+    dOutput = Process((VstInt16)iNote);
     // ModuleLogger::print(LOG_CLASS_GENERATOR, "osc output: %lf", res);
 
-    return res;
+    return dOutput;
 }
