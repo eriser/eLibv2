@@ -42,6 +42,7 @@
 #include <Effect/EQ3Band.h>
 #include <Effect/Flanger.h>
 #include <Effect/Mixer.h>
+#include <Effect/MultiTapDelay.h>
 #include <Effect/Overdrive.h>
 #include <Effect/Phaser.h>
 #include <Effect/Resample.h>
