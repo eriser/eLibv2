@@ -36,6 +36,7 @@ namespace eLibV2
                 m_pScaler->attachInput(m_pLFO);
 
                 m_pDelay = new Effect::Delay();
+                m_pDelay->setFeedbackLevel(0.5);
                 m_pDelay->attachDelayLength(m_pScaler);
 
                 m_bBypass = false;
@@ -55,12 +56,18 @@ namespace eLibV2
             virtual void Init(void) {}
             virtual void Reset(void) {}
             virtual double Process(const double Input);
-            virtual double processConnection();
+            virtual double processConnection(void);
             virtual void setSamplerate(const double Samplerate);
 
         public:
             /* getter/setter */
             void setLFOFreq(const double Freq);
+
+            void setMixLevel(const double MixLevel)
+            {
+                if (m_pDelay)
+                    m_pDelay->setMixLevel(MixLevel);
+            }
 
         public:
             /* attach methods */

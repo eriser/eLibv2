@@ -20,8 +20,8 @@ namespace eLibV2
             BiQuad(void) {}
             virtual ~BiQuad(void) {}
 
-            virtual void Init() {}
-            virtual void Reset()
+            virtual void Init(void) {}
+            virtual void Reset(void)
             {
                 // flush Delays
                 mXz_1 = mXz_2 = mYz_1 = mYz_2 = 0;

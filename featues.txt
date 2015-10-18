@@ -49,7 +49,7 @@ effects:
 delay-line
 -> working
 
-stereo crossed-feedbck delay
+stereo crossed-feedback delay
 
 multi-tap delay
 

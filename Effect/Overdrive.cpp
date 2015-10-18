@@ -11,7 +11,7 @@ double Overdrive::Process(const double input)
     return ret;
 }
 
-double Overdrive::processConnection()
+double Overdrive::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

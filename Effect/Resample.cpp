@@ -32,7 +32,7 @@ double Resample::Process(const double Input)
     return m_dCurrentValue;
 }
 
-double Resample::processConnection()
+double Resample::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

@@ -32,10 +32,10 @@ namespace eLibV2
             virtual ~Overdrive() {}
 
             /* inherited */
-            virtual void Init() { setLevel(50.0); }
-            virtual void Reset() {}
+            virtual void Init(void) { setLevel(50.0); }
+            virtual void Reset(void) {}
             virtual double Process(const double input);
-            virtual double processConnection();
+            virtual double processConnection(void);
 
         public:
             void setLevel(double Level) { dLevel = Util::ModuleHelper::clamp(Level, OVERDRIVE_LEVEL_MIN, OVERDRIVE_LEVEL_MAX); }

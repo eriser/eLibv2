@@ -36,7 +36,7 @@ namespace eLibV2
             process connected inputs
             @return result of procession
             */
-            virtual double processConnection() { return processInputs(); }
+            virtual double processConnection(void) { return processInputs(); }
             virtual double processInputs()
             {
                 // ModuleLogger::print(LOG_CLASS_CONNECTION, "%s::processInputs value: %lf", getModuleName().c_str(), mValue);

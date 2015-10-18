@@ -16,7 +16,7 @@ void BaseLFO::adjustPhases(VstInt16 Note)
     m_dQuadPhase = m_dPhase + BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / QUADPHASE_DIVIDER;
 }
 
-double BaseLFO::processConnection()
+double BaseLFO::processConnection(void)
 {
     double dOutput = 0.0;
 

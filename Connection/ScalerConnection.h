@@ -31,7 +31,7 @@ namespace eLibV2
             }
             virtual ~ScalerConnection() {}
 
-            virtual double processConnection()
+            virtual double processConnection(void)
             {
                 double input = 0.0;
 

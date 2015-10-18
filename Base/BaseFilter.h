@@ -40,12 +40,12 @@ namespace eLibV2
                 m_pInternalBiquad = NULL;
             }
 
-            virtual void Init() = 0;
+            virtual void Init(void) = 0;
 
             /**
             reset internal BiQuad-module
             */
-            virtual void Reset()
+            virtual void Reset(void)
             {
                 if (m_pInternalBiquad)
                     m_pInternalBiquad->Reset();
@@ -97,7 +97,7 @@ namespace eLibV2
                 calcCoefficients();
             }
 
-            virtual double processConnection()
+            virtual double processConnection(void)
             {
                 double dInput = 0.0, dOutput = 0.0;
 

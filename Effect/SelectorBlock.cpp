@@ -7,7 +7,7 @@ void SelectorBlock::Reset(void)
     Init();
 }
 
-double SelectorBlock::processConnection()
+double SelectorBlock::processConnection(void)
 {
     double input = 0.0;
 

@@ -18,9 +18,9 @@ namespace eLibV2
                 Init();
             }
 
-            void Init();
-            void Reset() {}
-            double Process();
+            void Init(void);
+            void Reset(void) {}
+            double Process(const double Input);
 
             void setSync(bool Sync) { bSync = Sync; }
             void setSpeed(double Speed) { dSpeed = Speed; }

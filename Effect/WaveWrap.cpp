@@ -43,7 +43,7 @@ double WaveWrap::Process(const double Input)
     return res;
 }
 
-double WaveWrap::processConnection()
+double WaveWrap::processConnection(void)
 {
     double input = 0.0;
 

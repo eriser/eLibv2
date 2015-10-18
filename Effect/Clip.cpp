@@ -40,7 +40,7 @@ double Clip::Process(const double Input)
     return res;
 }
 
-double Clip::processConnection()
+double Clip::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

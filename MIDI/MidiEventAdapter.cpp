@@ -2,7 +2,7 @@
 
 using namespace eLibV2::MIDI;
 
-double MidiEventAdapter::processConnection()
+double MidiEventAdapter::processConnection(void)
 {
     double res = 0.0;
     MidiEventVector events;

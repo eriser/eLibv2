@@ -42,7 +42,7 @@ namespace eLibV2
             virtual void Init(void);
             virtual void Reset(void) {}
             virtual double Process(const double Input);
-            virtual double processConnection();
+            virtual double processConnection(void);
 
         public:
             /* getter/setter */

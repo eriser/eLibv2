@@ -33,6 +33,7 @@
 
 // effect modules
 #include <Effect/Clip.h>
+#include <Effect/CrossedFeedbackDelay.h>
 #include <Effect/Delay.h>
 #include <Effect/Dither.h>
 #include <Effect/DynamicsProcessor.h>

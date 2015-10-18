@@ -26,7 +26,7 @@ namespace eLibV2
             /**
             process first existing note on selected channel
             */
-            virtual double processConnection();
+            virtual double processConnection(void);
 
         private:
             const int mChannel; ///< MIDI-channel to check

@@ -40,7 +40,7 @@ namespace eLibV2
             virtual void Reset(void);
             virtual double Process(const double Input);
 
-            virtual double processConnection();
+            virtual double processConnection(void);
 
             /* setter */
             void setGain(const VstInt16 Index, const double Gain) { dGain[Index] = Gain; }

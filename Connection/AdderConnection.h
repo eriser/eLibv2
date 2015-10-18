@@ -28,7 +28,7 @@ namespace eLibV2
             }
             virtual ~AdderConnection() {};
 
-            virtual double processConnection()
+            virtual double processConnection(void)
             {
                 double input = 0.0;
 

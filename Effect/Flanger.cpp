@@ -1,5 +1,5 @@
 #include <Effect/Flanger.h>
-
+#include <Util/DataSampler.h>
 using namespace eLibV2::Effect;
 
 double Flanger::Process(const double Input)
@@ -9,10 +9,11 @@ double Flanger::Process(const double Input)
     if (m_pDelay)
         res = m_pDelay->processConnection();
 
+    DataSampler::sample(res);
     return res;
 }
 
-double Flanger::processConnection()
+double Flanger::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

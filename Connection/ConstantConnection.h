@@ -25,7 +25,7 @@ namespace eLibV2
             process connected inputs
             @return result of procession
             */
-            virtual double processConnection() { return processInputs(); }
+            virtual double processConnection(void) { return processInputs(); }
 
             double processInputs()
             {

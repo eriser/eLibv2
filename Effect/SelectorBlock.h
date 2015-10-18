@@ -35,7 +35,7 @@ namespace eLibV2
             void setInputSwitch(const unsigned int InputSwitch) { uiInputSwitch = InputSwitch; }
             unsigned int getInputSwitch(void) { return uiInputSwitch; }
 
-            virtual double processConnection();
+            virtual double processConnection(void);
 
         public:
             void attachInput(const unsigned int InputIndex, BaseConnection *connection)

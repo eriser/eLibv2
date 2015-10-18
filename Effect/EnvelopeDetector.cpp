@@ -50,7 +50,7 @@ double EnvelopeDetector::Process(const double Input)
     return m_dCurrentLevel;
 }
 
-double EnvelopeDetector::processConnection()
+double EnvelopeDetector::processConnection(void)
 {
     double input = 0.0;
 

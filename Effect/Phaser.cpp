@@ -27,7 +27,7 @@ double Phaser::Process(const double Input)
     return dOutput;
 }
 
-double Phaser::processConnection()
+double Phaser::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

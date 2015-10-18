@@ -29,7 +29,7 @@ namespace eLibV2
         public:
             /* inherited methods */
             virtual void Init(void);
-            virtual double processConnection();
+            virtual double processConnection(void);
 
             virtual void adjustPhases(VstInt16 Note);
 

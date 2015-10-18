@@ -45,7 +45,7 @@ namespace eLibV2
             virtual void Init(void);
             virtual void Reset(void);
             virtual double Process(const VstInt16 Note);
-            virtual double processConnection();
+            virtual double processConnection(void);
             virtual void setSamplerate(const double Samplerate);
 
             virtual void adjustPhases(VstInt16 Note);

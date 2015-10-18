@@ -66,7 +66,7 @@ double EQ3Band::Process(const double Input)
     return(mid1 + mid2 + high);
 }
 
-double EQ3Band::processConnection()
+double EQ3Band::processConnection(void)
 {
     double input = 0.0;
 

@@ -20,13 +20,13 @@ namespace eLibV2
             }
             virtual ~EnhancedBiQuad(void) {}
 
-            virtual void Init()
+            virtual void Init(void)
             {
                 // initialize wet-level to 1.0 which means operation like standard bi-quad
                 setWetDryLevel(1.0, 0.0);
             }
 
-            virtual void Reset()
+            virtual void Reset(void)
             {
                 // flush Delays
                 mXz_1 = mXz_2 = mYz_1 = mYz_2 = 0;

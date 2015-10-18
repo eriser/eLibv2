@@ -23,7 +23,7 @@ namespace eLibV2
                 Init();
             }
 
-            void Init()
+            void Init(void)
             {
                 m_bBypass = false;
                 m_dCutoff = 22050.0;

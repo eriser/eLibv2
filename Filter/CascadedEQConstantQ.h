@@ -51,7 +51,7 @@ namespace eLibV2
                 m_pInput = NULL;
             }
 
-            void Init()
+            void Init(void)
             {
                 double N = 10.0 / m_uiNumberOfStages;
                 double Q = sqrt(pow(2.0, N)) / (pow(2.0, N) - 1.0);
@@ -96,7 +96,7 @@ namespace eLibV2
                 }
             }
 
-            void Reset()
+            void Reset(void)
             {
                 if (m_pStages)
                 {
@@ -105,7 +105,7 @@ namespace eLibV2
                 }
             }
 
-            virtual double processConnection()
+            virtual double processConnection(void)
             {
                 double input = 0.0;
 

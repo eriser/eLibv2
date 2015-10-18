@@ -24,7 +24,7 @@ namespace eLibV2
                 Init();
             }
 
-            void Init()
+            void Init(void)
             {
                 m_bBypass = false;
                 m_iOrder = 2;

@@ -69,7 +69,7 @@ double DynamicsProcessor::Process(const double Input)
     return dOutput;
 }
 
-double DynamicsProcessor::processConnection()
+double DynamicsProcessor::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

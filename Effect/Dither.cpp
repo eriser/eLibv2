@@ -29,7 +29,7 @@ double Dither::Process(const double Input)
     return ((double)((long)(Input * Scaler)) / Scaler);
 }
 
-double Dither::processConnection()
+double Dither::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

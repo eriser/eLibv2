@@ -102,7 +102,7 @@ namespace eLibV2
                 }
             }
             virtual double Process(const double Input);
-            virtual double processConnection();
+            virtual double processConnection(void);
             virtual void setSamplerate(const double Samplerate);
 
         public:

@@ -57,7 +57,7 @@ namespace eLibV2
             */
             bool hasEventsOnAnyChannel() const;
 
-            void Init() {}
+            void Init(void) {}
 
         private:
             bool channelInRange(const int channel) const { return ((channel >= MIDI_CHANNEL_MIN) && (channel < MIDI_CHANNEL_MAX)); }

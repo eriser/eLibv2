@@ -28,7 +28,7 @@ namespace eLibV2
             }
             virtual ~MultiplierConnection() {}
 
-            virtual double processConnection()
+            virtual double processConnection(void)
             {
                 double input = 1.0;
 

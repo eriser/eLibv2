@@ -48,7 +48,7 @@ namespace eLibV2
             /**
             process signal flow for all connected module
             */
-            virtual double processConnection() = 0;
+            virtual double processConnection(void) = 0;
 
             /**
             print signal flow of modules

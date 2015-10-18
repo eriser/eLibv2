@@ -49,7 +49,7 @@ void BaseSequencer::addSteps(long Count)
     }
 }
 
-double BaseSequencer::Process(void)
+double BaseSequencer::Process(const double Input)
 {
     double ret;
     long lNeededSamplePosition = 0;

@@ -70,7 +70,7 @@ double SimpleComp::Process(const double Input)
     return res;
 }
 
-double SimpleComp::processConnection()
+double SimpleComp::processConnection(void)
 {
     double input = 0.0;
 
