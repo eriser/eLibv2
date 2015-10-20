@@ -22,7 +22,7 @@ void EQ3Band::Reset(void)
 
 void EQ3Band::setSamplerate(const double Samplerate)
 {
-    mSamplerate = Samplerate;
+    BaseModule::setSamplerate(Samplerate);
 
     for (VstInt16 FreqIndex = 0; FreqIndex < (EQ_NUM_BANDS - 1); FreqIndex++)
         setFrequency(FreqIndex, dFrequency[FreqIndex]);
@@ -32,7 +32,7 @@ void EQ3Band::setFrequency(VstInt16 Index, double Frequency)
 {
     memset(&Bands[Index], 0, sizeof(Bands[Index]));
     dFrequency[Index] = Frequency;
-    Bands[Index].Frequency = 2 * sin(PI * (dFrequency[Index] / mSamplerate));
+    Bands[Index].Frequency = 2 * sin(PI * (dFrequency[Index] / getSamplerate()));
 }
 
 double EQ3Band::CalcBand(VstInt16 BandIndex, double Input)

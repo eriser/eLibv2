@@ -33,7 +33,8 @@ bool EnvelopeDADSR::isReady(void)
 
 double EnvelopeDADSR::Process(void)
 {
-    double res = 0.0, div = 0.0;
+    double dOutput = 0.0, div = 0.0;
+    double dSamplerate = getSamplerate();
 
     if (bActive)
     {
@@ -44,7 +45,7 @@ double EnvelopeDADSR::Process(void)
                 break;
 
             case ENVELOPE_DADSR_STATE_DELAY:
-                tDelayEnd = (VstInt32)(dDelay * dDelayScale * mSamplerate);
+                tDelayEnd = (VstInt32)(dDelay * dDelayScale * dSamplerate);
 
                 // normal processing
                 if (tDelay < tDelayEnd)
@@ -54,14 +55,14 @@ double EnvelopeDADSR::Process(void)
                 break;
 
             case ENVELOPE_DADSR_STATE_ATTACK:
-                tAttackEnd = (VstInt32)(dAttack * dAttackScale * mSamplerate);
+                tAttackEnd = (VstInt32)(dAttack * dAttackScale * dSamplerate);
 
                 // normal processing
                 if (dAttack > LOWEST)
-                    div = dAttack * dAttackScale * mSamplerate;
+                    div = dAttack * dAttackScale * dSamplerate;
                 else
-                    div = LOWEST * dAttackScale * mSamplerate;
-                res = (double)tAttack / div;
+                    div = LOWEST * dAttackScale * dSamplerate;
+                dOutput = (double)tAttack / div;
 
                 if (tAttack < tAttackEnd)
                     tAttack++;
@@ -70,14 +71,14 @@ double EnvelopeDADSR::Process(void)
                 break;
 
             case ENVELOPE_DADSR_STATE_DECAY:
-                tDecayEnd = (VstInt32)(dDecay * dDecayScale * mSamplerate);
+                tDecayEnd = (VstInt32)(dDecay * dDecayScale * dSamplerate);
 
                 // normal processing
                 if (dDecay > LOWEST)
-                    div = dDecay * dDecayScale * mSamplerate;
+                    div = dDecay * dDecayScale * dSamplerate;
                 else
-                    div = LOWEST * dDecayScale * mSamplerate;
-                res = (((double)tDecay * (dSustain - 1.0)) / div) + 1.0;
+                    div = LOWEST * dDecayScale * dSamplerate;
+                dOutput = (((double)tDecay * (dSustain - 1.0)) / div) + 1.0;
 
                 if (tDecay < tDecayEnd)
                     tDecay++;
@@ -86,19 +87,18 @@ double EnvelopeDADSR::Process(void)
                 break;
 
             case ENVELOPE_DADSR_STATE_SUSTAIN:
-                res = dSustain;
-                dLastLevel = res;
+                dOutput = dSustain;
                 break;
 
             case ENVELOPE_DADSR_STATE_RELEASE:
-                tReleaseEnd = (VstInt32)(dRelease * dReleaseScale * mSamplerate);
+                tReleaseEnd = (VstInt32)(dRelease * dReleaseScale * dSamplerate);
 
                 // normal processing
                 if (dRelease > LOWEST)
-                    div = dRelease * dReleaseScale * mSamplerate;
+                    div = dRelease * dReleaseScale * dSamplerate;
                 else
-                    div = LOWEST * dReleaseScale * mSamplerate;
-                res = (((double)tRelease * (-dLastLevel)) / div) + dLastLevel;
+                    div = LOWEST * dReleaseScale * dSamplerate;
+                dOutput = (((double)tRelease * (-dLastLevel)) / div) + dLastLevel;
 
                 if (tRelease < tReleaseEnd)
                     tRelease++;
@@ -121,6 +121,6 @@ double EnvelopeDADSR::Process(void)
     {
         Reset();
     }
-    dLastLevel = res;
-    return res;
+    dLastLevel = dOutput;
+    return dOutput;
 }

@@ -23,7 +23,10 @@ namespace eLibV2
         public:
             BaseModule() :
                 BaseName("BaseModule")
-            {}
+            {
+                m_dSamplerate = 44100.0;
+                m_dTempo = 120.0;
+            }
             virtual ~BaseModule() {}
 
             /**
@@ -35,16 +38,29 @@ namespace eLibV2
             get currently set samplerate
             @return samplerate in Hz
             */
-            virtual double getSamplerate(void) { return mSamplerate; }
+            virtual double getSamplerate(void) { return m_dSamplerate; }
 
             /**
             set samplerate for module
             @param Samplerate samplerate in Hz
             */
-            virtual void setSamplerate(const double Samplerate) { mSamplerate = Samplerate; }
+            virtual void setSamplerate(const double Samplerate) { m_dSamplerate = Samplerate; }
+
+            /**
+            get currently set tempo
+            @return tempo in beats-per-minute
+            */
+            virtual double getTempo(void) { return m_dTempo; }
+
+            /**
+            set tempo for module
+            @param Tempo tempo in beats-per-minute
+            */
+            virtual void setTempo(const double Tempo) { m_dTempo = Tempo; }
 
         protected:
-            double mSamplerate; ///< internally used samplerate
+            double m_dSamplerate;   ///< internally used samplerate
+            double m_dTempo;        ///< Tempo to sync with
         };
     }
 }

@@ -46,6 +46,9 @@ cascaded graphic eq constant-q
 
 effects:
 
+sync to host tempo
+-> in progress
+
 delay-line
 -> working
 
@@ -69,6 +72,7 @@ phaser
 -> working
 
 reverb
+-> working
 
 tremolo/panning
 
@@ -82,20 +86,22 @@ compressor/limiter
 -> working
 
 expander/gate
-
+-> working
 
 envelope detector
 -> working (parameters need matching)
+
+spectral compressor
 
 envelope follower
 
 second input line
 
 oversampling:
-- add n-1 zeros between each sample (n is oversampling-factor)
-- kill all freqs above the regular nyquist-freq
+- pad each sample with n-1 zeros (n is oversampling-factor)
+- kill all freqs above the original nyquist-freq
 . do processing
-- kill all freqs above the regular nyquist-freq again
+- kill all freqs above the original nyquist-freq again
 - drop every added sample
-
+-> creates delay of n-1-samples
 

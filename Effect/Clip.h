@@ -32,7 +32,8 @@ namespace eLibV2
 
         public:
             Clip(std::string name = "Clip") :
-                BaseName(name)
+                BaseName(name),
+                BaseConnection(CLIP_CONNECTION_NUM)
             {
                 Init();
             }

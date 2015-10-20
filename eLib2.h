@@ -47,6 +47,7 @@
 #include <Effect/Phaser.h>
 #include <Effect/Resample.h>
 #include <Effect/RMSCalc.h>
+#include <Effect/RoomReverb.h>
 #include <Effect/SelectorBlock.h>
 #include <Effect/SignalAdd.h>
 #include <Effect/SimpleComp.h>
@@ -59,10 +60,14 @@
 #include <Filter/ButterworthHPF.h>
 #include <Filter/ButterworthLPF.h>
 #include <Filter/CascadedEQConstantQ.h>
+#include <Filter/CombFilter.h>
+#include <Filter/CombFilterLPF.h>
+#include <Filter/DelayAPF.h>
 #include <Filter/HiShelving.h>
 #include <Filter/LoShelving.h>
 #include <Filter/LinkwitzRileyHPF.h>
 #include <Filter/LinkwitzRileyLPF.h>
+#include <Filter/OnePoleLPF.h>
 #include <Filter/ParametricConstantQ.h>
 #include <Filter/ResonantBPF.h>
 #include <Filter/ResonantBSF.h>

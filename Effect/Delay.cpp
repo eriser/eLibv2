@@ -6,6 +6,7 @@ void Delay::Init(void)
 {
     m_iWriteIndex = 0;
     m_iReadIndex = 0;
+    setSyncTempo(false);
     setDelayLength(1000);
     setMixLevel(0.5);
     setFeedbackMode(FEEDBACK_MODE_INTERNAL);
@@ -25,15 +26,23 @@ void Delay::adjustIndices(void)
     m_iWriteIndex = ModuleHelper::wrap(m_iWriteIndex, DELAY_BUFFER_SIZE - 1);
 }
 
-void Delay::setDelayLength(unsigned int length)
+void Delay::setDelayLength(const double Length)
 {
-    unsigned int input = ModuleHelper::clamp(length, 1, DELAY_BUFFER_SIZE - 1);
-    if (m_iDelayLength != input)
+    m_dDelayLength = Length;
+    if (m_bSyncTempo)
     {
-        m_iDelayLength = input;
-        m_iReadIndex = m_iWriteIndex - m_iDelayLength;
-        adjustIndices();
+        // prevent out of bounds
+        unsigned char syncIndex = ModuleHelper::clamp((unsigned char)((double)((Length)* 8.5)), 0, NUM_SYNC_FACTORS - 1);
+        m_iDelayLengthInSamples = ModuleHelper::quarter2samples(m_dSyncFactors[syncIndex], getTempo(), getSamplerate());
     }
+    else
+        // length is in milliseconds
+        m_iDelayLengthInSamples = Length;
+//        m_iDelayLengthInSamples = (int)(((double)Length / 1000.0) * getSamplerate());
+
+    m_iDelayLengthInSamples = ModuleHelper::clamp(m_iDelayLengthInSamples, 1, DELAY_BUFFER_SIZE - 1);
+    m_iReadIndex = m_iWriteIndex - m_iDelayLengthInSamples;
+    adjustIndices();
 }
 
 double Delay::Process(const double Input)
@@ -47,9 +56,9 @@ double Delay::Process(const double Input)
         dFeedback = m_dInternalFeedback;
     else if (m_eFeedbackMode == FEEDBACK_MODE_EXTERNAL)
         dFeedback = m_dExternalFeedback;
-    m_pBuffer[m_iWriteIndex++] = Input + dFeedback;
+    m_pBuffer[m_iWriteIndex++] = Input + dFeedback * m_dFeedbackLevel;
 
-    m_dInternalFeedback = m_pBuffer[m_iReadIndex++] * m_dFeedbackLevel;
+    m_dInternalFeedback = m_pBuffer[m_iReadIndex++];
     adjustIndices();
 
     return dOutput;

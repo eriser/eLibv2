@@ -32,11 +32,11 @@ namespace eLibV2
                 m_pLFO->setFreq(0.01);
                 m_pLFO->setWaveform(Generator::BaseWavetable::WAVETABLE_WAVEFORM_TRIANGLE_BL);
 
-                m_pScaler = new Connection::ScalerConnection("phaser.lfo.scaler", 500.0, 500.0);
+                m_pScaler = new Connection::ScalerConnection("flanger.lfo.scaler", 500.0, 500.0);
                 m_pScaler->attachInput(m_pLFO);
 
                 m_pDelay = new Effect::Delay();
-                m_pDelay->setFeedbackLevel(0.5);
+                m_pDelay->setFeedbackLevel(0.0);
                 m_pDelay->attachDelayLength(m_pScaler);
 
                 m_bBypass = false;

@@ -44,10 +44,11 @@ namespace eLibV2
             void calcCoefficients(void)
             {
                 double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
+                double dSamplerate = getSamplerate();
 
                 if (m_iOrder == 1)
                 {
-                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / dSamplerate), -PI_DIV_2, PI_DIV_2);
                     double Alpha = (tan(argtan) - 1.0) / (tan(argtan) + 1.0);
 
                     a0 = Alpha;
@@ -58,9 +59,9 @@ namespace eLibV2
                 }
                 else if (m_iOrder == 2)
                 {
-                    double argtan = ModuleHelper::clamp(((PI * m_dQ) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double argtan = ModuleHelper::clamp(((PI * m_dQ) / dSamplerate), -PI_DIV_2, PI_DIV_2);
                     double Alpha = (tan(argtan) - 1.0) / (tan(argtan) + 1.0);
-                    double ThetaC = 2.0 * PI * m_dCutoff / mSamplerate;
+                    double ThetaC = 2.0 * PI * m_dCutoff / dSamplerate;
                     double Beta = -cos(ThetaC);
 
                     a0 = -Alpha;

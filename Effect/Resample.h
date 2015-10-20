@@ -59,7 +59,7 @@ namespace eLibV2
         private:
             void adjustSamplePeriod()
             {
-                m_dSamplePeriod = mSamplerate / m_dRate;
+                m_dSamplePeriod = getSamplerate() / m_dRate;
             }
 
         private:

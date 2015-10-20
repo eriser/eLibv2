@@ -49,7 +49,7 @@ namespace eLibV2
 
                 if (m_iOrder == 2)
                 {
-                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / getSamplerate()), -PI_DIV_2, PI_DIV_2);
                     double C = 1.0 / tan(argtan);
                     double C2 = C * C;
 

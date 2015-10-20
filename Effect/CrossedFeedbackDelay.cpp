@@ -5,6 +5,7 @@ using namespace eLibV2::Effect;
 void CrossedFeedbackDelay::Init()
 {
     setDelayMode(DELAY_MODE_NORMAL);
+    setSyncTempo(false);
 }
 
 void CrossedFeedbackDelay::setSamplerate(const double Samplerate)
@@ -14,6 +15,15 @@ void CrossedFeedbackDelay::setSamplerate(const double Samplerate)
         m_pDelayLeft->setSamplerate(Samplerate);
     if (m_pDelayRight)
         m_pDelayRight->setSamplerate(Samplerate);
+}
+
+void CrossedFeedbackDelay::setTempo(const double Tempo)
+{
+    BaseModule::setTempo(Tempo);
+    if (m_pDelayLeft)
+        m_pDelayLeft->setTempo(Tempo);
+    if (m_pDelayRight)
+        m_pDelayRight->setTempo(Tempo);
 }
 
 void CrossedFeedbackDelay::setDelayMode(const DelayMode delayMode)

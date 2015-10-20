@@ -51,16 +51,17 @@ void BaseSequencer::addSteps(long Count)
 
 double BaseSequencer::Process(const double Input)
 {
-    double ret;
+    double dOutput;
     long lNeededSamplePosition = 0;
+    double dSamplerate = getSamplerate();
 
-    ret = getStepValue(lCurrentStepIndex);
+    dOutput = getStepValue(lCurrentStepIndex);
 
     lCurrentSamplePosition++;
     if (bSync)
-        lNeededSamplePosition = (long)ModuleHelper::quarter2samples(dSpeed, dBpm, mSamplerate);
+        lNeededSamplePosition = (long)ModuleHelper::quarter2samples(dSpeed, dBpm, dSamplerate);
     else
-        lNeededSamplePosition = (long)ModuleHelper::ms2samples(dSpeed * 1000, mSamplerate);
+        lNeededSamplePosition = (long)ModuleHelper::ms2samples(dSpeed * 1000, dSamplerate);
 
     if (lCurrentSamplePosition >= lNeededSamplePosition)
     {
@@ -69,5 +70,5 @@ double BaseSequencer::Process(const double Input)
         lCurrentStepIndex %= SequencerData.size();
     }
 
-    return ret ;
+    return dOutput;
 }

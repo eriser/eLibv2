@@ -34,7 +34,7 @@ namespace eLibV2
 
             void calcCoefficients(void)
             {
-                double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
+                double ThetaC = (2.0 * PI * m_dCutoff) / getSamplerate();
                 ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
                 double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;

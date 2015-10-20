@@ -72,22 +72,26 @@ void EnvelopeDetector::setSamplerate(const double Samplerate)
 
 void EnvelopeDetector::setAttack(const double Attack)
 {
+    double dSamplerate = getSamplerate();
+
     m_dAttack = Attack;
 
     if (m_eTCMode == ENVELOPEDETECTOR_TCMODE_ANALOG)
-        m_dAttackScaled = exp(ANALOG_TC / (m_dAttack * mSamplerate * 0.001));
+        m_dAttackScaled = exp(ANALOG_TC / (m_dAttack * dSamplerate * 0.001));
     else
-        m_dAttackScaled = exp(DIGITAL_TC / (m_dAttack * mSamplerate * 0.001));
+        m_dAttackScaled = exp(DIGITAL_TC / (m_dAttack * dSamplerate * 0.001));
 }
 
 void EnvelopeDetector::setRelease(const double Release)
 {
+    double dSamplerate = getSamplerate();
+
     m_dRelease = Release;
 
     if (m_eTCMode == ENVELOPEDETECTOR_TCMODE_ANALOG)
-        m_dReleaseScaled = exp(ANALOG_TC / (m_dRelease * mSamplerate * 0.001));
+        m_dReleaseScaled = exp(ANALOG_TC / (m_dRelease * dSamplerate * 0.001));
     else
-        m_dReleaseScaled = exp(DIGITAL_TC / (m_dRelease * mSamplerate * 0.001));
+        m_dReleaseScaled = exp(DIGITAL_TC / (m_dRelease * dSamplerate * 0.001));
 }
 
 void EnvelopeDetector::setTCMode(const TCMode TCMode)

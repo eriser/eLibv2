@@ -36,12 +36,13 @@ namespace eLibV2
             void calcCoefficients(void)
             {
                 double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
+                double dSamplerate = getSamplerate();
 
                 if (m_iOrder == 2)
                 {
-                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff * m_dBW) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff * m_dBW) / dSamplerate), -PI_DIV_2, PI_DIV_2);
                     double C = tan(argtan);
-                    double D = 2.0 * cos((2.0 * PI * m_dCutoff) / mSamplerate);
+                    double D = 2.0 * cos((2.0 * PI * m_dCutoff) / dSamplerate);
 
                     a0 = 1.0 / (1.0 + C);
                     a1 = -a0 * D;

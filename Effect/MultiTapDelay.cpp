@@ -44,8 +44,8 @@ double MultiTapDelay::Process(const double Input)
     double dOutput = 0.0, dFeedback = 0.0;
 
     // read old input and write new
-    dOutput = 0.25 * m_pBuffer[m_iReadIndex[0]] * m_dMixLevel + Input * (1.0 - m_dMixLevel);
-    dOutput += 0.25 * m_pBuffer[m_iReadIndex[1]++] + 0.25 * m_pBuffer[m_iReadIndex[2]++] + 0.25 * m_pBuffer[m_iReadIndex[3]++];
+    dOutput = 0.5 * m_pBuffer[m_iReadIndex[0]] * m_dMixLevel + Input * (1.0 - m_dMixLevel);
+    dOutput += 0.25 * m_pBuffer[m_iReadIndex[1]++] + 0.125 * m_pBuffer[m_iReadIndex[2]++] + 0.0625 * m_pBuffer[m_iReadIndex[3]++];
     dFeedback = m_dInternalFeedback;
     m_pBuffer[m_iWriteIndex++] = Input + dFeedback;
 

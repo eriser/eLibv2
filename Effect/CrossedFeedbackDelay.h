@@ -53,6 +53,7 @@ namespace eLibV2
             virtual double Process(const double Input) { return 0.0; }
             virtual double processConnection(void) { return 0.0; }
             virtual void setSamplerate(const double Samplerate);
+            virtual void setTempo(const double Tempo);
 
             void Process(const double input1, const double input2, double* output1, double* output2);
 
@@ -69,7 +70,7 @@ namespace eLibV2
                     m_pDelayRight->setFeedbackLevel(FeedbackLevel);
             }
 
-            void setDelayLength(const unsigned int DelayLength)
+            void setDelayLength(const double DelayLength)
             {
                 if (m_pDelayLeft)
                     m_pDelayLeft->setDelayLength(DelayLength);
@@ -85,6 +86,16 @@ namespace eLibV2
                     m_pDelayRight->setMixLevel(MixLevel);
             }
 
+            void setSyncTempo(const bool SyncTempo)
+            {
+                m_bSyncTempo = SyncTempo;
+                if (m_pDelayLeft)
+                    m_pDelayLeft->setSyncTempo(SyncTempo);
+                if (m_pDelayRight)
+                    m_pDelayRight->setSyncTempo(SyncTempo);
+            }
+            bool getSyncTempo(void) { return m_bSyncTempo; }
+
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[CFBDELAY_CONNECTION_BYPASS] = connection; }
             void attachInput(BaseConnection *connection) { inputConnections[CFBDELAY_CONNECTION_INPUT] = connection; }
@@ -92,6 +103,7 @@ namespace eLibV2
         private:
             Delay *m_pDelayLeft, *m_pDelayRight;
             DelayMode m_eDelayMode;
+            bool m_bSyncTempo;
         };
     }
 }

@@ -25,7 +25,7 @@ namespace eLibV2
                 double res = value;
                 if (res < 0.0)
                 {
-                    while (res < range)
+                    while ((res < 0.0) && (res < range))
                         res += range;
                 }
                 else

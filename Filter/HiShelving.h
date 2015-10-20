@@ -40,7 +40,7 @@ namespace eLibV2
 
                 if (m_iOrder == 1)
                 {
-                    double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
+                    double ThetaC = (2.0 * PI * m_dCutoff) / getSamplerate();
                     ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
                     double Mu = pow(10, (m_dGain / 20.0));
@@ -60,7 +60,7 @@ namespace eLibV2
                 }
                 else if (m_iOrder == 2)
                 {
-                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double argtan = ModuleHelper::clamp(((PI * m_dCutoff) / getSamplerate()), -PI_DIV_2, PI_DIV_2);
 
                     double K = tan(argtan);
                     double K2 = K * K;

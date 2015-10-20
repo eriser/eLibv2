@@ -39,7 +39,7 @@ namespace eLibV2
                 {
                     double OmegaC = PI * m_dCutoff;
                     double OmegaC2 = OmegaC * OmegaC;
-                    double ThetaC = ModuleHelper::clamp((OmegaC / mSamplerate), -PI_DIV_2, PI_DIV_2);
+                    double ThetaC = ModuleHelper::clamp((OmegaC / getSamplerate()), -PI_DIV_2, PI_DIV_2);
 
                     double Kappa = OmegaC / tan(ThetaC);
                     double Kappa2 = Kappa * Kappa;

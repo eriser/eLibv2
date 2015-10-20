@@ -38,7 +38,7 @@ namespace eLibV2
 
                 if (m_iOrder == 2)
                 {
-                    double ThetaC = (2.0 * PI * m_dCutoff) / mSamplerate;
+                    double ThetaC = (2.0 * PI * m_dCutoff) / getSamplerate();
                     ThetaC = ModuleHelper::minval(ThetaC, mMinimumThetaC);
 
                     double argtan = ThetaC * (m_dBW / 2.0);

@@ -39,7 +39,7 @@ void BaseOscillator::setSamplerate(const double Samplerate)
 
 void BaseOscillator::adjustScaler()
 {
-    m_dScaler = BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / mSamplerate;
+    m_dScaler = BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / getSamplerate();
 }
 
 void BaseOscillator::setCoarse(double Coarse)
