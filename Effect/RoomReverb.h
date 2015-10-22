@@ -54,8 +54,24 @@ namespace eLibV2
 
         public:
             void setMixLevel(const double MixLevel) { m_dMixLevel = MixLevel; }
-
             void setRT60(const double RT60);
+            void setPreDelayGain(const double PreDelayGain) { m_dPreDelayGain = PreDelayGain; }
+            void setPreDelayLength(const double PreDelayLength)
+            {
+                m_dPreDelayLength = PreDelayLength;
+                m_pPreDelay->setDelayLength(ModuleHelper::ms2samples(m_dPreDelayLength, getSamplerate()));
+            }
+            void setInputBandwidth(const double InputBandwidth)
+            {
+                m_dInputBandwidth = InputBandwidth;
+                m_pInputLPF->setGain(m_dInputBandwidth);
+            }
+            void setOutputDamping(const double OutputDamping)
+            {
+                m_dOutputDamping = OutputDamping;
+                m_pOutputLPF[0]->setGain(m_dOutputDamping);
+                m_pOutputLPF[1]->setGain(m_dOutputDamping);
+            }
 
             double getSecondOutput(void) { return m_dSecondOutput; }
 
@@ -64,7 +80,8 @@ namespace eLibV2
             void attachInput(BaseConnection *connection) { inputConnections[ROOMREVERB_CONNECTION_INPUT] = connection; }
 
         private:
-            double m_dPreDelayGain;
+            double m_dPreDelayGain, m_dPreDelayLength;
+            double m_dInputBandwidth, m_dOutputDamping;
             double m_dReverbTimeRT60;
             double m_dMixLevel;
             double m_dSecondOutput;

@@ -5,11 +5,14 @@ using namespace eLibV2::Effect;
 void RoomReverb::Init()
 {
     m_dPreDelayGain = 1.0;
+    m_dPreDelayLength = 40.0;
+    m_dInputBandwidth = 0.45;
+    m_dOutputDamping = 0.5;
     m_dReverbTimeRT60 = 1000.0;
     m_dMixLevel = 0.5;
 
-    m_pPreDelay->setDelayLength(ModuleHelper::ms2samples(40.0, getSamplerate()));
-    m_pInputLPF->setGain(0.45);
+    m_pPreDelay->setDelayLength(ModuleHelper::ms2samples(m_dPreDelayLength, getSamplerate()));
+    m_pInputLPF->setGain(m_dInputBandwidth);
     m_pInputAPF[0]->setDelayLength(ModuleHelper::ms2samples(13.28, getSamplerate()));
     m_pInputAPF[0]->setGain(0.7);
     m_pInputAPF[1]->setDelayLength(ModuleHelper::ms2samples(28.13, getSamplerate()));
@@ -30,8 +33,8 @@ void RoomReverb::Init()
     m_pCombLPFRight[0]->setGainRT60(m_dReverbTimeRT60);
     m_pCombLPFRight[1]->setDelayLength(ModuleHelper::ms2samples(42.58, getSamplerate()));
     m_pCombLPFRight[1]->setGainRT60(m_dReverbTimeRT60);
-    m_pOutputLPF[0]->setGain(0.5);
-    m_pOutputLPF[1]->setGain(0.5);
+    m_pOutputLPF[0]->setGain(m_dOutputDamping);
+    m_pOutputLPF[1]->setGain(m_dOutputDamping);
     m_pOutputAPF[0]->setDelayLength(ModuleHelper::ms2samples(9.39, getSamplerate()));
     m_pOutputAPF[0]->setGain(-0.6);
     m_pOutputAPF[1]->setDelayLength(ModuleHelper::ms2samples(11, getSamplerate()));
@@ -45,7 +48,7 @@ double RoomReverb::Process(const double Input)
 
     if (!m_bBypass)
     {
-        double dPreDelayOut = m_pPreDelay->Process(Input);
+        double dPreDelayOut = m_pPreDelay->Process(Input) * m_dPreDelayGain;
         double dInputAPF1Out = m_pInputAPF[0]->Process(dPreDelayOut);
         double dInputAPF2Out = m_pInputAPF[1]->Process(dInputAPF1Out);
         double dInputLPFOut = m_pInputLPF->Process(dInputAPF2Out);
