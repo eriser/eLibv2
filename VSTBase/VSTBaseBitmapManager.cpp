@@ -14,18 +14,16 @@ void VSTBaseBitmapManager::clearAll()
     if (mBitmaps.size())
     {
         for (std::map<std::string, CBitmap *>::iterator it = mBitmaps.begin(); it != mBitmaps.end(); it++)
-        {
             it->second->forget();
-            it->second = NULL;
-        }
-
-        for (std::map<unsigned int, CBitmap *>::iterator it = mBackgroundBitmaps.begin(); it != mBackgroundBitmaps.end(); it++)
-        {
-            it->second->forget();
-            it->second = NULL;
-        }
+        mBitmaps.clear();
     }
-    mBitmaps.clear();
+
+    if (mBackgroundBitmaps.size())
+    {
+        for (std::map<unsigned int, CBitmap *>::iterator it = mBackgroundBitmaps.begin(); it != mBackgroundBitmaps.end(); it++)
+            it->second->forget();
+        mBackgroundBitmaps.clear();
+    }
 }
 
 void VSTBaseBitmapManager::addBackgroundBitmap(const unsigned int pageIndex, CBitmap *bitmap)

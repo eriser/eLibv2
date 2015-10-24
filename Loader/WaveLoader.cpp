@@ -194,8 +194,10 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                     byteOffset += Wave.format.BlockAlign;
                 }
             }
-            free(TempByteBuffer);
-            TempByteBuffer = 0;
+            if (TempByteBuffer)
+                free(TempByteBuffer);
+            TempByteBuffer = NULL;
+
             Wave.data.DataPtr = WaveData;
         }
         else
@@ -207,9 +209,11 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
             }
         }
     }
+
     if (buf)
         delete[] buf;
     buf = NULL;
+
     wavefile.close();
     m_bLoaded = true;
     return WAVE_ERROR_NO_ERROR;

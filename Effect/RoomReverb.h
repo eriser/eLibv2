@@ -42,7 +42,47 @@ namespace eLibV2
                 }
                 Init();
             }
-            virtual ~RoomReverb() {}
+            virtual ~RoomReverb()
+            {
+                if (m_pPreDelay)
+                    delete m_pPreDelay;
+                m_pPreDelay = NULL;
+
+                if (m_pInputLPF)
+                    delete m_pInputLPF;
+                m_pInputLPF = NULL;
+
+                for (int i = 0; i < 2; ++i)
+                {
+                    if (m_pInputAPF[i])
+                        delete m_pInputAPF[i];
+                    m_pInputAPF[i] = NULL;
+
+                    if (m_pCombLeft[i])
+                        delete m_pCombLeft[i];
+                    m_pCombLeft[i] = NULL;
+
+                    if (m_pCombLPFLeft[i])
+                        delete m_pCombLPFLeft[i];
+                    m_pCombLPFLeft[i] = NULL;
+
+                    if (m_pCombRight[i])
+                        delete m_pCombRight[i];
+                    m_pCombRight[i] = NULL;
+
+                    if (m_pCombLPFRight[i])
+                        delete m_pCombLPFRight[i];
+                    m_pCombLPFRight[i] = NULL;
+
+                    if (m_pOutputLPF[i])
+                        delete m_pOutputLPF[i];
+                    m_pOutputLPF[i] = NULL;
+
+                    if (m_pOutputAPF[i])
+                        delete m_pOutputAPF[i];
+                    m_pOutputAPF[i] = NULL;
+                }
+            }
 
         public:
             /* inherited */

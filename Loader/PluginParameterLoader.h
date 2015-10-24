@@ -54,8 +54,8 @@ namespace eLibV2
                         if ((*nodeIt)->getName() == "parameter")
                         {
                             std::string id, label;
-                            PluginParameter::ParameterType type;
-                            double min, max;
+                            PluginParameter::ParameterType type = PluginParameter::ParameterTypeDouble;
+                            double min = 0.0, max = 0.0, init = 0.0;
 
                             StringMap attributes = (*nodeIt)->getAttributes();
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
@@ -80,8 +80,10 @@ namespace eLibV2
                                     min = atof(attributeValue.c_str());
                                 else if (attributeName == "max")
                                     max = atof(attributeValue.c_str());
+                                else if (attributeName == "init")
+                                    init = atof(attributeValue.c_str());
                             }
-                            PluginParameter parameter(id, label, type, min, max);
+                            PluginParameter parameter(id, label, type, min, max, init);
                             parameters.push_back(parameter);
                         }
                     }

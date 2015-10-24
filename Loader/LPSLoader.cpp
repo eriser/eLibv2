@@ -139,18 +139,20 @@ int LPSLoader::Load(std::string filename)
         }
 
         /* cleanup buffers */
-        if (helper)
-            delete[] helper;
-        helper = NULL;
         if (TrackCompressed)
             delete TrackCompressed;
         TrackCompressed = NULL;
+
         if (TempBuffer)
             delete TempBuffer;
         TempBuffer = NULL;
     }
     lpsfile.close();
     ModuleLogger::print(LOG_CLASS_LOADER, "File '%s' successfully loaded", filename.c_str());
+
+    if (helper)
+        delete[] helper;
+    helper = NULL;
 
     FileLoaded = true;
     return LPS_ERROR_NONE;

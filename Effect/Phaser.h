@@ -73,10 +73,23 @@ namespace eLibV2
 
             virtual ~Phaser()
             {
-                delete m_pLFO;
-                for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
-                    delete m_pFilterStages[stageIndex];
-                delete m_pScaler;
+                if (m_pInput)
+                    delete m_pInput;
+                m_pInput = NULL;
+
+                if (m_pLFO)
+                    delete m_pLFO;
+                m_pLFO = NULL;
+
+                if (m_pScaler)
+                    delete m_pScaler;
+                m_pScaler = NULL;
+
+                if (m_pFilterStages)
+                {
+                    for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
+                        delete m_pFilterStages[stageIndex];
+                }
             }
 
         public:

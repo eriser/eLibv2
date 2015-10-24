@@ -29,7 +29,13 @@ namespace eLibV2
             {
                 Init();
             }
-            virtual ~WaveWrap() { if (triangle) delete[] triangle; }
+
+            virtual ~WaveWrap()
+            {
+                if (triangle)
+                    delete[] triangle;
+                triangle = NULL;
+            }
 
         public:
             /* inherited */

@@ -28,6 +28,11 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties pro
     suspend();
 }
 
+VSTBaseClass::~VSTBaseClass()
+{
+
+}
+
 //------------------------------------------------------------------------
 // attach externally provided programs to plugin
 //------------------------------------------------------------------------
@@ -53,7 +58,7 @@ void VSTBaseClass::attachMidiEventHandler(MidiEventHandler *handler)
 //------------------------------------------------------------------------
 void VSTBaseClass::attachParameter(PluginParameter *param, Connection::InputConnection *inputConnection)
 {
-    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::attachParameter");
+    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::attachParameter: %s %s", param->getId().c_str(), param->getLabel().c_str());
     mParameters.push_back(param);
     mParameterConnections.push_back(inputConnection);
 }
@@ -76,9 +81,15 @@ void VSTBaseClass::setProgram(VstInt32 program)
     ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::setProgram: %d", program);
     if ((VstInt32)mPrograms.size() > program)
     {
-        for (VstInt16 ParamIndex = 0; ParamIndex < mProperties.getNumParameters(); ParamIndex++)
-            setParameter(ParamIndex, mPrograms[program].getParameter(ParamIndex));
         mCurrentProgram = program;
+        for (VstInt16 ParamIndex = 0; ParamIndex < mProperties.getNumParameters(); ParamIndex++)
+        {
+            double ParamValue = mPrograms[program].getParameter(ParamIndex);
+            ModuleLogger::print(LOG_CLASS_VSTBASE, "index: %d %lf", ParamIndex, ParamValue);
+
+            setParameter(ParamIndex, ParamValue);
+        }
+
         AudioEffectX::updateDisplay();
     }
 }
@@ -128,12 +139,16 @@ void VSTBaseClass::setParameter(VstInt32 index, float value)
     setParameterInvoked(index, value);
 
     ModuleLogger::print(LOG_CLASS_VSTBASE, "%li %li %p", index, mParameterConnections.size(), mParameterConnections[index]);
-    // process connected inputs
+    /// TODO process connected inputs
     if (index < mParameterConnections.size() && mParameterConnections[index])
     {
         ModuleLogger::print(LOG_CLASS_VSTBASE, "setValue");
         mParameterConnections[index]->setInput(getParameterScaled(index));
     }
+
+    // set editor as well
+    if (mProperties.hasEditor())
+        ((AEffGUIEditor*)editor)->setParameter(index, value);
 }
 
 //------------------------------------------------------------------------

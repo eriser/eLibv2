@@ -33,7 +33,12 @@ namespace eLibV2
 
                 Init();
             }
-            virtual ~MultiTapDelay() {}
+            virtual ~MultiTapDelay()
+            {
+                if (m_pBuffer)
+                    delete[] m_pBuffer;
+                m_pBuffer = NULL;
+            }
 
             /* inherited */
             virtual void Init(void);

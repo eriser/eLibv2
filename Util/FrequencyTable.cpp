@@ -9,10 +9,10 @@ void FrequencyTable::SetupFreqs(void)
 {
     // make frequency (Hz) table
     double k = 1.059463094359;  // 12th root of 2
-    double a = 1.71875; // a
+    double a = 6.875; // 1.71875; // a
     a *= k;     // b
     a *= k;     // bb
-    a *= k;     // c, frequency of midi note 0
+    a *= k;     // c, frequency of midi note 0, should be 8.1757989156 Hz
 
     // 128 midi notes
     for (unsigned char FreqIndex = 0; FreqIndex < kNumNotes; FreqIndex++)

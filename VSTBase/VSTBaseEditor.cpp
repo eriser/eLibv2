@@ -24,6 +24,13 @@ void VSTBaseEditor::setupEditor(const EditorProperties properties)
             bitmapManager.addBackgroundBitmap(it->first, new CBitmap(it->second));
     }
 
+    // load all control bitmaps
+    for (std::map<std::string, unsigned int>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
+    {
+        if ((it->first != "") && (it->second != 0))
+            bitmapManager.addBitmap(it->first, new CBitmap(it->second));
+    }
+
     // init the size of the plugin
     mActivePage = 0;
     rect.left   = 0;
@@ -60,13 +67,6 @@ bool VSTBaseEditor::open(void *ptr)
 
     lFrame->addView(mEditorPage[mActivePage]);
 
-    // load all control bitmaps
-    for (std::map<std::string, unsigned int>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
-    {
-        if ((it->first != "") && (it->second != 0))
-            bitmapManager.addBitmap(it->first, new CBitmap(it->second));
-    }
-
     // init things in open method of derived class (design pattern "template method" ;-) )
     openInvoked();
 
@@ -81,18 +81,25 @@ void VSTBaseEditor::close()
 {
     ModuleLogger::print(LOG_CLASS_VSTBASE, "close editor");
 
-    // clear all editor pages
-    mEditorPage.clear();
-
-    mKickButtons.clear();
-
-    // forget all control bitmaps
-    for (std::map<std::string, unsigned int>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
-        bitmapManager.forgetBitmap(it->first);
+#if VSTGUI_VERSION_MAJOR == 3 && VSTGUI_VERSION_MINOR == 0
+    // !!! always call this !!!
+    AEffGUIEditor::close();
+#endif
 
     if (frame)
+    {
+        // add all non-child container
+        for (std::vector<CViewContainer*>::iterator it = mEditorPage.begin(); it != mEditorPage.end(); ++it)
+        {
+            if (!frame->isChild((*it)))
+                frame->addView((*it));
+        }
         delete frame;
-    frame = 0;
+    }
+
+    // remove controls and editor pages
+    removeControls();
+    mEditorPage.clear();
 }
 
 void VSTBaseEditor::idle()
@@ -132,13 +139,42 @@ void VSTBaseEditor::setControlValue(const EditorParameter::ControlType type, con
 {
     switch (type)
     {
+        case EditorParameter::OnOffButton:
+            if (mOnOffButtons.count(tag) != 0)
+                mOnOffButtons[tag]->setValue(value);
+            break;
+
+        case EditorParameter::KickButton:
+            if (mKickButtons.count(tag) != 0)
+                mKickButtons[tag]->setValue(value);
+            break;
+
+        case EditorParameter::AnimKnob:
+            if (mAnimKnobs.count(tag) != 0)
+                mAnimKnobs[tag]->setValue(value);
+            break;
+
         case EditorParameter::MovieBitmap:
             if (mMovieBitmap.count(tag) != 0)
-            {
                 mMovieBitmap[tag]->setValue(value);
-            }
             break;
     }
+}
+
+void VSTBaseEditor::removeControls()
+{
+    if (mOnOffButtons.size())
+        mOnOffButtons.clear();
+    if (mKickButtons.size())
+        mKickButtons.clear();
+    if (mTextLabels.size())
+        mTextLabels.clear();
+    if (mOptionMenus.size())
+        mOptionMenus.clear();
+    if (mAnimKnobs.size())
+        mAnimKnobs.clear();
+    if (mMovieBitmap.size())
+        mMovieBitmap.clear();
 }
 
 void VSTBaseEditor::attachToPage(const VstInt32 pageIndex, CView* control)

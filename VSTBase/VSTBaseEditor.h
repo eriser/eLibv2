@@ -69,6 +69,11 @@ namespace eLibV2
             */
             void attachToPage(const VstInt32 pageIndex, CView* control);
 
+            /**
+            remove all created controls
+            */
+            void removeControls();
+
         protected:
             /**
             abstract method which is called when editor is opened

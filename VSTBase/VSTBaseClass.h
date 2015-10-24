@@ -1,10 +1,14 @@
 #ifndef VSTBASECLASS_H_
 #define VSTBASECLASS_H_
 
+// std includes
 #include <sstream>
 
+// VST includes
 #include <audioeffectx.h>
+#include <aeffguieditor.h>
 
+// eLib includes
 #include <Connection/InputConnection.h>
 #include <Util/Defines.h>
 #include <Util/Logger.h>
@@ -31,7 +35,7 @@ namespace eLibV2
         {
             public:
                 VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties);
-                ~VSTBaseClass() {}
+                virtual ~VSTBaseClass();
 
                 PluginProperties getProperties() { return mProperties; }
 

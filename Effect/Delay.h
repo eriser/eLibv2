@@ -46,7 +46,12 @@ namespace eLibV2
 
                 Init();
             }
-            virtual ~Delay() {}
+            virtual ~Delay()
+            {
+                if (m_pBuffer)
+                    delete[] m_pBuffer;
+                m_pBuffer = NULL;
+            }
 
             /* inherited */
             virtual void Init(void);
