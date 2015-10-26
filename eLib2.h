@@ -52,6 +52,7 @@
 #include <Effect/SignalAdd.h>
 #include <Effect/SimpleComp.h>
 #include <Effect/VCF.h>
+#include <Effect/WaveShaper.h>
 #include <Effect/WaveWrap.h>
 
 // filter modules
