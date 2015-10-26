@@ -25,7 +25,7 @@ namespace eLibV2
             enum ClipMode
             {
                 CLIP_MODE_UNDEF = 0,
-                CLIP_MODE_POSITIVE = 0,
+                CLIP_MODE_POSITIVE,
                 CLIP_MODE_NEGATIVE,
                 CLIP_MODE_BOTH
             };

@@ -51,6 +51,7 @@
 #include <Effect/SelectorBlock.h>
 #include <Effect/SignalAdd.h>
 #include <Effect/SimpleComp.h>
+#include <Effect/TremoloPanner.h>
 #include <Effect/VCF.h>
 #include <Effect/WaveShaper.h>
 #include <Effect/WaveWrap.h>

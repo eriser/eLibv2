@@ -4,40 +4,34 @@ using namespace eLibV2::Effect;
 
 void Clip::Init()
 {
-    setClipLevel(1.0);
+    setClipLevel(CLIP_LEVEL_MAX);
     setClipMode(CLIP_MODE_POSITIVE);
 }
 
 double Clip::Process(const double Input)
 {
-    double res = 0.0;
+    double dOutput = Input;
 
     switch (eClipMode)
     {
         case CLIP_MODE_POSITIVE:
             if (Input > dClipLevel)
-                res = dClipLevel;
-            else
-                res = Input;
+                dOutput = dClipLevel;
             break;
 
         case CLIP_MODE_NEGATIVE:
             if (Input < -dClipLevel)
-                res = -dClipLevel;
-            else
-                res = Input;
+                dOutput = -dClipLevel;
             break;
 
         case CLIP_MODE_BOTH:
             if (Input < -dClipLevel)
-                res = -dClipLevel;
+                dOutput = -dClipLevel;
             else if (Input > dClipLevel)
-                res = dClipLevel;
-            else
-                res = Input;
+                dOutput = dClipLevel;
             break;
     }
-    return res;
+    return dOutput;
 }
 
 double Clip::processConnection(void)

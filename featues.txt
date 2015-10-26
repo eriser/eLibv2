@@ -75,10 +75,12 @@ reverb
 -> working
 
 tremolo/panning
+-> working
 
 ring modulator
 
 waveshaper
+-> working
 
 dynamics processor:
 
