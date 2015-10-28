@@ -28,7 +28,8 @@ namespace eLibV2
 
         public:
             CrossedFeedbackDelay(std::string name = "CrossedFeedbackDelay") :
-                BaseName(name)
+                BaseName(name),
+                BaseConnection(CFBDELAY_CONNECTION_NUM)
             {
                 m_pDelayLeft = new Delay();
                 m_pDelayLeft->setFeedbackLevel(0.707);
@@ -104,6 +105,7 @@ namespace eLibV2
             Delay *m_pDelayLeft, *m_pDelayRight;
             DelayMode m_eDelayMode;
             bool m_bSyncTempo;
+            double m_dSecondOutput;
         };
     }
 }

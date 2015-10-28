@@ -6,7 +6,9 @@ void TremoloPanner::Init()
 {
     setMode(TREMOLOPANNER_MODE_TREMOLO);
     setLFOFreq(1.0);
-    m_dSecondOutput = 0;
+    setBypass(false);
+    setModulationDepth(0.0);
+    m_pOutputConnection->setInput(0.0);
 }
 
 double TremoloPanner::Process(const double Input1, const double Input2)
@@ -19,14 +21,14 @@ double TremoloPanner::Process(const double Input1, const double Input2)
     {
         case TREMOLOPANNER_MODE_TREMOLO:
             dOutput = Input1 * (dLFOOutput * m_dModulationDepth + 1.0 - m_dModulationDepth);
-            m_dSecondOutput = Input2 * (dLFOOutput * m_dModulationDepth + 1.0 - m_dModulationDepth);
+            m_pOutputConnection->setInput(Input2 * (dLFOOutput * m_dModulationDepth + 1.0 - m_dModulationDepth));
             break;
 
         case TREMOLOPANNER_MODE_PANNER:
             double dPan = m_dModulationDepth * (dLFOOutput + 1.0) * PI_DIV_2 * 0.5;
 
             dOutput = Input1 * cos(dPan);
-            m_dSecondOutput = Input2 * sin(dPan);
+            m_pOutputConnection->setInput(Input2 * sin(dPan));
             break;
     }
     return dOutput;

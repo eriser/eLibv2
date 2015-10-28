@@ -2,6 +2,7 @@
 #define MODTREMOLOPANNER_H_
 
 #include <Base/BaseEffect.h>
+#include <Connection/InputConnection.h>
 #include <Generator/BaseLFO.h>
 #include <Util/Helper.h>
 
@@ -35,6 +36,7 @@ namespace eLibV2
                 BaseConnection(TREMOLOPANNER_CONNECTION_NUM)
             {
                 m_pLFO = new Generator::BaseLFO();
+                m_pOutputConnection = new Connection::InputConnection();
 
                 Init();
             }
@@ -43,6 +45,10 @@ namespace eLibV2
                 if (m_pLFO)
                     delete m_pLFO;
                 m_pLFO = NULL;
+
+                if (m_pOutputConnection)
+                    delete m_pOutputConnection;
+                m_pOutputConnection = NULL;
             }
 
             /* inherited */
@@ -74,10 +80,10 @@ namespace eLibV2
                 return dFreq;
             }
 
-            double getSecondOutput(void) { return m_dSecondOutput; }
-
             // own process-method for 2 inputs
             virtual double Process(const double Input1, const double Input2);
+
+            BaseConnection* getSecondOutput(void) { return m_pOutputConnection; }
 
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[TREMOLOPANNER_CONNECTION_BYPASS] = connection; }
@@ -86,10 +92,10 @@ namespace eLibV2
             void attachLFORate(BaseConnection *connection) { inputConnections[TREMOLOPANNER_CONNECTION_LFOFREQ] = connection; }
 
         private:
+            Connection::InputConnection *m_pOutputConnection;
             Generator::BaseLFO *m_pLFO;
             TremoloPannerMode m_eMode;
             double m_dModulationDepth;
-            double m_dSecondOutput;
         };
     }
 }
