@@ -72,7 +72,7 @@ void BaseWavetable::Init()
         smplhold = new double[WAVETABLE_SAMPLE_SIZE];
 
         // create waveforms
-        for (UInt16 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
+        for (UInt32 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
         {
             // bandlimited waveforms
             sine[SampleIndex] = sin((2.0 * PI * (SampleIndex / (double)WAVETABLE_SAMPLE_SIZE)));
@@ -156,7 +156,7 @@ void BaseWavetable::Init()
         }
 
         // normalize bandlimited waveforms
-        for (UInt16 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
+        for (UInt32 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
         {
             triangle_bl[SampleIndex] /= triangle_bl_max;
             sawup_bl[SampleIndex] /= sawup_bl_max;

@@ -1,7 +1,6 @@
 #ifndef MODWAVELOADER_H_
 #define MODWAVELOADER_H_
 
-#error wwwdwdf
 #include <Base/BaseModule.h>
 #include <Util/Types.h>
 
