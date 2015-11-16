@@ -12,7 +12,7 @@ typedef signed __int64 SInt64;      ///< 64 bit integer type
 typedef unsigned __int64 UInt64;    ///< 64 bit integer type
 #else
 #include <stdint.h>
-typedef int8_t char;       ///< 8 bit integer type
+typedef int8_t SInt8;       ///< 8 bit integer type
 typedef uint8_t UInt8;      ///< 8 bit integer type
 typedef int16_t SInt16;     ///< 16 bit integer type
 typedef uint16_t UInt16;    ///< 16 bit integer type

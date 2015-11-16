@@ -5,7 +5,6 @@
 #include <Filter/OnePoleLPF.h>
 #include <Effect/Delay.h>
 #include <Util/Defines.h>
-#include <cmath>
 
 namespace eLibV2
 {

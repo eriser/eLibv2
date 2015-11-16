@@ -5,9 +5,9 @@
 #include <Loader/WaveLoader.h>
 #include <Util/Helper.h>
 
-#include <time.h>
-#include <math.h>
-#include <stdlib.h>
+#include <ctime>
+#include <cmath>
+#include <cstdlib>
 
 #include <string>
 #include <vector>

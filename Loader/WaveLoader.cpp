@@ -16,7 +16,7 @@ void WaveLoader::Init()
     SizeOfData = 0;
 }
 
-float *WaveLoader::getWaveData(BYTE channel)
+float *WaveLoader::getWaveData(UInt8 channel)
 {
     if (m_bLoaded && channel < Wave.format.NumChannels)
         return WaveData[channel];
@@ -27,9 +27,9 @@ float *WaveLoader::getWaveData(BYTE channel)
 WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
 {
     std::ifstream wavefile;
-    ULONG i, NumRemain, NumPages;
-    BYTE* buf = new BYTE[MAX_WAVE_BUFFER];
-    BYTE *TempByteBuffer;
+    UInt32 i, NumRemain, NumPages;
+    UInt8* buf = new UInt8[MAX_WAVE_BUFFER];
+    UInt8 *TempByteBuffer;
 
     wavefile.open(filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!wavefile.good())
@@ -91,7 +91,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 if (Wave.format.ExtraFormatLng)
                 {
                     for (i = 0; i < Wave.format.ExtraFormatLng; i++)
-                        wavefile.read((char*)buf, sizeof(BYTE));
+                        wavefile.read((char*)buf, sizeof(UInt8));
                 }
             }
         }
@@ -99,7 +99,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         else if (strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_DATA, 4) == 0)
         {
             ModuleLogger::print(LOG_CLASS_LOADER, "data-Chunk size: %li", Chunk.ChunkSize);
-            TempByteBuffer = (BYTE*)malloc(Chunk.ChunkSize);
+            TempByteBuffer = (UInt8*)malloc(Chunk.ChunkSize);
 
             NumRemain = Chunk.ChunkSize % MAX_WAVE_BUFFER;
             NumPages = (Chunk.ChunkSize - NumRemain) / MAX_WAVE_BUFFER;
@@ -137,7 +137,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 // iterate over samples
                 for (SInt32 sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
                 {
-                    __int32 tempData = 0;
+                    SInt32 tempData = 0;
                     // input data will be stored left-aligned
                     switch (Wave.format.BitsPerSample)
                     {
@@ -209,7 +209,7 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         // cue chunk
         else if (strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_CUE, 4) == 0)
         {
-            DWORD numCues;
+            UInt32 numCues;
             cueChunk cuePoint;
             wavefile.read((char*)&numCues, sizeof(numCues));
             ModuleLogger::print(LOG_CLASS_LOADER, "cue chunk: '%li'", numCues);

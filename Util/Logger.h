@@ -68,7 +68,7 @@ namespace eLibV2
             Enable given logging classes
             @param classes the logging classes to activate
             */
-            static void enable(UInt16 classes) { EnableLoggingClasses(loggingClasses | classes); }
+            static void enable(SInt32 classes) { EnableLoggingClasses(loggingClasses | classes); }
 
             /**
             Disable all logging classes, so no message will be printed
@@ -79,7 +79,7 @@ namespace eLibV2
             Disable given logging classes
             @param classes the logging classes to deactivate
             */
-            static void disable(UInt16 classes) { EnableLoggingClasses(loggingClasses & ~classes); }
+            static void disable(SInt32 classes) { EnableLoggingClasses(loggingClasses & ~classes); }
 
             /**
             All outputs will be sent to the console
@@ -96,15 +96,15 @@ namespace eLibV2
             @param loggingClass class set for message
             @param format format of message according to printf
             */
-            static void print(UInt16 loggingClass, const char* format, ...);
+            static void print(SInt32 loggingClass, const char* format, ...);
 
         private:
-            static void EnableLoggingClasses(UInt16 classes) { loggingClasses = classes; }
-            static bool LoggingClassesEnabled(UInt16 classes) { return (loggingClasses & classes); }
+            static void EnableLoggingClasses(SInt32 classes) { loggingClasses = classes; }
+            static bool LoggingClassesEnabled(SInt32 classes) { return (loggingClasses & classes); }
 
         private:
             ModuleLogger();
-            static UInt16 loggingClasses;
+            static SInt32 loggingClasses;
             static OutputType outputType;
 
             static const SInt16 DEBUG_BUFFER_LEN = 1024;

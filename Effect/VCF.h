@@ -3,8 +3,6 @@
 
 #include <Base/BaseEffect.h>
 
-#include <math.h>
-
 namespace eLibV2
 {
     namespace Effect

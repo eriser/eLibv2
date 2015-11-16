@@ -42,7 +42,7 @@ SInt16 LPSLoader::Load(std::string filename)
 {
     std::ifstream lpsfile;
     UInt32 numread, tracknum, NumRemain, NumPages;
-    BYTE* helper = new BYTE[LPS_MAXREADBUF];
+    UInt8* helper = new UInt8[LPS_MAXREADBUF];
     
     // cleanup previously used memory
     Unload();
@@ -110,26 +110,26 @@ SInt16 LPSLoader::Load(std::string filename)
         ModuleLogger::print(LOG_CLASS_LOADER, "Name: %s Ptr: %p %p %p Len: %li %li", LPSTracks[tracknum]->Name, LPSTracks[tracknum], TrackData[tracknum], helper, LPSTracks[tracknum]->LengthCompressed, LPSTracks[tracknum]->LengthUnCompressed);
 
         /* allocate temp buffers */
-        TrackCompressed = new BYTE[LPSTracks[tracknum]->LengthCompressed];
+        TrackCompressed = new UInt8[LPSTracks[tracknum]->LengthCompressed];
         LengthUncompressed = LPSTracks[tracknum]->LengthUnCompressed * 2;
-        TempBuffer = new BYTE[LengthUncompressed];
+        TempBuffer = new UInt8[LengthUncompressed];
 
         /* fast readout of file */
         NumRemain = LPSTracks[tracknum]->LengthCompressed % LPS_MAXREADBUF;
         NumPages = (LPSTracks[tracknum]->LengthCompressed - NumRemain) / LPS_MAXREADBUF;
         for (numread = 0; numread < NumPages; numread++)
         {
-            lpsfile.read((char*)helper, sizeof(BYTE) * LPS_MAXREADBUF);
+            lpsfile.read((char*)helper, sizeof(UInt8) * LPS_MAXREADBUF);
             memcpy(&TrackCompressed[numread * LPS_MAXREADBUF], helper, LPS_MAXREADBUF);
         }
         if (NumRemain)
         {
-            lpsfile.read((char*)helper, sizeof(BYTE) * NumRemain);
+            lpsfile.read((char*)helper, sizeof(UInt8) * NumRemain);
             memcpy(&TrackCompressed[NumPages * LPS_MAXREADBUF], helper, NumRemain);
         }
 
         /* uncompress file data */
-        uncompress(TempBuffer, &LengthUncompressed, TrackCompressed, LPSTracks[tracknum]->LengthCompressed);
+        uncompress(TempBuffer, (uLongf*)&LengthUncompressed, TrackCompressed, LPSTracks[tracknum]->LengthCompressed);
         /* convert and copy temp buffer to destination */
         SInt16 help = 0;
         for (numread = 0; numread < LengthUncompressed / 2; numread++)
@@ -166,7 +166,7 @@ void LPSLoader::getName(char *name)
         strcpy(name, "");
 }
 
-USHORT LPSLoader::getBPM(void)
+UInt16 LPSLoader::getBPM(void)
 {
     if (FileLoaded)
         return LPSFile.BPM;
@@ -174,7 +174,7 @@ USHORT LPSLoader::getBPM(void)
         return 0;
 }
 
-ULONG LPSLoader::getMaxLengthTracks(void)
+UInt32 LPSLoader::getMaxLengthTracks(void)
 {
     if (FileLoaded)
         return LPSFile.MaxLengthTracks;
@@ -182,7 +182,7 @@ ULONG LPSLoader::getMaxLengthTracks(void)
         return 0;
 }
 
-USHORT LPSLoader::getNumTracks(void)
+UInt16 LPSLoader::getNumTracks(void)
 {
     if (FileLoaded)
         return LPSFile.NumTracks;
@@ -198,7 +198,7 @@ void LPSLoader::getTrackName(char *name, SInt16 TrackIndex)
         strcpy(name, "");
 }
 
-ULONG LPSLoader::getTrackSize(SInt16 TrackIndex)
+UInt32 LPSLoader::getTrackSize(SInt16 TrackIndex)
 {
     if (FileLoaded)
         return LPSFile.TrackData[TrackIndex]->LengthUnCompressed;

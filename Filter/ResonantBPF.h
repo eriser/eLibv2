@@ -3,7 +3,6 @@
 
 #include <Base/BaseFilter.h>
 #include <Util/Defines.h>
-#include <cmath>
 
 namespace eLibV2
 {

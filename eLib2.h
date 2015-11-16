@@ -10,10 +10,6 @@
 #include <Connection/MultiplierConection.h>
 #include <Connection/ScalerConnection.h>
 
-// data types
-#include <Data/PluginParameter.h>
-#include <Data/PluginProgram.h>
-
 // loader modules
 #include <Loader/EditorParameterLoader.h>
 #include <Loader/LPSLoader.h>
@@ -87,10 +83,5 @@
 #include <Util/Logger.h>
 #include <Util/ParamRandom.h>
 #include <Util/Types.h>
-
-// VSTBase
-#include <VSTBase/VSTBaseBitmapManager.h>
-#include <VSTBase/VSTBaseClass.h>
-#include <VSTBase/VSTBaseEditor.h>
 
 #endif

@@ -38,20 +38,20 @@ namespace eLibV2
 
             struct lpsData
             {
-                BYTE    Name[64];                       // Name der Spur
-                ULONG   LengthCompressed;               // L�nge der komprimierten Spur
-                ULONG   LengthUnCompressed;             // L�nge der unkomprimierten Spur
+                UInt8   Name[64];                       // Name der Spur
+                UInt32  LengthCompressed;               // L�nge der komprimierten Spur
+                UInt32  LengthUnCompressed;             // L�nge der unkomprimierten Spur
                 double  *Data;                          // Daten
             };
 
             struct lpsHeader
             {
-                BYTE    Magic[4];                       // "sLps"-Kennung
-                ULONG   Version;                        // Erstellt f�r Version
-                BYTE    Name[64];                       // Loop-Name
-                USHORT  BPM;                            // Geschwindigkeit
-                ULONG   MaxLengthTracks;                // L�nge der l�ngsten Spur
-                USHORT  NumTracks;                      // Anzahl Spuren
+                UInt8   Magic[4];                       // "sLps"-Kennung
+                UInt32  Version;                        // Erstellt f�r Version
+                UInt8   Name[64];                       // Loop-Name
+                UInt16  BPM;                            // Geschwindigkeit
+                UInt32  MaxLengthTracks;                // L�nge der l�ngsten Spur
+                UInt16  NumTracks;                      // Anzahl Spuren
                 lpsData *TrackData[LPS_MAXTRACKS];      // Daten der einzelnen Spuren
             };
 
@@ -70,19 +70,19 @@ namespace eLibV2
 
             // getter methods for LPSfile
             void getName(char *name);
-            USHORT getBPM(void);
-            ULONG getMaxLengthTracks(void);
-            USHORT getNumTracks(void);
+            UInt16 getBPM(void);
+            UInt32 getMaxLengthTracks(void);
+            UInt16 getNumTracks(void);
 
             // getter methods for LPStracks
             void getTrackName(char *name, SInt16 TrackIndex);
-            ULONG getTrackSize(SInt16 TrackIndex);
+            UInt32 getTrackSize(SInt16 TrackIndex);
             double *getTrackPointer(SInt16 TrackIndex);
             double getTrackData(SInt16 TrackIndex, SInt16 DataIndex);
 
         private:
-            BYTE *TrackCompressed, *TempBuffer;
-            ULONG LengthUncompressed;
+            UInt8 *TrackCompressed, *TempBuffer;
+            UInt32 LengthUncompressed;
 
             // file and data pointers
             struct lpsHeader LPSFile;

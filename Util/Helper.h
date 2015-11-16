@@ -3,6 +3,8 @@
 
 #include <Util/Types.h>
 
+#include <cmath>
+
 namespace eLibV2
 {
     namespace Util

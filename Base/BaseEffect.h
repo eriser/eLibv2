@@ -3,6 +3,8 @@
 
 #include <Base/BaseModule.h>
 
+#include <cmath>
+
 namespace eLibV2
 {
     namespace Base

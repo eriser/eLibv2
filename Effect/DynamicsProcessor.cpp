@@ -53,14 +53,14 @@ double DynamicsProcessor::Process(const double Input)
         {
             double x[2], y[2];
             x[0] = m_dThreshold - m_dKneeWidth / 2.0;
-            x[1] = min(0.0, m_dThreshold + m_dKneeWidth / 2.0);
+            x[1] = ModuleHelper::minval(0.0, m_dThreshold + m_dKneeWidth / 2.0);
             y[0] = 0;
             y[1] = dSlope;
 
             dSlope = ModuleHelper::LagrangeInterpolation(x, y, 2, dDetectedValueIndB);
         }
 
-        double dGain = min(0.0, dSlope * (m_dThreshold - dDetectedValueIndB));
+        double dGain = ModuleHelper::minval(0.0, dSlope * (m_dThreshold - dDetectedValueIndB));
         dGain = ModuleHelper::dB2value(dGain);
 
         double dOutputGain = ModuleHelper::dB2value(m_dOutputGainIndB);

@@ -97,9 +97,9 @@ namespace eLibV2
             */
             struct waveHeader
             {
-                BYTE Magic[4];              ///< should be "RIFF"
-                ULONG Size;                 ///< Filesize in Bytes without Header and Size
-                BYTE RiffType[4];           ///< should be "WAVE"
+                UInt8 Magic[4];              ///< should be "RIFF"
+                UInt32 Size;                 ///< Filesize in Bytes without Header and Size
+                UInt8 RiffType[4];           ///< should be "WAVE"
             };
 
             /**
@@ -107,9 +107,9 @@ namespace eLibV2
             */
             struct chunkData
             {
-                BYTE ChunkID[4];            ///< Type of WaveChunk
-                ULONG ChunkSize;            ///< Size of Chunk
-                BYTE* Data;                 ///< Data of Chunk
+                UInt8 ChunkID[4];            ///< Type of WaveChunk
+                UInt32 ChunkSize;            ///< Size of Chunk
+                UInt8* Data;                 ///< Data of Chunk
             };
 
             /**
@@ -117,14 +117,14 @@ namespace eLibV2
             */
             typedef struct fmtChunk
             {
-                USHORT Compression;         ///< Type of Compression
-                USHORT NumChannels;         ///< Number of Channels (1 = Mono, 2 = Stereo, ...)
-                ULONG SampleRate;           ///< Samplerate in Hertz
-                ULONG BytesPerSec;          ///< Average Bytes per Second
-                USHORT BlockAlign;          ///< Block Align (bytes per frame * channels)
-                USHORT BitsPerSample;       ///< Significant Bits per Sample
-                USHORT ExtraFormatLng;      ///< Length of Extra Format
-                BYTE* ExtraFormatData;      ///< Extra Format Bytes
+                UInt16 Compression;         ///< Type of Compression
+                UInt16 NumChannels;         ///< Number of Channels (1 = Mono, 2 = Stereo, ...)
+                UInt32 SampleRate;           ///< Samplerate in Hertz
+                UInt32 BytesPerSec;          ///< Average Bytes per Second
+                UInt16 BlockAlign;          ///< Block Align (bytes per frame * channels)
+                UInt16 BitsPerSample;       ///< Significant Bits per Sample
+                UInt16 ExtraFormatLng;      ///< Length of Extra Format
+                UInt8* ExtraFormatData;      ///< Extra Format Bytes
             } WaveFormat;
 
             /**
@@ -140,12 +140,12 @@ namespace eLibV2
             */
             struct cueChunk
             {
-                DWORD  dwName;
-                DWORD  dwPosition;
-                FOURCC fccChunk;
-                DWORD  dwChunkStart;
-                DWORD  dwBlockStart;
-                DWORD  dwSampleOffset;
+                UInt32  dwName;
+                UInt32  dwPosition;
+                UInt32  fccChunk;
+                UInt32  dwChunkStart;
+                UInt32  dwBlockStart;
+                UInt32  dwSampleOffset;
             };
 
             /**
@@ -186,7 +186,7 @@ namespace eLibV2
             @param channel the channel to retrieve data for
             @return pointer to data
             */
-            float *getWaveData(BYTE channel);
+            float *getWaveData(UInt8 channel);
 
             /**
             get size of loaded wavefile in samples
@@ -202,7 +202,7 @@ namespace eLibV2
 
         private:
             void Init(void);
-            float Int32toFloat32(__int32 input)
+            float Int32toFloat32(SInt32 input)
             {
                 double sc = fScaler32 + .49999;
                 float output = ((double)input / sc);

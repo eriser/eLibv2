@@ -4,7 +4,6 @@
 #include <Base/BaseFilter.h>
 #include <Filter/EnhancedBiQuad.h>
 #include <Util/Defines.h>
-#include <cmath>
 
 namespace eLibV2
 {

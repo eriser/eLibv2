@@ -4,8 +4,6 @@
 #include <Base/BaseEffect.h>
 #include <Util/Helper.h>
 
-#include <math.h>
-
 namespace eLibV2
 {
     namespace Effect

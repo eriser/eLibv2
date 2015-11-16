@@ -2,10 +2,10 @@
 
 using namespace eLibV2::Util;
 
-UInt16 ModuleLogger::loggingClasses = 0;
+SInt32 ModuleLogger::loggingClasses = 0;
 ModuleLogger::OutputType ModuleLogger::outputType = ModuleLogger::OUTPUT_TYPE_DBGVIEW;
 
-void ModuleLogger::print(UInt16 loggingClass, const char* format, ...)
+void ModuleLogger::print(SInt32 loggingClass, const char* format, ...)
 {
 #ifdef _DEBUG
     if (!LoggingClassesEnabled(loggingClass))
