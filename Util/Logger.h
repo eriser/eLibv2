@@ -1,7 +1,9 @@
 #ifndef MODLOGGER_H_
 #define MODLOGGER_H_
 
+#ifdef WIN32
 #include <windows.h>
+#endif
 
 #include <cstdio>
 #include <iostream>
@@ -56,7 +58,9 @@ namespace eLibV2
             enum OutputType
             {
                 OUTPUT_TYPE_CONSOLE,
+#ifdef WIN32
                 OUTPUT_TYPE_DBGVIEW,
+#endif
             };
 
             /**
@@ -86,10 +90,12 @@ namespace eLibV2
             */
             static void setConsole(void) { outputType = OUTPUT_TYPE_CONSOLE; }
 
+#ifdef WIN32
             /**
             All output will be sent to debugging output
             */
             static void setDebugView(void) { outputType = OUTPUT_TYPE_DBGVIEW; }
+#endif
 
             /**
             Print message

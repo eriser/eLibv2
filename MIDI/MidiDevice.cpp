@@ -110,5 +110,5 @@ void CALLBACK MidiDevice::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR
 }
 
 #else
-#error "MidiDevice currently implemented only on Windows"
+//#error "MidiDevice currently implemented only on Windows"
 #endif

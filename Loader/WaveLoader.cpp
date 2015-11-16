@@ -14,6 +14,7 @@ void WaveLoader::Init()
     m_bLoaded = false;
     memset(&Wave, 0, sizeof(Wave));
     SizeOfData = 0;
+    fScaler32 = (double)0x7fffffffL;
 }
 
 float *WaveLoader::getWaveData(UInt8 channel)

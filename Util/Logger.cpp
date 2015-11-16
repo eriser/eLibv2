@@ -3,7 +3,11 @@
 using namespace eLibV2::Util;
 
 SInt32 ModuleLogger::loggingClasses = 0;
+#ifdef WIN32
 ModuleLogger::OutputType ModuleLogger::outputType = ModuleLogger::OUTPUT_TYPE_DBGVIEW;
+#else
+ModuleLogger::OutputType ModuleLogger::outputType = ModuleLogger::OUTPUT_TYPE_CONSOLE;
+#endif
 
 void ModuleLogger::print(SInt32 loggingClass, const char* format, ...)
 {
@@ -19,10 +23,12 @@ void ModuleLogger::print(SInt32 loggingClass, const char* format, ...)
 
     // append \n at the end
     snprintf(debugBuffer, sizeof(debugBuffer), "%s\n", debugBuffer);
-    if (outputType == ModuleLogger::OUTPUT_TYPE_DBGVIEW)
-        OutputDebugString(debugBuffer);
-    else if (outputType == ModuleLogger::OUTPUT_TYPE_CONSOLE)
+    if (outputType == ModuleLogger::OUTPUT_TYPE_CONSOLE)
         std::cout << debugBuffer << std::endl;
+#ifdef WIN32
+    else if (outputType == ModuleLogger::OUTPUT_TYPE_DBGVIEW)
+        OutputDebugString(debugBuffer);
+#endif
 
     va_end(args);
 #endif

@@ -31,6 +31,6 @@ double RMSCalculator::Process(const double Input)
     mRms = 0.0;
     mSamples = 0;
 
-    double rmsdB = 20.0 * log10(mGain * mRmsSmoothed);
+//    double rmsdB = 20.0 * log10(mGain * mRmsSmoothed);
     return mRmsSmoothed;
 }

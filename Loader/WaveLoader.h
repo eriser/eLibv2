@@ -1,6 +1,7 @@
 #ifndef MODWAVELOADER_H_
 #define MODWAVELOADER_H_
 
+#error wwwdwdf
 #include <Base/BaseModule.h>
 #include <Util/Types.h>
 
@@ -211,7 +212,7 @@ namespace eLibV2
             }
 
         private:
-            const double fScaler32 = (double)0x7fffffffL;
+            double fScaler32;
             struct waveFile Wave;
             struct chunkData Chunk;
             float **WaveData;
