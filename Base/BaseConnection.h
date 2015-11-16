@@ -27,7 +27,7 @@ namespace eLibV2
             };
 
         public:
-            BaseConnection(int numInputs = 1, int numOutputs = 1) :
+            BaseConnection(UInt8 numInputs = 1, UInt8 numOutputs = 1) :
                 numberOfInputs(numInputs),
                 numberOfOutputs(numOutputs)
             {
@@ -54,22 +54,21 @@ namespace eLibV2
             print signal flow of modules
             @param depth identation depth for output
             */
-            virtual void printConnection(int depth = 0)
+            virtual void printConnection(const UInt8 depth = 0)
             {
                 std::stringstream oss;
 
-                depth++;
-                for (int i = 1; i < depth; i++)
+                for (SInt16 i = 1; i <= depth; i++)
                     oss << ' ';
-                oss << getModuleName().c_str() << " (" << (int)getNumberOfInputs() << "/" << (int)getNumberOfOutputs() << ")";
+                oss << getModuleName().c_str() << " (" << (SInt16)getNumberOfInputs() << "/" << (SInt16)getNumberOfOutputs() << ")";
                 ModuleLogger::print(LOG_CLASS_CONNECTION, oss.str().c_str());
 
                 if (inputConnections != NULL)
                 {
-                    for (unsigned char inputIndex = 0; inputIndex < numberOfInputs; ++inputIndex)
+                    for (UInt8 inputIndex = 0; inputIndex < numberOfInputs; ++inputIndex)
                     {
                         if (isInputConnected(inputIndex))
-                            inputConnections[inputIndex]->printConnection(depth);
+                            inputConnections[inputIndex]->printConnection(depth + 1);
                     }
                 }
             }
@@ -79,13 +78,13 @@ namespace eLibV2
             get number of available inputs for module
             @return number of inputs
             */
-            virtual int getNumberOfInputs() { return numberOfInputs; }
+            virtual UInt8 getNumberOfInputs() { return numberOfInputs; }
 
             /**
             get number of available outputs for module
             @return number of outputs
             */
-            virtual int getNumberOfOutputs() { return numberOfOutputs; }
+            virtual UInt8 getNumberOfOutputs() { return numberOfOutputs; }
 
             /**
             check if input with given index is connected
@@ -93,7 +92,7 @@ namespace eLibV2
             @param connectionIndex index of input
             @return true if connected
             */
-            virtual bool isInputConnected(unsigned int connectionIndex)
+            virtual bool isInputConnected(const UInt8 connectionIndex)
             {
                 bool bRes = false;
                 if (connectionIndex < getNumberOfInputs())
@@ -112,7 +111,7 @@ namespace eLibV2
             @param connectionIndex index of output
             @return true if connected
             */
-            virtual bool isOutputConnected(unsigned int connectionIndex)
+            virtual bool isOutputConnected(const UInt8 connectionIndex)
             {
                 bool bRes = false;
                 if (connectionIndex < getNumberOfOutputs())
@@ -126,8 +125,8 @@ namespace eLibV2
             }
 
         protected:
-            const int numberOfInputs; ///< number of inputs available
-            const int numberOfOutputs; ///< number of outputs available
+            const UInt8 numberOfInputs; ///< number of inputs available
+            const UInt8 numberOfOutputs; ///< number of outputs available
 
             BaseConnection** inputConnections;  ///< all input-connections
             BaseConnection** outputConnections; ///< all output-connections

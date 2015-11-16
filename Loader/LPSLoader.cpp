@@ -12,7 +12,7 @@ void LPSLoader::Init()
 {
     FileLoaded = false;
     LPSFile = { 0 };
-    for (int i = 0; i < LPS_MAXTRACKS; i++)
+    for (SInt16 i = 0; i < LPS_MAXTRACKS; i++)
     {
         TrackData[i] = 0;
         LPSTracks[i] = 0;
@@ -21,7 +21,7 @@ void LPSLoader::Init()
 
 void LPSLoader::Unload(void)
 {
-    for (int i = 0; i < LPS_MAXTRACKS; i++)
+    for (SInt16 i = 0; i < LPS_MAXTRACKS; i++)
     {
         if (TrackData[i])
         {
@@ -38,10 +38,10 @@ void LPSLoader::Unload(void)
     FileLoaded = false;
 }
 
-int LPSLoader::Load(std::string filename)
+SInt16 LPSLoader::Load(std::string filename)
 {
     std::ifstream lpsfile;
-    unsigned long numread, tracknum, NumRemain, NumPages;
+    UInt32 numread, tracknum, NumRemain, NumPages;
     BYTE* helper = new BYTE[LPS_MAXREADBUF];
     
     // cleanup previously used memory
@@ -131,7 +131,7 @@ int LPSLoader::Load(std::string filename)
         /* uncompress file data */
         uncompress(TempBuffer, &LengthUncompressed, TrackCompressed, LPSTracks[tracknum]->LengthCompressed);
         /* convert and copy temp buffer to destination */
-        SSHORT help = 0;
+        SInt16 help = 0;
         for (numread = 0; numread < LengthUncompressed / 2; numread++)
         {
             help = (TempBuffer[numread * 2 + 1] << 8) + TempBuffer[numread * 2];
@@ -190,7 +190,7 @@ USHORT LPSLoader::getNumTracks(void)
         return 0;
 }
 
-void LPSLoader::getTrackName(char *name, VstInt16 TrackIndex)
+void LPSLoader::getTrackName(char *name, SInt16 TrackIndex)
 {
     if (FileLoaded)
         sprintf(name, "%s", LPSFile.TrackData[TrackIndex]->Name);
@@ -198,7 +198,7 @@ void LPSLoader::getTrackName(char *name, VstInt16 TrackIndex)
         strcpy(name, "");
 }
 
-ULONG LPSLoader::getTrackSize(VstInt16 TrackIndex)
+ULONG LPSLoader::getTrackSize(SInt16 TrackIndex)
 {
     if (FileLoaded)
         return LPSFile.TrackData[TrackIndex]->LengthUnCompressed;
@@ -206,7 +206,7 @@ ULONG LPSLoader::getTrackSize(VstInt16 TrackIndex)
         return 0;
 }
 
-double *LPSLoader::getTrackPointer(VstInt16 TrackIndex)
+double *LPSLoader::getTrackPointer(SInt16 TrackIndex)
 {
     if (FileLoaded)
         return LPSFile.TrackData[TrackIndex]->Data;
@@ -214,7 +214,7 @@ double *LPSLoader::getTrackPointer(VstInt16 TrackIndex)
         return 0;
 }
 
-double LPSLoader::getTrackData(VstInt16 TrackIndex, VstInt16 DataIndex)
+double LPSLoader::getTrackData(SInt16 TrackIndex, SInt16 DataIndex)
 {
     if (FileLoaded)
         return LPSFile.TrackData[TrackIndex]->Data[DataIndex];

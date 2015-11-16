@@ -8,7 +8,7 @@ void ParamRandomizer::Init(void)
     srand((unsigned)time(NULL));
 }
 
-int ParamRandomizer::AddParam(long Id, double Min, double Max)
+SInt16 ParamRandomizer::AddParam(SInt32 Id, double Min, double Max)
 {
     sRandom tmp;
 
@@ -23,7 +23,7 @@ int ParamRandomizer::AddParam(long Id, double Min, double Max)
         return -1;
 }
 
-int ParamRandomizer::DeleteParam(long Id)
+SInt16 ParamRandomizer::DeleteParam(SInt32 Id)
 {
     if (!RandomizerMap.count(Id))
         return -1;
@@ -33,12 +33,12 @@ int ParamRandomizer::DeleteParam(long Id)
     return 0;
 }
 
-int ParamRandomizer::ProcessParam(long *Id, double *Value)
+SInt16 ParamRandomizer::ProcessParam(SInt32 *Id, double *Value)
 {
-    long i, index;
+    SInt32 i, index;
 
     for (i = 0; i < 5; i++)
-        index = (long)(rand() % RandomizerMap.size());
+        index = (SInt32)(rand() % RandomizerMap.size());
 
     for (RandomizerMapIterator = RandomizerMap.begin(); RandomizerMapIterator != RandomizerMap.end(); RandomizerMapIterator++)
     {

@@ -26,7 +26,7 @@ namespace eLibV2
             @param channel the channel to process
             @param event to insert
             */
-            void insertEvent(const int channel, const MidiEvent& event);
+            void insertEvent(const SInt16 channel, const MidiEvent& event);
 
             /**
             delete event in given channel
@@ -34,7 +34,7 @@ namespace eLibV2
             @param event to delete
             @return true if event was successfully deleted
             */
-            bool deleteEvent(const int channel, const MidiEvent& event);
+            bool deleteEvent(const SInt16 channel, const MidiEvent& event);
 
             /**
             get all events currently bound to given channel
@@ -42,14 +42,14 @@ namespace eLibV2
             @param events a vector filled with all found events
             @return true if events were found on given channel
             */
-            bool getEvents(const int channel, MidiEventVector& events) const;
+            bool getEvents(const SInt16 channel, MidiEventVector& events) const;
 
             /**
             check if channel has currently any events
             @param channel the channel to process
             @return true if any events are currently present
             */
-            bool hasEventsOnChannel(const int channel) const;
+            bool hasEventsOnChannel(const SInt16 channel) const;
 
             /**
             check if there are events on any channel
@@ -60,7 +60,7 @@ namespace eLibV2
             void Init(void) {}
 
         private:
-            bool channelInRange(const int channel) const { return ((channel >= MIDI_CHANNEL_MIN) && (channel < MIDI_CHANNEL_MAX)); }
+            bool channelInRange(const SInt16 channel) const { return ((channel >= MIDI_CHANNEL_MIN) && (channel < MIDI_CHANNEL_MAX)); }
 
             MidiEventVector mMidiEvents[MIDI_CHANNEL_MAX]; ///< events for all channels
         };

@@ -9,8 +9,6 @@ namespace eLibV2
 {
     namespace Base
     {
-        static const VstInt16 GENERATOR_NUM_NOTES = 128; ///< number of notes used in generators
-
         /**
         this module provides methods for generating output signals in its subclasses
         */
@@ -29,7 +27,7 @@ namespace eLibV2
             @param Note input note
             @return the output signal
             */
-            virtual double Process(VstInt16 Note) = 0;
+            virtual double Process(UInt8 Note) = 0;
         };
     }
 }

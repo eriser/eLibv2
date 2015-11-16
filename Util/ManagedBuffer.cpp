@@ -2,38 +2,38 @@
 
 using namespace eLibV2::Util;
 
-ManagedBuffer::ManagedBuffer(int bufferCount, int bufferSize)
+ManagedBuffer::ManagedBuffer(SInt16 bufferCount, SInt16 bufferSize)
     : m_bufferCount(bufferCount),
     m_bufferSize(bufferSize),
     m_readingPosition(NULL),
     m_writingPosition(NULL),
     m_internalBuffer(NULL)
 {
-    m_internalBuffer = new int*[m_bufferCount];
-    for (int bufferIndex = 0; bufferIndex < m_bufferCount; bufferIndex++)
+    m_internalBuffer = new SInt16*[m_bufferCount];
+    for (SInt16 bufferIndex = 0; bufferIndex < m_bufferCount; bufferIndex++)
     {
-        m_internalBuffer[bufferIndex] = new int[m_bufferSize];
-        memset(m_internalBuffer[bufferIndex], 0, m_bufferSize * sizeof(int));
+        m_internalBuffer[bufferIndex] = new SInt16[m_bufferSize];
+        memset(m_internalBuffer[bufferIndex], 0, m_bufferSize * sizeof(SInt16));
     }
 
-    m_readingPosition = new int[m_bufferCount];
-    memset(m_readingPosition, 0, m_bufferCount * sizeof(int));
-    m_writingPosition = new int[m_bufferCount];
-    memset(m_writingPosition, 0, m_bufferCount * sizeof(int));
+    m_readingPosition = new SInt16[m_bufferCount];
+    memset(m_readingPosition, 0, m_bufferCount * sizeof(SInt16));
+    m_writingPosition = new SInt16[m_bufferCount];
+    memset(m_writingPosition, 0, m_bufferCount * sizeof(SInt16));
 }
 
 ManagedBuffer::~ManagedBuffer()
 {
     if (m_internalBuffer)
     {
-        for (int bufferIndex = 0; bufferIndex < m_bufferCount; bufferIndex++)
+        for (SInt16 bufferIndex = 0; bufferIndex < m_bufferCount; bufferIndex++)
             delete[] m_internalBuffer[bufferIndex];
         delete[] m_internalBuffer;
         m_internalBuffer = NULL;
     }
 }
 
-int ManagedBuffer::Read(int bufferIndex, int readSize, int* output)
+SInt16 ManagedBuffer::Read(SInt16 bufferIndex, SInt16 readSize, SInt16* output)
 {
     bool ReadAhead = false;
 
@@ -49,11 +49,11 @@ int ManagedBuffer::Read(int bufferIndex, int readSize, int* output)
 //                ModuleLogger::print("read (%li) from %i [%li]", readSize, m_readingPosition[bufferIndex], bufferIndex);
                 if (m_readingPosition[bufferIndex] + readSize > m_bufferSize)
                 {
-                    int byteCountSecondRead = (m_readingPosition[bufferIndex] + readSize) % m_bufferSize;
-                    int byteCountFirstRead = readSize - byteCountSecondRead;
+                    SInt16 byteCountSecondRead = (m_readingPosition[bufferIndex] + readSize) % m_bufferSize;
+                    SInt16 byteCountFirstRead = readSize - byteCountSecondRead;
 
-                    memcpy(output, m_internalBuffer[bufferIndex] + m_readingPosition[bufferIndex], byteCountFirstRead * sizeof(int));
-                    memcpy(output + byteCountFirstRead, m_internalBuffer[bufferIndex], byteCountSecondRead * sizeof(int));
+                    memcpy(output, m_internalBuffer[bufferIndex] + m_readingPosition[bufferIndex], byteCountFirstRead * sizeof(SInt16));
+                    memcpy(output + byteCountFirstRead, m_internalBuffer[bufferIndex], byteCountSecondRead * sizeof(SInt16));
 
                     m_readingPosition[bufferIndex] = byteCountSecondRead;
 #if 0
@@ -67,7 +67,7 @@ int ManagedBuffer::Read(int bufferIndex, int readSize, int* output)
                 }
                 else
                 {
-                    memcpy(output, m_internalBuffer[bufferIndex] + m_readingPosition[bufferIndex], readSize * sizeof(int));
+                    memcpy(output, m_internalBuffer[bufferIndex] + m_readingPosition[bufferIndex], readSize * sizeof(SInt16));
                     m_readingPosition[bufferIndex] += readSize;
 
 #if 0
@@ -92,7 +92,7 @@ int ManagedBuffer::Read(int bufferIndex, int readSize, int* output)
         return -1; // requested buffer index out of bounds
 }
 
-int ManagedBuffer::Write(int bufferIndex, int writeSize, int* input)
+SInt16 ManagedBuffer::Write(SInt16 bufferIndex, SInt16 writeSize, SInt16* input)
 {
     bool WriteAhead = false;
 
@@ -108,11 +108,11 @@ int ManagedBuffer::Write(int bufferIndex, int writeSize, int* input)
 //                ModuleLogger::print("write (%li) to %i [%li]", writeSize, m_writingPosition[bufferIndex], bufferIndex);
                 if (m_writingPosition[bufferIndex] + writeSize > m_bufferSize)
                 {
-                    int byteCountSecondRead = (m_writingPosition[bufferIndex] + writeSize) % m_bufferSize;
-                    int byteCountFirstRead = writeSize - byteCountSecondRead;
+                    SInt16 byteCountSecondRead = (m_writingPosition[bufferIndex] + writeSize) % m_bufferSize;
+                    SInt16 byteCountFirstRead = writeSize - byteCountSecondRead;
 
-                    memcpy(m_internalBuffer[bufferIndex] + m_writingPosition[bufferIndex], input, byteCountFirstRead * sizeof(int));
-                    memcpy(m_internalBuffer[bufferIndex], input + byteCountFirstRead, byteCountSecondRead * sizeof(int));
+                    memcpy(m_internalBuffer[bufferIndex] + m_writingPosition[bufferIndex], input, byteCountFirstRead * sizeof(SInt16));
+                    memcpy(m_internalBuffer[bufferIndex], input + byteCountFirstRead, byteCountSecondRead * sizeof(SInt16));
 
                     m_writingPosition[bufferIndex] = byteCountSecondRead;
 
@@ -127,7 +127,7 @@ int ManagedBuffer::Write(int bufferIndex, int writeSize, int* input)
                 }
                 else
                 {
-                    memcpy(m_internalBuffer[bufferIndex] + m_writingPosition[bufferIndex], input, writeSize * sizeof(int));
+                    memcpy(m_internalBuffer[bufferIndex] + m_writingPosition[bufferIndex], input, writeSize * sizeof(SInt16));
                     m_writingPosition[bufferIndex] += writeSize;
 
 #if 0

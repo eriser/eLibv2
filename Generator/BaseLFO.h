@@ -31,12 +31,12 @@ namespace eLibV2
             virtual void Init(void);
             virtual double processConnection(void);
 
-            virtual void adjustPhases(VstInt16 Note);
+            virtual void adjustPhases(UInt8 Note);
 
         public:
             /* set and get methods */
             void setFreq(double Freq) { m_dFreq = ModuleHelper::clamp(Freq, 0.005, 100.0); }
-            double getFreq() { return m_dFreq; }
+            double getFreq() const { return m_dFreq; }
 
         public:
             /* attach methods */

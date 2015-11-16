@@ -44,23 +44,23 @@ namespace eLibV2
             /* inherited methods */
             virtual void Init(void);
             virtual void Reset(void);
-            virtual double Process(const VstInt16 Note);
+            virtual double Process(const UInt8 Note);
             virtual double processConnection(void);
             virtual void setSamplerate(const double Samplerate);
 
-            virtual void adjustPhases(VstInt16 Note);
+            virtual void adjustPhases(UInt8 Note);
 
         public:
             /* set and get methods */
-            void setWaveform(VstInt32 Waveform);
+            void setWaveform(SInt32 Waveform);
             void setCoarse(const double Coarse);
             void setFinetune(const double Finetune);
             void adjustScaler();
 
-            VstInt32 getWaveform(void) { return m_lWaveform; }
+            SInt32 getWaveform(void) { return m_lWaveform; }
             double getCoarse(void) { return m_dCoarse; }
             double getFinetune(void) { return m_dFinetune; }
-            VstInt32 getNumWaveforms(void);
+            SInt32 getNumWaveforms(void);
 
             double getQuadOutput(void) { return m_dQuadOutput; }
 
@@ -72,7 +72,7 @@ namespace eLibV2
             void attachFinetune(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_FINETUNE] = connection; }
 
         protected:
-            VstInt32 m_lWaveform;
+            SInt32 m_lWaveform;
             double m_dCoarse, m_dFinetune;
             double m_dPhase, m_dQuadPhase, m_dScaler;
             double m_dQuadOutput;

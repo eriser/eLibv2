@@ -3,7 +3,7 @@
 #ifdef WIN32
 
 using namespace eLibV2::MIDI;
-using namespace eLibV2::Host;
+using namespace eLibV2::VST::Host;
 
 MidiDevice::MidiDevice(const PluginHost* hostThread)
     : m_pHostThread(hostThread),
@@ -20,7 +20,7 @@ void MidiDevice::EnumerateMidiInDevices()
     m_uiNumMidiInDevices = midiInGetNumDevs();
     ss << "midiIn devices: " << m_uiNumMidiInDevices << std::endl;
 
-    for (int deviceIndex = 0; deviceIndex < m_uiNumMidiInDevices; deviceIndex++)
+    for (SInt16 deviceIndex = 0; deviceIndex < m_uiNumMidiInDevices; deviceIndex++)
     {
         MIDIINCAPS MidiInCaps;
         MMRESULT mmr = midiInGetDevCaps(deviceIndex, &MidiInCaps, sizeof(MIDIINCAPS));
@@ -32,7 +32,7 @@ void MidiDevice::EnumerateMidiInDevices()
     ModuleLogger::print(LOG_CLASS_MIDI, ss.str().c_str());
 }
 
-std::string MidiDevice::GetDeviceName(unsigned int deviceIndex)
+std::string MidiDevice::GetDeviceName(UInt16 deviceIndex)
 {
     if (deviceIndex < m_DeviceNames.size())
         return m_DeviceNames[deviceIndex];
@@ -40,7 +40,7 @@ std::string MidiDevice::GetDeviceName(unsigned int deviceIndex)
         return std::string("not found");
 }
 
-bool MidiDevice::OpenDevice(int deviceId)
+bool MidiDevice::OpenDevice(SInt16 deviceId)
 {
     ModuleLogger::print(LOG_CLASS_MIDI, "opening '%s'", m_DeviceNames[deviceId].c_str());
     MMRESULT mmr = midiInOpen(&m_OpenedMidiIn, deviceId, (DWORD_PTR)MidiDevice::CallbackFunction, (DWORD_PTR)m_pHostThread, CALLBACK_FUNCTION | MIDI_IO_STATUS);
@@ -65,7 +65,7 @@ void MidiDevice::CloseDevice()
 void CALLBACK MidiDevice::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
     std::stringstream ss;
-    eLibV2::Host::PluginHost *host = (eLibV2::Host::PluginHost*)dwInstance;
+    eLibV2::VST::Host::PluginHost *host = (eLibV2::VST::Host::PluginHost*)dwInstance;
 
     switch (wMsg)
     {
@@ -79,10 +79,10 @@ void CALLBACK MidiDevice::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR
 
     case MIM_DATA:
     {
-        int midiChannel = LOBYTE(LOWORD(dwParam1)) & 0x0f;
-        int midiStatus = LOBYTE(LOWORD(dwParam1)) & 0xf0;
-        int midiData1 = HIBYTE(LOWORD(dwParam1));
-        int midiData2 = LOBYTE(HIWORD(dwParam1));
+        SInt16 midiChannel = LOBYTE(LOWORD(dwParam1)) & 0x0f;
+        SInt16 midiStatus = LOBYTE(LOWORD(dwParam1)) & 0xf0;
+        SInt16 midiData1 = HIBYTE(LOWORD(dwParam1));
+        SInt16 midiData2 = LOBYTE(HIWORD(dwParam1));
 
         ss << "MIM_DATA received channel: " << midiChannel << " status: " << midiStatus << " data1: " << midiData1 << " data2: " << midiData2;
         if (midiStatus == 0x90)

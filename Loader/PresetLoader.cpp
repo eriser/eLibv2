@@ -6,11 +6,11 @@
 
 using namespace eLibV2::Loader;
 
-int PresetLoader::Load(const std::string& filename)
+SInt16 PresetLoader::Load(const std::string& filename)
 {
     size_t found;
     std::string Filetype;
-    int ret;
+    SInt16 ret;
 
     if (!filename.size())
         return ERR_PRESET_NO_FILENAME;
@@ -34,7 +34,7 @@ int PresetLoader::Load(const std::string& filename)
     return ret;
 }
 
-int PresetLoader::Save(const std::string& filename)
+SInt16 PresetLoader::Save(const std::string& filename)
 {
     char tempstr[12];
 
@@ -49,7 +49,7 @@ int PresetLoader::Save(const std::string& filename)
 
         // output programnames
         OutFile << "static char preset_names[PRESET_NUM][kVstMaxProgNameLen] = {";
-        for (int ProgramIndex = 0; ProgramIndex < Bank.NumPrograms; ProgramIndex++)
+        for (SInt16 ProgramIndex = 0; ProgramIndex < Bank.NumPrograms; ProgramIndex++)
         {
             // new line and indent
             if ((ProgramIndex % MAX_NAMES_PER_LINE) == 0)
@@ -63,10 +63,10 @@ int PresetLoader::Save(const std::string& filename)
 
         // output program values
         OutFile << "double preset_data[PRESET_NUM][PARAM_NUM] = {" << std::endl;
-        for (int ProgramIndex = 0; ProgramIndex < Bank.NumPrograms; ProgramIndex++)
+        for (SInt16 ProgramIndex = 0; ProgramIndex < Bank.NumPrograms; ProgramIndex++)
         {
             OutFile << "{";
-            for (unsigned int ParamIndex = 0; ParamIndex < Bank.Programs.at(ProgramIndex).Params.size(); ParamIndex++)
+            for (UInt16 ParamIndex = 0; ParamIndex < Bank.Programs.at(ProgramIndex).Params.size(); ParamIndex++)
             {
                 if ((ParamIndex % MAX_PARAMS_PER_LINE) == 0)
                 {
@@ -90,7 +90,7 @@ int PresetLoader::Save(const std::string& filename)
     return ERR_PRESET_NO_ERROR;
 }
 
-int PresetLoader::LoadTxtFile(const std::string& Filename)
+SInt16 PresetLoader::LoadTxtFile(const std::string& Filename)
 {
     InFile.open(Filename.c_str(), std::ifstream::in);
     if (!InFile.good())
@@ -166,11 +166,11 @@ input:
     return 0;
 }
 
-int PresetLoader::ReadProgram(void)
+SInt16 PresetLoader::ReadProgram(void)
 {
     fxProgram fxpProgram;
     OutputProgram Program;
-    VstInt32 tempval;
+    SInt32 tempval;
     flint tempdata;
     std::stringstream ss;
 
@@ -216,7 +216,7 @@ int PresetLoader::ReadProgram(void)
     ss << getModuleName() << ": Reading " << fxpProgram.numParams <<  " parameters for program '" <<  fxpProgram.prgName << "'" << std::endl;
     ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
 
-    for (int ii = 0; ii < fxpProgram.numParams; ii++)
+    for (SInt16 ii = 0; ii < fxpProgram.numParams; ii++)
     {
         InFile.read((char*)&tempval, sizeof(tempdata));
         tempdata.i = SwapBytes(tempval);
@@ -226,9 +226,9 @@ int PresetLoader::ReadProgram(void)
     return ERR_PRESET_NO_ERROR;
 }
 
-int PresetLoader::LoadFxpFile(const std::string& Filename)
+SInt16 PresetLoader::LoadFxpFile(const std::string& Filename)
 {
-    int ret = 0;
+    SInt16 ret = 0;
 
     InFile.open(Filename.c_str(), std::ifstream::in | std::ifstream::binary);
     if (!InFile.good())
@@ -241,10 +241,10 @@ int PresetLoader::LoadFxpFile(const std::string& Filename)
     return ret;
 }
 
-int PresetLoader::LoadFxbFile(const std::string& Filename)
+SInt16 PresetLoader::LoadFxbFile(const std::string& Filename)
 {
-    int ret = 0;
-    VstInt32 tempval;
+    SInt16 ret = 0;
+    SInt32 tempval;
     fxBank fxbBank;
     std::stringstream ss;
 
@@ -282,7 +282,7 @@ int PresetLoader::LoadFxbFile(const std::string& Filename)
     ss << getModuleName() << ": Reading " << fxbBank.numPrograms <<  " programs" << std::endl;
     ModuleLogger::print(LOG_CLASS_LOADER, ss.str().c_str());
 
-    for (VstInt32 ProgramIndex = 0; ProgramIndex < fxbBank.numPrograms; ProgramIndex++)
+    for (SInt32 ProgramIndex = 0; ProgramIndex < fxbBank.numPrograms; ProgramIndex++)
     {
         ret = ReadProgram();
         if (ret != ERR_PRESET_NO_ERROR)

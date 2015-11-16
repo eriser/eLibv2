@@ -2,7 +2,7 @@
 
 using namespace eLibV2::ASIO;
 using namespace eLibV2::Loader;
-using namespace eLibV2::Host;
+using namespace eLibV2::VST::Host;
 using namespace eLibV2::Util::Threads;
 
 // asio.cpp uses this explicitly as external reference (bad design)
@@ -48,7 +48,7 @@ void AsioDevice::EnumerateDevices()
     }
 }
 
-std::string AsioDevice::GetDeviceName(unsigned int deviceIndex)
+std::string AsioDevice::GetDeviceName(UInt16 deviceIndex)
 {
     if (deviceIndex < m_DeviceNames.size())
         return m_DeviceNames[deviceIndex];
@@ -192,7 +192,7 @@ ASIOTime* AsioDevice::bufferSwitchTimeInfo(ASIOTime *timeInfo, long index, ASIOB
         if (channel >= managedBuffer->GetBufferCount())
             continue;
 
-        int readSize = managedBuffer->Read(channel, buffSize, source);
+        int readSize = managedBuffer->Read(channel, buffSize, (SInt16*)source);
 #else
         if (!waveLoader.getWaveData(channel))
             continue;

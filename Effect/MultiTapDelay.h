@@ -48,8 +48,8 @@ namespace eLibV2
 
         public:
             /* setter/getter */
-            void setDelayLength(const unsigned int length);
-            unsigned int getDelayLength(void) { m_iDelayLength; }
+            void setDelayLength(const UInt16 length);
+            UInt16 getDelayLength(void) { m_iDelayLength; }
 
             void setMixLevel(const double MixLevel) { m_dMixLevel = MixLevel; }
             double getMixLevel(void) { return m_dMixLevel; }
@@ -68,8 +68,8 @@ namespace eLibV2
         private:
             double *m_pBuffer;
             double m_dMixLevel;
-            unsigned int m_iDelayLength;
-            int m_iReadIndex[4], m_iWriteIndex;
+            UInt16 m_iDelayLength;
+            SInt16 m_iReadIndex[4], m_iWriteIndex;
             double m_dInternalFeedback;
             double m_dFeedbackLevel;
         };

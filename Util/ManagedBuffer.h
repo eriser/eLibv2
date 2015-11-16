@@ -18,21 +18,21 @@ namespace eLibV2
             };
 
         public:
-            ManagedBuffer(int bufferCount = DEFAULT_BUFFER_COUNT, int bufferSize = DEFAULT_BUFFER_SIZE);
+            ManagedBuffer(SInt16 bufferCount = DEFAULT_BUFFER_COUNT, SInt16 bufferSize = DEFAULT_BUFFER_SIZE);
             ~ManagedBuffer();
 
-            int GetBufferCount() { return m_bufferCount; }
-            int GetBufferSize() { return m_bufferSize; }
+            SInt16 GetBufferCount() { return m_bufferCount; }
+            SInt16 GetBufferSize() { return m_bufferSize; }
 
-            int Read(int bufferIndex, int readSize, int* output);
-            int Write(int bufferIndex, int writeSize, int* input);
+            SInt16 Read(SInt16 bufferIndex, SInt16 readSize, SInt16* output);
+            SInt16 Write(SInt16 bufferIndex, SInt16 writeSize, SInt16* input);
 
         private:
-            int     m_bufferCount;
-            int     m_bufferSize;
-            int*    m_readingPosition;
-            int*    m_writingPosition;
-            int**   m_internalBuffer;
+            SInt16     m_bufferCount;
+            SInt16     m_bufferSize;
+            SInt16*    m_readingPosition;
+            SInt16*    m_writingPosition;
+            SInt16**   m_internalBuffer;
         };
     }
 }

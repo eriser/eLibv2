@@ -21,12 +21,12 @@ double Dither::Process(const double Input)
     // which means an integer between -32768 and 32767
 
     // to reach a dithering effect this value is multiplied
-    // by the dithering factor (2 ^ Bitsize) and cast to a long
+    // by the dithering factor (2 ^ Bitsize) and cast to a SInt32
     // resulting in -(2 ^ Bitsize) to (2 ^ Bitsize)
     // after that, the value is cast back to a double and
     // divided by the same dithering factor
-    Scaler = pow(2.0, (int)m_uiBitsize);
-    return ((double)((long)(Input * Scaler)) / Scaler);
+    Scaler = pow(2.0, (SInt16)m_uiBitsize);
+    return ((double)((SInt32)(Input * Scaler)) / Scaler);
 }
 
 double Dither::processConnection(void)
@@ -36,7 +36,7 @@ double Dither::processConnection(void)
     if (isInputConnected(DITHER_CONNECTION_BYPASS))
         m_bBypass = ModuleHelper::double2bool(inputConnections[DITHER_CONNECTION_BYPASS]->processConnection(), 0.5);
     if (isInputConnected(DITHER_CONNECTION_BITSIZE))
-        setBitsize((unsigned int)inputConnections[DITHER_CONNECTION_BITSIZE]->processConnection());
+        setBitsize((UInt16)inputConnections[DITHER_CONNECTION_BITSIZE]->processConnection());
     if (isInputConnected(DITHER_CONNECTION_INPUT))
         dInput = inputConnections[DITHER_CONNECTION_INPUT]->processConnection();
 

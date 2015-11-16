@@ -8,7 +8,7 @@ BaseWavetable* BaseWavetable::instance = 0;
 
 BaseWavetable::~BaseWavetable()
 {
-    for (unsigned int WaveformIndex = 0; WaveformIndex < Waveforms.size(); WaveformIndex++)
+    for (UInt16 WaveformIndex = 0; WaveformIndex < Waveforms.size(); WaveformIndex++)
         DeleteWaveform(WaveformIndex);
 }
 
@@ -23,9 +23,9 @@ void BaseWavetable::Init()
 {
     // prepare random coefficients
     double random = 0.0, sh_random = 0.0;
-    const static int q = 15;
+    const static SInt16 q = 15;
     const static double c1 = (1 << q) - 1;
-    const static double c2 = (double)(((int)(c1 / 3)) + 1);
+    const static double c2 = (double)(((SInt16)(c1 / 3)) + 1);
     const static double c3 = 1.0 / c1;
 
     // add empty waveform
@@ -72,7 +72,7 @@ void BaseWavetable::Init()
         smplhold = new double[WAVETABLE_SAMPLE_SIZE];
 
         // create waveforms
-        for (unsigned int SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
+        for (UInt16 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
         {
             // bandlimited waveforms
             sine[SampleIndex] = sin((2.0 * PI * (SampleIndex / (double)WAVETABLE_SAMPLE_SIZE)));
@@ -80,7 +80,7 @@ void BaseWavetable::Init()
 
             /* generate triangle waveform (0.0 -> 1.0, 1.0 -> -1.0, -1.0 -> 0.0 */
             triangle_bl[SampleIndex] = 0.0;
-            for (unsigned char WaveIndex = 0; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1) / 2; ++WaveIndex)
+            for (UInt8 WaveIndex = 0; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1) / 2; ++WaveIndex)
             {
                 triangle_bl[SampleIndex] += pow(-1.0, WaveIndex) * (1.0 / pow((2 * WaveIndex + 1), 2.0)) * sin(2.0 * PI * (2.0 * WaveIndex + 1) * (SampleIndex / (double)WAVETABLE_SAMPLE_SIZE));
                 if (triangle_bl[SampleIndex] > triangle_bl_max)
@@ -88,7 +88,7 @@ void BaseWavetable::Init()
             }
 
             sawup_bl[SampleIndex] = 0.0;
-            for (unsigned char WaveIndex = 1; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1); ++WaveIndex)
+            for (UInt8 WaveIndex = 1; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1); ++WaveIndex)
             {
                 sawup_bl[SampleIndex] += pow(-1.0, (double)(WaveIndex + 1)) * (1.0 / (double)WaveIndex) * sin(2.0 * PI * (double)SampleIndex * (double)WaveIndex / (double)WAVETABLE_SAMPLE_SIZE);
                 if (sawup_bl[SampleIndex] > sawup_bl_max)
@@ -96,7 +96,7 @@ void BaseWavetable::Init()
             }
 
             sawdn_bl[SampleIndex] = 0.0;
-            for (unsigned char WaveIndex = 1; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1); ++WaveIndex)
+            for (UInt8 WaveIndex = 1; WaveIndex <= (WAVETABLE_SAMPLE_BANDLIMIT + 1); ++WaveIndex)
             {
                 sawdn_bl[SampleIndex] += (1.0 / (double)WaveIndex) * sin(2.0 * PI * (double)SampleIndex * (double)WaveIndex / (double)WAVETABLE_SAMPLE_SIZE);
                 if (sawdn_bl[SampleIndex] > sawdn_bl_max)
@@ -104,7 +104,7 @@ void BaseWavetable::Init()
             }
 
             pulse_bl[SampleIndex] = 0.0;
-            for (unsigned char WaveIndex = 1; WaveIndex <= WAVETABLE_SAMPLE_BANDLIMIT; WaveIndex += 2)
+            for (UInt8 WaveIndex = 1; WaveIndex <= WAVETABLE_SAMPLE_BANDLIMIT; WaveIndex += 2)
             {
                 pulse_bl[SampleIndex] += (1.0 / (double)WaveIndex) * sin(2.0 * PI * (double)SampleIndex * (double)WaveIndex / (double)WAVETABLE_SAMPLE_SIZE);
                 if (pulse_bl[SampleIndex] > pulse_bl_max)
@@ -156,7 +156,7 @@ void BaseWavetable::Init()
         }
 
         // normalize bandlimited waveforms
-        for (unsigned int SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
+        for (UInt16 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
         {
             triangle_bl[SampleIndex] /= triangle_bl_max;
             sawup_bl[SampleIndex] /= sawup_bl_max;
@@ -223,7 +223,7 @@ void BaseWavetable::Init()
     }
 }
 
-void BaseWavetable::DeleteWaveform(unsigned int Index)
+void BaseWavetable::DeleteWaveform(UInt16 Index)
 {
     if (Waveforms[Index].WaveData)
     {
@@ -258,7 +258,7 @@ bool BaseWavetable::AddWaveform(const std::string Filename, const std::string Wa
             return false;
 
         // get only data of first channel
-        for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
+        for (SInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
             waveform.WaveData[SampleIndex] = ((double)waveData[SampleIndex]);
 
         waveLoader.Unload();
@@ -277,7 +277,7 @@ bool BaseWavetable::AddWaveform(const std::string Filename, const std::string Wa
     return true;
 }
 
-bool BaseWavetable::AddWaveform(const double *Wavedata, const unsigned int WaveSize, const std::string WaveName, const unsigned char ChannelNum)
+bool BaseWavetable::AddWaveform(const double *Wavedata, const UInt16 WaveSize, const std::string WaveName, const UInt8 ChannelNum)
 {
     Waveform waveform;
 
@@ -294,7 +294,7 @@ bool BaseWavetable::AddWaveform(const double *Wavedata, const unsigned int WaveS
         if (!Wavedata)
             return false;
 
-        for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
+        for (SInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
             waveform.WaveData[SampleIndex] = Wavedata[SampleIndex];
 
         Waveforms.push_back(waveform);
@@ -314,14 +314,14 @@ bool BaseWavetable::AddWaveform(const double *Wavedata, const unsigned int WaveS
 }
 
 #if defined(WIN32)
-bool BaseWavetable::AddWaveform(const HINSTANCE hInstance, const unsigned int ResourceID, const std::string WaveName, const unsigned char ByteSize, const unsigned char ChannelNum)
+bool BaseWavetable::AddWaveform(const HINSTANCE hInstance, const UInt16 ResourceID, const std::string WaveName, const UInt8 ByteSize, const UInt8 ChannelNum)
 {
     HGLOBAL hRData = NULL;
     HRSRC hResource = NULL;
     double *data;
-    VstInt16 *pRData;
-    VstInt16 *buf;
-    VstInt32 bufferSize, Divisor;
+    SInt16 *pRData;
+    SInt16 *buf;
+    SInt32 bufferSize, Divisor;
     Waveform waveform;
 
     try
@@ -342,14 +342,14 @@ bool BaseWavetable::AddWaveform(const HINSTANCE hInstance, const unsigned int Re
             if ((!data) || (!hRData))
                 return false;
 
-            pRData = (VstInt16 *)LockResource(hRData);
+            pRData = (SInt16 *)LockResource(hRData);
             UnlockResource(hRData);
             FreeResource(hRData);
 
             buf = pRData;
             Divisor = 1 << (ByteSize * 8);
 
-            for (VstInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
+            for (SInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
                 data[SampleIndex] = ((double)(buf[SampleIndex])) / Divisor;
 
             Waveforms.push_back(waveform);
@@ -369,18 +369,18 @@ bool BaseWavetable::AddWaveform(const HINSTANCE hInstance, const unsigned int Re
     return true;
 }
 
-double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const unsigned int resID, double *data, const unsigned char ByteSize, const unsigned char ChannelNum)
+double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const UInt16 resID, double *data, const UInt8 ByteSize, const UInt8 ChannelNum)
 {
     HGLOBAL hResourceData = NULL;
     HRSRC hResource = NULL;
     short *pResourceData;
-    long bufferSize;
+    SInt32 bufferSize;
 
     // Load Resource //
     hResource = FindResource(hInstance, MAKEINTRESOURCE(resID), "RAW");
     if (hResource)
     {
-        if (((long)SizeofResource(hInstance, hResource) / (ByteSize * ChannelNum)) > WAVETABLE_SAMPLE_SIZE)
+        if (((SInt32)SizeofResource(hInstance, hResource) / (ByteSize * ChannelNum)) > WAVETABLE_SAMPLE_SIZE)
             bufferSize = WAVETABLE_SAMPLE_SIZE;
         else
             bufferSize = SizeofResource(hInstance, hResource) / (ByteSize * ChannelNum);
@@ -392,7 +392,7 @@ double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const unsigned in
             UnlockResource(hResourceData);
             FreeResource(hResourceData);
 
-            for (long i = 0; i < bufferSize; i++)
+            for (SInt32 i = 0; i < bufferSize; i++)
             {
                 data[i] = ((double)(pResourceData[i])) / 0x10000;
             }
@@ -402,7 +402,7 @@ double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const unsigned in
 }
 #endif
 
-double BaseWavetable::getWaveData(const unsigned int WaveIndex, const double dPhase)
+double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase)
 {
     double data = 0.0;
 
@@ -410,18 +410,18 @@ double BaseWavetable::getWaveData(const unsigned int WaveIndex, const double dPh
         return data;
 
     // prepare for linear interpolation
-    int firstIndex = (int)(dPhase * 2);
+    SInt16 firstIndex = (SInt16)(dPhase * 2);
     double dFrac = (dPhase * 2) - firstIndex;
-    int nextIndex = (firstIndex + 1) % Waveforms[WaveIndex].WaveSize;
+    SInt16 nextIndex = (firstIndex + 1) % Waveforms[WaveIndex].WaveSize;
     firstIndex %= Waveforms[WaveIndex].WaveSize;
 
-    // data = Waveforms[WaveIndex].WaveData[(VstInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
+    // data = Waveforms[WaveIndex].WaveData[(SInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
     data = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[firstIndex], dFrac);
     data = ModuleHelper::clamp(data, -1.0, 1.0);
     return data;
 }
 
-bool BaseWavetable::getWaveName(const unsigned int WaveIndex, char* name)
+bool BaseWavetable::getWaveName(const UInt16 WaveIndex, char* name)
 {
     if (!name)
         return false;
@@ -430,12 +430,12 @@ bool BaseWavetable::getWaveName(const unsigned int WaveIndex, char* name)
     return true;
 }
 
-long BaseWavetable::getWaveSize(const unsigned int WaveIndex)
+SInt32 BaseWavetable::getWaveSize(const UInt16 WaveIndex)
 {
     return Waveforms[WaveIndex].WaveSize;
 }
 
-double BaseWavetable::adjustPhase(const unsigned int WaveIndex, const double phase)
+double BaseWavetable::adjustPhase(const UInt16 WaveIndex, const double phase)
 {
     double dCorrect = (double)(getWaveSize(WaveIndex));
     if (phase >= dCorrect)

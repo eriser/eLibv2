@@ -23,7 +23,7 @@ namespace eLibV2
             get name for module
             @return the name of the module
             */
-            virtual std::string getModuleName(void) { return mModuleName; }
+            virtual std::string getModuleName(void) const { return mModuleName; }
 
         private:
             const std::string mModuleName; ///< internal module name

@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+#include <Util/Types.h>
+
 namespace eLibV2
 {
     namespace Data
@@ -13,18 +15,18 @@ namespace eLibV2
         class PluginProgram
         {
         public:
-            PluginProgram(const unsigned long numParameters) { mNumParameters = numParameters; }
+            PluginProgram(const UInt16 numParameters) { mNumParameters = numParameters; }
             ~PluginProgram() {}
 
             void addParameter(const float value);
-            void setParameter(const unsigned long parameterIndex, const float value);
-            float getParameter(const unsigned long parameterIndex) const;
+            void setParameter(const UInt16 parameterIndex, const float value);
+            float getParameter(const UInt16 parameterIndex) const;
 
             void setName(const std::string name) { mProgramName = name; }
             std::string getName() const { return mProgramName; }
 
         private:
-            unsigned long mNumParameters;
+            UInt16 mNumParameters;
             std::vector<float> mParameterValues;
             std::string mProgramName;
         };

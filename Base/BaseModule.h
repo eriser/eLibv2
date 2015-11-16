@@ -9,8 +9,6 @@
 #include <string>
 #include <cstdarg>
 
-#include <aeffect.h>
-
 namespace eLibV2
 {
     namespace Base
@@ -38,7 +36,7 @@ namespace eLibV2
             get currently set samplerate
             @return samplerate in Hz
             */
-            virtual double getSamplerate(void) { return m_dSamplerate; }
+            virtual double getSamplerate(void) const { return m_dSamplerate; }
 
             /**
             set samplerate for module
@@ -50,7 +48,7 @@ namespace eLibV2
             get currently set tempo
             @return tempo in beats-per-minute
             */
-            virtual double getTempo(void) { return m_dTempo; }
+            virtual double getTempo(void) const { return m_dTempo; }
 
             /**
             set tempo for module

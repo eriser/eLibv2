@@ -14,7 +14,7 @@ namespace eLibV2
         class Delay : public Base::BaseEffect
         {
         public:
-            static const unsigned char NUM_SYNC_FACTORS = 9;
+            static const UInt8 NUM_SYNC_FACTORS = 9;
 
             enum FeedbackMode
             {
@@ -41,7 +41,7 @@ namespace eLibV2
                 m_pBuffer = new double[DELAY_BUFFER_SIZE];
                 memset(m_pBuffer, 0, sizeof(double) * DELAY_BUFFER_SIZE);
 
-                for (unsigned char syncIndex = 0; syncIndex < NUM_SYNC_FACTORS; ++syncIndex)
+                for (UInt8 syncIndex = 0; syncIndex < NUM_SYNC_FACTORS; ++syncIndex)
                     m_dSyncFactors[syncIndex] = pow(2.0, (syncIndex - 4));
 
                 Init();
@@ -73,7 +73,7 @@ namespace eLibV2
             get length of delay-line
             @return length of delay-line in samples
             */
-            unsigned int getDelayLength(void) { return m_iDelayLengthInSamples; }
+            UInt16 getDelayLength(void) { return m_iDelayLengthInSamples; }
 
             /**
             set mix-level of wet signal
@@ -141,8 +141,8 @@ namespace eLibV2
         private:
             double *m_pBuffer;
             double m_dMixLevel, m_dDelayLength;
-            unsigned int m_iDelayLengthInSamples;
-            int m_iReadIndex, m_iWriteIndex;
+            UInt16 m_iDelayLengthInSamples;
+            SInt16 m_iReadIndex, m_iWriteIndex;
             double m_dInternalFeedback, m_dExternalFeedback;
             double m_dFeedbackLevel;
             FeedbackMode m_eFeedbackMode;

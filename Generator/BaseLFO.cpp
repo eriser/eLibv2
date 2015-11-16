@@ -8,7 +8,7 @@ void BaseLFO::Init(void)
     m_lWaveform = 1;
 }
 
-void BaseLFO::adjustPhases(VstInt16 Note)
+void BaseLFO::adjustPhases(UInt8 Note)
 {
     double dFreq = m_dFreq * m_dScaler;
     m_dPhase += dFreq;
@@ -23,7 +23,7 @@ double BaseLFO::processConnection(void)
     if (isInputConnected(LFO_CONNECTION_FREQ))
         setFreq(inputConnections[LFO_CONNECTION_FREQ]->processConnection());
     if (isInputConnected(LFO_CONNECTION_WAVEFORM))
-        setWaveform((VstInt16)inputConnections[LFO_CONNECTION_WAVEFORM]->processConnection());
+        setWaveform((SInt32)inputConnections[LFO_CONNECTION_WAVEFORM]->processConnection());
 
     dOutput = Process(0);
     return dOutput;

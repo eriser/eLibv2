@@ -14,7 +14,7 @@ double WaveShaper::Process(const double Input)
 {
     double dOutput = Input;
 
-    for (unsigned char stageIndex = 0; stageIndex < m_iNumStages; ++stageIndex)
+    for (UInt8 stageIndex = 0; stageIndex < m_iNumStages; ++stageIndex)
     {
         if (dOutput >= 0.0)
             dOutput = (1.0 / atan(m_dPositiveExponent)) * atan(m_dPositiveExponent * dOutput);

@@ -39,7 +39,7 @@ double Resample::processConnection(void)
     if (isInputConnected(RESAMPLE_CONNECTION_BYPASS))
         m_bBypass = ModuleHelper::double2bool(inputConnections[RESAMPLE_CONNECTION_BYPASS]->processConnection(), 0.5);
     if (isInputConnected(RESAMPLE_CONNECTION_RATE))
-        setRate((unsigned int)inputConnections[RESAMPLE_CONNECTION_RATE]->processConnection());
+        setRate((UInt16)inputConnections[RESAMPLE_CONNECTION_RATE]->processConnection());
     if (isInputConnected(RESAMPLE_CONNECTION_INPUT))
         dInput = inputConnections[RESAMPLE_CONNECTION_INPUT]->processConnection();
 

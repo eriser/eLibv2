@@ -32,7 +32,7 @@ namespace eLibV2
             {
                 double input = 0.0;
 
-                for (unsigned char inputIndex = 0; inputIndex < ADDER_INPUT_NUM; ++inputIndex)
+                for (UInt8 inputIndex = 0; inputIndex < ADDER_INPUT_NUM; ++inputIndex)
                 {
                     if (isInputConnected(inputIndex))
                         input += inputConnections[inputIndex]->processConnection();
@@ -49,7 +49,7 @@ namespace eLibV2
             }
 
         protected:
-            unsigned char numInputs;
+            UInt8 numInputs;
         };
     }
 }

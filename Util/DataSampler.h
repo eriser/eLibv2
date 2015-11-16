@@ -9,6 +9,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <Util/Types.h>
+
 namespace eLibV2
 {
     namespace Util
@@ -27,7 +29,7 @@ namespace eLibV2
             Set sample duration
             @param sampleDuration the number of samples to be taken before output is done
             */
-            static void setSampleDuration(const unsigned int sampleDuration) { ms_SampleDuration = sampleDuration; }
+            static void setSampleDuration(const UInt16 sampleDuration) { ms_SampleDuration = sampleDuration; }
 
             /**
             Set the message prefix used for output
@@ -39,7 +41,7 @@ namespace eLibV2
             Sample an integer value
             @param input the integer value to be sampled
             */
-            static void sample(const int input);
+            static void sample(const SInt16 input);
 
             /**
             Sample a double value
@@ -49,9 +51,9 @@ namespace eLibV2
 
         private:
             DataSampler();
-            static unsigned int ms_SampleDuration;
+            static UInt16 ms_SampleDuration;
             static std::string ms_MessagePrefix;
-            static unsigned int ms_CurrentlySampled;
+            static UInt16 ms_CurrentlySampled;
         };
     }
 }

@@ -19,7 +19,7 @@ double Phaser::Process(const double Input)
     if (m_pLFO)
         filterFreq = (m_pLFO->processConnection() / 2.0) + 0.5;
 
-    for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
+    for (UInt8 stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
         m_pFilterStages[stageIndex]->setCutoff(m_dMaxCutoffs[stageIndex] * filterFreq + m_dMinCutoffs[stageIndex]);
 
     // output is mixed input and filter-output depending on depth
@@ -53,7 +53,7 @@ void Phaser::setSamplerate(const double Samplerate)
     BaseModule::setSamplerate(Samplerate);
     if (m_pLFO)
         m_pLFO->setSamplerate(Samplerate);
-    for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
+    for (UInt8 stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
     {
         if (m_pFilterStages[stageIndex])
             m_pFilterStages[stageIndex]->setSamplerate(Samplerate);

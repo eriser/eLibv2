@@ -1,7 +1,7 @@
-#include <VSTBase/VSTBaseEditor.h>
+#include <VST/Plugin/VSTBaseEditor.h>
 
 using namespace eLibV2;
-using namespace eLibV2::VSTBase;
+using namespace eLibV2::VST::Plugin;
 
 VSTBaseEditor::VSTBaseEditor(VSTBaseClass *effect) : AEffGUIEditor(effect)
 {
@@ -18,14 +18,14 @@ void VSTBaseEditor::setupEditor(const EditorProperties properties)
     mProperties = properties;
 
     // load the page background bitmaps
-    for (std::map<unsigned int, unsigned int>::iterator it = properties.mBackgroundBitmaps.begin(); it != properties.mBackgroundBitmaps.end(); ++it)
+    for (std::map<UInt8, UInt16>::iterator it = properties.mBackgroundBitmaps.begin(); it != properties.mBackgroundBitmaps.end(); ++it)
     {
         if (it->second != 0)
             bitmapManager.addBackgroundBitmap(it->first, new CBitmap(it->second));
     }
 
     // load all control bitmaps
-    for (std::map<std::string, unsigned int>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
+    for (std::map<std::string, UInt16>::iterator it = mProperties.mControlBitmaps.begin(); it != mProperties.mControlBitmaps.end(); it++)
     {
         if ((it->first != "") && (it->second != 0))
             bitmapManager.addBitmap(it->first, new CBitmap(it->second));
@@ -40,8 +40,8 @@ void VSTBaseEditor::setupEditor(const EditorProperties properties)
     rect.right  = (short)bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getWidth();
     rect.bottom = (short)bitmapManager.getBitmap(mProperties.mBackgroundBitmaps[mActivePage])->getHeight();
 #else
-    rect.right  = (VstInt16)bitmapManager.getBackgroundBitmap(mActivePage)->getWidth();
-    rect.bottom = (VstInt16)bitmapManager.getBackgroundBitmap(mActivePage)->getHeight();
+    rect.right  = (SInt16)bitmapManager.getBackgroundBitmap(mActivePage)->getWidth();
+    rect.bottom = (SInt16)bitmapManager.getBackgroundBitmap(mActivePage)->getHeight();
 #endif
 }
 
@@ -62,7 +62,7 @@ bool VSTBaseEditor::open(void *ptr)
     CFrame* lFrame = new CFrame(size, ptr, this);
 
     // setup editor pages
-    for (std::map<unsigned int, unsigned int>::iterator it = mProperties.mBackgroundBitmaps.begin(); it != mProperties.mBackgroundBitmaps.end(); it++)
+    for (std::map<UInt8, UInt16>::iterator it = mProperties.mBackgroundBitmaps.begin(); it != mProperties.mBackgroundBitmaps.end(); it++)
         mEditorPage.push_back(new CViewContainer(size, lFrame, bitmapManager.getBackgroundBitmap(it->first)));
 
     lFrame->addView(mEditorPage[mActivePage]);
@@ -109,7 +109,7 @@ void VSTBaseEditor::idle()
     AEffGUIEditor::idle();
 }
 
-CView* VSTBaseEditor::addControl(const EditorParameter::ControlType type, CControlListener *listener, const CPoint position, const VstInt32 tag, const VstInt32 numBitmaps, const std::string bitmapId, CPoint handle)
+CView* VSTBaseEditor::addControl(const EditorParameter::ControlType type, CControlListener *listener, const CPoint position, const UInt16 tag, const UInt16 numBitmaps, const std::string bitmapId, CPoint handle)
 {
     CPoint bitmapSize(getBitmap(bitmapId)->getWidth(), getBitmap(bitmapId)->getHeight() / numBitmaps);
     CRect tempSize(position.x, position.y, bitmapSize.x + position.x, bitmapSize.y + position.y);
@@ -135,7 +135,7 @@ CView* VSTBaseEditor::addControl(const EditorParameter::ControlType type, CContr
     return NULL;
 }
 
-void VSTBaseEditor::setControlValue(const EditorParameter::ControlType type, const VstInt32 tag, const double value)
+void VSTBaseEditor::setControlValue(const EditorParameter::ControlType type, const UInt16 tag, const double value)
 {
     switch (type)
     {
@@ -177,7 +177,7 @@ void VSTBaseEditor::removeControls()
         mMovieBitmap.clear();
 }
 
-void VSTBaseEditor::attachToPage(const VstInt32 pageIndex, CView* control)
+void VSTBaseEditor::attachToPage(const UInt8 pageIndex, CView* control)
 {
     if (pageIndex < mEditorPage.size())
         mEditorPage[pageIndex]->addView(control);

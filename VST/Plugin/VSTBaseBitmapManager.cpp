@@ -1,8 +1,8 @@
-#include <VSTBase/VSTBaseBitmapManager.h>
+#include <VST/Plugin/VSTBaseBitmapManager.h>
 
 using namespace eLibV2;
 using namespace eLibV2::Util;
-using namespace eLibV2::VSTBase;
+using namespace eLibV2::VST::Plugin;
 
 VSTBaseBitmapManager::~VSTBaseBitmapManager()
 {
@@ -20,13 +20,13 @@ void VSTBaseBitmapManager::clearAll()
 
     if (mBackgroundBitmaps.size())
     {
-        for (std::map<unsigned int, CBitmap *>::iterator it = mBackgroundBitmaps.begin(); it != mBackgroundBitmaps.end(); it++)
+        for (std::map<UInt8, CBitmap *>::iterator it = mBackgroundBitmaps.begin(); it != mBackgroundBitmaps.end(); it++)
             it->second->forget();
         mBackgroundBitmaps.clear();
     }
 }
 
-void VSTBaseBitmapManager::addBackgroundBitmap(const unsigned int pageIndex, CBitmap *bitmap)
+void VSTBaseBitmapManager::addBackgroundBitmap(const UInt8 pageIndex, CBitmap *bitmap)
 {
     ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseBitmapManager::addBitmap: add id: %d", pageIndex);
     mBackgroundBitmaps[pageIndex] = bitmap;

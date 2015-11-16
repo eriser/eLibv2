@@ -10,9 +10,9 @@ namespace eLibV2
 {
     namespace Effect
     {
-        static const unsigned int DITHER_BITSIZE_MIN = 1;
-        static const unsigned int DITHER_BITSIZE_MAX = 32;
-        static const unsigned int DITHER_BITSIZE_DEFAULT = 12;
+        static const UInt16 DITHER_BITSIZE_MIN = 1;
+        static const UInt16 DITHER_BITSIZE_MAX = 32;
+        static const UInt16 DITHER_BITSIZE_DEFAULT = 12;
 
         /**
         this effect is used to dither incoming audio-samples to fit a given bitsize.
@@ -52,8 +52,8 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            unsigned char getBitsize(void) { return m_uiBitsize; }
-            void setBitsize(const unsigned char Bitsize) { m_uiBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
+            UInt8 getBitsize(void) { return m_uiBitsize; }
+            void setBitsize(const UInt8 Bitsize) { m_uiBitsize = Util::ModuleHelper::clamp(Bitsize, DITHER_BITSIZE_MIN, DITHER_BITSIZE_MAX); }
 
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BYPASS] = connection; }
@@ -61,7 +61,7 @@ namespace eLibV2
             void attachBitsize(BaseConnection *connection) { inputConnections[DITHER_CONNECTION_BITSIZE] = connection; }
 
         private:
-            unsigned char m_uiBitsize;
+            UInt8 m_uiBitsize;
         };
     }
 }

@@ -55,7 +55,7 @@ namespace eLibV2
                 m_pScaler = new Connection::ScalerConnection("phaser.lfo.scaler", 500.0, 500.0);
                 m_pScaler->attachInput(m_pLFO);
 
-                for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
+                for (UInt8 stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
                 {
                     m_pFilterStages[stageIndex] = new Filter::SwitchableAPF();
                     m_pFilterStages[stageIndex]->setSecondOrder(false);
@@ -87,7 +87,7 @@ namespace eLibV2
 
                 if (m_pFilterStages)
                 {
-                    for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
+                    for (UInt8 stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
                         delete m_pFilterStages[stageIndex];
                 }
             }
@@ -108,7 +108,7 @@ namespace eLibV2
 
             virtual void Reset(void)
             {
-                for (unsigned char stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
+                for (UInt8 stageIndex = 0; stageIndex < PHASER_FILTERSTAGES_NUM; ++stageIndex)
                 {
                     if (m_pFilterStages[stageIndex])
                         m_pFilterStages[stageIndex]->Reset();

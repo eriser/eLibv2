@@ -18,10 +18,10 @@ namespace eLibV2
 
             void Init(void);
 
-            int AddParam(long Id, double Min, double Max);
-            int DeleteParam(long Id);
-            int SearchParam(long Id);
-            int ProcessParam(long *Id, double *Value);
+            SInt16 AddParam(SInt32 Id, double Min, double Max);
+            SInt16 DeleteParam(SInt32 Id);
+            SInt16 SearchParam(SInt32 Id);
+            SInt16 ProcessParam(SInt32 *Id, double *Value);
 
         private:
             struct sRandom
@@ -31,8 +31,8 @@ namespace eLibV2
             };
 
         private:
-            std::map<long, sRandom> RandomizerMap;
-            std::map<long, sRandom>::iterator RandomizerMapIterator;
+            std::map<SInt32, sRandom> RandomizerMap;
+            std::map<SInt32, sRandom>::iterator RandomizerMapIterator;
         };
     }
 

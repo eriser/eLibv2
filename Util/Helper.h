@@ -1,7 +1,7 @@
 #ifndef MODHELPER_H_
 #define MODHELPER_H_
 
-#include <string>
+#include <Util/Types.h>
 
 namespace eLibV2
 {
@@ -48,14 +48,14 @@ namespace eLibV2
             }
 
             // performs lagrange interpolation with two value-arrays and a fractional position between them
-            static double LagrangeInterpolation(const double *xInput, const double *yInput, unsigned char order, const double value)
+            static double LagrangeInterpolation(const double *xInput, const double *yInput, UInt8 order, const double value)
             {
                 double fx = 0.0;
                 double l = 1.0;
-                for (unsigned char i = 0; i < order; i++)
+                for (UInt8 i = 0; i < order; i++)
                 {
                     l = 1.0;
-                    for (unsigned char j = 0; j < order; j++)
+                    for (UInt8 j = 0; j < order; j++)
                     {
                         if (j != i)
                             l *= (value - xInput[j]) / (xInput[i] - xInput[j]);

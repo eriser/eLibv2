@@ -1,6 +1,6 @@
-#include "PluginInterface.h"
+#include <VST/Host/VSTPluginInterface.h>
 
-using namespace eLibV2::Host;
+using namespace eLibV2::VST::Host;
 
 bool PluginInterface::Load(const std::string fileName, audioMasterCallback callback)
 {
@@ -103,7 +103,7 @@ void PluginInterface::SetupPlugin()
     m_pEffect->dispatcher(m_pEffect, effSetSampleRate, 0, 0, NULL, m_fSamplerate);
     SetBlocksize(m_uiBlocksize);
     m_pEffect->dispatcher(m_pEffect, effSetEditKnobMode, 0, 2, NULL, 0.0f);
-    m_uiVstVersion = (unsigned int)m_pEffect->dispatcher(m_pEffect, effGetVstVersion, 0, 0, NULL, 0.0f);
+    m_uiVstVersion = (UInt16)m_pEffect->dispatcher(m_pEffect, effGetVstVersion, 0, 0, NULL, 0.0f);
 
     // get plugin id
     char pluginID[5] = { 0 };
@@ -312,7 +312,7 @@ std::string PluginInterface::GetEffectName()
     return std::string(effectName);
 }
 
-void PluginInterface::SendMidi(int channel, int status, int data1, int data2)
+void PluginInterface::SendMidi(VstInt16 channel, VstInt16 status, VstInt16 data1, VstInt16 data2)
 {
     ModuleLogger::print(LOG_CLASS_PLUGIN, "Plugin> %s: Receiving Midi message...", m_sPluginID.c_str());
 
@@ -482,8 +482,8 @@ void PluginInterface::SyncInputBuffers(ManagedBuffer* managedBuffer, VstInt32 da
 {
     if (managedBuffer)
     {
-        for (int bufferIndex = 0; bufferIndex < m_uiNumInputs; ++bufferIndex)
-            managedBuffer->Read(bufferIndex, dataSize, (int*)m_ppInputs[bufferIndex]);
+        for (VstInt16 bufferIndex = 0; bufferIndex < m_uiNumInputs; ++bufferIndex)
+            managedBuffer->Read(bufferIndex, dataSize, (VstInt16*)m_ppInputs[bufferIndex]);
     }
 }
 
@@ -491,8 +491,8 @@ void PluginInterface::SyncOutputBuffers(ManagedBuffer* managedBuffer, VstInt32 d
 {
     if (managedBuffer)
     {
-        for (int bufferIndex = 0; bufferIndex < m_uiNumOutputs; ++bufferIndex)
-            managedBuffer->Write(bufferIndex, dataSize, (int*)m_ppOutputs[bufferIndex]);
+        for (VstInt16 bufferIndex = 0; bufferIndex < m_uiNumOutputs; ++bufferIndex)
+            managedBuffer->Write(bufferIndex, dataSize, (VstInt16*)m_ppOutputs[bufferIndex]);
     }
 }
 

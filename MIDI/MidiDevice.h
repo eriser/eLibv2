@@ -10,7 +10,7 @@
 #include <vector>
 
 #include <Util/Defines.h>
-#include <Plugin/PluginHost.h>
+#include <VST/Host/VSTPluginHost.h>
 
 namespace eLibV2
 {
@@ -19,13 +19,13 @@ namespace eLibV2
         class MidiDevice
         {
         public:
-            MidiDevice(const Host::PluginHost* hostThread);
+            MidiDevice(const VST::Host::PluginHost* hostThread);
             ~MidiDevice() {}
 
-            bool OpenDevice(int deviceIndex);
+            bool OpenDevice(SInt16 deviceIndex);
             void CloseDevice();
-            unsigned int GetNumberOfDevices() { return m_uiNumMidiInDevices; }
-            std::string GetDeviceName(unsigned int deviceIndex);
+            UInt16 GetNumberOfDevices() { return m_uiNumMidiInDevices; }
+            std::string GetDeviceName(UInt16 deviceIndex);
 
             static void CALLBACK CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
@@ -33,9 +33,9 @@ namespace eLibV2
             void EnumerateMidiInDevices();
 
         private:
-            const Host::PluginHost* m_pHostThread;
+            const VST::Host::PluginHost* m_pHostThread;
             HMIDIIN m_OpenedMidiIn;
-            unsigned int m_uiNumMidiInDevices;
+            UInt16 m_uiNumMidiInDevices;
             std::vector<std::string> m_DeviceNames;
         };
     }

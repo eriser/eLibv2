@@ -1,21 +1,21 @@
-#include <Plugin/PluginHost.h>
+#include <VST/Host/VSTPluginHost.h>
 #include <ASIO/AsioDevice.h>
 
-using namespace eLibV2::Host;
+using namespace eLibV2::VST::Host;
 using namespace eLibV2::Util::Threads;
 
 double PluginHost::ms_dSamplerate = kSampleRate;
 double PluginHost::ms_dTempo = 140.0f;
-unsigned int PluginHost::ms_uiBlocksize = kBlockSize;
-unsigned int PluginHost::ms_uiTimeSignatureBeatsPerMeasure = 4;
-unsigned int PluginHost::ms_uiTimeSignatureNoteValue = 4;
+UInt16 PluginHost::ms_uiBlocksize = kBlockSize;
+UInt16 PluginHost::ms_uiTimeSignatureBeatsPerMeasure = 4;
+UInt16 PluginHost::ms_uiTimeSignatureNoteValue = 4;
 VstTimeInfo PluginHost::_VstTimeInfo;
 bool PluginHost::ms_bTransportPlaying = false;
 LARGE_INTEGER PluginHost::ms_liElapsedMicroseconds;
 ManagedBuffer* PluginHost::ms_inputBuffer = NULL;
 ManagedBuffer* PluginHost::ms_outputBuffer = NULL;
-int PluginHost::ms_iBufferRequestedSize = 0;
-long PluginHost::ms_SamplesProcessed = 0;
+VstInt16 PluginHost::ms_iBufferRequestedSize = 0;
+VstInt32 PluginHost::ms_SamplesProcessed = 0;
 
 PluginHost::PluginHost()
 {
@@ -58,7 +58,7 @@ bool PluginHost::OpenPlugin(std::string fileName)
             // insert current plugin to relevant midi-channel
             if (plugin->CanReceiveMidi())
             {
-                int midiChannel = plugin->GetMidiChannel();
+                VstInt16 midiChannel = plugin->GetMidiChannel();
                 m_PluginsForMIDIChannel[midiChannel].push_back(plugin);
             }
             return true;
@@ -123,7 +123,7 @@ void PluginHost::StopTimer()
     ms_liElapsedMicroseconds.QuadPart /= m_liFrequency.QuadPart;
 }
 
-VstInt32 eLibV2::Host::PluginHost::CheckCanDo(char * canDo)
+VstInt32 PluginHost::CheckCanDo(char * canDo)
 {
     return VstInt32();
 }
@@ -169,7 +169,7 @@ PluginInterfaceList PluginHost::GetLoadedPlugins()
     return list;
 }
 
-PluginInterfaceList PluginHost::GetPluginsForMidiChannel(int channel)
+PluginInterfaceList PluginHost::GetPluginsForMidiChannel(VstInt16 channel)
 {
     PluginInterfaceList list;
     for (PluginMap::iterator it = m_LoadedPlugins.begin(); it != m_LoadedPlugins.end(); it++)
@@ -181,7 +181,7 @@ PluginInterfaceList PluginHost::GetPluginsForMidiChannel(int channel)
     return list;
 }
 
-void PluginHost::InsertMidiEvent(int channel, int status, int data1, int data2)
+void PluginHost::InsertMidiEvent(VstInt16 channel, VstInt16 status, VstInt16 data1, VstInt16 data2)
 {
     PluginInterfaceList list = m_PluginsForMIDIChannel[channel];
     for (PluginInterfaceList::iterator it = list.begin(); it != list.end(); it++)
@@ -220,7 +220,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 
     if (!filtered)
     {
-        std::cout << "PLUG> HostCallback (opcode " << (int)opcode << ") index: " << (int)index << " value: " << (int)FromVstPtr<void>(value) << " ptr: " << ptr << " opt " << opt << std::endl;
+        std::cout << "PLUG> HostCallback (opcode " << (VstInt16)opcode << ") index: " << (VstInt16)index << " value: " << (VstInt16)FromVstPtr<void>(value) << " ptr: " << ptr << " opt " << opt << std::endl;
     }
 #endif
 
@@ -401,7 +401,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
         ss << "samplerate requested." << std::endl;
         ModuleLogger::print(LOG_CLASS_PLUGIN, ss.str().c_str());
 
-        result = (int)GetSampleRate();
+        result = (VstInt16)GetSampleRate();
         break;
 
     case audioMasterGetBlockSize:
@@ -496,7 +496,7 @@ VstIntPtr VSTCALLBACK PluginHost::HostCallback(AEffect* effect, VstInt32 opcode,
 DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
 {
     extern bool stopProcessing;
-    static int lastPreferredSize = 0;
+    static VstInt16 lastPreferredSize = 0;
     bool resetBufferSize = false;
 
     PluginInterfaceList *pList = reinterpret_cast<PluginInterfaceList*>(lpParam);
@@ -528,13 +528,13 @@ DWORD WINAPI PluginHost::ProcessReplacing(LPVOID lpParam)
                 }
 
                 // samples from all plugins need to be taken and mixed together
-                int framesToProcess = ms_iBufferRequestedSize;
+                VstInt16 framesToProcess = ms_iBufferRequestedSize;
                 if (ms_iBufferRequestedSize > kBlockSize)
                     framesToProcess = kBlockSize;
 
                 // tell all plugins to process their inputs/outputs
                 // this will be done in seperate threads for each plugin
-                for (int currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
+                for (VstInt16 currentThreadIndex = 0; currentThreadIndex < processThreads.size(); currentThreadIndex++)
                 {
                     PluginInterface* plugin = processThreads[currentThreadIndex].plugin;
 

@@ -23,16 +23,18 @@ using namespace eLibV2::Util;
 
 namespace eLibV2
 {
-    namespace VSTBase
+    namespace VST
     {
-        enum
+        namespace Plugin
         {
-            NUM_MIDI_INPUT_CHANNELS = 16,
-            NUM_MIDI_OUTPUT_CHANNELS = 16
-        };
+            enum
+            {
+                NUM_MIDI_INPUT_CHANNELS = 16,
+                NUM_MIDI_OUTPUT_CHANNELS = 16
+            };
 
-        class VSTBaseClass : public AudioEffectX
-        {
+            class VSTBaseClass : public AudioEffectX
+            {
             public:
                 VSTBaseClass(audioMasterCallback audioMaster, PluginProperties properties);
                 virtual ~VSTBaseClass();
@@ -49,7 +51,7 @@ namespace eLibV2
                 void attachParameter(PluginParameter *param, Connection::InputConnection *inputConnection = 0);
                 PluginParameter* getAttachedParameter(VstInt16 id);
 
-            // virtual functions from AudioEffectX
+                // virtual functions from AudioEffectX
             protected:
 
                 // handling of programms
@@ -135,7 +137,8 @@ namespace eLibV2
                 std::vector<PluginProgram> mPrograms;
                 VstInt32 mCurrentProgram;
 
-        };
+            };
+        }
     }
 }
 

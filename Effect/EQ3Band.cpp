@@ -24,18 +24,18 @@ void EQ3Band::setSamplerate(const double Samplerate)
 {
     BaseModule::setSamplerate(Samplerate);
 
-    for (VstInt16 FreqIndex = 0; FreqIndex < (EQ_NUM_BANDS - 1); FreqIndex++)
+    for (SInt16 FreqIndex = 0; FreqIndex < (EQ_NUM_BANDS - 1); FreqIndex++)
         setFrequency(FreqIndex, dFrequency[FreqIndex]);
 }
 
-void EQ3Band::setFrequency(VstInt16 Index, double Frequency)
+void EQ3Band::setFrequency(SInt16 Index, double Frequency)
 {
     memset(&Bands[Index], 0, sizeof(Bands[Index]));
     dFrequency[Index] = Frequency;
     Bands[Index].Frequency = 2 * sin(PI * (dFrequency[Index] / getSamplerate()));
 }
 
-double EQ3Band::CalcBand(VstInt16 BandIndex, double Input)
+double EQ3Band::CalcBand(SInt16 BandIndex, double Input)
 {
     double Freq = Bands[BandIndex].Frequency;
 
@@ -60,7 +60,7 @@ double EQ3Band::Process(const double Input)
     mid2 *= dGain[2];
     high *= dGain[3];
 
-    for (VstInt16 BufferIndex = EQ_BUFFER_SIZE - 1; BufferIndex >= 0; BufferIndex--)
+    for (SInt16 BufferIndex = EQ_BUFFER_SIZE - 1; BufferIndex >= 0; BufferIndex--)
         buffer[BufferIndex] = (BufferIndex) ? buffer[BufferIndex - 1] : Input;
 
     return(mid1 + mid2 + high);

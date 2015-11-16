@@ -46,14 +46,14 @@ namespace eLibV2
             {
                 //-------------------------------------------------------------------------------------------------------
                 char chunkMagic[4];     ///< 'CcnK'
-                VstInt32 byteSize;      ///< size of this chunk, excl. magic + byteSize
+                SInt32 byteSize;      ///< size of this chunk, excl. magic + byteSize
 
                 char fxMagic[4];        ///< 'FxCk' (regular) or 'FPCh' (opaque chunk)
-                VstInt32 version;       ///< format version (currently 1)
+                SInt32 version;       ///< format version (currently 1)
                 char fxID[4];           ///< fx unique ID
-                VstInt32 fxVersion;     ///< fx version
+                SInt32 fxVersion;     ///< fx version
 
-                VstInt32 numParams;     ///< number of parameters
+                SInt32 numParams;     ///< number of parameters
                 char prgName[28];       ///< program name (null-terminated ASCII string)
                 //-------------------------------------------------------------------------------------------------------
             };
@@ -65,17 +65,17 @@ namespace eLibV2
             {
                 //-------------------------------------------------------------------------------------------------------
                 char chunkMagic[4];         ///< 'CcnK'
-                VstInt32 byteSize;          ///< size of this chunk, excl. magic + byteSize
+                SInt32 byteSize;          ///< size of this chunk, excl. magic + byteSize
 
                 char fxMagic[4];            ///< 'FxBk' (regular) or 'FBCh' (opaque chunk)
-                VstInt32 version;           ///< format version (1 or 2)
+                SInt32 version;           ///< format version (1 or 2)
                 char fxID[4];               ///< fx unique ID
-                VstInt32 fxVersion;         ///< fx version
+                SInt32 fxVersion;         ///< fx version
 
-                VstInt32 numPrograms;       ///< number of programs
+                SInt32 numPrograms;       ///< number of programs
 
 #if VST_2_4_EXTENSIONS
-                VstInt32 currentProgram;    ///< version 2: current program number
+                SInt32 currentProgram;    ///< version 2: current program number
                 char future[124];           ///< reserved, should be zero
 #else
                 char future[128];           ///< reserved, should be zero
@@ -91,7 +91,7 @@ namespace eLibV2
 
             typedef struct
             {
-                int NumPrograms;
+                SInt16 NumPrograms;
                 std::vector<OutputProgram> Programs;
             } OutputBank;
 
@@ -101,22 +101,22 @@ namespace eLibV2
             {
             }
 
-            int Load(const std::string& filename);
-            int Save(const std::string& filename);
+            SInt16 Load(const std::string& filename);
+            SInt16 Save(const std::string& filename);
 
         private:
-            VstInt32 SwapBytes(VstInt32 input)
+            SInt32 SwapBytes(SInt32 input)
             {
-                VstInt32 temp = 0;
+                SInt32 temp = 0;
                 temp = ((input & 0xFF000000) >> 24) + (((input & 0x00FF0000) >> 16) << 8) + (((input & 0x0000FF00) >> 8) << 16) + ((input & 0x000000FF) << 24);
 
                 return temp;
             }
 
-            int LoadTxtFile(const std::string& Filename);
-            int LoadFxpFile(const std::string& Filename);
-            int LoadFxbFile(const std::string& Filename);
-            int ReadProgram(void);
+            SInt16 LoadTxtFile(const std::string& Filename);
+            SInt16 LoadFxpFile(const std::string& Filename);
+            SInt16 LoadFxbFile(const std::string& Filename);
+            SInt16 ReadProgram(void);
 
         private:
             std::ifstream InFile;

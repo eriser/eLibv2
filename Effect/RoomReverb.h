@@ -30,7 +30,7 @@ namespace eLibV2
             {
                 m_pPreDelay = new Delay();
                 m_pInputLPF = new Filter::OnePoleLPF();
-                for (int i = 0; i < 2; ++i)
+                for (SInt16 i = 0; i < 2; ++i)
                 {
                     m_pInputAPF[i] = new Filter::DelayAPF();
                     m_pCombLeft[i] = new Filter::CombFilter();
@@ -52,7 +52,7 @@ namespace eLibV2
                     delete m_pInputLPF;
                 m_pInputLPF = NULL;
 
-                for (int i = 0; i < 2; ++i)
+                for (SInt16 i = 0; i < 2; ++i)
                 {
                     if (m_pInputAPF[i])
                         delete m_pInputAPF[i];

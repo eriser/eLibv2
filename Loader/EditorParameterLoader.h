@@ -19,14 +19,14 @@ namespace eLibV2
         {
         public:
 #if defined(WIN32)
-            static EditorParameters loadFromResource(HINSTANCE instance, unsigned int resourceId)
+            static EditorParameters loadFromResource(HINSTANCE instance, UInt16 resourceId)
             {
                 HRSRC hResource = NULL;
                 HGLOBAL hRData = NULL;
                 void *pRData;
 
                 hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
-                unsigned int bufferSize = SizeofResource(instance, hResource);
+                UInt16 bufferSize = SizeofResource(instance, hResource);
                 hRData = LoadResource(instance, hResource);
                 pRData = LockResource(hRData);
                 XmlParser parser(pRData, bufferSize);
@@ -48,7 +48,7 @@ namespace eLibV2
             static EditorParameters load(nodeVector* nodes)
             {
                 EditorParameters parameters;
-                unsigned int currentPageIndex = 0;
+                UInt16 currentPageIndex = 0;
                 if (nodes)
                 {
                     for (NodeVector::iterator nodeIt = nodes->begin(); nodeIt != nodes->end(); nodeIt++)
@@ -67,7 +67,7 @@ namespace eLibV2
                         }
                         else if ((*nodeIt)->getName() == "control")
                         {
-                            unsigned int pageIndex, posX, posY, tag, subpix;
+                            UInt16 pageIndex, posX, posY, tag, subpix;
                             std::string bitmapId;
                             EditorParameter::ControlType type = EditorParameter::ControlType::Undefined;
 

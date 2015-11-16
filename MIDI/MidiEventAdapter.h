@@ -17,7 +17,7 @@ namespace eLibV2
         class MidiEventAdapter : public Base::BaseConnection
         {
         public:
-            MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, int channel) :
+            MidiEventAdapter::MidiEventAdapter(MidiEventHandler *handler, SInt16 channel) :
                 Base::BaseName("MidiEventAdapter"),
                 mHandler(handler),
                 mChannel(channel)
@@ -29,7 +29,7 @@ namespace eLibV2
             virtual double processConnection(void);
 
         private:
-            const int mChannel; ///< MIDI-channel to check
+            const SInt16 mChannel; ///< MIDI-channel to check
             MidiEventHandler *mHandler; ///< MidiEventHandler to use
         };
     }

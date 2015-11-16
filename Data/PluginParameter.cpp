@@ -20,7 +20,7 @@ double PluginParameter::getValue(const double in) const
     if (isBooleanType())
         return (in < 0.5) ? 0 : 1;
     else if (isIntegerType())
-        return ((float)((int)output));
+        return ((float)((SInt16)output));
     else
         return (float)output;
 }
@@ -42,7 +42,7 @@ std::string PluginParameter::getValueAsString(const double in) const
         break;
 
     case ParameterTypeInteger:
-        res << (int)output;
+        res << (SInt16)output;
         break;
 
     default:

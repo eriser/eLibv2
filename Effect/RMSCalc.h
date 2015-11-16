@@ -40,7 +40,7 @@ namespace eLibV2
             void InputSample(const double Input);
 
         private:
-            unsigned int mSamples;
+            UInt16 mSamples;
             double mRms;
             double mAlpha, mGain;
             double mRmsSmoothed;

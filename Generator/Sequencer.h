@@ -25,22 +25,22 @@ namespace eLibV2
             void setSync(bool Sync) { bSync = Sync; }
             void setSpeed(double Speed) { dSpeed = Speed; }
             void setBpm(double Bpm) { dBpm = Bpm; }
-            void setType(long Type) { lType = Type; }
-            void setStepValue(unsigned long Index, double Value);
+            void setType(SInt32 Type) { lType = Type; }
+            void setStepValue(UInt32 Index, double Value);
 
             bool getSync(void) { return bSync; }
             double getSpeed(void) { return dSpeed; }
             double getBpm(void) { return dBpm; }
-            long getType(void) { return lType; }
-            long getStepCount(void);
-            double getStepValue(unsigned long Index);
+            SInt32 getType(void) { return lType; }
+            SInt32 getStepCount(void);
+            double getStepValue(UInt32 Index);
 
-            void addSteps(long Count);
+            void addSteps(SInt32 Count);
 
         private:
             bool bSync;
             double dSpeed, dBpm;
-            long lType, lCurrentSamplePosition, lCurrentStepIndex;
+            SInt32 lType, lCurrentSamplePosition, lCurrentStepIndex;
             std::vector<double> SequencerData;
         };
     }

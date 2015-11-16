@@ -50,8 +50,8 @@ namespace eLibV2
 
         protected:
             EnvelopeState eEnvelopeState;
-            VstInt32 tDelay, tAttack, tDecay, tRelease;
-            VstInt32 tDelayEnd, tAttackEnd, tDecayEnd, tReleaseEnd;
+            SInt32 tDelay, tAttack, tDecay, tRelease;
+            SInt32 tDelayEnd, tAttackEnd, tDecayEnd, tReleaseEnd;
 
             double dDelay, dAttack, dDecay, dSustain, dRelease;
             double dDelayScale, dAttackScale, dDecayScale, dReleaseScale;

@@ -15,7 +15,7 @@ void FrequencyTable::SetupFreqs(void)
     a *= k;     // c, frequency of midi note 0, should be 8.1757989156 Hz
 
     // 128 midi notes
-    for (unsigned char FreqIndex = 0; FreqIndex < kNumNotes; FreqIndex++)
+    for (UInt8 FreqIndex = 0; FreqIndex < kNumNotes; FreqIndex++)
     {
         freqtab[FreqIndex] = a;
         a *= k;
@@ -23,7 +23,7 @@ void FrequencyTable::SetupFreqs(void)
     initialized = true;
 }
 
-double FrequencyTable::ForNote(unsigned char note)
+double FrequencyTable::ForNote(UInt8 note)
 {
     double res = 0.0;
 

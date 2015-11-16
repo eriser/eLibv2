@@ -30,7 +30,7 @@ namespace eLibV2
             EditorProperties() {}
 
 #if defined(WIN32)
-            static bool loadFromResource(HINSTANCE instance, unsigned int resourceId)
+            static bool loadFromResource(HINSTANCE instance, UInt16 resourceId)
             {
                 bool bRes = false;
                 HRSRC hResource = NULL;
@@ -40,7 +40,7 @@ namespace eLibV2
                 hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
                 if (hResource)
                 {
-                    unsigned int bufferSize = SizeofResource(instance, hResource);
+                    UInt16 bufferSize = SizeofResource(instance, hResource);
                     hRData = LoadResource(instance, hResource);
                     if (hRData)
                     {
@@ -73,7 +73,7 @@ namespace eLibV2
                     {
                         BitmapType type = BitmapTypeUndefined;
                         std::string id;
-                        unsigned int resourceid, pageindex;
+                        UInt16 resourceid, pageindex;
                         if ((*nodeIt)->getName() == "editor")
                         {
                             StringMap attributes = (*nodeIt)->getAttributes();
@@ -119,14 +119,14 @@ namespace eLibV2
             }
 
         private:
-            static void addBackgroundBitmap(const unsigned int pageIndex, const unsigned int resourceId) { mBackgroundBitmaps[pageIndex] = resourceId; }
-            static void addControlBitmap(const std::string bitmapId, const unsigned int resourceId) { mControlBitmaps[bitmapId] = resourceId; }
-            static void setNumPages(const unsigned int numPages) { mNumPages = numPages; }
+            static void addBackgroundBitmap(const UInt8 pageIndex, const UInt16 resourceId) { mBackgroundBitmaps[pageIndex] = resourceId; }
+            static void addControlBitmap(const std::string bitmapId, const UInt16 resourceId) { mControlBitmaps[bitmapId] = resourceId; }
+            static void setNumPages(const UInt8 numPages) { mNumPages = numPages; }
 
         public:
-            static std::map<unsigned int, unsigned int> mBackgroundBitmaps;
-            static std::map<std::string, unsigned int> mControlBitmaps;
-            static unsigned int mNumPages;
+            static std::map<UInt8, UInt16> mBackgroundBitmaps;
+            static std::map<std::string, UInt16> mControlBitmaps;
+            static UInt8 mNumPages;
         };
     }
 }

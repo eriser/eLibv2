@@ -7,7 +7,7 @@
 
 #include <ASIO/AsioDevice.h>
 #include <ASIO/SampleConversion.h>
-#include <Plugin/PluginHost.h>
+#include <VST/Host/VSTPluginHost.h>
 #include <Loader/WaveLoader.h>
 #include <Util/Logger.h>
 #include <Util/Threads/EventManager.h>
@@ -85,8 +85,8 @@ namespace eLibV2
 
             bool OpenDevice(int deviceIndex);
             void CloseDevice();
-            unsigned int GetNumberOfDevices() { return m_uiNumAsioDevices; }
-            std::string GetDeviceName(unsigned int deviceIndex);
+            UInt16 GetNumberOfDevices() { return m_uiNumAsioDevices; }
+            std::string GetDeviceName(UInt16 deviceIndex);
 
             // callbacks directly called from hardware driver
             static void bufferSwitch(long index, ASIOBool processNow);
@@ -108,7 +108,7 @@ namespace eLibV2
             void SetupCallbacks();
 
         private:
-            unsigned int m_uiNumAsioDevices;
+            UInt16 m_uiNumAsioDevices;
             std::vector<std::string> m_DeviceNames;
         };
     }

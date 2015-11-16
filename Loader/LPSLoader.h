@@ -65,7 +65,7 @@ namespace eLibV2
 
             void Init(void);
 
-            int Load(std::string filename);
+            SInt16 Load(std::string filename);
             void Unload(void);
 
             // getter methods for LPSfile
@@ -75,10 +75,10 @@ namespace eLibV2
             USHORT getNumTracks(void);
 
             // getter methods for LPStracks
-            void getTrackName(char *name, VstInt16 TrackIndex);
-            ULONG getTrackSize(VstInt16 TrackIndex);
-            double *getTrackPointer(VstInt16 TrackIndex);
-            double getTrackData(VstInt16 TrackIndex, VstInt16 DataIndex);
+            void getTrackName(char *name, SInt16 TrackIndex);
+            ULONG getTrackSize(SInt16 TrackIndex);
+            double *getTrackPointer(SInt16 TrackIndex);
+            double getTrackData(SInt16 TrackIndex, SInt16 DataIndex);
 
         private:
             BYTE *TrackCompressed, *TempBuffer;

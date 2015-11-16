@@ -53,38 +53,38 @@ namespace eLibV2
 
         public:
             /* getter/setter */
-            virtual bool getBypass(void) { return m_bBypass; }
+            virtual bool getBypass(void) const { return m_bBypass; }
             virtual void setBypass(const bool Bypass) { m_bBypass = Bypass; }
 
-            virtual unsigned char getOrder(void) { return m_iOrder; }
-            virtual void setOrder(const unsigned char Order)
+            virtual UInt8 getOrder(void) const { return m_iOrder; }
+            virtual void setOrder(const UInt8 Order)
             {
                 m_iOrder = Order;
                 calcCoefficients();
             }
 
-            virtual double getCutoff() { return m_dCutoff; }
+            virtual double getCutoff() const { return m_dCutoff; }
             virtual void setCutoff(const double Cutoff)
             {
                 m_dCutoff = Cutoff;
                 calcCoefficients();
             }
 
-            virtual double getQ() { return m_dQ; }
+            virtual double getQ() const { return m_dQ; }
             virtual void setQ(const double Q)
             {
                 m_dQ = Q;
                 calcCoefficients();
             }
 
-            virtual double getBW() { return m_dBW; }
+            virtual double getBW() const { return m_dBW; }
             virtual void setBW(const double BW)
             {
                 m_dBW = BW;
                 calcCoefficients();
             }
 
-            virtual double getGain() { return m_dGain; }
+            virtual double getGain() const { return m_dGain; }
             virtual void setGain(const double Gain)
             {
                 m_dGain = Gain;
@@ -142,7 +142,7 @@ namespace eLibV2
 
         protected:
             Filter::EnhancedBiQuad *m_pInternalBiquad;
-            unsigned char m_iOrder; ///< order of the filter
+            UInt8 m_iOrder;         ///< order of the filter
             bool m_bBypass;         ///< bypass processing of filter
             double m_dCutoff;       ///< cutoff frequency
             double m_dQ;            ///< q-factor

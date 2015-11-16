@@ -45,8 +45,8 @@ namespace eLibV2
 
             typedef struct
             {
-                VstInt16 ChannelNum;
-                VstInt32 WaveSize;
+                SInt16 ChannelNum;
+                SInt32 WaveSize;
                 std::string WaveName;
                 double *WaveData;
             } Waveform;
@@ -66,20 +66,20 @@ namespace eLibV2
 
         private:
             bool AddWaveform(const std::string Filename, const std::string WaveName);
-            bool AddWaveform(const double *Wavedata, const unsigned int WaveSize, const std::string WaveName, const unsigned char ChannelNum = 1);
+            bool AddWaveform(const double *Wavedata, const UInt16 WaveSize, const std::string WaveName, const UInt8 ChannelNum = 1);
 
 #if defined(WIN32)
-            bool AddWaveform(const HINSTANCE hInstance, const unsigned int ResourceID, const std::string WaveName, const unsigned char ByteSize = 2, const unsigned char ChannelNum = 1);
-            double* loadWaveform(const HINSTANCE hInstance, const unsigned int resID, double *data, const unsigned char ByteSize = 2, const unsigned char ChannelNum = 1);
+            bool AddWaveform(const HINSTANCE hInstance, const UInt16 ResourceID, const std::string WaveName, const UInt8 ByteSize = 2, const UInt8 ChannelNum = 1);
+            double* loadWaveform(const HINSTANCE hInstance, const UInt16 resID, double *data, const UInt8 ByteSize = 2, const UInt8 ChannelNum = 1);
 #endif
-            void DeleteWaveform(const unsigned int Index);
+            void DeleteWaveform(const UInt16 Index);
 
         public:
-            long getWaveSize(const unsigned int WaveIndex);
-            double adjustPhase(const unsigned int WaveIndex, const double phase);
-            double getWaveData(const unsigned int WaveIndex, const double dPhase);
-            bool getWaveName(const unsigned int WaveIndex, char* name);
-            long getNumLoadedWaveforms(void) { return Waveforms.size(); }
+            SInt32 getWaveSize(const UInt16 WaveIndex);
+            double adjustPhase(const UInt16 WaveIndex, const double phase);
+            double getWaveData(const UInt16 WaveIndex, const double dPhase);
+            bool getWaveName(const UInt16 WaveIndex, char* name);
+            SInt32 getNumLoadedWaveforms(void) { return Waveforms.size(); }
 
         private:
             std::vector<Waveform> Waveforms;

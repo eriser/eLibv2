@@ -21,7 +21,7 @@ void BaseOscillator::Reset(void)
     m_dQuadPhase = m_dPhase + BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / QUADPHASE_DIVIDER;
 }
 
-void BaseOscillator::setWaveform(VstInt32 Waveform)
+void BaseOscillator::setWaveform(SInt32 Waveform)
 {
     if (m_lWaveform != Waveform)
     {
@@ -52,12 +52,12 @@ void BaseOscillator::setFinetune(double Finetune)
     m_dFinetune = ModuleHelper::clamp(Finetune, -BASEOSC_FINE_RANGE, BASEOSC_FINE_RANGE);
 }
 
-VstInt32 BaseOscillator::getNumWaveforms(void)
+SInt32 BaseOscillator::getNumWaveforms(void)
 {
     return BaseWavetable::getInstance()->getNumLoadedWaveforms();
 }
 
-double BaseOscillator::Process(VstInt16 Note)
+double BaseOscillator::Process(UInt8 Note)
 {
     double dOutput;
 
@@ -69,20 +69,20 @@ double BaseOscillator::Process(VstInt16 Note)
     return dOutput;
 }
 
-void BaseOscillator::adjustPhases(VstInt16 Note)
+void BaseOscillator::adjustPhases(UInt8 Note)
 {
     // modulation in simetones
     double dCoarseFreq, dFineFreq, dFreq;
 
-    dCoarseFreq = FrequencyTable::ForNote((Note + (VstInt16)(m_dCoarse)) & 0x7f);
+    dCoarseFreq = FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse)) & 0x7f);
     if (m_dFinetune >= 0.0)
     {
-        dFineFreq = (FrequencyTable::ForNote((Note + (VstInt16)(m_dCoarse)+1) & 0x7f) - dCoarseFreq) * (((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
+        dFineFreq = (FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse)+1) & 0x7f) - dCoarseFreq) * (((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
         dFreq = (dCoarseFreq + dFineFreq) * m_dScaler;
     }
     else
     {
-        dFineFreq = (dCoarseFreq - FrequencyTable::ForNote((Note + (VstInt16)(m_dCoarse)-1) & 0x7f)) * (0.5 - ((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
+        dFineFreq = (dCoarseFreq - FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse)-1) & 0x7f)) * (0.5 - ((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
         dFreq = (dCoarseFreq - dFineFreq) * m_dScaler;
     }
     m_dPhase += dFreq;
@@ -92,20 +92,20 @@ void BaseOscillator::adjustPhases(VstInt16 Note)
 
 double BaseOscillator::processConnection(void)
 {
-    VstInt16 iNote;
+    SInt16 iNote;
     double dOutput;
 
     if (isInputConnected(OSC_CONNECTION_NOTE))
-        iNote = (VstInt16)inputConnections[OSC_CONNECTION_NOTE]->processConnection();
+        iNote = (SInt16)inputConnections[OSC_CONNECTION_NOTE]->processConnection();
     if (isInputConnected(OSC_CONNECTION_WAVEFORM))
-        setWaveform((VstInt16)inputConnections[OSC_CONNECTION_WAVEFORM]->processConnection());
+        setWaveform((SInt16)inputConnections[OSC_CONNECTION_WAVEFORM]->processConnection());
     if (isInputConnected(OSC_CONNECTION_COARSE))
         setCoarse(inputConnections[OSC_CONNECTION_COARSE]->processConnection());
     if (isInputConnected(OSC_CONNECTION_FINETUNE))
         setFinetune(inputConnections[OSC_CONNECTION_FINETUNE]->processConnection());
 
     // ModuleLogger::print(LOG_CLASS_GENERATOR, "%s::processIOs C:%lf/F:%lf/W:%ld/I:%lf", getModuleName().c_str(), getCoarse(), getFinetune(), getWaveform(), input);
-    dOutput = Process((VstInt16)iNote);
+    dOutput = Process((SInt16)iNote);
     // ModuleLogger::print(LOG_CLASS_GENERATOR, "osc output: %lf", res);
 
     return dOutput;

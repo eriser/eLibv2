@@ -13,12 +13,12 @@ void BaseSequencer::Init()
     lCurrentStepIndex = 0;
 }
 
-long BaseSequencer::getStepCount(void)
+SInt32 BaseSequencer::getStepCount(void)
 {
     return SequencerData.size();
 }
 
-void BaseSequencer::setStepValue(unsigned long Index, double Value)
+void BaseSequencer::setStepValue(UInt32 Index, double Value)
 {
     double StepValue;
 
@@ -29,7 +29,7 @@ void BaseSequencer::setStepValue(unsigned long Index, double Value)
     SequencerData.at(Index) = StepValue;
 }
 
-double BaseSequencer::getStepValue(unsigned long Index)
+double BaseSequencer::getStepValue(UInt32 Index)
 {
     double res = 0.0;
 
@@ -39,10 +39,10 @@ double BaseSequencer::getStepValue(unsigned long Index)
     return res;
 }
 
-void BaseSequencer::addSteps(long Count)
+void BaseSequencer::addSteps(SInt32 Count)
 {
     double temp;
-    for (long StepIndex = 0; StepIndex < Count; StepIndex++)
+    for (SInt32 StepIndex = 0; StepIndex < Count; StepIndex++)
     {
         temp = 0.0;
         SequencerData.push_back(temp);
@@ -52,16 +52,16 @@ void BaseSequencer::addSteps(long Count)
 double BaseSequencer::Process(const double Input)
 {
     double dOutput;
-    long lNeededSamplePosition = 0;
+    SInt32 lNeededSamplePosition = 0;
     double dSamplerate = getSamplerate();
 
     dOutput = getStepValue(lCurrentStepIndex);
 
     lCurrentSamplePosition++;
     if (bSync)
-        lNeededSamplePosition = (long)ModuleHelper::quarter2samples(dSpeed, dBpm, dSamplerate);
+        lNeededSamplePosition = (SInt32)ModuleHelper::quarter2samples(dSpeed, dBpm, dSamplerate);
     else
-        lNeededSamplePosition = (long)ModuleHelper::ms2samples(dSpeed * 1000, dSamplerate);
+        lNeededSamplePosition = (SInt32)ModuleHelper::ms2samples(dSpeed * 1000, dSamplerate);
 
     if (lCurrentSamplePosition >= lNeededSamplePosition)
     {

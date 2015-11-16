@@ -136,6 +136,19 @@ namespace eLibV2
             };
 
             /**
+            cue chunk
+            */
+            struct cueChunk
+            {
+                DWORD  dwName;
+                DWORD  dwPosition;
+                FOURCC fccChunk;
+                DWORD  dwChunkStart;
+                DWORD  dwBlockStart;
+                DWORD  dwSampleOffset;
+            };
+
+            /**
             structure of wavefile including header, format and data
             */
             struct waveFile
@@ -179,7 +192,7 @@ namespace eLibV2
             get size of loaded wavefile in samples
             @return number of samples
             */
-            long getWaveSize(void) { return SizeOfData; }
+            SInt32 getWaveSize(void) { return SizeOfData; }
 
             /**
             get format of loaded wavefile
@@ -202,7 +215,7 @@ namespace eLibV2
             struct waveFile Wave;
             struct chunkData Chunk;
             float **WaveData;
-            long SizeOfData;
+            SInt32 SizeOfData;
             bool m_bLoaded;
         };
     }

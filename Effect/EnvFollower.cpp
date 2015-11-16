@@ -22,10 +22,10 @@ double EnvFollower::Process(const double input)
 {
     double i = input;
     double res = 0.0;
-    long tATime, tRTime;
+    SInt32 tATime, tRTime;
 
-    tATime = (long)(Util::ModuleHelper::ms2samples(dAttack, dSampleRate)) * 10;
-    tRTime = (long)(Util::ModuleHelper::ms2samples(dRelease, dSampleRate)) * 10;
+    tATime = (SInt32)(Util::ModuleHelper::ms2samples(dAttack, dSampleRate)) * 10;
+    tRTime = (SInt32)(Util::ModuleHelper::ms2samples(dRelease, dSampleRate)) * 10;
 
     tATime = (tATime == 0) ? 1 : tATime;
     tRTime = (tRTime == 0) ? 1 : tRTime;

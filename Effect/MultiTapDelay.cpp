@@ -5,7 +5,7 @@ using namespace eLibV2::Effect;
 void MultiTapDelay::Init(void)
 {
     m_iWriteIndex = 0;
-    for (unsigned char readIndex = 0; readIndex < 4; ++readIndex)
+    for (UInt8 readIndex = 0; readIndex < 4; ++readIndex)
         m_iReadIndex[readIndex] = 0;
     setDelayLength(1000);
     setMixLevel(0.5);
@@ -20,14 +20,14 @@ void MultiTapDelay::Reset(void)
 
 void MultiTapDelay::adjustIndices(void)
 {
-    for (unsigned char readIndex = 0; readIndex < 4; ++readIndex)
+    for (UInt8 readIndex = 0; readIndex < 4; ++readIndex)
         m_iReadIndex[readIndex] = ModuleHelper::wrap(m_iReadIndex[readIndex], DELAY_BUFFER_SIZE - 1);
     m_iWriteIndex = ModuleHelper::wrap(m_iWriteIndex, DELAY_BUFFER_SIZE - 1);
 }
 
-void MultiTapDelay::setDelayLength(unsigned int length)
+void MultiTapDelay::setDelayLength(UInt16 length)
 {
-    unsigned int input = ModuleHelper::clamp(length, 1, DELAY_BUFFER_SIZE - 1);
+    UInt16 input = ModuleHelper::clamp(length, 1, DELAY_BUFFER_SIZE - 1);
     if (m_iDelayLength != input)
     {
         m_iDelayLength = input;

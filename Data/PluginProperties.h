@@ -31,7 +31,7 @@ namespace eLibV2
             {}
 
 #if defined(WIN32)
-            static PluginProperties loadFromResource(HINSTANCE instance, unsigned int resourceId)
+            static PluginProperties loadFromResource(HINSTANCE instance, UInt16 resourceId)
             {
                 PluginProperties res;
                 HRSRC hResource = NULL;
@@ -41,7 +41,7 @@ namespace eLibV2
                 hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
                 if (hResource)
                 {
-                    unsigned int bufferSize = SizeofResource(instance, hResource);
+                    UInt16 bufferSize = SizeofResource(instance, hResource);
                     hRData = LoadResource(instance, hResource);
                     if (hRData)
                     {
@@ -108,37 +108,37 @@ namespace eLibV2
                 return props;
             }
 
-            bool isSynth() { return mSynth; }
-            bool hasEditor() { return mEditor; }
-            bool canProcessReplacing() { return mCanProcessReplacing; }
-            bool canDoubleReplacing() { return mCanDoubleReplacing; }
-            int getNumPrograms() { return mNumPrograms; }
-            int getNumParameters() { return mNumParameters; }
-            int getNumInputs() { return mNumInputs; }
-            int getNumOutputs() { return mNumOutputs; }
-            std::string getId() { return mId; }
-            std::string getName() { return mName; }
-            std::string getVendor() { return mVendor; }
-            long getIdAsLong()
+            bool isSynth() const { return mSynth; }
+            bool hasEditor() const { return mEditor; }
+            bool canProcessReplacing() const { return mCanProcessReplacing; }
+            bool canDoubleReplacing() const { return mCanDoubleReplacing; }
+            UInt16 getNumPrograms() const { return mNumPrograms; }
+            UInt16 getNumParameters() const { return mNumParameters; }
+            UInt8 getNumInputs() const { return mNumInputs; }
+            UInt8 getNumOutputs() const { return mNumOutputs; }
+            std::string getId() const { return mId; }
+            std::string getName() const { return mName; }
+            std::string getVendor() const { return mVendor; }
+            SInt32 getIdAsLong()
             {
                 const char *s = mId.c_str();
-                long temp;
+                SInt32 temp;
 
                 temp = (s[0] << 24) + (s[1] << 16) + (s[2] << 8) + s[3];
                 return temp;
             }
 
-            int getVersion() { return mVersion; }
+            UInt16 getVersion() const { return mVersion; }
 
         private:
-            void setNumPrograms(int numPrograms) { mNumPrograms = numPrograms; }
-            void setNumParameters(int numParameters) { mNumParameters = numParameters; }
-            void setNumInputs(int numInputs) { mNumInputs = numInputs; }
-            void setNumOutputs(int numOutputs) { mNumOutputs = numOutputs; }
+            void setNumPrograms(UInt16 numPrograms) { mNumPrograms = numPrograms; }
+            void setNumParameters(UInt16 numParameters) { mNumParameters = numParameters; }
+            void setNumInputs(UInt8 numInputs) { mNumInputs = numInputs; }
+            void setNumOutputs(UInt8 numOutputs) { mNumOutputs = numOutputs; }
             void setId(std::string id) { mId = id; }
             void setName(std::string name) { mName = name; }
             void setVendor(std::string vendor) { mVendor = vendor; }
-            void setVersion(int version) { mVersion = version; }
+            void setVersion(UInt16 version) { mVersion = version; }
             void setSynth(bool synth) { mSynth = synth; }
             void setEditor(bool active) { mEditor = active; }
             void setProcessReplacing(bool processReplacing) { mCanProcessReplacing = processReplacing; }
@@ -151,9 +151,9 @@ namespace eLibV2
             std::string mId;
             std::string mName;
             std::string mVendor;
-            int mVersion;
-            int mNumInputs, mNumOutputs;
-            int mNumPrograms, mNumParameters;
+            UInt16 mVersion;
+            UInt8 mNumInputs, mNumOutputs;
+            UInt16 mNumPrograms, mNumParameters;
         };
     }
 }

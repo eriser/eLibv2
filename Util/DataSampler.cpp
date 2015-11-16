@@ -2,17 +2,17 @@
 
 using namespace eLibV2::Util;
 
-unsigned int DataSampler::ms_SampleDuration = 1000;
-unsigned int DataSampler::ms_CurrentlySampled = 0;
+UInt16 DataSampler::ms_SampleDuration = 1000;
+UInt16 DataSampler::ms_CurrentlySampled = 0;
 
 std::string DataSampler::ms_MessagePrefix = "sampled: ";
 
-void DataSampler::sample(const int input)
+void DataSampler::sample(const SInt16 input)
 {
     if (ms_CurrentlySampled >= ms_SampleDuration)
     {
         std::stringstream ss;
-        ss << ms_MessagePrefix << (int)input << std::endl;
+        ss << ms_MessagePrefix << (SInt16)input << std::endl;
 
 #ifdef WIN32
         OutputDebugString(ss.str().c_str());

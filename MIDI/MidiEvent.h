@@ -39,26 +39,26 @@ namespace eLibV2
             /**
             create event with given note and velocity
             */
-            MidiEvent(int note, int velocity) { mNote = note; mVelocity = velocity; }
+            MidiEvent(SInt16 note, SInt16 velocity) { mNote = note; mVelocity = velocity; }
 
             /**
             get note stored in event
             @return note
             */
-            int getNote() const { return mNote; }
+            SInt16 getNote() const { return mNote; }
 
             /**
             get velocity stored in event
             @return velocity
             */
-            int getVelocity() const { return mVelocity; }
+            SInt16 getVelocity() const { return mVelocity; }
 
         private:
             MidiEvent() {}
 
         private:
-            int mNote; ///< note
-            int mVelocity; ///< velocity
+            SInt16 mNote; ///< note
+            SInt16 mVelocity; ///< velocity
         };
 
         typedef std::vector<MidiEvent> MidiEventVector; ///< typedef for vector of events

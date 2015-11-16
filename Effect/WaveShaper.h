@@ -41,8 +41,8 @@ namespace eLibV2
             void setNegativeExponent(const double Exponent) { m_dNegativeExponent = Exponent; }
             double getNegativeExponent(void) { return m_dNegativeExponent; }
 
-            void setNumStages(const unsigned char NumStages) { m_iNumStages = NumStages; }
-            unsigned char getNumStages(void) { return m_iNumStages; }
+            void setNumStages(const UInt8 NumStages) { m_iNumStages = NumStages; }
+            UInt8 getNumStages(void) { return m_iNumStages; }
 
             void setInvertStages(const bool InvertStages) { m_bInvertStages = InvertStages; }
             bool getInvertStages(void) { return m_bInvertStages; }
@@ -53,7 +53,7 @@ namespace eLibV2
 
         private:
             double m_dPositiveExponent, m_dNegativeExponent;
-            unsigned char m_iNumStages;
+            UInt8 m_iNumStages;
             bool m_bInvertStages;
         };
     }

@@ -26,7 +26,7 @@ namespace eLibV2
                 Init();
             }
 
-            CascadedEQConstantQ(unsigned char NumberOfStages, std::string name = "CascadedEQConstantQ") :
+            CascadedEQConstantQ(UInt8 NumberOfStages, std::string name = "CascadedEQConstantQ") :
                 BaseName(name)
             {
                 m_uiNumberOfStages = ModuleHelper::clamp(NumberOfStages, 1, 31);
@@ -40,7 +40,7 @@ namespace eLibV2
             {
                 if (m_pStages)
                 {
-                    for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
+                    for (UInt8 stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
                         delete m_pStages[stageIndex];
                     delete[] m_pStages;
                 }
@@ -61,7 +61,7 @@ namespace eLibV2
 
                 m_pInput = new Connection::InputConnection("eq.input");
                 m_pStages = new ParametricConstantQ*[m_uiNumberOfStages];
-                for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
+                for (UInt8 stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
                 {
                     m_pStages[stageIndex] = new ParametricConstantQ();
                     if (stageIndex == 0)
@@ -81,7 +81,7 @@ namespace eLibV2
                 m_dGain = Gain;
                 if (m_pStages)
                 {
-                    for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
+                    for (UInt8 stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
                         m_pStages[stageIndex]->setGain(Gain);
                 }
             }
@@ -91,7 +91,7 @@ namespace eLibV2
                 BaseModule::setSamplerate(Samplerate);
                 if (m_pStages)
                 {
-                    for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
+                    for (UInt8 stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
                         m_pStages[stageIndex]->setSamplerate(Samplerate);
                 }
             }
@@ -100,7 +100,7 @@ namespace eLibV2
             {
                 if (m_pStages)
                 {
-                    for (unsigned char stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
+                    for (UInt8 stageIndex = 0; stageIndex < m_uiNumberOfStages; ++stageIndex)
                         m_pStages[stageIndex]->Reset();
                 }
             }
@@ -127,7 +127,7 @@ namespace eLibV2
         private:
             Connection::InputConnection *m_pInput;
             ParametricConstantQ **m_pStages;
-            unsigned char m_uiNumberOfStages;
+            UInt8 m_uiNumberOfStages;
             double m_dQ, m_dGain;
         };
     }

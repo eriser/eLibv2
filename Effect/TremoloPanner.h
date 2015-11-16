@@ -61,10 +61,10 @@ namespace eLibV2
         public:
             /* getter/setter */
             void setMode(const TremoloPannerMode Mode) { m_eMode = Mode; }
-            TremoloPannerMode getMode(void) { return m_eMode; }
+            TremoloPannerMode getMode(void) const { return m_eMode; }
 
             void setModulationDepth(const double ModulationDepth) { m_dModulationDepth = ModulationDepth; }
-            double getModulationDepth(void) { return m_dModulationDepth; }
+            double getModulationDepth(void) const { return m_dModulationDepth; }
 
             void setLFOFreq(const double LFOFreq)
             {
@@ -72,7 +72,7 @@ namespace eLibV2
                     m_pLFO->setFreq(LFOFreq);
             }
 
-            double getLFOFreq(void)
+            double getLFOFreq(void) const
             {
                 double dFreq = 0.0;
                 if (m_pLFO)
@@ -83,7 +83,7 @@ namespace eLibV2
             // own process-method for 2 inputs
             virtual double Process(const double Input1, const double Input2);
 
-            BaseConnection* getSecondOutput(void) { return m_pOutputConnection; }
+            BaseConnection* getSecondOutput(void) const { return m_pOutputConnection; }
 
         public:
             void attachBypass(BaseConnection *connection) { inputConnections[TREMOLOPANNER_CONNECTION_BYPASS] = connection; }

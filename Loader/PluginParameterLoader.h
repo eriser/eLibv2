@@ -19,14 +19,14 @@ namespace eLibV2
         {
         public:
 #if defined(WIN32)
-            static PluginParameters loadFromResource(HINSTANCE instance, unsigned int resourceId)
+            static PluginParameters loadFromResource(HINSTANCE instance, UInt16 resourceId)
             {
                 HRSRC hResource = NULL;
                 HGLOBAL hRData = NULL;
                 void *pRData;
 
                 hResource = FindResource(instance, MAKEINTRESOURCE(resourceId), "RAW");
-                unsigned int bufferSize = SizeofResource(instance, hResource);
+                UInt16 bufferSize = SizeofResource(instance, hResource);
                 hRData = LoadResource(instance, hResource);
                 pRData = LockResource(hRData);
                 XmlParser parser(pRData, bufferSize);

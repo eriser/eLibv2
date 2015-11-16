@@ -2,16 +2,16 @@
 
 using namespace eLibV2::MIDI;
 
-void MidiEventHandler::insertEvent(const int channel, const MidiEvent& event)
+void MidiEventHandler::insertEvent(const SInt16 channel, const MidiEvent& event)
 {
     if (channelInRange(channel))
         mMidiEvents[channel].push_back(event);
 }
 
-bool MidiEventHandler::deleteEvent(const int channel, const MidiEvent& event)
+bool MidiEventHandler::deleteEvent(const SInt16 channel, const MidiEvent& event)
 {
     bool deleted = false;
-    int noteToSearch = event.getNote();
+    SInt16 noteToSearch = event.getNote();
 
     if (channelInRange(channel))
     {
@@ -29,7 +29,7 @@ bool MidiEventHandler::deleteEvent(const int channel, const MidiEvent& event)
     return deleted;
 }
 
-bool MidiEventHandler::getEvents(const int channel, MidiEventVector& events) const
+bool MidiEventHandler::getEvents(const SInt16 channel, MidiEventVector& events) const
 {
     bool res = false;
     if (channelInRange(channel))
@@ -49,7 +49,7 @@ bool MidiEventHandler::getEvents(const int channel, MidiEventVector& events) con
     return res;
 }
 
-bool MidiEventHandler::hasEventsOnChannel(const int channel) const
+bool MidiEventHandler::hasEventsOnChannel(const SInt16 channel) const
 {
     bool has = false;
 
@@ -63,7 +63,7 @@ bool MidiEventHandler::hasEventsOnAnyChannel() const
 {
     bool hasEvents = false;
 
-    for (int channelIndex = MIDI_CHANNEL_MIN; channelIndex < MIDI_CHANNEL_MAX; channelIndex++)
+    for (SInt16 channelIndex = MIDI_CHANNEL_MIN; channelIndex < MIDI_CHANNEL_MAX; channelIndex++)
     {
         if (hasEventsOnChannel(channelIndex))
         {

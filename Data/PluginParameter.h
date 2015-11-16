@@ -6,6 +6,8 @@
 #include <sstream>
 #include <vector>
 
+#include <Util/Types.h>
+
 namespace eLibV2
 {
     namespace Data

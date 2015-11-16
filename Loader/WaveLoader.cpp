@@ -62,6 +62,12 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
         wavefile.read((char*)&Chunk.ChunkID, sizeof(Chunk.ChunkID));
         wavefile.read((char*)&Chunk.ChunkSize, sizeof(Chunk.ChunkSize));
 
+        if (Chunk.ChunkSize % 4 != 0)
+        {
+            ModuleLogger::print(LOG_CLASS_LOADER, "Chunk size not aligned. will be padded");
+            Chunk.ChunkSize += (4 - (Chunk.ChunkSize % 4));
+        }
+
         // format chunk
         if (strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_FMT, 4) == 0)
         {
@@ -125,11 +131,11 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
                 WaveData[channelIndex] = new float[SizeOfData];
                 int byteAdvance = Wave.format.BlockAlign / Wave.format.NumChannels;
 
-                long byteOffset = channelIndex * byteAdvance;
+                SInt32 byteOffset = channelIndex * byteAdvance;
                 ModuleLogger::print(LOG_CLASS_LOADER, "advancing %li bytes", byteAdvance);
 
                 // iterate over samples
-                for (long sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
+                for (SInt32 sampleIndex = 0; sampleIndex < SizeOfData; sampleIndex++)
                 {
                     __int32 tempData = 0;
                     // input data will be stored left-aligned
@@ -199,6 +205,19 @@ WaveLoader::WaveLoaderError WaveLoader::Load(std::string filename)
             TempByteBuffer = NULL;
 
             Wave.data.DataPtr = WaveData;
+        }
+        // cue chunk
+        else if (strncmp((char*)&Chunk.ChunkID, WAVE_MAGIC_CUE, 4) == 0)
+        {
+            DWORD numCues;
+            cueChunk cuePoint;
+            wavefile.read((char*)&numCues, sizeof(numCues));
+            ModuleLogger::print(LOG_CLASS_LOADER, "cue chunk: '%li'", numCues);
+            for (i = 0; i < numCues; ++i)
+            {
+                wavefile.read((char*)&cuePoint, sizeof(cuePoint));
+                ModuleLogger::print(LOG_CLASS_LOADER, "cue point: blockstart: %li chunkstart: %li position: %li sampleoffset: %li", cuePoint.dwBlockStart, cuePoint.dwChunkStart, cuePoint.dwPosition, cuePoint.dwSampleOffset);
+            }
         }
         else
         {

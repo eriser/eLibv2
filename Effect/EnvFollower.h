@@ -34,8 +34,8 @@ namespace eLibV2
             double dRelease;
             double dLastInput;
             double dSampleRate;
-            long tAttack;
-            long tRelease;
+            SInt32 tAttack;
+            SInt32 tRelease;
         };
     }
 }
