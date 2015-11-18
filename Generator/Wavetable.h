@@ -40,13 +40,13 @@ namespace eLibV2
             enum
             {
                 WAVETABLE_SAMPLE_BANDLIMIT = 63, // needs to be odd value
-                WAVETABLE_SAMPLE_SIZE = 65536
+                WAVETABLE_SAMPLE_SIZE = 0x8000   // size is limited to a UInt16
             };
 
             typedef struct
             {
-                SInt16 ChannelNum;
-                SInt32 WaveSize;
+                UInt16 ChannelNum;
+                UInt16 WaveSize;
                 std::string WaveName;
                 double *WaveData;
             } Waveform;

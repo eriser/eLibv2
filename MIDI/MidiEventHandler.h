@@ -1,7 +1,7 @@
 #ifndef MODMIDIEVENTHANDLER_H_
 #define MODMIDIEVENTHANDLER_H_
 
-#include <BASE/BaseModule.h>
+#include <Base/BaseModule.h>
 #include <MIDI/MidiEvent.h>
 #include <Util/Logger.h>
 

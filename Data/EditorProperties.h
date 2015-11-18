@@ -8,6 +8,7 @@
 
 #include <string>
 #include <map>
+#include <cstdlib>
 
 using namespace eLibV2::Util;
 using namespace eLibV2::XML;

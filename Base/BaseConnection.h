@@ -7,6 +7,7 @@
 
 #include <map>
 #include <sstream>
+#include <memory.h>
 
 using namespace eLibV2::Util;
 

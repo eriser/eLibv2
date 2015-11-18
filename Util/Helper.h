@@ -4,6 +4,7 @@
 #include <Util/Types.h>
 
 #include <cmath>
+#include <cstdlib>
 
 namespace eLibV2
 {

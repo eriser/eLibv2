@@ -10,7 +10,11 @@ typedef signed int SInt32;          ///< 32 bit integer type
 typedef unsigned int UInt32;        ///< 32 bit integer type
 typedef signed __int64 SInt64;      ///< 64 bit integer type
 typedef unsigned __int64 UInt64;    ///< 64 bit integer type
+#elif defined __APPLE__
+// mac osx
+#include <CoreServices/CoreServices.h>
 #else
+// all other platforms
 #include <stdint.h>
 typedef int8_t SInt8;       ///< 8 bit integer type
 typedef uint8_t UInt8;      ///< 8 bit integer type
@@ -29,3 +33,4 @@ union flint
 };
 
 #endif
+

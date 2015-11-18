@@ -47,7 +47,7 @@ namespace eLibV2
         public:
             /* setter/getter */
             void setDelayLength(const UInt16 length);
-            UInt16 getDelayLength(void) { m_iDelayLength; }
+            UInt16 getDelayLength(void) { return m_iDelayLength; }
 
             void setMixLevel(const double MixLevel) { m_dMixLevel = MixLevel; }
             double getMixLevel(void) { return m_dMixLevel; }

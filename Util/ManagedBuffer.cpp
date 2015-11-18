@@ -1,4 +1,5 @@
 #include <Util/ManagedBuffer.h>
+#include <memory.h>
 
 using namespace eLibV2::Util;
 

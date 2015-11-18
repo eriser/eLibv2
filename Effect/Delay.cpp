@@ -1,8 +1,7 @@
 #include <Effect/Delay.h>
 
-using namespace eLibV2::Effect;
-
-void Delay::Init(void)
+// TODO: mac osx has also class delay
+void eLibV2::Effect::Delay::Init(void)
 {
     m_iWriteIndex = 0;
     m_iReadIndex = 0;
@@ -15,18 +14,18 @@ void Delay::Init(void)
     m_dExternalFeedback = 0.0;
 }
 
-void Delay::Reset(void)
+void eLibV2::Effect::Delay::Reset(void)
 {
     Init();
 }
 
-void Delay::adjustIndices(void)
+void eLibV2::Effect::Delay::adjustIndices(void)
 {
     m_iReadIndex = ModuleHelper::wrap(m_iReadIndex, DELAY_BUFFER_SIZE - 1);
     m_iWriteIndex = ModuleHelper::wrap(m_iWriteIndex, DELAY_BUFFER_SIZE - 1);
 }
 
-void Delay::setDelayLength(const double Length)
+void eLibV2::Effect::Delay::setDelayLength(const double Length)
 {
     m_dDelayLength = Length;
     if (m_bSyncTempo)
@@ -45,7 +44,7 @@ void Delay::setDelayLength(const double Length)
     adjustIndices();
 }
 
-double Delay::Process(const double Input)
+double eLibV2::Effect::Delay::Process(const double Input)
 {
     double dOutput = 0.0, dFeedback = 0.0;
 
@@ -64,7 +63,7 @@ double Delay::Process(const double Input)
     return dOutput;
 }
 
-double Delay::processConnection(void)
+double eLibV2::Effect::Delay::processConnection(void)
 {
     double dInput = 0.0, dOutput = 0.0;
 

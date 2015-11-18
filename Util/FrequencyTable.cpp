@@ -29,7 +29,6 @@ double FrequencyTable::ForNote(UInt8 note)
 
     if (!initialized)
         SetupFreqs();
-    if ((note >= 0) && (note < kNumNotes))
-        res = freqtab[note];
+    res = freqtab[note];
     return res;
 }

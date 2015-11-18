@@ -1,4 +1,5 @@
 #include <Loader/WaveLoader.h>
+#include <cstdlib>
 
 using namespace eLibV2::Loader;
 using namespace eLibV2::Util;
