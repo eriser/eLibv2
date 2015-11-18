@@ -142,7 +142,7 @@ void BaseWavetable::Init()
             else
                 pulse[SampleIndex] = (SampleIndex < (WAVETABLE_SAMPLE_SIZE / 2)) ? 1.0 : -1.0;
 
-            random = ((float)rand() / (float)(RAND_MAX + 1));
+            random = ((double)rand() / ((double)RAND_MAX) + 1.0);
             if (SampleIndex == 0)
                 noise[SampleIndex] = 0.0f;
             else

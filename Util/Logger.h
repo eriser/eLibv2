@@ -7,6 +7,9 @@
 
 #include <cstdio>
 #include <iostream>
+#include <cstdarg>
+
+#include <memory.h>
 
 #include <Util/Types.h>
 

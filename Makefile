@@ -78,19 +78,19 @@ $(LIB_A): $(OBJ)
 	ar rcs $(LIB_A) $(OBJ)
 
 $(BUILDTEST_A): $(LIB_A) buildtest.cpp
-	$(CCC) $(INCLUDES) buildtest.cpp libeLibv2.a $(LDFLAGS) -o $(BUILDTEST_A)
+	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp libeLibv2.a $(LDFLAGS) -o $(BUILDTEST_A)
 
 $(LIB_SO): $(SRC)
-	$(CCC) $(INCLUDES) -shared -fPIC $(SRC) $(LDFLAGS) -o $(LIB_SO)
+	$(CCC) $(INCLUDES) $(CCFLAGS) -shared -fPIC $(SRC) $(LDFLAGS) -o $(LIB_SO)
 
 $(BUILDTEST_SO): $(LIB_SO) buildtest.cpp
-	$(CCC) $(INCLUDES) buildtest.cpp -L. -leLibv2 -o $(BUILDTEST_SO)
+	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp -L. -leLibv2 -o $(BUILDTEST_SO)
 
 $(MIDITEST_LINUX): miditest_linux.cpp
-	$(CCC) $(INCLUDES) miditest_linux.cpp -o $(MIDITEST_LINUX)
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_linux.cpp -o $(MIDITEST_LINUX)
 
 $(MIDITEST_MACOS): miditest_macos.cpp
-	$(CCC) $(INCLUDES) miditest_macos.cpp -o $(MIDITEST_MACOS) -framework CoreMIDI -framework CoreServices
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_macos.cpp -o $(MIDITEST_MACOS) -framework CoreMIDI -framework CoreServices
 
 #depend: dep
 # 

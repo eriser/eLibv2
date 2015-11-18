@@ -15,6 +15,9 @@ int main(int argc, char**argv)
     WaveLoader* loader = new WaveLoader();
     LPSLoader* lps = new LPSLoader();
     Clip* clipper = new Clip();
+
+    ModuleLogger::enable();
+    ModuleLogger::setConsole();
     
     clipper->setClipMode(Clip::CLIP_MODE_BOTH);
     clipper->setClipLevel(0.5);

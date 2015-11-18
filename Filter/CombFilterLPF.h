@@ -18,8 +18,8 @@ namespace eLibV2
         public:
             CombFilterLPF(std::string name = "CombFilterLPF") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

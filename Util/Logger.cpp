@@ -18,12 +18,14 @@ void ModuleLogger::print(SInt32 loggingClass, const char* format, ...)
     va_list args;
 
     va_start(args, format);
+    memset(debugBuffer, 0, sizeof(debugBuffer));
     vsnprintf(debugBuffer, sizeof(debugBuffer), format, args);
 
     // append \n at the end
-    snprintf(debugBuffer, sizeof(debugBuffer), "%s\n", debugBuffer);
+    // TODO: overwrites complete buffer on raspberry pi
+    // snprintf(debugBuffer, sizeof(debugBuffer), "%s\n", debugBuffer);
     if (outputType == ModuleLogger::OUTPUT_TYPE_CONSOLE)
-        std::cout << debugBuffer;
+        std::cout << debugBuffer << std::endl;
 #ifdef WIN32
     else if (outputType == ModuleLogger::OUTPUT_TYPE_DBGVIEW)
         OutputDebugString(debugBuffer);

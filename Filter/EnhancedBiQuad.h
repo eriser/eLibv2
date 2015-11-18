@@ -42,8 +42,8 @@ namespace eLibV2
 
                 // underflow check
                 if (
-                    (feedback > 0.0) && (feedback < FLT_MIN_PLUS) ||
-                    (feedback < 0.0) && (feedback > FLT_MIN_MINUS)
+                    ((feedback > 0.0) && (feedback < FLT_MIN_PLUS)) ||
+                    ((feedback < 0.0) && (feedback > FLT_MIN_MINUS))
                     )
                     feedback = 0.0;
 
