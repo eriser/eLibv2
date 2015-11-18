@@ -40,13 +40,13 @@ namespace eLibV2
             enum
             {
                 WAVETABLE_SAMPLE_BANDLIMIT = 63, // needs to be odd value
-                WAVETABLE_SAMPLE_SIZE = 0x8000   // size is limited to a UInt16
+                WAVETABLE_SAMPLE_SIZE = 0x10000   // size is limited to a UInt16
             };
 
             typedef struct
             {
                 UInt16 ChannelNum;
-                UInt16 WaveSize;
+                UInt32 WaveSize;
                 std::string WaveName;
                 double *WaveData;
             } Waveform;
@@ -66,7 +66,7 @@ namespace eLibV2
 
         private:
             bool AddWaveform(const std::string Filename, const std::string WaveName);
-            bool AddWaveform(const double *Wavedata, const UInt16 WaveSize, const std::string WaveName, const UInt8 ChannelNum = 1);
+            bool AddWaveform(const double *Wavedata, const UInt32 WaveSize, const std::string WaveName, const UInt8 ChannelNum = 1);
 
 #if defined(WIN32)
             bool AddWaveform(const HINSTANCE hInstance, const UInt16 ResourceID, const std::string WaveName, const UInt8 ByteSize = 2, const UInt8 ChannelNum = 1);

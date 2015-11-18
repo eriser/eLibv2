@@ -11,7 +11,6 @@ ModuleLogger::OutputType ModuleLogger::outputType = ModuleLogger::OUTPUT_TYPE_CO
 
 void ModuleLogger::print(SInt32 loggingClass, const char* format, ...)
 {
-#ifdef _DEBUG
     if (!LoggingClassesEnabled(loggingClass))
         return;
 
@@ -24,12 +23,11 @@ void ModuleLogger::print(SInt32 loggingClass, const char* format, ...)
     // append \n at the end
     snprintf(debugBuffer, sizeof(debugBuffer), "%s\n", debugBuffer);
     if (outputType == ModuleLogger::OUTPUT_TYPE_CONSOLE)
-        std::cout << debugBuffer << std::endl;
+        std::cout << debugBuffer;
 #ifdef WIN32
     else if (outputType == ModuleLogger::OUTPUT_TYPE_DBGVIEW)
         OutputDebugString(debugBuffer);
 #endif
 
     va_end(args);
-#endif
 }

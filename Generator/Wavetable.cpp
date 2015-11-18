@@ -75,7 +75,7 @@ void BaseWavetable::Init()
         for (UInt32 SampleIndex = 0; SampleIndex < WAVETABLE_SAMPLE_SIZE; ++SampleIndex)
         {
             // bandlimited waveforms
-            sine[SampleIndex] = sin((2.0 * PI * (SampleIndex / (double)WAVETABLE_SAMPLE_SIZE)));
+            sine[SampleIndex] = sin((2.0 * PI * ((double)SampleIndex / (double)WAVETABLE_SAMPLE_SIZE)));
             enis[SampleIndex] = -sine[SampleIndex];
 
             /* generate triangle waveform (0.0 -> 1.0, 1.0 -> -1.0, -1.0 -> 0.0 */
@@ -277,7 +277,7 @@ bool BaseWavetable::AddWaveform(const std::string Filename, const std::string Wa
     return true;
 }
 
-bool BaseWavetable::AddWaveform(const double *Wavedata, const UInt16 WaveSize, const std::string WaveName, const UInt8 ChannelNum)
+bool BaseWavetable::AddWaveform(const double *Wavedata, const UInt32 WaveSize, const std::string WaveName, const UInt8 ChannelNum)
 {
     Waveform waveform;
 
@@ -410,9 +410,9 @@ double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase)
         return data;
 
     // prepare for linear interpolation
-    SInt16 firstIndex = (SInt16)(dPhase * 2);
+    SInt32 firstIndex = (SInt32)(dPhase * 2);
     double dFrac = (dPhase * 2) - firstIndex;
-    SInt16 nextIndex = (firstIndex + 1) % Waveforms[WaveIndex].WaveSize;
+    SInt32 nextIndex = (firstIndex + 1) % Waveforms[WaveIndex].WaveSize;
     firstIndex %= Waveforms[WaveIndex].WaveSize;
 
     // data = Waveforms[WaveIndex].WaveData[(SInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
