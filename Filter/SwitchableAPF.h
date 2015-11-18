@@ -16,8 +16,8 @@ namespace eLibV2
         public:
             SwitchableAPF(std::string name = "SwitchableAPF") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

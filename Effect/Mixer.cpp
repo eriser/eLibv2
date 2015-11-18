@@ -19,6 +19,9 @@ double Mixer::Process2(const double Input1, const double Input2)
 
     switch (eMode)
     {
+        case MIXER_MODE_UNDEF:
+            break;
+
         case MIXER_MODE_ADD:
             res = Input1 + Input2;
             break;

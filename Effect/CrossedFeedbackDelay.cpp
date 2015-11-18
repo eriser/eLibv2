@@ -32,6 +32,9 @@ void CrossedFeedbackDelay::setDelayMode(const DelayMode delayMode)
 
     switch (m_eDelayMode)
     {
+        case DELAY_MODE_UNDEF:
+            break;
+
         case DELAY_MODE_NORMAL:
             m_pDelayLeft->setFeedbackMode(Delay::FEEDBACK_MODE_INTERNAL);
             m_pDelayRight->setFeedbackMode(Delay::FEEDBACK_MODE_INTERNAL);

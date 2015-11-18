@@ -27,6 +27,9 @@ double DynamicsProcessor::Process(const double Input)
         // get slope depending on mode
         switch (m_eMode)
         {
+            case DYNAMICS_MODE_UNDEF:
+                break;
+
             case DYNAMICS_MODE_COMPRESSOR:
                 dSlope = 1.0 - (1.0 / m_dRatio);
                 break;

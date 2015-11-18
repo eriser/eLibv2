@@ -19,6 +19,9 @@ double TremoloPanner::Process(const double Input1, const double Input2)
 
     switch (m_eMode)
     {
+        case TREMOLOPANNER_MODE_UNDEF:
+            break;
+            
         case TREMOLOPANNER_MODE_TREMOLO:
             dOutput = Input1 * (dLFOOutput * m_dModulationDepth + 1.0 - m_dModulationDepth);
             m_pOutputConnection->setInput(Input2 * (dLFOOutput * m_dModulationDepth + 1.0 - m_dModulationDepth));

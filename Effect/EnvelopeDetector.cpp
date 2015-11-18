@@ -24,6 +24,9 @@ double EnvelopeDetector::Process(const double Input)
 
     switch (m_eDetectMode)
     {
+        case ENVELOPEDETECTOR_DETECTMODE_UNDEF:
+            break;
+
         case ENVELOPEDETECTOR_DETECTMODE_PEAK:
             dInput = fabs(Input);
             break;

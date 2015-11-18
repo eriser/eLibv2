@@ -258,7 +258,7 @@ bool BaseWavetable::AddWaveform(const std::string Filename, const std::string Wa
             return false;
 
         // get only data of first channel
-        for (SInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
+        for (UInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
             waveform.WaveData[SampleIndex] = ((double)waveData[SampleIndex]);
 
         waveLoader.Unload();
@@ -294,7 +294,7 @@ bool BaseWavetable::AddWaveform(const double *Wavedata, const UInt32 WaveSize, c
         if (!Wavedata)
             return false;
 
-        for (SInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
+        for (UInt32 SampleIndex = 0; SampleIndex < waveform.WaveSize / waveform.ChannelNum; SampleIndex += waveform.ChannelNum)
             waveform.WaveData[SampleIndex] = Wavedata[SampleIndex];
 
         Waveforms.push_back(waveform);

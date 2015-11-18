@@ -34,7 +34,10 @@ std::string PluginParameter::getValueAsString(const double in) const
     switch (mType)
     {
     case ParameterTypeBoolean:
-        res << (in < ((mMaxValue - mMinValue) / 2)) ? "false" : "true";
+        if (in < ((mMaxValue - mMinValue) / 2))
+            res << "false";
+        else
+            res << "true";
         break;
 
     case ParameterTypeDouble:

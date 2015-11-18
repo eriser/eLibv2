@@ -17,8 +17,8 @@ namespace eLibV2
         public:
             CombFilter(std::string name = "CombFilter") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

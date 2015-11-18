@@ -14,6 +14,9 @@ double Clip::Process(const double Input)
 
     switch (eClipMode)
     {
+        case CLIP_MODE_UNDEF:
+            break;
+
         case CLIP_MODE_POSITIVE:
             if (Input > dClipLevel)
                 dOutput = dClipLevel;

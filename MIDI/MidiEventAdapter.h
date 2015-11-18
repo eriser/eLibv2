@@ -19,8 +19,8 @@ namespace eLibV2
         public:
             MidiEventAdapter(MidiEventHandler *handler, SInt16 channel) :
                 Base::BaseName("MidiEventAdapter"),
-                mHandler(handler),
-                mChannel(channel)
+                mChannel(channel),
+                mHandler(handler)
             {}
 
             /**
