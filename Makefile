@@ -1,5 +1,6 @@
 # source files.
-SRC =  	Generator/NoiseGenerator.cpp \
+SRC = \
+	Generator/NoiseGenerator.cpp \
 	Generator/Wavetable.cpp \
 	Generator/BaseOsc.cpp \
 	Generator/Sequencer.cpp \
@@ -45,41 +46,55 @@ SRC =  	Generator/NoiseGenerator.cpp \
 
 OBJ = $(SRC:.cpp=.o)
  
-OUTSTATIC = libeLibv2.a
-OUTDYNAMIC = libeLibv2.so
-BUILDTEST = buildtest
+LIB_A = libeLibv2.a
+LIB_SO = libeLibv2.so
+BUILDTEST_A = buildtest_a
+BUILDTEST_SO = buildtest_so
+MIDITEST_LINUX = miditest_linux
+MIDITEST_MACOS = miditest_macos
 
 # include directories
-INCLUDES = -I. -I../include/ -I/usr/local/include
- 
+INCLUDES = -I. -I/usr/local/include
+
 # C++ compiler flags (-g -O2 -Wall)
-CCFLAGS = -g
+CCFLAGS = -g -Wall
 
 # compiler
 CCC = g++
 
 # compile flags
+# c and m for standard
+# z for zlib
 LDFLAGS = -L/usr/lib -L/usr/local/lib -lc -lm -lz
 
 .SUFFIXES: .cpp
- 
-default: $(OUTSTATIC) $(OUTDYNAMIC) $(BUILDTEST)
- 
+
+default: $(LIB_A) $(LIB_SO) $(BUILDTEST_A) $(BUILDTEST_SO) $(MIDITEST_LINUX) $(MIDITEST_MACOS)
+
 .cpp.o:
 	$(CCC) $(INCLUDES) $(CCFLAGS) -c $< -o $@
- 
-$(OUTSTATIC): $(OBJ)
-	ar rcs $(OUTSTATIC) $(OBJ)
 
-$(OUTDYNAMIC): $(SRC)
-	g++ $(INCLUDES) -shared -fPIC -o $(OUTDYNAMIC) $(SRC) $(LDFLAGS)
+$(LIB_A): $(OBJ)
+	ar rcs $(LIB_A) $(OBJ)
 
-$(BUILDTEST): $(OUTDYNAMIC)
-	g++ $(INCLUDES) buildtest.cpp -o buildtest -L. -leLibv2
+$(BUILDTEST_A): $(LIB_A) buildtest.cpp
+	$(CCC) $(INCLUDES) buildtest.cpp libeLibv2.a $(LDFLAGS) -o $(BUILDTEST_A)
+
+$(LIB_SO): $(SRC)
+	$(CCC) $(INCLUDES) -shared -fPIC $(SRC) $(LDFLAGS) -o $(LIB_SO)
+
+$(BUILDTEST_SO): $(LIB_SO) buildtest.cpp
+	$(CCC) $(INCLUDES) buildtest.cpp -L. -leLibv2 -o $(BUILDTEST_SO)
+
+$(MIDITEST_LINUX): miditest_linux.cpp
+	$(CCC) $(INCLUDES) miditest_linux.cpp -o $(MIDITEST_LINUX)
+
+$(MIDITEST_MACOS): miditest_macos.cpp
+	$(CCC) $(INCLUDES) miditest_macos.cpp -o $(MIDITEST_MACOS) -framework CoreMIDI -framework CoreServices
 
 #depend: dep
 # 
 #	makedepend -- $(CFLAGS) -- $(INCLUDES) $(SRC)
- 
+
 clean:
-	rm -f $(OBJ) $(OUTSTATIC) $(OUTDYNAMIC) Makefile.bak
+	rm -f $(OBJ) $(LIB_A) $(LIB_SO) $(BUILDTEST_A) $(BUILDTEST_SO) $(MITEST_LINUX) $(MIDITEST_MACOS) Makefile.bak
