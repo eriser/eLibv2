@@ -1,14 +1,14 @@
 #ifndef MODENVELOPEDADSR_H_
 #define MODENVELOPEDADSR_H_
 
-#include <Base/BaseEnvelope.h>
+#include <Envelope/BaseEnvelope.h>
 
 namespace eLibV2
 {
     namespace Envelope
     {
         /// @todo transfer test-case to googletest
-        class EnvelopeDADSR : public Base::BaseEnvelope
+        class EnvelopeDADSR : public BaseEnvelope
         {
         public:
             enum EnvelopeState

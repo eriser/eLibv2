@@ -8,12 +8,12 @@
 
 namespace eLibV2
 {
-    namespace Base
+    namespace Filter
     {
         /**
         this module provides basic methods used for signal processing in its subclasses
         */
-        class BaseFilter : public BaseModule
+        class BaseFilter : public Base::BaseModule
         {
         public:
             enum
@@ -29,8 +29,8 @@ namespace eLibV2
 
         public:
             BaseFilter(std::string name = "BaseFilter") :
-                BaseName(name),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                Base::BaseName(name),
+                Connection::BaseConnection(FILTER_CONNECTION_NUM)
             {
                 m_pInternalBiquad = new Filter::EnhancedBiQuad();
                 mMinimumThetaC = 0.0005;

@@ -1,7 +1,7 @@
 #ifndef MODCOMBFILTERLPF_H_
 #define MODCOMBFILTERLPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Filter/OnePoleLPF.h>
 #include <Effect/Delay.h>
 #include <Util/Defines.h>
@@ -13,7 +13,7 @@ namespace eLibV2
         /**
         Implements a second-order Butterworth Bandpass-Filter
         */
-        class CombFilterLPF : public Base::BaseFilter
+        class CombFilterLPF : public BaseFilter
         {
         public:
             CombFilterLPF(std::string name = "CombFilterLPF") :

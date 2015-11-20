@@ -1,14 +1,14 @@
 #ifndef MODWAVESHAPER_H_
 #define MODWAVESHAPER_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 namespace eLibV2
 {
     namespace Effect
     {
-        class WaveShaper : public Base::BaseEffect
+        class WaveShaper : public BaseEffect
         {
         public:
             enum

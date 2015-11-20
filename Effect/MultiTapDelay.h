@@ -1,7 +1,7 @@
 #ifndef MODMULTITAPDELAY_H_
 #define MODMULTITAPDELAY_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Logger.h>
 #include <Util/Helper.h>
 
@@ -9,7 +9,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class MultiTapDelay : public Base::BaseEffect
+        class MultiTapDelay : public BaseEffect
         {
         public:
             enum

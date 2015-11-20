@@ -1,7 +1,7 @@
 #ifndef MODCASCADEDEQCONSTANTQ_H_
 #define MODCASCADEDEQCONSTANTQ_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Connection/InputConnection.h>
 #include <Filter/ParametricConstantQ.h>
 #include <Util/Defines.h>
@@ -13,7 +13,7 @@ namespace eLibV2
         /**
         Implements a hi-shelving filter
         */
-        class CascadedEQConstantQ : public Base::BaseFilter
+        class CascadedEQConstantQ : public BaseFilter
         {
         public:
             CascadedEQConstantQ(std::string name = "CascadedEQConstantQ") :

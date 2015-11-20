@@ -1,7 +1,7 @@
 #ifndef MODDELAY_H_
 #define MODDELAY_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Logger.h>
 #include <Util/Helper.h>
 
@@ -9,7 +9,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class Delay : public Base::BaseEffect
+        class Delay : public BaseEffect
         {
         public:
             static const UInt8 NUM_SYNC_FACTORS = 9;

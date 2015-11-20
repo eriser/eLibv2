@@ -1,7 +1,7 @@
 #ifndef MODCFBDELAY_H_
 #define MODCFBDELAY_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Effect/Delay.h>
 #include <Util/Helper.h>
 
@@ -9,7 +9,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class CrossedFeedbackDelay : public Base::BaseEffect
+        class CrossedFeedbackDelay : public BaseEffect
         {
         public:
             enum DelayMode

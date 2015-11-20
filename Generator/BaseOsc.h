@@ -1,7 +1,7 @@
 #ifndef MODBASEOSC_H_
 #define MODBASEOSC_H_
 
-#include <Base/BaseGenerator.h>
+#include <Generator/BaseGenerator.h>
 #include <Generator/Wavetable.h>
 
 #include <Util/FrequencyTable.h>
@@ -19,7 +19,7 @@ namespace eLibV2
         /**
         this class implements a basic oscillator module using a wavetable
         */
-        class BaseOscillator : public Base::BaseGenerator
+        class BaseOscillator : public Generator::BaseGenerator
         {
         protected:
             enum
@@ -66,10 +66,10 @@ namespace eLibV2
 
         public:
             /* attach methods */
-            void attachNote(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_NOTE] = connection; }
-            void attachWaveform(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_WAVEFORM] = connection; }
-            void attachCoarse(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_COARSE] = connection; }
-            void attachFinetune(Base::BaseConnection *connection) { inputConnections[OSC_CONNECTION_FINETUNE] = connection; }
+            void attachNote(Connection::BaseConnection *connection) { inputConnections[OSC_CONNECTION_NOTE] = connection; }
+            void attachWaveform(Connection::BaseConnection *connection) { inputConnections[OSC_CONNECTION_WAVEFORM] = connection; }
+            void attachCoarse(Connection::BaseConnection *connection) { inputConnections[OSC_CONNECTION_COARSE] = connection; }
+            void attachFinetune(Connection::BaseConnection *connection) { inputConnections[OSC_CONNECTION_FINETUNE] = connection; }
 
         protected:
             SInt32 m_lWaveform;

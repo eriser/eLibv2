@@ -85,24 +85,12 @@ namespace eLibV2
                 virtual VstInt32 getNumMidiOutputChannels();
                 virtual VstInt32 canDo(char* text);
 
-                virtual VstInt32 startProcess() {
-                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::startProcess");
-                    return 0;
-                }
-                virtual VstInt32 stopProcess() {
-                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::stopProcess");
-                    return 0;
-                }
+                virtual VstInt32 startProcess() { ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::startProcess"); return 0; }
+                virtual VstInt32 stopProcess() { ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::stopProcess"); return 0; }
 
-                virtual void open() {
-                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::open");
-                }
-                virtual void close() {
-                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::close");
-                }
-                virtual void suspend() {
-                    ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::suspend");
-                }
+                virtual void open() { ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::open"); }
+                virtual void close() { ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::close"); }
+                virtual void suspend() { ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::suspend"); }
 
                 // audio processing
                 virtual void processReplacing(float** inputs, float** outputs, VstInt32 sampleFrames);

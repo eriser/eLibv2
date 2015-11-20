@@ -1,6 +1,6 @@
 #include "MidiDevice.h"
 
-#ifdef WIN32
+#if defined(WIN32)
 
 using namespace eLibV2::MIDI;
 using namespace eLibV2::VST::Host;
@@ -109,6 +109,8 @@ void CALLBACK MidiDevice::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR
     ModuleLogger::print(LOG_CLASS_MIDI, ss.str().c_str());
 }
 
-#else
-//#error "MidiDevice currently implemented only on Windows"
+#elif defined(__APPLE__)
+// do something on mac os
+#elif defined(LINUX)
+// do something o linux
 #endif

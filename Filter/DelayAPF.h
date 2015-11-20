@@ -1,7 +1,7 @@
 #ifndef MODDELAYAPF_H_
 #define MODDELAYAPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Effect/Delay.h>
 #include <Util/Defines.h>
 
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         this class implements a delayed Allpass-Filter
         */
-        class DelayAPF : public Base::BaseFilter
+        class DelayAPF : public BaseFilter
         {
         public:
             DelayAPF(std::string name = "DelayAPF") :

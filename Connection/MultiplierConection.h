@@ -1,7 +1,7 @@
 #ifndef MODMULTIPLIERCONNECTOR_H_
 #define MODMULTIPLIERCONNECTOR_H_
 
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 
 namespace eLibV2
 {
@@ -11,7 +11,7 @@ namespace eLibV2
         creates a input connection which multiplies all input with a previously set factor
         @todo is this really complete?
         */
-        class MultiplierConnection : public Base::BaseConnection
+        class MultiplierConnection : public BaseConnection
         {
         public:
             enum

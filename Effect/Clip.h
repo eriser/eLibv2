@@ -1,7 +1,7 @@
 #ifndef MODCLIP_H_
 #define MODCLIP_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         static const double CLIP_LEVEL_MIN = 0.0;
         static const double CLIP_LEVEL_MAX = 1.0;
 
-        class Clip : public Base::BaseEffect
+        class Clip : public BaseEffect
         {
         public:
             enum

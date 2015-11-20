@@ -1,13 +1,13 @@
 #ifndef MODVCF_H_
 #define MODVCF_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 
 namespace eLibV2
 {
     namespace Effect
     {
-        class VCF : public Base::BaseEffect
+        class VCF : public BaseEffect
         {
         public:
             enum FilterType

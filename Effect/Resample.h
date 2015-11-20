@@ -1,7 +1,7 @@
 #ifndef MODRESAMPLE_H_
 #define MODRESAMPLE_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Logger.h>
 #include <Util/Helper.h>
 
@@ -17,7 +17,7 @@ namespace eLibV2
 
         a simple sample&hold-algorithm is used
         */
-        class Resample : public Base::BaseEffect
+        class Resample : public BaseEffect
         {
         public:
             enum

@@ -1,7 +1,7 @@
 #ifndef MODFLANGER_H_
 #define MODFLANGER_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 #include <Generator/BaseLFO.h>
@@ -12,7 +12,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class Flanger : public Base::BaseEffect
+        class Flanger : public BaseEffect
         {
         public:
             enum

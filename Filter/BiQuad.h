@@ -1,7 +1,7 @@
 #ifndef MODBIQUAD_H_
 #define MODBIQUAD_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 #define FLT_MIN_PLUS    1.175494351e-38 /* min positive value */

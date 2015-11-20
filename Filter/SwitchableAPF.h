@@ -1,7 +1,7 @@
 #ifndef MODSWITCHABLEAPF_H_
 #define MODSWITCHABLEAPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Util/Defines.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         /**
         Implements a switchable Allpass-Filter
         */
-        class SwitchableAPF : public Base::BaseFilter
+        class SwitchableAPF : public BaseFilter
         {
         public:
             SwitchableAPF(std::string name = "SwitchableAPF") :

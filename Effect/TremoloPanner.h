@@ -1,7 +1,7 @@
 #ifndef MODTREMOLOPANNER_H_
 #define MODTREMOLOPANNER_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Connection/InputConnection.h>
 #include <Generator/BaseLFO.h>
 #include <Util/Helper.h>
@@ -10,7 +10,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class TremoloPanner : public Base::BaseEffect
+        class TremoloPanner : public BaseEffect
         {
         public:
             enum

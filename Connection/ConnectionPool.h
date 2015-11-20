@@ -1,7 +1,7 @@
 #ifndef MODCONNECTIONPOOL_H_
 #define MODCONNECTIONPOOL_H_
 
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 #include <Util/Logger.h>
 
 #include <vector>
@@ -21,15 +21,15 @@ namespace eLibV2
             {
                 if (m_pConnections.size())
                 {
-                    for (std::vector<Base::BaseConnection*>::iterator it = m_pConnections.begin(); it != m_pConnections.end(); ++it)
+                    for (std::vector<BaseConnection*>::iterator it = m_pConnections.begin(); it != m_pConnections.end(); ++it)
                         delete (*it);
                 }
             }
 
-            void registerConnection(Base::BaseConnection* Connection) { m_pConnections.push_back(Connection); }
+            void registerConnection(BaseConnection* Connection) { m_pConnections.push_back(Connection); }
 
         private:
-            std::vector<Base::BaseConnection*> m_pConnections;
+            std::vector<BaseConnection*> m_pConnections;
         };
     }
 }

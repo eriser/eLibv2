@@ -1,7 +1,7 @@
 #ifndef MODONEPOLELPF_H_
 #define MODONEPOLELPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Util/Defines.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         /**
         this class implements a one-pole Lowpass-Filter
         */
-        class OnePoleLPF : public Base::BaseFilter
+        class OnePoleLPF : public BaseFilter
         {
         public:
             OnePoleLPF(std::string name = "OnePoleLPF") :

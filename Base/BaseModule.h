@@ -1,7 +1,7 @@
 #ifndef MODBASEMODULE_H_
 #define MODBASEMODULE_H_
 
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 #include <Util/Defines.h>
 
 // std headers
@@ -16,7 +16,7 @@ namespace eLibV2
         /**
         this module provides basic methods used in most of all classes in the framework
         */
-        class BaseModule : virtual public BaseConnection
+        class BaseModule : virtual public Connection::BaseConnection
         {
         public:
             BaseModule() :

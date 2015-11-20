@@ -1,7 +1,7 @@
 #ifndef MODROOMREVERB_H_
 #define MODROOMREVERB_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Effect/Delay.h>
 #include <Filter/OnePoleLPF.h>
 #include <Filter/DelayAPF.h>
@@ -13,7 +13,7 @@ namespace eLibV2
 {
     namespace Effect
     {
-        class RoomReverb : public Base::BaseEffect
+        class RoomReverb : public BaseEffect
         {
         public:
             enum

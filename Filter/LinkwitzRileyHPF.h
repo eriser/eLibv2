@@ -1,7 +1,7 @@
 #ifndef MODLINKWITZRILEYHPF_H_
 #define MODLINKWITZRILEYHPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Util/Defines.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         /**
         Implements a single Bi-Quad Structure
         */
-        class LinkwitzRileyHPF : public Base::BaseFilter
+        class LinkwitzRileyHPF : public BaseFilter
         {
         public:
             LinkwitzRileyHPF(std::string name = "LinkwitzRileyHPF") :

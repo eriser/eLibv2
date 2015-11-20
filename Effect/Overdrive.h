@@ -1,7 +1,7 @@
 #ifndef MODOVERDRIVE_H_
 #define MODOVERDRIVE_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         static const double OVERDRIVE_LEVEL_MIN = 0.0;
         static const double OVERDRIVE_LEVEL_MAX = 100.0;
 
-        class Overdrive : public Base::BaseEffect
+        class Overdrive : public BaseEffect
         {
         public:
             enum

@@ -17,7 +17,7 @@ namespace eLibV2
         {
         public:
             ConstantConnection(double value) :
-                BaseName("ConstantConnection"),
+                Base::BaseName("ConstantConnection"),
                 mValue(value)
             {}
 

@@ -1,7 +1,7 @@
 #ifndef MODINPUTCONNECTOR_H_
 #define MODINPUTCONNECTOR_H_
 
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 #include <Util/Logger.h>
 
 #include <vector>
@@ -15,7 +15,7 @@ namespace eLibV2
         /**
         creates a generic input connection with a variable value which can be set during runtime
         */
-        class InputConnection : public Base::BaseConnection
+        class InputConnection : public BaseConnection
         {
         public:
             InputConnection(std::string name = "InputConnection") :

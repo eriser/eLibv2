@@ -40,8 +40,8 @@ namespace eLibV2
 
         public:
             /* attach methods */
-            void attachFreq(Base::BaseConnection *connection) { inputConnections[LFO_CONNECTION_FREQ] = connection; }
-            void attachWaveform(Base::BaseConnection *connection) { inputConnections[LFO_CONNECTION_WAVEFORM] = connection; }
+            void attachFreq(Connection::BaseConnection *connection) { inputConnections[LFO_CONNECTION_FREQ] = connection; }
+            void attachWaveform(Connection::BaseConnection *connection) { inputConnections[LFO_CONNECTION_WAVEFORM] = connection; }
 
         private:
             double m_dFreq;

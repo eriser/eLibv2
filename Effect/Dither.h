@@ -1,7 +1,7 @@
 #ifndef MODDITHER_H_
 #define MODDITHER_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 namespace eLibV2
@@ -22,7 +22,7 @@ namespace eLibV2
         so the value range between -1.0 and 1.0 gets divided into 16 parts
         and the output sample is the one which is nearest to the input sample.
         */
-        class Dither : public Base::BaseEffect
+        class Dither : public BaseEffect
         {
         public:
             enum

@@ -1,7 +1,7 @@
 #ifndef MODLOSHELVING_H_
 #define MODLOSHELVING_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Filter/EnhancedBiQuad.h>
 #include <Util/Defines.h>
 
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         Implements a hi-shelving filter
         */
-        class LoShelving : public Base::BaseFilter
+        class LoShelving : public BaseFilter
         {
         public:
             LoShelving(std::string name = "LoShelving") :

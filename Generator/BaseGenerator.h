@@ -7,15 +7,15 @@
 
 namespace eLibV2
 {
-    namespace Base
+    namespace Generator
     {
         /**
         this module provides methods for generating output signals in its subclasses
         */
-        class BaseGenerator : public BaseModule
+        class BaseGenerator : public Base::BaseModule
         {
         public:
-            BaseGenerator(std::string name = "BaseGenerator") : BaseName(name) {}
+            BaseGenerator(std::string name = "BaseGenerator") : Base::BaseName(name) {}
 
             /**
             reset internal module state to initialization

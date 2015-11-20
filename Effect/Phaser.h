@@ -1,7 +1,7 @@
 #ifndef MODPHASER_H_
 #define MODPHASER_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 #include <Connection/ScalerConnection.h>
@@ -16,7 +16,7 @@ namespace eLibV2
         /**
         this module implements a simple phaser consisting of 6 first-order APFs
         */
-        class Phaser : public Base::BaseEffect
+        class Phaser : public BaseEffect
         {
         public:
             enum

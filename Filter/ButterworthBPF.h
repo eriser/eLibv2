@@ -1,7 +1,7 @@
 #ifndef MODBUTTERWORTHBPF_H_
 #define MODBUTTERWORTHBPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Util/Defines.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         /**
         Implements a second-order Butterworth Bandpass-Filter
         */
-        class ButterworthBPF : public Base::BaseFilter
+        class ButterworthBPF : public BaseFilter
         {
         public:
             ButterworthBPF(std::string name = "ButterworthBPF") :

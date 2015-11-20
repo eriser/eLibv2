@@ -7,16 +7,16 @@
 
 namespace eLibV2
 {
-    namespace Base
+    namespace Effect
     {
         /**
         this module provides basic methods used for signal processing in its subclasses
         */
-        class BaseEffect : public BaseModule
+        class BaseEffect : public Base::BaseModule
         {
         public:
             BaseEffect(std::string name = "BaseEffect") :
-                BaseName(name)
+                Base::BaseName(name)
             {
                 Init();
             }

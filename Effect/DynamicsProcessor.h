@@ -1,7 +1,7 @@
 #ifndef MODDYNAMICS_H_
 #define MODDYNAMICS_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Effect/EnvelopeDetector.h>
 #include <Util/Helper.h>
 
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         this class implements a simple dynamics processor
         */
-        class DynamicsProcessor : public Base::BaseEffect
+        class DynamicsProcessor : public BaseEffect
         {
         public:
             enum

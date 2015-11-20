@@ -1,7 +1,7 @@
 #ifndef MODRESONANTBPF_H_
 #define MODRESONANTBPF_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Util/Defines.h>
 
 namespace eLibV2
@@ -11,7 +11,7 @@ namespace eLibV2
         /**
         Implements a single Bi-Quad Structure
         */
-        class ResonantBPF : public Base::BaseFilter
+        class ResonantBPF : public BaseFilter
         {
         public:
             ResonantBPF(std::string name = "ResonantBPF") :

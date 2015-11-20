@@ -1,7 +1,7 @@
 #ifndef MODENVELOPEDETECTOR_H_
 #define MODENVELOPEDETECTOR_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Logger.h>
 #include <Util/Helper.h>
 
@@ -12,7 +12,7 @@ namespace eLibV2
         static const double DIGITAL_TC = -2.0; // log(1%)
         static const double ANALOG_TC = -0.43533393574791066201247090699309; // (log(36.7%)
 
-        class EnvelopeDetector : public Base::BaseEffect
+        class EnvelopeDetector : public BaseEffect
         {
         public:
             enum

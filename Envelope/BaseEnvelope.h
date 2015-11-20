@@ -5,12 +5,12 @@
 
 namespace eLibV2
 {
-    namespace Base
+    namespace Envelope
     {
         /**
         this module provides methods used by envelope-modules
         */
-        class BaseEnvelope : public BaseModule
+        class BaseEnvelope : public Base::BaseModule
         {
         protected:
 
@@ -29,7 +29,8 @@ namespace eLibV2
             };
 
         public:
-            BaseEnvelope(std::string name = "BaseEnvelope") : BaseName(name) {}
+            BaseEnvelope(std::string name = "BaseEnvelope") :
+                Base::BaseName(name) {}
 
             /**
             reset internal module state to initialization

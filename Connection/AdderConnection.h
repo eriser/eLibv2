@@ -1,7 +1,7 @@
 #ifndef MODADDERCONNECTOR_H_
 #define MODADDERCONNECTOR_H_
 
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 
 namespace eLibV2
 {
@@ -10,7 +10,7 @@ namespace eLibV2
         /**
         creates a input connection which processes every input with a factor and an offset
         */
-        class AdderConnection : public Base::BaseConnection
+        class AdderConnection : public BaseConnection
         {
         public:
             enum

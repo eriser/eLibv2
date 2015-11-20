@@ -1,13 +1,13 @@
 #ifndef MODEQ3BAND_H_
 #define MODEQ3BAND_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 
 namespace eLibV2
 {
     namespace Effect
     {
-        class EQ3Band : public Base::BaseEffect
+        class EQ3Band : public BaseEffect
         {
         private:
             enum

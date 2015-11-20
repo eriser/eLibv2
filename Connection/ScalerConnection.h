@@ -1,7 +1,7 @@
 #ifndef MODSCALERCONNECTOR_H_
 #define MODSCALERCONNECTOR_H_
 
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 
 namespace eLibV2
 {
@@ -10,7 +10,7 @@ namespace eLibV2
         /**
         creates a input connection which processes input with a factor and an offset
         */
-        class ScalerConnection : public Base::BaseConnection
+        class ScalerConnection : public BaseConnection
         {
         public:
             enum

@@ -1,7 +1,7 @@
 #ifndef MODCOMBFILTER_H_
 #define MODCOMBFILTER_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Effect/Delay.h>
 #include <Util/Defines.h>
 
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         Implements a second-order Butterworth Bandpass-Filter
         */
-        class CombFilter : public Base::BaseFilter
+        class CombFilter : public BaseFilter
         {
         public:
             CombFilter(std::string name = "CombFilter") :

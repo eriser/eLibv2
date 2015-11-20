@@ -1,7 +1,7 @@
 #ifndef MODPARAMETRICCONSTANTQ_H_
 #define MODPARAMETRICCONSTANTQ_H_
 
-#include <Base/BaseFilter.h>
+#include <Filter/BaseFilter.h>
 #include <Filter/EnhancedBiQuad.h>
 #include <Util/Defines.h>
 
@@ -12,7 +12,7 @@ namespace eLibV2
         /**
         Implements a hi-shelving filter
         */
-        class ParametricConstantQ : public Base::BaseFilter
+        class ParametricConstantQ : public BaseFilter
         {
         public:
             ParametricConstantQ(std::string name = "ParametricConstantQ") :

@@ -1,14 +1,14 @@
 #ifndef MODENVFOLLOWER_H_
 #define MODENVFOLLOWER_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 #include <Util/Helper.h>
 
 namespace eLibV2
 {
     namespace Effect
     {
-        class EnvFollower : public Base::BaseEffect
+        class EnvFollower : public BaseEffect
         {
         public:
             EnvFollower(std::string name = "EnvFollower") :

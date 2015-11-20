@@ -1,13 +1,13 @@
 #ifndef MODSELECTORBLOCK_H_
 #define MODSELECTORBLOCK_H_
 
-#include <Base/BaseEffect.h>
+#include <Effect/BaseEffect.h>
 
 namespace eLibV2
 {
     namespace Effect
     {
-        class SelectorBlock : public Base::BaseEffect
+        class SelectorBlock : public BaseEffect
         {
         public:
             enum

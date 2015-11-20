@@ -13,12 +13,12 @@ using namespace eLibV2::Util;
 
 namespace eLibV2
 {
-    namespace Base
+    namespace Connection
     {
         /**
         this module provides connections between individual modules
         */
-        class BaseConnection : virtual public BaseName // virtual is needed for initialisation in subclasses
+        class BaseConnection : virtual public Base::BaseName // virtual is needed for initialisation in subclasses
         {
         public:
             enum ConnectionType

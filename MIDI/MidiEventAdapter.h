@@ -2,7 +2,7 @@
 #define MODMIDIEVENTADAPTER_H_
 
 #include <Base/BaseModule.h>
-#include <Base/BaseConnection.h>
+#include <Connection/BaseConnection.h>
 
 #include <MIDI/MidiEvent.h>
 #include <MIDI/MidiEventHandler.h>
@@ -14,7 +14,7 @@ namespace eLibV2
         /**
         adapter for connecting the MidiEventHandler into the module signal flow
         */
-        class MidiEventAdapter : public Base::BaseConnection
+        class MidiEventAdapter : public Connection::BaseConnection
         {
         public:
             MidiEventAdapter(MidiEventHandler *handler, SInt16 channel) :

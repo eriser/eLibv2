@@ -1,7 +1,7 @@
 #ifndef __MIDIDEVICE_H__
 #define __MIDIDEVICE_H__
 
-#ifdef WIN32
+#if defined(WIN32)
 
 #include <Windows.h>
 #include <mmsystem.h>
@@ -40,6 +40,10 @@ namespace eLibV2
         };
     }
 }
+
+#elif defined(__APPLE__)
+
+#elif defined(LINUX)
 
 #endif
 
