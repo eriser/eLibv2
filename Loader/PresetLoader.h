@@ -2,7 +2,6 @@
 #define MODPRESETLOADER_H_
 
 #include <Base/BaseModule.h>
-#include <Util/Types.h>
 
 #include <vector>
 #include <fstream>

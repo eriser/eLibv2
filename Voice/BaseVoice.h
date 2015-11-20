@@ -2,29 +2,21 @@
 #define MODBASEVOICE_H_
 
 #include <Base/BaseName.h>
-#include <Util/Logger.h>
-#include <Util/Defines.h>
-
-#include <map>
-#include <sstream>
-#include <memory.h>
-
-using namespace eLibV2::Util;
 
 namespace eLibV2
 {
-    namespace Base
+    namespace Voice
     {
         /**
         this module provides a base voice which can be used to produce polyphonic output
         every note is used to create a single voice which maintains all processing itself
         each voice is designed to be processed with in its own thread
         */
-        class BaseVoice : virtual public BaseName // virtual is needed for initialisation in subclasses
+        class BaseVoice : virtual public Base::BaseName // virtual is needed for initialisation in subclasses
         {
         public:
             BaseVoice() :
-                BaseName("BaseVoice")
+                Base::BaseName("BaseVoice")
             {
             }
 

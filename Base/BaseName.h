@@ -1,6 +1,7 @@
 #ifndef MODBASENAME_H_
 #define MODBASENAME_H_
 
+#include <Util/Types.h>
 #include <string>
 
 namespace eLibV2

@@ -80,6 +80,7 @@
 
 // helper modules
 #include <Util/DataSampler.h>
+#include <Util/Defines.h>
 #include <Util/Logger.h>
 #include <Util/ParamRandom.h>
 #include <Util/Types.h>
