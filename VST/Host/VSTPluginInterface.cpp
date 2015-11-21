@@ -146,24 +146,31 @@ void PluginInterface::SetupProcessingMemory()
     m_uiNumInputs = m_pEffect->numInputs; // > 0 ? m_pEffect->numInputs : 2;
     m_uiNumOutputs = m_pEffect->numOutputs;
 
-    if (m_uiNumInputs > 0)
+    try
     {
-        m_ppInputs = new float*[m_uiNumInputs];
-        for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+        if (m_uiNumInputs > 0)
         {
-            m_ppInputs[i] = new float[m_uiBlocksize];
-            memset(m_ppInputs[i], 0, m_uiBlocksize * sizeof(float));
+            m_ppInputs = new float*[m_uiNumInputs];
+            for (VstInt32 i = 0; i < m_uiNumInputs; i++)
+            {
+                m_ppInputs[i] = new float[m_uiBlocksize];
+                memset(m_ppInputs[i], 0, m_uiBlocksize * sizeof(float));
+            }
+        }
+
+        if (m_uiNumOutputs > 0)
+        {
+            m_ppOutputs = new float*[m_uiNumOutputs];
+            for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
+            {
+                m_ppOutputs[i] = new float[m_uiBlocksize];
+                memset(m_ppOutputs[i], 0, m_uiBlocksize * sizeof(float));
+            }
         }
     }
-
-    if (m_uiNumOutputs > 0)
+    catch (std::bad_alloc e)
     {
-        m_ppOutputs = new float*[m_uiNumOutputs];
-        for (VstInt32 i = 0; i < m_uiNumOutputs; i++)
-        {
-            m_ppOutputs[i] = new float[m_uiBlocksize];
-            memset(m_ppOutputs[i], 0, m_uiBlocksize * sizeof(float));
-        }
+        ModuleLogger::print(LOG_CLASS_PLUGIN, "new failed");
     }
 }
 

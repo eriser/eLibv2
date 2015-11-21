@@ -103,6 +103,10 @@ namespace eLibV2
                 virtual VstInt32 processMidiEvent(VstInt16 channel, VstInt16 status, VstInt16 note, VstInt16 velocity);
                 virtual VstInt32 processSysexEvent(VstInt32 size, char *data);
 
+                // note handling
+                virtual void NoteOn(VstInt16 note, VstInt16 velocity, VstInt16 mode) = 0;
+                virtual void NoteOff(VstInt16 note) = 0;
+
                 // invoked abstract methods
                 virtual void setParameterInvoked(VstInt32 index, float value) = 0;
 

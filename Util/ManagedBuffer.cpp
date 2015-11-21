@@ -1,4 +1,5 @@
 #include <Util/ManagedBuffer.h>
+#include <Util/Defines.h>
 #include <memory.h>
 
 using namespace eLibV2::Util;
@@ -10,17 +11,24 @@ ManagedBuffer::ManagedBuffer(SInt16 bufferCount, SInt16 bufferSize)
     m_writingPosition(NULL),
     m_internalBuffer(NULL)
 {
-    m_internalBuffer = new SInt16*[m_bufferCount];
-    for (SInt16 bufferIndex = 0; bufferIndex < m_bufferCount; bufferIndex++)
+    try
     {
-        m_internalBuffer[bufferIndex] = new SInt16[m_bufferSize];
-        memset(m_internalBuffer[bufferIndex], 0, m_bufferSize * sizeof(SInt16));
-    }
+        m_internalBuffer = new SInt16*[m_bufferCount];
+        for (SInt16 bufferIndex = 0; bufferIndex < m_bufferCount; bufferIndex++)
+        {
+            m_internalBuffer[bufferIndex] = new SInt16[m_bufferSize];
+            memset(m_internalBuffer[bufferIndex], 0, m_bufferSize * sizeof(SInt16));
+        }
 
-    m_readingPosition = new SInt16[m_bufferCount];
-    memset(m_readingPosition, 0, m_bufferCount * sizeof(SInt16));
-    m_writingPosition = new SInt16[m_bufferCount];
-    memset(m_writingPosition, 0, m_bufferCount * sizeof(SInt16));
+        m_readingPosition = new SInt16[m_bufferCount];
+        memset(m_readingPosition, 0, m_bufferCount * sizeof(SInt16));
+        m_writingPosition = new SInt16[m_bufferCount];
+        memset(m_writingPosition, 0, m_bufferCount * sizeof(SInt16));
+    }
+    catch (std::bad_alloc e)
+    {
+        ModuleLogger::print(LOG_CLASS_UTIL, "new failed");
+    }
 }
 
 ManagedBuffer::~ManagedBuffer()

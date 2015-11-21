@@ -99,8 +99,8 @@ namespace eLibV2
                                     props.setSynth((attributeValue == "true") ? true : false);
                                 else if (attributeName == "editor")
                                     props.setEditor((attributeValue == "true") ? true : false);
-                                else if (attributeName == "double")
-                                    props.setDoubleReplacing((attributeValue == "true") ? true : false);
+                                else if (attributeName == "resolution")
+                                    props.setDoubleReplacing((attributeValue == "double") ? true : false);
                             }
                         }
                     }
@@ -110,7 +110,6 @@ namespace eLibV2
 
             bool isSynth() const { return mSynth; }
             bool hasEditor() const { return mEditor; }
-            bool canProcessReplacing() const { return mCanProcessReplacing; }
             bool canDoubleReplacing() const { return mCanDoubleReplacing; }
             UInt16 getNumPrograms() const { return mNumPrograms; }
             UInt16 getNumParameters() const { return mNumParameters; }
@@ -141,12 +140,11 @@ namespace eLibV2
             void setVersion(UInt16 version) { mVersion = version; }
             void setSynth(bool synth) { mSynth = synth; }
             void setEditor(bool active) { mEditor = active; }
-            void setProcessReplacing(bool processReplacing) { mCanProcessReplacing = processReplacing; }
             void setDoubleReplacing(bool doubleReplacing) { mCanDoubleReplacing = doubleReplacing; }
 
         private:
             bool mSynth;
-            bool mCanProcessReplacing, mCanDoubleReplacing;
+            bool mCanDoubleReplacing;
             bool mEditor;
             std::string mId;
             std::string mName;

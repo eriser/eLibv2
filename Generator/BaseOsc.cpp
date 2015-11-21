@@ -92,7 +92,7 @@ void BaseOscillator::adjustPhases(UInt8 Note)
 
 double BaseOscillator::processConnection(void)
 {
-    SInt16 iNote;
+    SInt16 iNote = 0;
     double dOutput;
 
     if (isInputConnected(OSC_CONNECTION_NOTE))

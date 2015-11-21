@@ -48,6 +48,7 @@ namespace eLibV2
 
             /**
             process signal flow for all connected module
+            @return the output ready processed
             */
             virtual double processConnection(void) = 0;
 
@@ -55,7 +56,7 @@ namespace eLibV2
             print signal flow of modules
             @param depth identation depth for output
             */
-            virtual void printConnection(const UInt8 depth = 0)
+            virtual void printConnection(const UInt8 depth = 0) const
             {
                 std::stringstream oss;
 
@@ -79,13 +80,13 @@ namespace eLibV2
             get number of available inputs for module
             @return number of inputs
             */
-            virtual UInt8 getNumberOfInputs() { return numberOfInputs; }
+            virtual UInt8 getNumberOfInputs() const { return numberOfInputs; }
 
             /**
             get number of available outputs for module
             @return number of outputs
             */
-            virtual UInt8 getNumberOfOutputs() { return numberOfOutputs; }
+            virtual UInt8 getNumberOfOutputs() const { return numberOfOutputs; }
 
             /**
             check if input with given index is connected
@@ -93,7 +94,7 @@ namespace eLibV2
             @param connectionIndex index of input
             @return true if connected
             */
-            virtual bool isInputConnected(const UInt8 connectionIndex)
+            virtual bool isInputConnected(const UInt8 connectionIndex) const
             {
                 bool bRes = false;
                 if (connectionIndex < getNumberOfInputs())
@@ -112,7 +113,7 @@ namespace eLibV2
             @param connectionIndex index of output
             @return true if connected
             */
-            virtual bool isOutputConnected(const UInt8 connectionIndex)
+            virtual bool isOutputConnected(const UInt8 connectionIndex) const
             {
                 bool bRes = false;
                 if (connectionIndex < getNumberOfOutputs())

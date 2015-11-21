@@ -19,10 +19,10 @@ VSTBaseClass::VSTBaseClass(audioMasterCallback audioMaster, PluginProperties pro
         setNumOutputs(mProperties.getNumOutputs());
         if (mProperties.isSynth())
             isSynth();
-        if (mProperties.canProcessReplacing())
-            canProcessReplacing();
         if (mProperties.canDoubleReplacing())
             canDoubleReplacing();
+        else
+            canProcessReplacing();
         setUniqueID(mProperties.getIdAsLong());
     }
     suspend();
@@ -455,12 +455,14 @@ VstInt32 VSTBaseClass::processMidiEvent(VstInt16 channel, VstInt16 status, VstIn
         case 0x90:
             if (velocity > 0)
             {
-                mMidiEventHandler->insertEvent(channel, MidiEvent(note, velocity));
+                //mMidiEventHandler->insertEvent(channel, MidiEvent(note, velocity));
+                NoteOn(note, velocity, 0);
                 ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: inserting note %d/%d", note, velocity);
             }
             else
             {
-                bool i = mMidiEventHandler->deleteEvent(channel, MidiEvent(note, 0));
+                bool i = true; // = mMidiEventHandler->deleteEvent(channel, MidiEvent(note, 0));
+                NoteOff(note);
                 ModuleLogger::print(LOG_CLASS_VSTBASE, "VSTBaseClass::processMidiEvents: deleting note %d %s", note, i ? "success" : "failure");
             }
             break;
