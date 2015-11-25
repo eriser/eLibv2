@@ -25,6 +25,7 @@
 #include <Generator/Wavetable.h>
 
 // envelope modules
+#include <Envelope/ADSR.h>
 #include <Envelope/EnvelopeDADSR.h>
 
 // effect modules

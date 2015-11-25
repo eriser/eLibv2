@@ -12,20 +12,38 @@ namespace eLibV2
         */
         class BaseEnvelope : public Base::BaseModule
         {
-        protected:
-
+        public:
             /**
             enumeration of possible envelope modes:
             - linear
             - logarithmic
             - exponential
             */
+            enum EnvelopeScale
+            {
+                SCALE_UNDEF = 0,
+                SCALE_LINEAR,
+                SCALE_LOGARITHMIC,
+                SCALE_EXPONENTIAL
+            };
+
             enum EnvelopeMode
             {
-                ENVELOPE_MODE_UNDEF = 0,
-                ENVELOPE_MODE_LINEAR,
-                ENVELOPE_MODE_LOGARITHMIC,
-                ENVELOPE_MODE_EXPONENTIAL
+                MODE_UNDEF = 0,
+                MODE_ANALOG,
+                MODE_DIGITAL
+            };
+
+            enum EnvelopeState
+            {
+                STATE_OFF = 0,
+                STATE_DELAY,
+                STATE_ATTACK,
+                STATE_HOLD,
+                STATE_DECAY,
+                STATE_SUSTAIN,
+                STATE_RELEASE,
+                STATE_SHUTDOWN
             };
 
         public:
@@ -46,27 +64,42 @@ namespace eLibV2
             activate/deactivate processing
             @param Active active state of module
             */
-            virtual void setActive(bool Active) { bActive = Active; }
+            virtual void setActive(const bool Active) { m_bActive = Active; }
+
+            virtual bool getActive(void) const { return m_bActive; }
+
+            /**
+            set envelope scale
+            @param Scale envelope state to set
+            */
+            virtual void setScale(const EnvelopeScale Scale) { m_eScale = Scale; }
+
+            virtual EnvelopeScale getScale(void) const { return m_eScale; }
 
             /**
             set envelope mode
             @param Mode envelope mode to set
             */
-            virtual void setEnvelopeMode(EnvelopeMode Mode) { lEnvelopeMode = Mode; }
+            virtual void setMode(const EnvelopeMode Mode) { m_eMode = Mode; }
+
+            virtual EnvelopeState getState(void) const { return m_eState; }
 
             /**
-            set trigger for internal state machine
-            @param Trigger trigger active/inactive
+            set envelope state
+            @param State envelope state to set
             */
-            virtual void setTrigger(bool Trigger) { bTrigger = Trigger; }
+            virtual void setState(const EnvelopeState State) { m_eState = State; }
+
+            virtual void start(void) {}
+            virtual void stop(void) {}
 
         protected:
-            bool bActive; ///< internal active state
-            bool bTrigger; ///< internal trigger state
-            bool bOldTrigger; ///< last set trigger state
-            double dLastLevel; ///< last calculated level for aliasing
+            bool m_bActive; ///< internal active state
+            double m_dCurrentOutput; ///< last calculated level for aliasing
 
-            EnvelopeMode lEnvelopeMode; ///< internal envelope mode
+            EnvelopeScale m_eScale;
+            EnvelopeMode m_eMode; ///< internal envelope mode
+            EnvelopeState m_eState;
         };
     }
 }

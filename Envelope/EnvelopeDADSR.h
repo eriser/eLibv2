@@ -49,7 +49,6 @@ namespace eLibV2
             virtual double processConnection(void) { return(0.0); }
 
         protected:
-            EnvelopeState eEnvelopeState;
             SInt32 tDelay, tAttack, tDecay, tRelease;
             SInt32 tDelayEnd, tAttackEnd, tDecayEnd, tReleaseEnd;
 

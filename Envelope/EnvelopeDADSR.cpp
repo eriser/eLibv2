@@ -14,7 +14,7 @@ void EnvelopeDADSR::Init(void)
     setRelease(0.1);
     setReleaseScale(1.0);
     setSamplerate(44100.0);
-    setEnvelopeMode(ENVELOPE_MODE_LINEAR);
+    setScale(SCALE_LINEAR);
 
     setActive(true);
     Reset();
@@ -22,13 +22,12 @@ void EnvelopeDADSR::Init(void)
 
 void EnvelopeDADSR::Reset(void)
 {
-    eEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
-    bTrigger = bOldTrigger = false;
+    m_eState = STATE_OFF;
 }
 
 bool EnvelopeDADSR::isReady(void)
 {
-    return ((eEnvelopeState == ENVELOPE_DADSR_STATE_INIT) && ((bTrigger | bOldTrigger) == false));
+    return false;
 }
 
 double EnvelopeDADSR::Process(void)
@@ -36,25 +35,25 @@ double EnvelopeDADSR::Process(void)
     double dOutput = 0.0, div = 0.0;
     double dSamplerate = getSamplerate();
 
-    if (bActive)
+    if (m_bActive)
     {
-        switch (eEnvelopeState)
+        switch (m_eState)
         {
-            case ENVELOPE_DADSR_STATE_INIT:
+            case STATE_OFF:
                 tDelay = tAttack = tDecay = tRelease = 0;
                 break;
 
-            case ENVELOPE_DADSR_STATE_DELAY:
+            case STATE_DELAY:
                 tDelayEnd = (SInt32)(dDelay * dDelayScale * dSamplerate);
 
                 // normal processing
                 if (tDelay < tDelayEnd)
                     tDelay++;
                 else
-                    eEnvelopeState = ENVELOPE_DADSR_STATE_ATTACK;
+                    m_eState = STATE_ATTACK;
                 break;
 
-            case ENVELOPE_DADSR_STATE_ATTACK:
+            case STATE_ATTACK:
                 tAttackEnd = (SInt32)(dAttack * dAttackScale * dSamplerate);
 
                 // normal processing
@@ -67,10 +66,10 @@ double EnvelopeDADSR::Process(void)
                 if (tAttack < tAttackEnd)
                     tAttack++;
                 else
-                    eEnvelopeState = ENVELOPE_DADSR_STATE_DECAY;
+                    m_eState = STATE_DECAY;
                 break;
 
-            case ENVELOPE_DADSR_STATE_DECAY:
+            case STATE_DECAY:
                 tDecayEnd = (SInt32)(dDecay * dDecayScale * dSamplerate);
 
                 // normal processing
@@ -83,14 +82,14 @@ double EnvelopeDADSR::Process(void)
                 if (tDecay < tDecayEnd)
                     tDecay++;
                 else
-                    eEnvelopeState = ENVELOPE_DADSR_STATE_SUSTAIN;
+                    m_eState = STATE_SUSTAIN;
                 break;
 
-            case ENVELOPE_DADSR_STATE_SUSTAIN:
+            case STATE_SUSTAIN:
                 dOutput = dSustain;
                 break;
 
-            case ENVELOPE_DADSR_STATE_RELEASE:
+            case STATE_RELEASE:
                 tReleaseEnd = (SInt32)(dRelease * dReleaseScale * dSamplerate);
 
                 // normal processing
@@ -98,29 +97,19 @@ double EnvelopeDADSR::Process(void)
                     div = dRelease * dReleaseScale * dSamplerate;
                 else
                     div = LOWEST * dReleaseScale * dSamplerate;
-                dOutput = (((double)tRelease * (-dLastLevel)) / div) + dLastLevel;
+                dOutput = (((double)tRelease * (-m_dCurrentOutput)) / div) + m_dCurrentOutput;
 
                 if (tRelease < tReleaseEnd)
                     tRelease++;
                 else
-                    eEnvelopeState = ENVELOPE_DADSR_STATE_INIT;
+                    m_eState = STATE_OFF;
                 break;
-        }
-
-        // trigger changed
-        if (bOldTrigger != bTrigger)
-        {
-            bOldTrigger = bTrigger;
-            if (bTrigger)
-            {
-                eEnvelopeState = ENVELOPE_DADSR_STATE_DELAY;
-            }
         }
     }
     else
     {
         Reset();
     }
-    dLastLevel = dOutput;
+    m_dCurrentOutput = dOutput;
     return dOutput;
 }
