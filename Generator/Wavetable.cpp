@@ -412,8 +412,10 @@ double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase)
     // prepare for linear interpolation
     SInt32 firstIndex = (SInt32)(dPhase * 2);
     double dFrac = (dPhase * 2) - firstIndex;
-    SInt32 nextIndex = (firstIndex + 1) % Waveforms[WaveIndex].WaveSize;
-    firstIndex %= Waveforms[WaveIndex].WaveSize;
+
+    firstIndex = ModuleHelper::wrap(firstIndex, Waveforms[WaveIndex].WaveSize);
+    SInt32 nextIndex = ModuleHelper::wrap(firstIndex + 1, Waveforms[WaveIndex].WaveSize);
+
 
     // data = Waveforms[WaveIndex].WaveData[(SInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
     data = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[nextIndex], dFrac);

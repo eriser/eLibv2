@@ -53,11 +53,11 @@ void ADSR::setMode(const EnvelopeMode Mode)
 
 void ADSR::start(void)
 {
-    if (!((m_bLegatoMode) && (m_eState != STATE_OFF) && (m_eState != STATE_RELEASE)))
-    {
-        Reset();
-        m_eState = STATE_ATTACK;
-    }
+    if (m_bLegatoMode && (m_eState != STATE_OFF) && (m_eState != STATE_RELEASE))
+        return;
+
+    Reset();
+    m_eState = STATE_ATTACK;
 }
 
 void ADSR::stop(void)

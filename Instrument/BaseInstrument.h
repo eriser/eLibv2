@@ -49,9 +49,16 @@ namespace eLibV2
                     voiceManager->Render(inputs, outputs, sampleFrames);
             }
 
-            void SetVoices(BaseVoice** Voices, UInt8 NumVoices)
+            virtual void ParameterChanged(UInt32 Index, double Value)
             {
-                voiceManager->SetVoices(Voices, NumVoices);
+                if (voiceManager)
+                    voiceManager->ParameterChanged(Index, Value);
+            }
+
+            virtual void SetVoices(BaseVoice** Voices, UInt8 NumVoices)
+            {
+                if (voiceManager)
+                    voiceManager->SetVoices(Voices, NumVoices);
             }
 
         protected:

@@ -30,6 +30,7 @@ namespace eLibV2
                 Base::BaseName("VoiceManager")
             {
                 m_iNumVoices = 0;
+                m_iNumUsedVoices = 0;
                 m_ppFreeVoices = NULL;
                 m_pUsedVoices = NULL;
                 m_eStealingStrategy = NONE;
@@ -43,6 +44,7 @@ namespace eLibV2
             */
             void SetVoices(BaseVoice** Voices, const UInt8 NumVoices)
             {
+                m_ppAvailableVoices = Voices;
                 m_iNumVoices = NumVoices;
                 m_ppFreeVoices = new BaseVoice*[m_iNumVoices];
 
@@ -69,9 +71,11 @@ namespace eLibV2
             {
                 bool bRes = false;
 
+                ModuleLogger::print(LOG_CLASS_INSTRUMENT, "starting note %i (%i %04x)", Note, Velocity, Mode);
                 if (m_iNumVoices)
                 {
-                    BaseVoice* FreeVoice = GetFreeVoice();
+                    bool Retrigger = false;
+                    BaseVoice* FreeVoice = GetFreeVoice(Note, Retrigger);
 
                     if (!FreeVoice)
                         FreeVoice = StealVoice();
@@ -80,7 +84,9 @@ namespace eLibV2
                     if (FreeVoice)
                     {
                         bRes = FreeVoice->Start(Note, Velocity, Mode);
-                        UseVoice(FreeVoice);
+                        if (!Retrigger)
+                            UseVoice(FreeVoice);
+                        ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p started", FreeVoice);
                     }
                 }
                 return bRes;
@@ -95,6 +101,7 @@ namespace eLibV2
             {
                 bool bRes = false;
 
+                ModuleLogger::print(LOG_CLASS_INSTRUMENT, "stopping note %i", Note);
                 if (m_iNumVoices)
                 {
                     // search for corresponding note
@@ -108,11 +115,20 @@ namespace eLibV2
                         {
                             m_pUsedVoices[VoiceIndex].Voice->RequestStop();
                             bRes = true;
+                            ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p stopped", m_pUsedVoices[VoiceIndex].Voice);
                             break;
                         }
                     }
                 }
                 return bRes;
+            }
+
+            void ParameterChanged(UInt32 Index, double Value)
+            {
+                for (UInt8 VoiceIndex = 0; VoiceIndex < m_iNumVoices; ++VoiceIndex)
+                {
+                    m_ppAvailableVoices[VoiceIndex]->ParameterChanged(Index, Value);
+                }
             }
 
             void SetStealingStrategy(StealingStrategy Strategy) { m_eStealingStrategy = Strategy; }
@@ -146,17 +162,43 @@ namespace eLibV2
             get a free voice or steal it when none is available
             @return the free/stolen voice or NULL
             */
-            BaseVoice* GetFreeVoice(void)
+            BaseVoice* GetFreeVoice(UInt8 Note, bool& Retriggered)
             {
                 BaseVoice* FoundVoice = NULL;
-                for (UInt8 VoiceIndex = 0; VoiceIndex < m_iNumVoices; ++VoiceIndex)
+                Retriggered = false;
+
+                // if voices are currently in use check for a voice with the note
+                if (m_iNumUsedVoices)
                 {
-                    if (m_ppFreeVoices[VoiceIndex] != NULL)
+                    for (UInt8 VoiceIndex = 0; VoiceIndex < m_iNumVoices; ++VoiceIndex)
                     {
-                        // get voice and erase from array
-                        FoundVoice = m_ppFreeVoices[VoiceIndex];
-                        m_ppFreeVoices[VoiceIndex] = NULL;
-                        break;
+                        if (m_pUsedVoices[VoiceIndex].Voice != NULL)
+                        {
+                            if (m_pUsedVoices[VoiceIndex].Voice->GetNote() == Note)
+                            {
+                                // found a used voice with the same note
+                                FoundVoice = m_pUsedVoices[VoiceIndex].Voice;
+                                ModuleLogger::print(LOG_CLASS_INSTRUMENT, "retriggering already used voice");
+                                Retriggered = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // check in free voices
+                if (!FoundVoice)
+                {
+                    for (UInt8 VoiceIndex = 0; VoiceIndex < m_iNumVoices; ++VoiceIndex)
+                    {
+                        if (m_ppFreeVoices[VoiceIndex] != NULL)
+                        {
+                            // get voice and erase from array
+                            FoundVoice = m_ppFreeVoices[VoiceIndex];
+                            m_ppFreeVoices[VoiceIndex] = NULL;
+                            ModuleLogger::print(LOG_CLASS_INSTRUMENT, "using new voice");
+                            break;
+                        }
                     }
                 }
                 return FoundVoice;
@@ -230,6 +272,7 @@ namespace eLibV2
                     {
                         m_pUsedVoices[VoiceIndex].Voice = Voice;
                         time(&m_pUsedVoices[VoiceIndex].StartTimeStamp);
+                        m_iNumUsedVoices++;
                         break;
                     }
                 }
@@ -242,11 +285,14 @@ namespace eLibV2
             {
                 for (UInt8 VoiceIndex = 0; VoiceIndex < m_iNumVoices; ++VoiceIndex)
                 {
+                    // find free slot to put voice back
                     if (m_ppFreeVoices[VoiceIndex] == NULL)
                     {
+                        ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p freed", m_pUsedVoices[StoppedIndex].Voice);
                         m_ppFreeVoices[VoiceIndex] = m_pUsedVoices[StoppedIndex].Voice;
                         m_pUsedVoices[StoppedIndex].Voice = NULL;
                         m_pUsedVoices[StoppedIndex].StartTimeStamp = 0;
+                        m_iNumUsedVoices--;
                         break;
                     }
                 }
@@ -259,7 +305,8 @@ namespace eLibV2
                 BaseVoice* Voice;
             } sUsedVoice;
 
-            UInt8 m_iNumVoices;
+            UInt8 m_iNumVoices, m_iNumUsedVoices;
+            BaseVoice** m_ppAvailableVoices;
             BaseVoice** m_ppFreeVoices;
             sUsedVoice* m_pUsedVoices;
             StealingStrategy m_eStealingStrategy;
