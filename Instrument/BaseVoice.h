@@ -66,7 +66,7 @@ namespace eLibV2
             UInt8 GetNote(void) const { return m_iNote; }
             UInt8 GetVelocity(void) const { return m_iVelocity; }
 
-            virtual void ParameterChanged(UInt32 Index, double Value) {}
+            virtual void ParameterChanged(UInt32 Index, double Value) = 0;
 
             /**
             this method processes the voice and delivers the output to the main mix
