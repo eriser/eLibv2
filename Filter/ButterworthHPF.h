@@ -16,8 +16,8 @@ namespace eLibV2
         public:
             ButterworthHPF(std::string name = "ButterworthHPF") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

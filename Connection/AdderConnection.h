@@ -20,8 +20,8 @@ namespace eLibV2
 
         public:
             AdderConnection(std::string name = "AdderConnection") :
-                BaseConnection(ADDER_INPUT_NUM),
-                Base::BaseName(name)
+                Base::BaseName(name),
+                BaseConnection(ADDER_INPUT_NUM)
             {
                 memset(inputConnections, 0, sizeof(inputConnections));
                 numInputs = 0;

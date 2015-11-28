@@ -17,8 +17,8 @@ namespace eLibV2
         public:
             HiShelving(std::string name = "HiShelving") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

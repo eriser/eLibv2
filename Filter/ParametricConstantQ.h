@@ -17,8 +17,8 @@ namespace eLibV2
         public:
             ParametricConstantQ(std::string name = "ParametricConstantQ") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

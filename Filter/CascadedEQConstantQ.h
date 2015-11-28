@@ -18,8 +18,8 @@ namespace eLibV2
         public:
             CascadedEQConstantQ(std::string name = "CascadedEQConstantQ") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 m_uiNumberOfStages = 10;
 

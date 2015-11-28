@@ -17,8 +17,8 @@ namespace eLibV2
         public:
             LoShelving(std::string name = "LoShelving") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

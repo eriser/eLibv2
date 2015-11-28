@@ -16,8 +16,8 @@ namespace eLibV2
         public:
             LinkwitzRileyLPF(std::string name = "LinkwitzRileyLPF") :
                 BaseName(name),
-                BaseFilter(),
-                BaseConnection(FILTER_CONNECTION_NUM)
+                BaseConnection(FILTER_CONNECTION_NUM),
+                BaseFilter()
             {
                 Init();
             }

@@ -28,6 +28,8 @@ SRC = \
 	Effect/Phaser.cpp \
 	Effect/Resample.cpp \
 	Effect/RoomReverb.cpp \
+	Envelope/ADSR.cpp \
+	Envelope/EnvelopeDADSR.cpp \
 	Util/FrequencyTable.cpp \
 	Util/DataSampler.cpp \
 	Util/Logger.cpp \

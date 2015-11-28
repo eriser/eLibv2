@@ -225,6 +225,9 @@ namespace eLibV2
 
                         switch (m_eStealingStrategy)
                         {
+                            case NONE:
+                                break;
+                                
                             case OLDEST:
                                 // get timestamp of first voice and compare to others
                                 if (SuitableTimeStamp == 0)

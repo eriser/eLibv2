@@ -69,7 +69,8 @@ namespace eLibV2
                         {
                             UInt16 pageIndex, posX, posY, tag, subpix;
                             std::string bitmapId;
-                            EditorParameter::ControlType type = EditorParameter::ControlType::Undefined;
+                            
+                            EditorParameter::ControlType type = EditorParameter::Undefined;
 
                             StringMap attributes = (*nodeIt)->getAttributes();
                             for (StringMap::iterator attributeIt = attributes.begin(); attributeIt != attributes.end(); attributeIt++)
@@ -81,13 +82,13 @@ namespace eLibV2
                                 if (attributeName == "type")
                                 {
                                     if (attributeValue == "kickbutton")
-                                        type = EditorParameter::ControlType::KickButton;
+                                        type = EditorParameter::KickButton;
                                     else if (attributeValue == "animknob")
-                                        type = EditorParameter::ControlType::AnimKnob;
+                                        type = EditorParameter::AnimKnob;
                                     else if (attributeValue == "onoffbutton")
-                                        type = EditorParameter::ControlType::OnOffButton;
+                                        type = EditorParameter::OnOffButton;
                                     else if (attributeValue == "moviebitmap")
-                                        type = EditorParameter::ControlType::MovieBitmap;
+                                        type = EditorParameter::MovieBitmap;
                                 }
                                 else if (attributeName == "posx")
                                     posX = atoi(attributeValue.c_str());
