@@ -86,7 +86,7 @@ namespace eLibV2
                         bRes = FreeVoice->Start(Note, Velocity, Mode);
                         if (!Retrigger)
                             UseVoice(FreeVoice);
-                        ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p started", FreeVoice);
+                        ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p started (used: %li)", FreeVoice, m_iNumUsedVoices);
                     }
                 }
                 return bRes;
@@ -291,11 +291,11 @@ namespace eLibV2
                     // find free slot to put voice back
                     if (m_ppFreeVoices[VoiceIndex] == NULL)
                     {
-                        ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p freed", m_pUsedVoices[StoppedIndex].Voice);
+                        m_iNumUsedVoices--;
+                        ModuleLogger::print(LOG_CLASS_INSTRUMENT, "voice %p freed (%li used)", m_pUsedVoices[StoppedIndex].Voice, m_iNumUsedVoices);
                         m_ppFreeVoices[VoiceIndex] = m_pUsedVoices[StoppedIndex].Voice;
                         m_pUsedVoices[StoppedIndex].Voice = NULL;
                         m_pUsedVoices[StoppedIndex].StartTimeStamp = 0;
-                        m_iNumUsedVoices--;
                         break;
                     }
                 }
