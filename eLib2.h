@@ -74,11 +74,6 @@
 #include <Filter/ResonantLPF.h>
 #include <Filter/SwitchableAPF.h>
 
-// instrument modules
-#include <Instrument/BaseInstrument.h>
-#include <Instrument/BaseVoice.h>
-#include <Instrument/VoiceManager.h>
-
 // midi event handling
 #include <MIDI/MidiEvent.h>
 #include <MIDI/MidiEventHandler.h>
@@ -90,5 +85,9 @@
 #include <Util/Logger.h>
 #include <Util/ParamRandom.h>
 #include <Util/Types.h>
+
+// voice modules
+#include <Voice/BaseVoice.h>
+#include <Voice/VoiceManager.h>
 
 #endif

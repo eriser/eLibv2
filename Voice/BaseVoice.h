@@ -4,7 +4,7 @@
 // TODO: how to handle parameter-changes which will affect the modules within the voice?
 namespace eLibV2
 {
-    namespace Instrument
+    namespace Voice
     {
         /**
         this module provides a base voice which can be used to produce polyphonic output

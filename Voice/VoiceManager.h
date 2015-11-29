@@ -2,14 +2,14 @@
 #define MODVOICEMANAGER_H_
 
 #include <Base/BaseName.h>
-#include <Instrument/BaseVoice.h>
+#include <Voice/BaseVoice.h>
 
 #include <memory.h>
 #include <time.h>
 
 namespace eLibV2
 {
-    namespace Instrument
+    namespace Voice
     {
         /**
         this module manages all active voices and handles incoming midi-events
