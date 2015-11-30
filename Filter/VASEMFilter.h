@@ -8,9 +8,6 @@ namespace eLibV2
 {
     namespace Filter
     {
-        /**
-        Implements a second-order Butterworth Bandpass-Filter
-        */
         class VASEMFilter : public BaseVAFilter
         {
         public:
@@ -34,6 +31,7 @@ namespace eLibV2
                 m_dAlpha0 = 1.0;
                 m_dRho = 1.0;
 
+                Reset();
                 calcCoefficients();
             }
 

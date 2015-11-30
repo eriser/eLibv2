@@ -8,9 +8,6 @@ namespace eLibV2
 {
     namespace Filter
     {
-        /**
-        Implements a second-order Butterworth Bandpass-Filter
-        */
         class VAOnePoleFilter : public BaseVAFilter
         {
         public:
@@ -36,6 +33,7 @@ namespace eLibV2
                 m_dEpsilon = 0.0;
                 m_dA0 = 1.0;
 
+                Reset();
                 calcCoefficients();
             }
 
@@ -66,6 +64,15 @@ namespace eLibV2
                         dOutput = hpf;
                 }
                 return dOutput;
+            }
+
+            void setCoefficients(const double alpha, const double beta, const double gamma, const double delta, const double epsilon)
+            {
+                m_dAlpha = alpha;
+                m_dBeta = beta;
+                m_dGamma = gamma;
+                m_dDelta = delta;
+                m_dEpsilon = epsilon;
             }
 
         public:

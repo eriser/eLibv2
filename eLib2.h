@@ -73,6 +73,7 @@
 #include <Filter/ResonantHPF.h>
 #include <Filter/ResonantLPF.h>
 #include <Filter/SwitchableAPF.h>
+#include <Filter/VAK35Filter.h>
 #include <Filter/VAOnePoleFilter.h>
 #include <Filter/VASEMFilter.h>
 
