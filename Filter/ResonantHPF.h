@@ -31,6 +31,7 @@ namespace eLibV2
                 calcCoefficients();
             }
 
+        protected:
             void calcCoefficients(void)
             {
                 double ThetaC = (2.0 * PI * m_dCutoff) / getSamplerate();

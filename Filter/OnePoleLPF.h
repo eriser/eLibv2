@@ -28,7 +28,7 @@ namespace eLibV2
                 m_dGain = 0.0;
             }
 
-        public:
+        protected:
             void calcCoefficients(void)
             {
                 // only a0 and b1 are used and set accordigly to use the enhanced biquad

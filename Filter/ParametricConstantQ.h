@@ -33,6 +33,7 @@ namespace eLibV2
                 calcCoefficients();
             }
 
+        protected:
             void calcCoefficients(void)
             {
                 double a0 = 0.0, a1 = 0.0, a2 = 0.0, b1 = 0.0, b2 = 0.0;
