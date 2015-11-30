@@ -68,6 +68,8 @@ namespace eLibV2
 
             virtual void ParameterChanged(UInt32 Index, double Value) = 0;
 
+            virtual void SetSamplerate(const double Samplerate) = 0;
+
             /**
             this method processes the voice and delivers the output to the main mix
             - the outputs should be accumulated
@@ -77,7 +79,7 @@ namespace eLibV2
             @param outputs outputs receiving the data for the main mix
             @param sampleFrames number of frames to process
             */
-            virtual void Render(float** inputs, float **outputs, UInt16 sampleFrames) = 0;
+            virtual void Render(float** inputs, float **outputs, SInt32 sampleFrames) = 0;
 
         protected:
             /**
