@@ -131,10 +131,18 @@ namespace eLibV2
                 }
             }
 
+            void SetSamplerate(const double Samplerate)
+            {
+                for (UInt8 VoiceIndex = 0; VoiceIndex < m_iNumVoices; ++VoiceIndex)
+                {
+                    m_ppAvailableVoices[VoiceIndex]->SetSamplerate(Samplerate);
+                }
+            }
+
             void SetStealingStrategy(StealingStrategy Strategy) { m_eStealingStrategy = Strategy; }
 
             // TODO: this should be split over multiple threads
-            void Render(float** inputs, float** outputs, UInt16 sampleFrames)
+            void Render(float** inputs, float** outputs, SInt32 sampleFrames)
             {
                 if (m_iNumVoices)
                 {
