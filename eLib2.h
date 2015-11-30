@@ -73,6 +73,8 @@
 #include <Filter/ResonantHPF.h>
 #include <Filter/ResonantLPF.h>
 #include <Filter/SwitchableAPF.h>
+#include <Filter/VAOnePoleFilter.h>
+#include <Filter/VASEMFilter.h>
 
 // midi event handling
 #include <MIDI/MidiEvent.h>
