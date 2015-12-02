@@ -74,6 +74,7 @@
 #include <Filter/ResonantLPF.h>
 #include <Filter/SwitchableAPF.h>
 #include <Filter/VAK35Filter.h>
+#include <Filter/VAMoogLadderFilter.h>
 #include <Filter/VAOnePoleFilter.h>
 #include <Filter/VASEMFilter.h>
 

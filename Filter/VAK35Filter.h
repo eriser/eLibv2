@@ -9,10 +9,10 @@ namespace eLibV2
 {
     namespace Filter
     {
-        class VAK36Filter : public BaseVAFilter
+        class VAK35Filter : public BaseVAFilter
         {
         public:
-            VAK36Filter(std::string name = "VAK36Filter") :
+            VAK35Filter(std::string name = "VAK35Filter") :
                 BaseName(name),
                 BaseConnection(FILTER_CONNECTION_NUM),
                 BaseVAFilter()
@@ -28,6 +28,7 @@ namespace eLibV2
 
                 Init();
             }
+            virtual ~VAK35Filter() {}
 
             void Init(void)
             {
@@ -98,6 +99,12 @@ namespace eLibV2
                         dOutput *= 1.0 / m_dK;
                 }
                 return dOutput;
+            }
+
+            virtual void setQ(const double Q)
+            {
+                m_dK = Q * 1.99 + 0.01;
+                calcCoefficients();
             }
 
         protected:

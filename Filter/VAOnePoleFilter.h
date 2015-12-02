@@ -18,6 +18,7 @@ namespace eLibV2
             {
                 Init();
             }
+            virtual ~VAOnePoleFilter() {}
 
             void Init(void)
             {
