@@ -21,19 +21,20 @@ namespace eLibV2
         public:
             enum
             {
-                WAVETABLE_WAVEFORM_NONE = 0,
-                WAVETABLE_WAVEFORM_SINE,
-                WAVETABLE_WAVEFORM_ENIS,
-                WAVETABLE_WAVEFORM_TRIANGLE_BL,
-                WAVETABLE_WAVEFORM_SAWUP_BL,
-                WAVETABLE_WAVEFORM_SAWDN_BL,
-                WAVETABLE_WAVEFORM_PULSE_BL,
-                WAVETABLE_WAVEFORM_TRIANGLE,
-                WAVETABLE_WAVEFORM_SAWUP,
-                WAVETABLE_WAVEFORM_SAWDN,
-                WAVETABLE_WAVEFORM_PULSE,
-                WAVETABLE_WAVEFORM_NOISE,
-                WAVETABLE_WAVEFORM_SH
+                WAVEFORM_NONE = 0,
+                WAVEFORM_SINE,
+                WAVEFORM_ENIS,
+                WAVEFORM_TRIANGLE_BL,
+                WAVEFORM_SAWUP_BL,
+                WAVEFORM_SAWDN_BL,
+                WAVEFORM_PULSE_BL,
+                WAVEFORM_TRIANGLE,
+                WAVEFORM_SAWUP,
+                WAVEFORM_SAWDN,
+                WAVEFORM_PULSE,
+                WAVEFORM_NOISE,
+                WAVEFORM_SH,
+                WAVEFORM_MAX = WAVEFORM_SH
             };
 
         private:
@@ -76,8 +77,8 @@ namespace eLibV2
 
         public:
             SInt32 getWaveSize(const UInt16 WaveIndex);
-            double adjustPhase(const UInt16 WaveIndex, const double phase);
-            double getWaveData(const UInt16 WaveIndex, const double dPhase);
+            double adjustPhase(const UInt16 WaveIndex, const double Phase);
+            double getWaveData(const UInt16 WaveIndex, const double Phase, const double PulseWidth);
             bool getWaveName(const UInt16 WaveIndex, char* name);
             SInt32 getNumLoadedWaveforms(void) { return Waveforms.size(); }
 

@@ -50,7 +50,7 @@ namespace eLibV2
 
                 m_pLFO = new Generator::BaseLFO();
                 m_pLFO->setFreq(0.01);
-                m_pLFO->setWaveform(Generator::BaseWavetable::WAVETABLE_WAVEFORM_TRIANGLE_BL);
+                m_pLFO->setWaveform(Generator::BaseWavetable::WAVEFORM_TRIANGLE_BL);
 
                 m_pScaler = new Connection::ScalerConnection("phaser.lfo.scaler", 500.0, 500.0);
                 m_pScaler->attachInput(m_pLFO);

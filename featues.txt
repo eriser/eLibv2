@@ -9,16 +9,22 @@ generators:
 oscillator with quad-phase output
 -> working
 
+pulse width (sum of saws-method)
+-> working
+
 wavetable:
 
-band-limited waveforms
-digital waveforms
+band-limited waveforms (SINE, TRI, SAWUP, SAW DOWN and PULSE)
+digital waveforms (TRI, SAWUP, SAW DOWN, PULSE, NOISE, S&H)
 
 sound-generators:
 
 grain synth
+sample player
 
 filters:
+
+bi-quad-filters:
 
 resonant filters (HPF and LPF)
 -> working as first- and second-order (cutoff and q matched)
@@ -27,7 +33,7 @@ resonant filters (BPF and BSF)
 -> working as second-order (cutoff and q/bw matched)
 
 allpass filter
-->working as first- and second-order
+-> working as first- and second-order
 
 shelving filters
 -> working as second-order (cutoff matched)
@@ -43,6 +49,23 @@ peaking filters constant-q
 
 cascaded graphic eq constant-q
 -> working (cutoff, q and gain matched)
+
+virtual analogue filters:
+
+one-pole filter (HPF and LPF)
+-> working (cutoff matched)
+
+oberheim sem-filter (BSF, BPF, HPF and LPF)
+-> working as second-order (cutoff and q matched)
+
+sallen-key korg35-filter (HPF and LPF)
+-> in progress
+
+moog ladder-filter (BPF, HPF and LPF)
+-> working as second and fourth-order (cutoff and q matched)
+
+diode ladder-filter (LPF)
+-> working (cutoff and q matched)
 
 effects:
 

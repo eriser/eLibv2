@@ -76,6 +76,11 @@ namespace eLibV2
                 m_dEpsilon = epsilon;
             }
 
+            void setA0(const double a0)
+            {
+                m_dA0 = a0;
+            }
+
         public:
             void setFeedback(const double Feedback) { m_dFeedback = Feedback; }
             double getFeedbackOutput(void) const { return m_dBeta * (m_dZ1 + m_dFeedback * m_dDelta); }

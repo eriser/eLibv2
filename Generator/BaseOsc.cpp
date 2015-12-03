@@ -8,6 +8,7 @@ void BaseOscillator::Init(void)
     setWaveform(1);
     setCoarse(0.0);
     setFinetune(0.0);
+    setPulseWidth(0.5);
     Reset();
 
     FrequencyTable::SetupFreqs();
@@ -42,14 +43,19 @@ void BaseOscillator::adjustScaler()
     m_dScaler = BaseWavetable::getInstance()->getWaveSize(m_lWaveform) / getSamplerate();
 }
 
-void BaseOscillator::setCoarse(double Coarse)
+void BaseOscillator::setCoarse(const double Coarse)
 {
     m_dCoarse = ModuleHelper::clamp(Coarse, -BASEOSC_COARSE_RANGE, BASEOSC_COARSE_RANGE);
 }
 
-void BaseOscillator::setFinetune(double Finetune)
+void BaseOscillator::setFinetune(const double Finetune)
 {
     m_dFinetune = ModuleHelper::clamp(Finetune, -BASEOSC_FINE_RANGE, BASEOSC_FINE_RANGE);
+}
+
+void BaseOscillator::setPulseWidth(const double PulseWidth)
+{
+    m_dPulseWidth = ModuleHelper::clamp(PulseWidth, 0.01, 0.99);;
 }
 
 SInt32 BaseOscillator::getNumWaveforms(void)
@@ -62,8 +68,8 @@ double BaseOscillator::Process(UInt8 Note)
     double dOutput;
 
     // get data and adjust phases
-    dOutput = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dPhase);
-    m_dQuadOutput = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dQuadPhase);
+    dOutput = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dPhase, m_dPulseWidth);
+    m_dQuadOutput = BaseWavetable::getInstance()->getWaveData(m_lWaveform, m_dQuadPhase, m_dPulseWidth);
     adjustPhases(Note);
 
     return dOutput;
@@ -77,12 +83,12 @@ void BaseOscillator::adjustPhases(UInt8 Note)
     dCoarseFreq = FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse)) & 0x7f);
     if (m_dFinetune >= 0.0)
     {
-        dFineFreq = (FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse)+1) & 0x7f) - dCoarseFreq) * (((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
+        dFineFreq = (FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse) + 1) & 0x7f) - dCoarseFreq) * (((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE)) - 0.5) * 2;
         dFreq = (dCoarseFreq + dFineFreq) * m_dScaler;
     }
     else
     {
-        dFineFreq = (dCoarseFreq - FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse)-1) & 0x7f)) * (0.5 - ((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
+        dFineFreq = (dCoarseFreq - FrequencyTable::ForNote((Note + (SInt16)(m_dCoarse) - 1) & 0x7f)) * (0.5 - ((m_dFinetune + BASEOSC_FINE_RANGE) / (2 * BASEOSC_FINE_RANGE))) * 2;
         dFreq = (dCoarseFreq - dFineFreq) * m_dScaler;
     }
     m_dPhase += dFreq;

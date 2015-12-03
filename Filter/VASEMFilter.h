@@ -59,7 +59,7 @@ namespace eLibV2
                     double lpf = m_dAlpha * bpf + m_dZ12;
 
                     double R = 1.0 / (2.0 * m_dQ);
-                    double bsf = input - 2.0 * R * bpf;
+                    double bsf = input - 2.0 * R * bpf; /// TODO ???
 
                     double semBSF = m_dBSFRatio * hpf + (1.0 - m_dBSFRatio) * lpf;
 

@@ -55,11 +55,13 @@ namespace eLibV2
             void setWaveform(SInt32 Waveform);
             void setCoarse(const double Coarse);
             void setFinetune(const double Finetune);
+            void setPulseWidth(const double PulseWidth);
             void adjustScaler();
 
-            SInt32 getWaveform(void) { return m_lWaveform; }
-            double getCoarse(void) { return m_dCoarse; }
-            double getFinetune(void) { return m_dFinetune; }
+            SInt32 getWaveform(void) const { return m_lWaveform; }
+            double getCoarse(void) const { return m_dCoarse; }
+            double getFinetune(void) const { return m_dFinetune; }
+            double getPulseWidth(void) const { return m_dPulseWidth; }
             SInt32 getNumWaveforms(void);
 
             double getQuadOutput(void) { return m_dQuadOutput; }
@@ -76,6 +78,7 @@ namespace eLibV2
             double m_dCoarse, m_dFinetune;
             double m_dPhase, m_dQuadPhase, m_dScaler;
             double m_dQuadOutput;
+            double m_dPulseWidth;
         };
     }
 }

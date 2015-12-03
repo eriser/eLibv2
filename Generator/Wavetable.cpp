@@ -402,7 +402,7 @@ double* BaseWavetable::loadWaveform(const HINSTANCE hInstance, const UInt16 resI
 }
 #endif
 
-double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase)
+double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase, const double PulseWidth)
 {
     double data = 0.0;
 
@@ -416,9 +416,41 @@ double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase)
     firstIndex = ModuleHelper::wrap(firstIndex, Waveforms[WaveIndex].WaveSize);
     SInt32 nextIndex = ModuleHelper::wrap(firstIndex + 1, Waveforms[WaveIndex].WaveSize);
 
+    // special treatment for pulse-width
+    // use two sawtooth-waveform (up and down) with phase shift and subtract
+    if ((WaveIndex == WAVEFORM_PULSE) || (WaveIndex == WAVEFORM_PULSE_BL))
+    {
+        // change waveforms to sawtooth
+        UInt16 WaveIndex1, WaveIndex2;
+        if (WaveIndex == WAVEFORM_PULSE)
+        {
+            WaveIndex1 = WAVEFORM_SAWUP;
+            WaveIndex2 = WAVEFORM_SAWUP;
+        }
+        else
+        {
+            WaveIndex1 = WAVEFORM_SAWUP_BL;
+            WaveIndex2 = WAVEFORM_SAWUP_BL;
+        }
 
-    // data = Waveforms[WaveIndex].WaveData[(SInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
-    data = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[nextIndex], dFrac);
+        // prepare phase shift for second sawtooth
+        double dPhase2 = dPhase + PulseWidth * Waveforms[WaveIndex].WaveSize * 0.5;
+        SInt32 firstIndex2 = (SInt32)(dPhase2 * 2);
+        double dFrac2 = (dPhase2 * 2) - firstIndex2;
+
+        firstIndex2 = ModuleHelper::wrap(firstIndex2, Waveforms[WaveIndex].WaveSize);
+        SInt32 nextIndex2 = ModuleHelper::wrap(firstIndex2 + 1, Waveforms[WaveIndex].WaveSize);
+
+        double data1 = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[nextIndex], dFrac);
+        double data2 = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex2], Waveforms[WaveIndex].WaveData[nextIndex2], dFrac2);
+        data = 0.5 * data1 - 0.5 * data2;
+    }
+    else
+    {
+        // data = Waveforms[WaveIndex].WaveData[(SInt32)(dPhase * 2) % Waveforms[WaveIndex].WaveSize];
+        data = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[nextIndex], dFrac);
+    }
+
     data = ModuleHelper::clamp(data, -1.0, 1.0);
     return data;
 }
