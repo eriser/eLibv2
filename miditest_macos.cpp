@@ -22,6 +22,8 @@
 //
 //
 
+#if defined(__APPLE__)
+
 #include <CoreServices/CoreServices.h>
 #include <CoreMIDI/CoreMIDI.h>  /* interface to MIDI in Macintosh OS X */
 #include <stdio.h>
@@ -39,13 +41,14 @@ int main(void) {
     MIDIClientRef midiclient  = NULL;
     MIDIPortRef   midiin     = NULL;
     OSStatus status;
-    if (status = MIDIClientCreate(CFSTR("TeStInG"), NULL, NULL, &midiclient)) {
+    if ((status = MIDIClientCreate(CFSTR("TeStInG"), NULL, NULL, &midiclient)))
+    {
         printf("Error trying to create MIDI Client structure: %d\n", (int)status);
         printf("%s\n", GetMacOSStatusErrorString(status));
         exit(status);
     }
-    if (status = MIDIInputPortCreate(midiclient, CFSTR("InPuT"), myReadProc, 
-                                     NULL, &midiin)) {
+    if ((status = MIDIInputPortCreate(midiclient, CFSTR("InPuT"), myReadProc, NULL, &midiin)))
+    {
         printf("Error trying to create MIDI output port: %d\n", (int)status);
         printf("%s\n", GetMacOSStatusErrorString(status));
         exit(status);
@@ -53,7 +56,8 @@ int main(void) {
     
     ItemCount nSrcs = MIDIGetNumberOfSources();
     ItemCount iSrc;
-    for (iSrc=0; iSrc<nSrcs; iSrc++) {
+    for (iSrc = 0; iSrc < nSrcs; iSrc++)
+    {
         MIDIEndpointRef src = MIDIGetSource(iSrc);
         MIDIPortConnectSource(midiin, src, NULL);
     }
@@ -76,12 +80,13 @@ int main(void) {
 //      MIDI input knows what to do with the MIDI messages after it
 //      receives them.
 
-void myReadProc(const MIDIPacketList *packetList, void* readProcRefCon,
-                void* srcConnRefCon) {
+void myReadProc(const MIDIPacketList *packetList, void* readProcRefCon, void* srcConnRefCon)
+{
     MIDIPacket *packet = (MIDIPacket*)packetList->packet;
-    int i, j;
+    int j;
     int count = packetList->numPackets;
-    for (j=0; j<count; j++) {
+    for (j = 0; j < count; j++)
+    {
         printPacketInfo(packet);
         packet = MIDIPacketNext(packet);
     }
@@ -94,10 +99,12 @@ void myReadProc(const MIDIPacketList *packetList, void* readProcRefCon,
 // printPacketInfo --
 //
 
-void printPacketInfo(const MIDIPacket* packet) {
+void printPacketInfo(const MIDIPacket* packet)
+{
     double timeinsec = 0.0;
     mach_timebase_info_data_t info;
-    if (mach_timebase_info(&info) == 0) {
+    if (mach_timebase_info(&info) == 0)
+    {
         timeinsec = mach_absolute_time()*1e-9*(double)info.numer/info.denom;
     }
     
@@ -106,15 +113,35 @@ void printPacketInfo(const MIDIPacket* packet) {
     printf("%9.3lfs\t", stampinsec);
     // display different in times in microseconds
     printf("%9.0lfus\t", (timeinsec-stampinsec)*1000000); 
-    int i;
-    for (i=0; i<packet->length; i++) {
-        if (packet->data[i] < 0x7f) {
-            printf("%d ", packet->data[i]);
-        } else {
-            printf("0x%x ", packet->data[i]);
-        }
+
+    int midistatus = packet->data[0] & 0xf0;
+    int midichannel = packet->data[0] & 0x0f;
+        
+    switch (midistatus)
+    {
+        // note off
+        case 0x80:
+            printf("note off (%d): note: %d velocity: %d", midichannel, packet->data[1], packet->data[2]);
+            break;
+                
+        // note on
+        case 0x90:
+            printf("note on (%d): note: %d velocity: %d", midichannel, packet->data[1], packet->data[2]);
+            break;
+                
+        // control change
+        case 0xb0:
+            printf("control change (%d): controller: %d value: %d", midichannel, packet->data[1], packet->data[2]);
+            break;
     }
     printf("\n");
 }
 
+#else
 
+int main()
+{
+    return 0;
+}
+
+#endif

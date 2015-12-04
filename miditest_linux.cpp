@@ -9,6 +9,8 @@
 // Description:	  Read ALSA Raw MIDI input using threads.
 //
 
+#if defined(__linux__)
+
 #include <alsa/asoundlib.h>      /* for alsa interface   */
 #include <pthread.h>             /* for threading        */
 #include <unistd.h>              /* for sleep() function */
@@ -112,4 +114,11 @@ void errormessage(const char *format, ...) {
    putc('\n', stderr);
 }
 
+#else
 
+int main()
+{
+    return 0;
+}
+
+#endif
