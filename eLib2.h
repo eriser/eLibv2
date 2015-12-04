@@ -26,6 +26,7 @@
 
 // envelope modules
 #include <Envelope/ADSR.h>
+#include <Envelope/AR.h>
 #include <Envelope/EnvelopeDADSR.h>
 
 // effect modules
