@@ -3,6 +3,7 @@ features:
 midi:
 
 voice allocation
+-> working
 
 generators:
 
@@ -10,7 +11,7 @@ oscillator with quad-phase output
 -> working
 
 pulse width (sum of saws-method)
--> working
+-> working, but should not be symmetrical
 
 wavetable:
 
@@ -20,7 +21,9 @@ digital waveforms (TRI, SAWUP, SAW DOWN, PULSE, NOISE, S&H)
 sound-generators:
 
 grain synth
+
 sample player
+
 
 filters:
 
@@ -66,6 +69,19 @@ moog ladder-filter (BPF, HPF and LPF)
 
 diode ladder-filter (LPF)
 -> working (cutoff and q matched)
+
+
+envelopes:
+
+ar
+-> working
+
+adsr
+-> working
+
+dadsr
+-> in progress
+
 
 effects:
 
