@@ -1,10 +1,8 @@
 # source files.
 SRC = \
-	Generator/NoiseGenerator.cpp \
-	Generator/Wavetable.cpp \
-	Generator/BaseOsc.cpp \
-	Generator/Sequencer.cpp \
-	Generator/BaseLFO.cpp \
+	Data/EditorProperties.cpp \
+	Data/PluginParameter.cpp \
+	Data/PluginProgram.cpp \
 	Effect/VCF.cpp \
 	Effect/TremoloPanner.cpp \
 	Effect/WaveShaper.cpp \
@@ -29,22 +27,24 @@ SRC = \
 	Effect/Resample.cpp \
 	Effect/RoomReverb.cpp \
 	Envelope/ADSR.cpp \
+	Envelope/AR.cpp \
 	Envelope/EnvelopeDADSR.cpp \
+	Generator/NoiseGenerator.cpp \
+	Generator/Wavetable.cpp \
+	Generator/BaseOsc.cpp \
+	Generator/Sequencer.cpp \
+	Generator/BaseLFO.cpp \
+	Loader/PresetLoader.cpp \
+	Loader/WaveLoader.cpp \
+	Loader/LPSLoader.cpp \
+	MIDI/MidiDevice.cpp \
+	MIDI/MidiEventAdapter.cpp \
+	MIDI/MidiEventHandler.cpp \
 	Util/FrequencyTable.cpp \
 	Util/DataSampler.cpp \
 	Util/Logger.cpp \
 	Util/ManagedBuffer.cpp \
-	Util/ParamRandom.cpp \
-	MIDI/MidiDevice.cpp \
-	MIDI/MidiEventAdapter.cpp \
-	MIDI/MidiEventHandler.cpp \
-	Envelope/EnvelopeDADSR.cpp \
-	Data/EditorProperties.cpp \
-	Data/PluginParameter.cpp \
-	Data/PluginProgram.cpp \
-	Loader/PresetLoader.cpp \
-	Loader/WaveLoader.cpp \
-	Loader/LPSLoader.cpp
+	Util/ParamRandom.cpp
 
 OBJ = $(SRC:.cpp=.o)
  
@@ -89,7 +89,7 @@ $(BUILDTEST_SO): $(LIB_SO) buildtest.cpp
 	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp -L. -leLibv2 -o $(BUILDTEST_SO)
 
 $(MIDITEST_LINUX): miditest_linux.cpp
-	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_linux.cpp -o $(MIDITEST_LINUX)
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_linux.cpp -lc -lm -lpthread -lasound -o $(MIDITEST_LINUX)
 
 $(MIDITEST_MACOS): miditest_macos.cpp
 	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_macos.cpp -o $(MIDITEST_MACOS) -framework CoreMIDI -framework CoreServices

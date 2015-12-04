@@ -60,27 +60,38 @@ int main(int argc, char *argv[]) {
 void *midiinfunction(void *arg) {
    // this is the parameter passed via last argument of pthread_create():
    snd_rawmidi_t* midiin = (snd_rawmidi_t*)arg;
-   char buffer[1];
-   int  count = 0;
+   char buffer[3];
    int status;
 
    while (1) {
       if (midiin == NULL) {
          break;
       }
-      if ((status = snd_rawmidi_read(midiin, buffer, 1)) < 0) {
+      if ((status = snd_rawmidi_read(midiin, buffer, 3)) < 0)
+      {
          errormessage("Problem reading MIDI input: %s", snd_strerror(status));
       }
-      count++;
-      if ((unsigned char)buffer[0] >= 0x80) {  // print command in hex
-         printf("0x%x ", (unsigned char)buffer[0]);
-      } else {
-         printf("%d ", (unsigned char)buffer[0]);
+
+      int midistatus = buffer[0] & 0xf0;
+      int midichannel = buffer[0] & 0x0f;
+      switch (midistatus)
+      {
+          // note off
+          case 0x80:
+              printf("note off (%d): note: %d velocity: %d\n", midichannel, buffer[1], buffer[2]);
+              break;
+
+          // note on
+          case 0x90:
+              printf("note on (%d): note: %d velocity: %d\n", midichannel, buffer[1], buffer[2]);
+              break;
+
+          // control change
+          case 0xb0:
+              printf("control change (%d): controller: %d value: %d\n", midichannel, buffer[1], buffer[2]);
+              break;
       }
       fflush(stdout);
-      if (count % 20 == 0) {
-         printf("\n");
-      }
    }
 
    return NULL;

@@ -2,6 +2,7 @@
 #define MODBASEENVELOPE_H_
 
 #include <Base/BaseModule.h>
+#include <cmath>
 
 namespace eLibV2
 {
