@@ -40,3 +40,7 @@ Icon
 *.so
 *.a
 
+# helpers
+miditest*
+buildtest*
+
