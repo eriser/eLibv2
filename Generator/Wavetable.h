@@ -40,8 +40,8 @@ namespace eLibV2
         private:
             enum
             {
-                WAVETABLE_SAMPLE_BANDLIMIT = 63, // needs to be odd value
-                WAVETABLE_SAMPLE_SIZE = 0x10000   // size is limited to a UInt16
+                SAMPLE_BANDLIMIT = 63,      // needs to be odd value
+                SAMPLE_WAVESIZE = 0x10000   // needs to be power of 2
             };
 
             typedef struct
@@ -63,6 +63,16 @@ namespace eLibV2
             static BaseWavetable *getInstance();
             ~BaseWavetable();
 
+            static void setWaveSize(const UInt32 WaveSize)
+            {
+                m_lWaveSize = WaveSize;
+            }
+
+            static void setBandLimit(const UInt8 BandLimit)
+            {
+                m_iBandLimit = BandLimit;
+            }
+
             virtual void Init(void);
 
         private:
@@ -83,9 +93,11 @@ namespace eLibV2
             SInt32 getNumLoadedWaveforms(void) { return Waveforms.size(); }
 
         private:
+            static UInt32 m_lWaveSize;
+            static UInt8 m_iBandLimit;
             std::vector<Waveform> Waveforms;
 
-            static BaseWavetable *instance;
+            static BaseWavetable *m_pInstance;
         };
     }
 }
