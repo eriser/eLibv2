@@ -127,6 +127,9 @@ namespace eLibV2
                         case TYPE_BPF:
                             m_dA = 0.0; m_dB = 2.0; m_dC = -2.0; m_dD = 0.0; m_dE = 0.0;
                             break;
+                            
+                        case TYPE_BSF:
+                            break;
                     }
                 }
                 else if (m_iOrder == 4)
@@ -143,6 +146,9 @@ namespace eLibV2
 
                         case TYPE_BPF:
                             m_dA = 0.0; m_dB = 0.0; m_dC = 4.0; m_dD = -8.0; m_dE = 4.0;
+                            break;
+                            
+                        case TYPE_BSF:
                             break;
                     }
                 }

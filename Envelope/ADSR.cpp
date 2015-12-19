@@ -146,6 +146,11 @@ double ADSR::Process(void)
                     m_eState = STATE_OFF;
                 }
                 break;
+                
+            case STATE_DELAY:
+            case STATE_HOLD:
+                // these states are not supported by class
+                break;
         }
     }
     else

@@ -104,6 +104,11 @@ double EnvelopeDADSR::Process(void)
                 else
                     m_eState = STATE_OFF;
                 break;
+                
+            case STATE_HOLD:
+            case STATE_SHUTDOWN:
+                // these states are not supported by class
+                break;
         }
     }
     else
