@@ -436,15 +436,15 @@ double BaseWavetable::getWaveData(const UInt16 WaveIndex, const double dPhase, c
         }
 
         // prepare phase shift for second sawtooth
-        double dPhase2 = dPhase + PulseWidth * Waveforms[WaveIndex].WaveSize * 0.5;
+        double dPhase2 = dPhase + PulseWidth * Waveforms[WaveIndex2].WaveSize * 0.5;
         SInt32 firstIndex2 = (SInt32)(dPhase2 * 2);
         double dFrac2 = (dPhase2 * 2) - firstIndex2;
 
-        firstIndex2 = ModuleHelper::wrap(firstIndex2, Waveforms[WaveIndex].WaveSize);
-        SInt32 nextIndex2 = ModuleHelper::wrap(firstIndex2 + 1, Waveforms[WaveIndex].WaveSize);
+        firstIndex2 = ModuleHelper::wrap(firstIndex2, Waveforms[WaveIndex2].WaveSize);
+        SInt32 nextIndex2 = ModuleHelper::wrap(firstIndex2 + 1, Waveforms[WaveIndex2].WaveSize);
 
-        double data1 = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex], Waveforms[WaveIndex].WaveData[nextIndex], dFrac);
-        double data2 = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex].WaveData[firstIndex2], Waveforms[WaveIndex].WaveData[nextIndex2], dFrac2);
+        double data1 = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex1].WaveData[firstIndex], Waveforms[WaveIndex1].WaveData[nextIndex], dFrac);
+        double data2 = ModuleHelper::LinearInterpolation(Waveforms[WaveIndex2].WaveData[firstIndex2], Waveforms[WaveIndex2].WaveData[nextIndex2], dFrac2);
         data = 0.5 * data1 - 0.5 * data2;
     }
     else

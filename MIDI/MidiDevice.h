@@ -9,6 +9,9 @@
 #include <CoreServices/CoreServices.h>
 #include <CoreMIDI/CoreMIDI.h>
 #elif defined(__linux__)
+#include <alsa/asoundlib.h>
+#include <pthread.h>
+#include <unistd.h>
 #else
 #error "unsupported platform"
 #endif
@@ -43,12 +46,13 @@ namespace eLibV2
             UInt16 GetNumberOfDevices() { return m_uiNumMidiInDevices; }
             std::string GetDeviceName(UInt16 deviceIndex);
 
+// callback functions
 #if defined(WIN32)
             static void CALLBACK CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 #elif defined(__APPLE__)
             static void CallbackFunction(const MIDIPacketList *packetList, void* readProcRefCon, void* srcConnRefCon);
 #elif defined(__linux__)
-            static void CallbackFunction(void *arg);
+            static void* CallbackFunction(void *arg);
 #else
 #error "unsupported platform"
 #endif
@@ -63,6 +67,11 @@ namespace eLibV2
 #elif defined(__APPLE__)
             MIDIClientRef m_pMidiClient;
             MIDIPortRef m_pMidiInput;
+#elif defined(__linux__)
+        public:
+            pthread_t m_pMidiInputThread;
+        private:
+            snd_rawmidi_t* m_pMidiInput;
 #endif
             UInt16 m_uiNumMidiInDevices;
             std::vector<std::string> m_DeviceNames;

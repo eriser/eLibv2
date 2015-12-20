@@ -67,16 +67,17 @@ CCC = g++
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)
-LDFRAMEWORKS =
+LIBS_PLATFORM = -lpthread -lasound
 endif
 ifeq ($(UNAME), Darwin)
-LDFRAMEWORKS = -framework CoreMidi -framework CoreServices
+LIBS_PLATFORM = -framework CoreMidi -framework CoreServices
 endif
 
 # compile flags
 # c and m for standard
 # z for zlib
-LDFLAGS = -L/usr/lib -L/usr/local/lib -lc -lm -lz
+LIBS_PATH = -L/usr/lib -L/usr/local/lib
+LIBS_STANDARD = -lc -lm -lz
 
 .SUFFIXES: .cpp
 
@@ -89,19 +90,19 @@ $(LIB_A): $(OBJ)
 	ar rcs $(LIB_A) $(OBJ)
 
 $(BUILDTEST_A): $(LIB_A) buildtest.cpp
-	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp libeLibv2.a $(LDFLAGS) -o $(BUILDTEST_A)
+	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp libeLibv2.a $(LIBS_PATH) $(LIBS_STANDARD) -o $(BUILDTEST_A)
 
 $(LIB_SO): $(SRC)
-	$(CCC) $(INCLUDES) $(CCFLAGS) -shared -fPIC $(SRC) $(LDFLAGS) $(LDFRAMEWORKS) -o $(LIB_SO)
+#	$(CCC) $(INCLUDES) $(CCFLAGS) -shared -fPIC $(SRC) $(LIBS_PATH) $(LIBS_STANDARD) $(LIBS_PLATFORM) -o $(LIB_SO)
 
 $(BUILDTEST_SO): $(LIB_SO) buildtest.cpp
 	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp -L. -leLibv2 -o $(BUILDTEST_SO)
 
-$(MIDITEST_LINUX): miditest_linux.cpp
-	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_linux.cpp -lc -lm -lpthread -lasound -o $(MIDITEST_LINUX)
+$(MIDITEST_LINUX): miditest_linux.cpp $(LIB_A)
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_linux.cpp ./libeLibv2.a $(LIBS_PLATFORM) -o $(MIDITEST_LINUX)
 
 $(MIDITEST_MACOS): miditest_macos.cpp
-	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_macos.cpp -L. -leLibv2 $(LDFRAMEWORKS) -o $(MIDITEST_MACOS)
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_macos.cpp -L. -leLibv2 $(LIBS_PLATFORM) -o $(MIDITEST_MACOS)
 
 #depend: dep
 # 

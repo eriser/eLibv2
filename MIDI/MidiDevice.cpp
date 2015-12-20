@@ -16,7 +16,13 @@ MidiDevice::MidiDevice(const PluginHost* hostThread) :
 #elif defined(__APPLE__)
 MidiDevice::MidiDevice() :
     m_pMidiClient(NULL),
-    m_pMidiInput(NULL)
+    m_pMidiInput(NULL),
+    m_uiNumMidiInDevices(0)
+#elif defined(__linux__)
+MidiDevice::MidiDevice() :
+//    m_pMidiInputThread(NULL),
+    m_pMidiInput(NULL),
+    m_uiNumMidiInDevices(0)
 #endif
 {
     EnumerateMidiInDevices();
@@ -53,6 +59,8 @@ void MidiDevice::EnumerateMidiInDevices()
     }
     m_DeviceNames.push_back("default");
 #elif defined(__linux__)
+    m_uiNumMidiInDevices = 1;
+    m_DeviceNames.push_back("hw:1,0,0");
 #endif
     ModuleLogger::print(LOG_CLASS_MIDI, ss.str().c_str());
 }
@@ -81,18 +89,18 @@ bool MidiDevice::OpenDevice(SInt16 deviceId)
 #elif defined(__APPLE__)
     // Prepare MIDI Interface Client/Port for writing MIDI data:
     OSStatus status;
-    
+
     if ((status = MIDIClientCreate(CFSTR("MIDIClient"), NULL, NULL, &m_pMidiClient)))
     {
-        printf("Error trying to create MIDI Client structure: %d\n", (int)status);
-        printf("%s\n", GetMacOSStatusErrorString(status));
-        exit(status);
+        ModuleLogger::print(LOG_CLASS_MIDI, "Error trying to create MIDI Client structure: %d\n", (int)status);
+        ModuleLogger::print(LOG_CLASS_MIDI, "%s\n", GetMacOSStatusErrorString(status));
+        return false;
     }
     if ((status = MIDIInputPortCreate(m_pMidiClient, CFSTR("MIDIInput"), MidiDevice::CallbackFunction, NULL, &m_pMidiInput)))
     {
-        printf("Error trying to create MIDI output port: %d\n", (int)status);
-        printf("%s\n", GetMacOSStatusErrorString(status));
-        exit(status);
+        ModuleLogger::print(LOG_CLASS_MIDI, "Error trying to create MIDI output port: %d\n", (int)status);
+        ModuleLogger::print(LOG_CLASS_MIDI, "%s\n", GetMacOSStatusErrorString(status));
+        return false;
     }
     
     for (ItemCount deviceIndex = 0; deviceIndex < m_uiNumMidiInDevices; deviceIndex++)
@@ -101,6 +109,21 @@ bool MidiDevice::OpenDevice(SInt16 deviceId)
         MIDIPortConnectSource(m_pMidiInput, src, NULL);
     }            
 #elif defined(__linux__)
+    int status;
+    int mode = 0;
+
+    if ((status = snd_rawmidi_open(&m_pMidiInput, NULL, GetDeviceName(deviceId).c_str(), mode)) < 0)
+    {
+        ModuleLogger::print(LOG_CLASS_MIDI, "Problem opening MIDI input: %s", snd_strerror(status));
+        return false;
+    }
+
+    status = pthread_create(&m_pMidiInputThread, NULL, MidiDevice::CallbackFunction, m_pMidiInput);
+    if (status == -1)
+    {
+        ModuleLogger::print(LOG_CLASS_MIDI, "Unable to create MIDI input thread.");
+        return false;
+    }
 #endif
     return true;
 }
@@ -111,6 +134,10 @@ void MidiDevice::CloseDevice()
     if (m_OpenedMidiIn)
         midiInClose(m_OpenedMidiIn);
     m_OpenedMidiIn = NULL;
+#elif defined(__APPLE__)
+#elif defined(__linux__)
+   snd_rawmidi_close(m_pMidiInput);
+   m_pMidiInput = NULL;
 #endif
 }
 
@@ -210,7 +237,73 @@ void MidiDevice::CallbackFunction(const MIDIPacketList *packetList, void* readPr
         }            
     }
 }
-// do something on mac os
-#elif defined(LINUX)
-// do something o linux
+#elif defined(__linux__)
+void *MidiDevice::CallbackFunction(void *arg)
+{
+    std::stringstream ss;
+
+    // this is the parameter passed via last argument of pthread_create():
+    snd_rawmidi_t* midiin = (snd_rawmidi_t*)arg;
+    snd_rawmidi_status_t* midistatus;
+    char buffer[256];
+    int status;
+
+    status = snd_rawmidi_status_malloc(&midistatus);
+
+    while (1)
+    {
+        ss.clear();
+
+        if (midiin == NULL)
+            break;
+
+        status = snd_rawmidi_status(midiin, midistatus);
+        size_t avail = snd_rawmidi_status_get_avail(midistatus);
+
+//        if (avail > 0)
+        {
+            ModuleLogger::print(LOG_CLASS_MIDI, "%d bytes available", avail);
+            if ((status = snd_rawmidi_read(midiin, buffer, 9)) < 0)
+                ModuleLogger::print(LOG_CLASS_MIDI, "Problem reading MIDI input: %s", snd_strerror(status));
+
+            status = snd_rawmidi_drain(midiin);
+
+            int midistatus = buffer[0] & 0xf0;
+            int midichannel = buffer[0] & 0x0f;
+
+            switch (midistatus)
+            {
+                // note events (0x80 = note off / 0x90 = note on)
+                case 0x80:
+                case 0x90:
+                {
+                    int velocity = 0;
+                    int note = buffer[1];
+                    
+                    if (midistatus == 0x90)
+                        velocity = buffer[2];
+                    
+                    if (velocity > 0)
+                        ss << "note on (" << (int)midichannel << "): note: " << (int)note << std::endl;
+                    else
+                        ss << "note off (" << (int)midichannel << "): note: " << (int)note << " velocity: " << (int)velocity << std::endl;
+                    break;
+                }
+                    
+                // control change
+                case 0xb0:
+                {
+                    int controller = buffer[1];
+                    int value = buffer[2];
+                    ss << "control change (" << (int)midichannel << "): controller: " << (int)controller << " value: " << (int)value << std::endl;
+                    break;
+                }
+            }
+            ModuleLogger::print(LOG_CLASS_MIDI, ss.str().c_str());
+            
+        }
+    }
+    snd_rawmidi_status_free(midistatus);
+    return NULL;
+}
 #endif
