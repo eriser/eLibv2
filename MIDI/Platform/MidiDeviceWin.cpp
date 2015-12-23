@@ -60,7 +60,7 @@ void MidiDeviceWin::CloseDevice()
 void CALLBACK MidiDeviceWin::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
     std::stringstream ss;
-    eLibV2::VST::Host::PluginHost *host = (eLibV2::VST::Host::PluginHost*)dwInstance;
+    MidiEventHandler *midiHandler = (MidiEventHandler*)dwInstance;
 
     switch (wMsg)
     {
@@ -83,7 +83,7 @@ void CALLBACK MidiDeviceWin::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_
         if (midiStatus == 0x90)
         {
             ss << "midi message note: " << midiData1 << " velocity: " << midiData2;
-            host->InsertMidiEvent(midiChannel, midiStatus, midiData1, midiData2);
+            midiHandler->insertEvent(midiChannel, new MidiEvent(midiData1, midiData2));
         }
         else if (midiStatus == 0xb0)
             ss << "control change event";

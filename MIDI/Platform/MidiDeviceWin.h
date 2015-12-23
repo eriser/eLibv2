@@ -30,8 +30,6 @@ namespace eLibV2
             virtual bool OpenDevice(SInt16 deviceIndex) ;
             virtual void CloseDevice();
 
-            void setReceiver(const VST::Host::PluginHost* hostThread) { m_pHostThread = hostThread; }
-
             // callback functions
             static void CALLBACK CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
@@ -39,7 +37,6 @@ namespace eLibV2
             virtual void EnumerateMidiInDevices();
 
         private:
-            const VST::Host::PluginHost* m_pHostThread;
             HMIDIIN m_OpenedMidiIn;
         };
     }

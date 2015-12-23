@@ -22,9 +22,11 @@ namespace eLibV2
 
             static BaseMidiDevice* GetMidiDevice()
             {
-                return m_pMidiDevice;
+                if (m_pInstance == NULL)
+                    m_pInstance = new MidiDeviceFactory();
+                return m_pInstance->GetMidiDeviceInternal();
             }
-
+            
         private:
             MidiDeviceFactory()
             {
@@ -39,8 +41,14 @@ namespace eLibV2
 #endif
             }
 
+            BaseMidiDevice* GetMidiDeviceInternal()
+            {
+                return m_pMidiDevice;
+            }
+            
         private:
-            static BaseMidiDevice* m_pMidiDevice;
+            static MidiDeviceFactory* m_pInstance;
+            BaseMidiDevice* m_pMidiDevice;
         };
     }
 }

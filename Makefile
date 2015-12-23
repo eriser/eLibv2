@@ -37,9 +37,13 @@ SRC = \
 	Loader/PresetLoader.cpp \
 	Loader/WaveLoader.cpp \
 	Loader/LPSLoader.cpp \
-	MIDI/MidiDevice.cpp \
+	MIDI/BaseMidiDevice.cpp \
+	MIDI/MidiDeviceFactory.cpp \
 	MIDI/MidiEventAdapter.cpp \
 	MIDI/MidiEventHandler.cpp \
+	MIDI/Platform/MidiDeviceLinux.cpp \
+	MIDI/Platform/MidiDeviceMac.cpp \
+	MIDI/Platform/MidiDeviceWin.cpp \
 	Util/FrequencyTable.cpp \
 	Util/DataSampler.cpp \
 	Util/Logger.cpp \
@@ -52,8 +56,8 @@ LIB_A = libeLibv2.a
 LIB_SO = libeLibv2.so
 BUILDTEST_A = buildtest_a
 BUILDTEST_SO = buildtest_so
-MIDITEST_LINUX = miditest_linux
-MIDITEST_MACOS = miditest_macos
+MIDITEST_A = miditest_a
+MIDITEST_SO = miditest_so
 
 # include directories
 INCLUDES = -I. -I/usr/local/include
@@ -81,7 +85,7 @@ LIBS_STANDARD = -lc -lm -lz
 
 .SUFFIXES: .cpp
 
-default: $(LIB_A) $(LIB_SO) $(BUILDTEST_A) $(BUILDTEST_SO) $(MIDITEST_LINUX) $(MIDITEST_MACOS)
+default: $(LIB_A) $(LIB_SO) $(BUILDTEST_A) $(BUILDTEST_SO) $(MIDITEST_A) $(MIDITEST_SO)
 
 .cpp.o:
 	$(CCC) $(INCLUDES) $(CCFLAGS) -c $< -o $@
@@ -93,20 +97,20 @@ $(BUILDTEST_A): $(LIB_A) buildtest.cpp
 	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp libeLibv2.a $(LIBS_PATH) $(LIBS_STANDARD) -o $(BUILDTEST_A)
 
 $(LIB_SO): $(SRC)
-#	$(CCC) $(INCLUDES) $(CCFLAGS) -shared -fPIC $(SRC) $(LIBS_PATH) $(LIBS_STANDARD) $(LIBS_PLATFORM) -o $(LIB_SO)
+	$(CCC) $(INCLUDES) $(CCFLAGS) -shared -fPIC $(SRC) $(LIBS_PATH) $(LIBS_STANDARD) $(LIBS_PLATFORM) -o $(LIB_SO)
 
 $(BUILDTEST_SO): $(LIB_SO) buildtest.cpp
 	$(CCC) $(INCLUDES) $(CCFLAGS) buildtest.cpp -L. -leLibv2 -o $(BUILDTEST_SO)
 
-$(MIDITEST_LINUX): miditest_linux.cpp $(LIB_A)
-	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_linux.cpp ./libeLibv2.a $(LIBS_PLATFORM) -o $(MIDITEST_LINUX)
+$(MIDITEST_A): miditest.cpp $(LIB_A)
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest.cpp ./libeLibv2.a $(LIBS_PLATFORM) -o $(MIDITEST_A)
 
-$(MIDITEST_MACOS): miditest_macos.cpp
-	$(CCC) $(INCLUDES) $(CCFLAGS) miditest_macos.cpp -L. -leLibv2 $(LIBS_PLATFORM) -o $(MIDITEST_MACOS)
+$(MIDITEST_SO): miditest.cpp
+	$(CCC) $(INCLUDES) $(CCFLAGS) miditest.cpp -L. -leLibv2 $(LIBS_PLATFORM) -o $(MIDITEST_SO)
 
 #depend: dep
 # 
 #	makedepend -- $(CFLAGS) -- $(INCLUDES) $(SRC)
 
 clean:
-	rm -f $(OBJ) $(LIB_A) $(LIB_SO) $(BUILDTEST_A) $(BUILDTEST_SO) $(MITEST_LINUX) $(MIDITEST_MACOS) Makefile.bak
+	rm -f $(OBJ) $(LIB_A) $(LIB_SO) $(BUILDTEST_A) $(BUILDTEST_SO) $(MIDITEST_A) $(MIDITEST_SO) Makefile.bak

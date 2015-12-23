@@ -29,8 +29,6 @@ namespace eLibV2
             virtual bool OpenDevice(SInt16 deviceIndex);
             virtual void CloseDevice();
 
-            void setReceiver(const VST::Host::PluginHost* hostThread) {}
-
             // callback functions
             static void* CallbackFunction(void *arg);
 
