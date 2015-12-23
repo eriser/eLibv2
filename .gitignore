@@ -41,6 +41,6 @@ Icon
 *.a
 
 # helpers
-miditest*
-buildtest*
+miditest_*
+buildtest_*
 
