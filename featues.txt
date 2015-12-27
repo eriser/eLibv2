@@ -11,7 +11,7 @@ oscillator with quad-phase output
 -> working
 
 pulse width (sum of saws-method)
--> working, but should not be symmetrical
+-> working
 
 wavetable:
 

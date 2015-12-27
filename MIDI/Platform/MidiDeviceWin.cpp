@@ -8,7 +8,6 @@ using namespace eLibV2::Util;
 using namespace eLibV2::VST::Host;
 
 MidiDeviceWin::MidiDeviceWin() :
-    m_pHostThread(NULL),
     m_OpenedMidiIn(NULL)
 {
     EnumerateMidiInDevices();
@@ -38,7 +37,7 @@ bool MidiDeviceWin::OpenDevice(SInt16 deviceId)
 {
     ModuleLogger::print(LOG_CLASS_MIDI, "opening '%s'", GetDeviceName(deviceId).c_str());
 
-    MMRESULT mmr = midiInOpen(&m_OpenedMidiIn, deviceId, (DWORD_PTR)MidiDeviceWin::CallbackFunction, (DWORD_PTR)m_pHostThread, CALLBACK_FUNCTION | MIDI_IO_STATUS);
+    MMRESULT mmr = midiInOpen(&m_OpenedMidiIn, deviceId, (DWORD_PTR)MidiDeviceWin::CallbackFunction, (DWORD_PTR)m_pMidiHandler, CALLBACK_FUNCTION | MIDI_IO_STATUS);
     if (mmr != MMSYSERR_NOERROR)
         return false;
 
@@ -83,7 +82,7 @@ void CALLBACK MidiDeviceWin::CallbackFunction(HMIDIIN hMidiIn, UINT wMsg, DWORD_
         if (midiStatus == 0x90)
         {
             ss << "midi message note: " << midiData1 << " velocity: " << midiData2;
-            midiHandler->insertEvent(midiChannel, new MidiEvent(midiData1, midiData2));
+            midiHandler->insertEvent(midiChannel, MidiEvent(midiData1, midiData2));
         }
         else if (midiStatus == 0xb0)
             ss << "control change event";

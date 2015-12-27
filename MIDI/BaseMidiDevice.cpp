@@ -3,7 +3,8 @@
 using namespace eLibV2::MIDI;
 
 BaseMidiDevice::BaseMidiDevice() :
-    m_uiNumMidiInDevices(0)
+    m_uiNumMidiInDevices(0),
+    m_pMidiHandler(NULL)
 {
 }
 
